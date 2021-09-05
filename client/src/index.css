@@ -1,0 +1,69 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.input {
+  border: none;
+  padding-left: 10px;
+  height: 20px;
+}
+
+
+.padding_top_10 {
+  padding-top: 10px;
+}
+
+.pt_5 {
+  padding-top: 5px;
+}
+
+.ptb_10 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.ptb_20 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.ptb_15 {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.ptb_50 {
+  padding: 50px 0;
+}
+
+.no_margin {
+  padding: 0;
+}
+
+.pl_5 {
+  padding-left: 5px;
+}
+.plr_5 {
+  padding: 0px 5px
+}
+
+.MuiAccordion-root.Mui-expanded {
+  margin: 16px;
+}

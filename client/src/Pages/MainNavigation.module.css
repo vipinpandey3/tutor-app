@@ -1,0 +1,23 @@
+.container {
+    padding-top: 50px;
+    height: auto;
+}
+
+.container ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.container ul li {
+    padding: 10px 0;
+    padding-left: 10px;
+    list-style-type: none;
+}
+
+.container ul .navLink .link{
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+}

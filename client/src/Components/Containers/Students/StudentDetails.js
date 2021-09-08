@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AccordionSummary, makeStyles, Paper, Typography, Accordion, AccordionDetails, Table, TableCell, TableHead, TableRow, TableSortLabel, TableBody, } from '@material-ui/core'
 import { Grid } from '@material-ui/core';
 import Text from '../../Common/Text';
-import StudentsRecords from './StudentsRecords';
+import { parentFormInput } from './StudentsRecords';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { StudentContext } from '../../../context/student-context';
+import { ParentForms } from './StudentRelatedForms';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -72,29 +74,45 @@ const FeesArray = [
 ]
 
 const StudentDetails = () => {
-    const [studentRecord, setStudentRecord] = useState({});
+    // const [studentRecord, setStudentRecord] = useState({});
+    const [showParentForm, setShowParentForm] = useState(true)
     const [totalPaid, setTotalPaid] = useState(0)
+    const {fetchStudentDetails, studentDetails } = useContext(StudentContext);
     const styles = useStyles()
     const params = useParams();
     const { studentId } = params;
 
-    const getStudentDetails = (studentId) => {
-        // let studentRecordArray = StudentsRecords.filter((record) => {
-        //     return record.id === studentId
-        // });
-        // setStudentRecord(studentRecordArray[0]);
-        let newArray = StudentsRecords.filter(x => x.id === studentId);
-        console.log("newArray", newArray);
-        setStudentRecord(newArray[0]);
-    }
-    useEffect(() => {    
-        getStudentDetails(studentId)
+    useEffect(() => {
+        fetchStudentDetails(studentId).catch(err => {
+            console.log('err', err)
+        })
         const totalPaid = FeesArray.reduce((accumulatedPaid, currentPaid) => {
             let total = accumulatedPaid + currentPaid.paidFees
             return total
         }, 0)
-        setTotalPaid(totalPaid)
-    }, [studentId])
+    }, [])
+
+    const fetchStudentEducationDetails = (event) => {
+        
+    }
+
+    // const getStudentDetails = (studentId) => {
+    //     // let studentRecordArray = StudentsRecords.filter((record) => {
+    //     //     return record.id === studentId
+    //     // });
+    //     // setStudentRecord(studentRecordArray[0]);
+    //     let newArray = StudentsRecords.filter(x => x.id === studentId);
+    //     console.log("newArray", newArray);
+    //     setStudentRecord(newArray[0]);
+    // }
+    // useEffect(() => {    
+    //     getStudentDetails(studentId)
+    //     const totalPaid = FeesArray.reduce((accumulatedPaid, currentPaid) => {
+    //         let total = accumulatedPaid + currentPaid.paidFees
+    //         return total
+    //     }, 0)
+    //     setTotalPaid(totalPaid)
+    // }, [studentId])
     return (
         <>
             <Paper className={`${styles.paperContent} `}>
@@ -104,7 +122,7 @@ const StudentDetails = () => {
                             FullName: 
                         </Text>
                         <Text variant="subtitle1" component="h6" className={styles.block}>
-                            Vipin Pandey
+                            {studentDetails.studentDetail.firstName } {studentDetails.studentDetail.lastName}
                         </Text>
                     </Grid>
                     <Grid item xs={3} className={styles.flexcontainer}>
@@ -112,7 +130,7 @@ const StudentDetails = () => {
                             Email: 
                         </Text>
                         <Text variant="subtitle1" component="h6" className={styles.block}>
-                            vipinpandey530@gmail.com
+                            {studentDetails.studentDetail.emailId}
                         </Text>
                     </Grid>
                     <Grid item xs={2} className={styles.flexcontainer}>
@@ -136,7 +154,7 @@ const StudentDetails = () => {
                             DOB: 
                         </Text>
                         <Text variant="subtitle1" component="h6" className={styles.block}>
-                            21-12-1995
+                            {studentDetails.dob}
                         </Text>
                     </Grid>
                     <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
@@ -144,11 +162,18 @@ const StudentDetails = () => {
                             Address: 
                         </Text>
                         <Text variant="subtitle1" component="h6" className={styles.block}>
-                            88/01, Ardeshir dady street, C. P. Tank, Mumbai: 400004
+                            {studentDetails.address}
                         </Text>
                     </Grid>
                 </Grid>
             </Paper>
+            {
+                showParentForm && (
+                    <Paper className={styles.paperContent} >
+                        <ParentForms setShowParentForm={setShowParentForm} studentId={studentId}/>
+                    </Paper>
+                )
+            }
             <Paper className={styles.paperContent}>
                 <Grid container className={styles.columnContainer}>
                     <Grid item xs={12} >
@@ -162,7 +187,7 @@ const StudentDetails = () => {
                                 Father Name: 
                             </Text>
                             <Text variant="subtitle1" component="h6" className={styles.block}>
-                                Rambachan Pandey
+                                {studentDetails.parentsDetail.fatherName}
                             </Text>
                         </Grid>
                         <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
@@ -170,15 +195,15 @@ const StudentDetails = () => {
                                 Father Education: 
                             </Text>
                             <Text variant="subtitle1" component="h6" className={styles.block}>
-                                HSC
+                                {studentDetails.parentsDetail.fatherHighestQualifaction}
                             </Text>
                         </Grid>
                         <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
                             <Text variant="subtitle1" component="subtitle1">
-                                Father Mobile: 
+                                Father Aadhar: 
                             </Text>
                             <Text variant="subtitle1" component="h6" className={styles.block}>
-                                9321475789
+                                {studentDetails.parentsDetail.fatherAadhar}
                             </Text>
                         </Grid>
                     </Grid>
@@ -188,7 +213,7 @@ const StudentDetails = () => {
                                 Mother Name: 
                             </Text>
                             <Text variant="subtitle1" component="h6" className={styles.block}>
-                                Satyrupa Pandey
+                                {studentDetails.parentsDetail.motherName}
                             </Text>
                         </Grid>
                         <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
@@ -196,21 +221,21 @@ const StudentDetails = () => {
                                 Mother Education: 
                             </Text>
                             <Text variant="subtitle1" component="h6" className={styles.block}>
-                                HSC
+                                {studentDetails.parentsDetail.motherHighestQualification}
                             </Text>
                         </Grid>
                         <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
                             <Text variant="subtitle1" component="subtitle1">
-                                Father Mobile: 
+                                Mother Aadhar: 
                             </Text>
                             <Text variant="subtitle1" component="h6" className={styles.block}>
-                                9321475789
+                                {studentDetails.parentsDetail.motherAadhar}
                             </Text>
                         </Grid>
                     </Grid>
                 </Grid>
             </Paper>
-               <Accordion className={`${styles.paperContent} ${styles.noPadding}`}>
+               <Accordion className={`${styles.paperContent} ${styles.noPadding}`} onChange={() => fetchStudentEducationDetails()}>
                     <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel2a-content"
@@ -226,7 +251,7 @@ const StudentDetails = () => {
                                         FullName: 
                                     </Text>
                                     <Text variant="subtitle1" component="h6" className={styles.block}>
-                                        Vipin Rambachan Pandey
+                                        {`${studentDetails.studentDetail.lastName} ${studentDetails.studentDetail.firstName}`}
                                     </Text>
                                 </Grid>
                             </Grid>

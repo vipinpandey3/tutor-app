@@ -10,8 +10,8 @@ import {
 import { TableBody } from "@material-ui/core";
 import useTable from "../../customsHooks/useTable";
 import ActionButton from "./ActionButton";
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -33,7 +33,13 @@ const useStyles = makeStyles((theme) => ({
 
 function Table(props) {
   const classes = useStyles();
-  const { headCells, records, filterFunction, openInPopup, redirectToDetailsPage } = props;
+  const {
+    headCells,
+    records,
+    filterFunction,
+    openInPopup,
+    redirectToDetailsPage,
+  } = props;
   const [tableRecords, setTableRecords] = useState(records);
   // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
   const {
@@ -43,7 +49,7 @@ function Table(props) {
     orderBy,
     order,
   } = useTable(tableRecords, filterFunction);
-  useTable();
+  console.log('Test')
   return (
     <>
       <MuiTable className={classes.table}>
@@ -66,37 +72,69 @@ function Table(props) {
                 </TableCell>
               );
             })}
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {recordsAfterPagingAndSorting().map((row) => {
             return (
-              <TableRow key={row.id} onClick={() => {redirectToDetailsPage(row.id)}}>
-                <TableCell>{row.fullName}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.mobile}</TableCell>
-                <TableCell>{row.department}</TableCell>
+              <TableRow
+                key={row.id}
+                onClick={() => {
+                  redirectToDetailsPage(row.id);
+                }}
+              >
+                {headCells.map((rowCell) => {
+                  const value = row[rowCell.id];
+                  return <TableCell>{value}</TableCell>;
+                })}
                 <TableCell>
-                  <ActionButton 
-                      onClick={() => openInPopup(row)}
-                      color="primary"
+                  <ActionButton
+                    onClick={() => openInPopup(row)}
+                    color="primary"
                   >
-                      <EditOutlinedIcon fontSize="small" />
+                    <EditOutlinedIcon fontSize="small" />
                   </ActionButton>
-                  <ActionButton 
-                      color="secondary"
-                      onClick={() => {
-                          // setConfirmDialog({
-                          //     isOpen: true,
-                          //     title: "Are you sure you want to delete tutor?",
-                          //     subTitle: "Operation once done can not be undone?",
-                          //     onConfirm: () => {onDeleteT(tutor.id)}
-                          // })
-                      }}
+                  <ActionButton
+                    color="secondary"
+                    onClick={() => {
+                      // setConfirmDialog({
+                      //     isOpen: true,
+                      //     title: "Are you sure you want to delete tutor?",
+                      //     subTitle: "Operation once done can not be undone?",
+                      //     onConfirm: () => {onDeleteT(tutor.id)}
+                      // })
+                    }}
                   >
-                      <CloseOutlinedIcon fontSize="small" />
+                    <CloseOutlinedIcon fontSize="small" />
                   </ActionButton>
-              </TableCell>
+                </TableCell>
+                {/* <TableCell>{row.firstName}</TableCell>
+                <TableCell>{row.lastName}</TableCell>
+                <TableCell>{row.emailId}</TableCell>
+                <TableCell>{row.aadharNo}</TableCell>
+                <TableCell>{row.gender}</TableCell>
+                <TableCell>
+                  <ActionButton
+                    onClick={() => openInPopup(row)}
+                    color="primary"
+                  >
+                    <EditOutlinedIcon fontSize="small" />
+                  </ActionButton>
+                  <ActionButton
+                    color="secondary"
+                    onClick={() => {
+                      // setConfirmDialog({
+                      //     isOpen: true,
+                      //     title: "Are you sure you want to delete tutor?",
+                      //     subTitle: "Operation once done can not be undone?",
+                      //     onConfirm: () => {onDeleteT(tutor.id)}
+                      // })
+                    }}
+                  >
+                    <CloseOutlinedIcon fontSize="small" />
+                  </ActionButton>
+                </TableCell> */}
               </TableRow>
             );
           })}

@@ -1,19 +1,25 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
 
-const adminController = require('../controllers/admin')
+const adminController = require("../controllers/admin");
 
+router.get("/get-students", adminController.getStudent);
 
-router.get('/get-students', (req, res, next) => {
-    console.log('Test')
-})
+router.post("/add-student", adminController.addStudentInDatabase);
 
-router.post('/add-student', adminController.addStudentInDatabase)
+router.get("/studentDetails/:studentId", adminController.getStudentById);
 
-router.get('/get-Teacher', adminController.getTeacher);
+router.get("/get-teachers", adminController.getTeacher);
 
-router.post('/add-teacher', adminController.addTeacher)
+router.post("/add-teacher", adminController.addTeacher);
 
+router.get("/teachersDetails/:teacherId", adminController.getTeacherById);
 
-module.exports = router
+router.post("/add-parent", adminController.addParent);
+
+router.get("/parentsDetails/:studentId", adminController.getParentsDetails);
+
+// router.post('/add-studentEducationDetails')
+
+module.exports = router;

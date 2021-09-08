@@ -1,5 +1,11 @@
-import { Grid, InputAdornment, makeStyles, Paper, Toolbar } from "@material-ui/core";
-import React, { useState } from "react";
+import {
+  Grid,
+  InputAdornment,
+  makeStyles,
+  Paper,
+  Toolbar,
+} from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import Input from "../../Common/Input";
 import Table from "../../Common/Table";
@@ -8,7 +14,8 @@ import MatButton from "../../Common/Button";
 import Popup from "../../Common/Popup";
 import AddIcon from "@material-ui/icons/Add";
 import StudentForm from "./StudentForm";
-import StudentsRecords from './StudentsRecords';
+import StudentsRecords from "./StudentsRecords";
+import { StudentContext } from "../../../context/student-context";
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -21,36 +28,50 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-  { id: "fullName", label: "Tutors Name" },
-  { id: "email", label: "Email" },
-  { id: "mobile", label: "Mobile" },
-  { id: "department", label: "Department" },
-  {id: 'actions', label: 'Actions', disableSorting: true}
+  { id: "firstName", label: "First Name" },
+  { id: "lastName", label: "Last Name" },
+  { id: "emailId", label: "EmailId" },
+  { id: "gender", label: "Gender" },
+  { id: "dob", label: "Date of Birth" },
+  { id: "aadharNo", label: "Aadhar Number" },
 ];
 
 const Students = () => {
-  const history = useHistory()
+  const history = useHistory();
   const classes = useStyles();
-  const [openPopup, setOpenPopup] = useState(false)
+  const { students, fetchStudents } = useContext(StudentContext);
+  const [showForm, setForm] = useState(false);
   const [filterFunction, setFilterFunction] = useState({
     fn: (item) => {
       return item;
     },
   });
 
+  useEffect(() => {
+    console.log('Test 1')
+    fetchStudents().catch(err => {
+      console.log(err);
+    })
+  }, [])
+
   const searchUser = (event) => {};
 
-  const openModalPupup = () => {
-    setOpenPopup(true)
-  }
+  const toggleForm = () => {
+    setForm(true);
+  };
 
   const redirectToStudentDetailsPage = (studentId) => {
     console.log("student Id", studentId);
     history.push(`/students/${studentId}`);
-  }
+  };
 
   return (
     <>
+      {showForm && (
+        <Paper className={classes.paperCotent}>
+          <StudentForm />
+        </Paper>
+      )}
       <Paper className={classes.paperCotent}>
         <Grid container>
           <Grid items xs={6}>
@@ -60,11 +81,11 @@ const Students = () => {
                 label="Search Users"
                 className={classes.seacrhInput}
                 InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="end">
-                            <SearchIcon />
-                        </InputAdornment>
-                    )
+                  startAdornment: (
+                    <InputAdornment position="end">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
                 }}
               />
             </Toolbar>
@@ -72,31 +93,31 @@ const Students = () => {
           <Grid item sm></Grid>
           <Grid item>
             <Toolbar>
-                <MatButton
-                    variant="outlined"
-                    startIcon={<AddIcon />}
-                    onClick={openModalPupup}
-                >
-                    Add New
-                </MatButton>
+              <MatButton
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={toggleForm}
+              >
+                Add New
+              </MatButton>
             </Toolbar>
           </Grid>
         </Grid>
         <Table
-          records={StudentsRecords}
+          records={students}
           headCells={headCells}
           filterFunction={filterFunction}
-          openInPopup={openModalPupup}
+          openInPopup={toggleForm}
           redirectToDetailsPage={redirectToStudentDetailsPage}
         />
       </Paper>
-      <Popup 
+      {/* <Popup 
         title="Students Form"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
           <StudentForm />
-      </Popup>
+      </Popup> */}
     </>
   );
 };

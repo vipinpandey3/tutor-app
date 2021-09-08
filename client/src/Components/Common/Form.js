@@ -22,93 +22,94 @@ const Form = (props) => {
   const classes = useStyles();
 
   
-  const { initialFormValues, formComponent, addUser } = props;
+  const { initialFormValues, formComponent, addValues, items, selectOptions } = props;
   const { values, errors, handleInputChange, resetForm } =
     useForm(initialFormValues);
 
   console.log(formComponent);
 
   const formSubmitHandler = (e) => {
-
-    addUser(values);
+    addValues(values);
     e.preventDefault();
   }
 
   return (
     <form className={classes.root} autoComplete="off" onSubmit={formSubmitHandler}>
       <Grid container>
-        <Grid item xs={6}>
+        {/* <Grid item xs={12}> */}
           {formComponent.map((formElement) => {
             if (formElement.type === "input") {
               return (
-                <Input
-                  key={formElement.id}
-                  name={formElement.name}
-                  label={formElement.label}
-                  value={values[formElement.name]}
-                  onChange={handleInputChange}
-                  error={errors[formElement.name]}
-                />
+                <Grid item xs={6}>
+                  <Input
+                    key={formElement.id}
+                    name={formElement.name}
+                    label={formElement.label}
+                    value={values[formElement.name]}
+                    onChange={handleInputChange}
+                    error={errors[formElement.name]}
+                  />
+                </Grid>
               );
             }
           })}
-
-          {/* <Input
-            name="fullName"
-            label="FullName"
-            value={values.fullName}
-            onChange={handleInputChange}
-            error={errors.fullName}
-          />
-          <Input
-            label="Email"
-            name="email"
-            value={values.email}
-            onChange={handleInputChange}
-            error={errors.email}
-          />
-          <Input
-            label="Mobile"
-            name="mobile"
-            value={values.mobile}
-            onChange={handleInputChange}
-            error={errors.mobile}
-          />
-          <Input
-            label="Branch"
-            name="branch"
-            value={values.city}
-            onChange={handleInputChange}
-          /> */}
-        </Grid>
-        <Grid item xs={6}>
-          {/* <RadioGroup
-            name="gender"
-            value={values.gender}
-            onChange={handleInputChange}
-            label="Gender"
-            //items={genderItems}
-          />
-          <Select
-            name="departmentId"
-            label="Department"
-            value={values.departmentId}
-            onChange={handleInputChange}
-            error={errors.departmentId}
-          />
-          <DatePicker
-            name="hireDate"
-            label="Hire Date"
-            value={values.hireDate}
-            onChange={handleInputChange}
-          />
-          <Checkbox
-            name="isPermanent"
-            label="Permanent Faculty"
-            value={values.isPermanent}
-            onChange={handleInputChange}
-          /> */}
           {formComponent.map((formElement) => {
+            if (formElement.type === "radio") {
+              return (
+                <Grid item xs={6}>
+                  <RadioGroup
+                    key={formElement.id}
+                    name={formElement.name}
+                    label={formElement.label}
+                    value={values[formElement.name]}
+                    onChange={handleInputChange}
+                    items={items}
+                  />
+                </Grid>
+              );
+            } else if (formElement.type === "select") {
+              return (
+                <Grid item xs={6}>
+                  <Select
+                    key={formElement.id}
+                    name={formElement.name}
+                    label={formElement.label}
+                    value={values[formElement.name]}
+                    onChange={handleInputChange}
+                    error={errors.departmentId}
+                    options={selectOptions}
+                  />
+                </Grid>
+              );
+            } else if (formElement.type === "date") {
+              return (
+                <Grid item xs={6}>
+                  <DatePicker
+                    key={formElement.id}
+                    name={formElement.name}
+                    label={formElement.label}
+                    value={values.hireDate}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+              );
+            } else if (formElement.type === "checkbox") {
+              return (
+                <Grid item xs={6}>
+                  <Checkbox
+                    key={formElement.id}
+                    name={formElement.name}
+                    label={formElement.label}
+                    value={values.isPermanent}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+              );
+            }
+          })}
+        {/* </Grid> */}
+        <Grid item xs={12}>
+          {/* {formComponent.map((formElement) => {
             if (formElement.type === "radio") {
               return (
                 <RadioGroup
@@ -117,7 +118,7 @@ const Form = (props) => {
                   value={values[formElement.name]}
                   onChange={handleInputChange}
                   label="Gender"
-                  //items={genderItems}
+                  items={items}
                 />
               );
             } else if (formElement.type === "select") {
@@ -129,6 +130,7 @@ const Form = (props) => {
                   value={values[formElement.name]}
                   onChange={handleInputChange}
                   error={errors.departmentId}
+                  options={selectOptions}
                 />
               );
             } else if (formElement.type === "date") {
@@ -152,7 +154,7 @@ const Form = (props) => {
                 />
               );
             }
-          })}
+          })} */}
           <div>
             <MatButton text="Submit" type="submit">
               Submit

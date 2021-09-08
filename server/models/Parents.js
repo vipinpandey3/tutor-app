@@ -40,8 +40,8 @@ const Parent = sequelize.define('parent', {
         type: Sequelize.DATEONLY,
         defaultValue: Sequelize.NOW()
     },
-    fatherHighestQualifaction: Sequelize.INTEGER,
-    motherHighestQualification: Sequelize.INTEGER,
+    fatherHighestQualifaction: Sequelize.STRING,
+    motherHighestQualification: Sequelize.STRING,
 });
 
 module.exports = Parent;

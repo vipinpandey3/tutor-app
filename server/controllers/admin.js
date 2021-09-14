@@ -311,7 +311,7 @@ const addFeesDetails = (req, res, next) => {
             fees: fees
           };
 
-          res.status(200)cc.json(response);
+          res.status(200).json(response);
         }
         if(parseInt(lastPaidFees.balance) <= parseInt(paidAmount)){
           console.log("lastPaidFees.balance", lastPaidFees.balance)

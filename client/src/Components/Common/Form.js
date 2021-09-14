@@ -25,9 +25,7 @@ const Form = (props) => {
   const { initialFormValues, formComponent, addValues, items, selectOptions } = props;
   const { values, errors, handleInputChange, resetForm } =
     useForm(initialFormValues);
-
-  console.log(formComponent);
-
+    
   const formSubmitHandler = (e) => {
     addValues(values);
     e.preventDefault();

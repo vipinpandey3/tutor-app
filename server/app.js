@@ -8,6 +8,8 @@ const StudentTeacherMap = require("./models/student-teacher-map");
 const StudentParentMap = require("./models/student-parent-map");
 const Parent = require("./models/Parents");
 const User = require('./models/user');
+const StudentEducationDetails = require('./models/student-education-details');
+const Fees = require('./models/fees');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,7 +43,11 @@ Student.belongsTo(User)
 // User.hasMany(Student);
 // User.hasMany(Teacher);
 // Teacher.belongsTo(Student, {through: StudentTeacherMap});
-Teacher.belongsTo(User)
+Teacher.belongsTo(User);
+// Student.hasMany(StudentEducationDetails);
+StudentEducationDetails.belongsTo(Student)
+Fees.belongsTo(Student);
+
 
 
 sequelize

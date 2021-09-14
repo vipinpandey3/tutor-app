@@ -18,8 +18,10 @@ router.get("/teachersDetails/:teacherId", adminController.getTeacherById);
 
 router.post("/add-parent", adminController.addParent);
 
-router.get("/parentsDetails/:studentId", adminController.getParentsDetails);
+// router.get("/parentsDetails/:studentId", adminController.getParentsDetails);
 
-// router.post('/add-studentEducationDetails')
+router.post('/add-studentEducation-details', adminController.addStudentEducationDetails);
+
+router.post('/add-feesDetails', adminController.addFeesDetails);
 
 module.exports = router;

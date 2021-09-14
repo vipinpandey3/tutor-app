@@ -7,7 +7,8 @@ export const StudentContextPorvider = (props) => {
     const [students, setStudents] = useState([])
     const [studentDetails, setStudeDetails] = useState({
         studentDetail: {},
-        parentsDetail: {}
+        parentsDetail: {},
+        educationDetails: []
     });
     const [studentParentDetails, setStudeParentDetails] = useState({})
 
@@ -24,7 +25,6 @@ export const StudentContextPorvider = (props) => {
     }
 
     const addParent = async (parentsValue) => {
-        console.log('add Parent value', parentsValue);
         const response = await fetch("http://localhost:5000/admin/add-parent", {
             headers: {
                 'Accept': 'application/json',
@@ -57,8 +57,23 @@ export const StudentContextPorvider = (props) => {
         const data = await response.json();
         setStudeDetails({
             studentDetail: data.studentDetails,
-            parentsDetail: data.parentDetails
+            parentsDetail: data.parentDetails,
+            educationDetails: data.educationDetails
         });
+    }
+
+    const storStudentEducationDetails = async(values) => {
+        const response = await fetch('http://localhost:5000/admin/add-studentEducation-details', {
+            headers: {
+                'Accept': "application/json",
+                "Content-Type": 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(values)
+        });
+
+        const res = await response.json();
+        return res;
     }
 
     // useEffect(() => {
@@ -73,7 +88,8 @@ export const StudentContextPorvider = (props) => {
             addStudent,
             addParent,
             fetchStudents,
-            fetchStudentDetails
+            fetchStudentDetails,
+            storStudentEducationDetails
         }}>
             {props.children}
         </StudentContext.Provider>

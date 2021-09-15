@@ -1,16 +1,19 @@
 import React, { useContext } from 'react';
 import { StudentContext } from '../../../context/student-context';
 import Form from '../../Common/Form';
-import { parentFormInitialValue, parentFormInput } from './StudentsRecords';
+import { parentFormInitialValue, parentFormInput, studentEducationForms, studentEducationInitialValue } from './StudentsRecords';
 
 
 export const ParentForms = (props) => {
-    const { setShowParentForm, studentId } = props
+    const { setShowParentForm, studentId, showForms } = props
     const {addParent} = useContext(StudentContext);
     const addParentData = (value) => {
         value.studentId = studentId
         addParent(value)
-        setShowParentForm(false)
+        setShowParentForm({
+            ...showForms,
+            parentForms: false
+        })
     }
     return (
         <>
@@ -24,9 +27,30 @@ export const ParentForms = (props) => {
 }
 
 export const StudentEducationForms = (props) => {
-    return (
-        <div>
+    const {setShowEdutionForm, studentId, showForms} = props;
+    const { storStudentEducationDetails } = useContext(StudentContext)
 
-        </div>
+    const addStudentEducationDetails = (value) => {
+        value.studentId = studentId;
+        storStudentEducationDetails(value)
+            // .then(value => {
+            //     console.log('values', value);
+            // })
+            .cacth(err => {
+                console.log('err', err);
+            });
+        setShowEdutionForm({
+            ...showForms,
+            educationDetailsForm: false
+        });
+    };
+    return (
+        <>
+            <Form 
+                formComponent={studentEducationForms}
+                initialFormValues={studentEducationInitialValue}
+                addValue={addStudentEducationDetails}
+            />   
+        </>
     )
 }

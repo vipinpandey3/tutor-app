@@ -24,4 +24,6 @@ router.post('/add-studentEducation-details', adminController.addStudentEducation
 
 router.post('/add-feesDetails', adminController.addFeesDetails);
 
+router.get('/getFeesDetailsById/:studentId', adminController.getFeesDetailsByStudentId);
+
 module.exports = router;

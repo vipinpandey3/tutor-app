@@ -20,6 +20,7 @@ const Fees = sequelize.define('fees', {
     discount: {
         type: Sequelize. STRING,
         allowNull: false,
+        defaultValue: "0.00"
     },
     paidAmount: {
         type: Sequelize.STRING,

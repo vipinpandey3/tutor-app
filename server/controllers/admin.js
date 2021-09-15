@@ -273,13 +273,13 @@ const addStudentEducationDetails = (req, res, next) => {
 };
 
 const addFeesDetails = (req, res, next) => {
-  const feesAmount = req.body.feesAmount;
-  let discount = req.body.discount;
-  const paidAmount = req.body.paidAmount;
+  let feesAmount = req.body.feesAmount;
+  let discount = req.body.discount ? req.body.discount : '0.00';
+  let paidAmount = req.body.paidAmount;
   let balance = req.body.balance;
-  const academicYear = req.body.academicYear;
-  const reamarks = req.body.reamarks;
-  const studentId = 1
+  let academicYear = req.body.academicYear;
+  let reamarks = req.body.reamarks;
+  let studentId = req.body.studentId
   Fees.findAll({where: {
     studentId: studentId
   }})
@@ -293,7 +293,7 @@ const addFeesDetails = (req, res, next) => {
               fees: fees
             };
 
-            res.status(200).json(response);
+            return res.status(200).json(response);
           })
           .catch((err)=> {
             const response = {
@@ -311,68 +311,79 @@ const addFeesDetails = (req, res, next) => {
             fees: fees
           };
 
-          res.status(200).json(response);
+          return res.status(200).json(response);
         }
         if(parseInt(lastPaidFees.balance) <= parseInt(paidAmount)){
-          console.log("lastPaidFees.balance", lastPaidFees.balance)
-          const response = {
+         const response = {
             resultShort: "failure",
             resultLong: "Payment is greater than balance amount",
             fees: fees
           };
-
           return res.json(response);
         } else {
           balance = parseInt(lastPaidFees.balance) - parseInt(paidAmount);
-
-          for (let i = 0; i < fees.length; i++) {
-            if(parseInt(fees[i].discount) >= 0) {
-              // discount = "0.00"
-              const response = {
-                resultShort: "failure",
-                resultLong: "discount cannot be given more than once"
-              };
-              return res.json(response);
+          if(parseInt(discount) !== 0 && discount !== 'undefined') {
+            for (let i = 0; i < fees.length; i++) {
+              if(parseInt(fees[i].discount) >= 0 ) {
+                // discount = "0.00"
+                const response = {
+                  resultShort: "failure",
+                  resultLong: "discount cannot be given more than once"
+                };
+                return res.json(response);
+              }
             }
+          } else {
+            Fees.create({feesAmount, discount, paidAmount, balance, academicYear, reamarks, studentId})
+              .then((fees) => {
+                const response = {
+                  resultShort: "success",
+                  resultLong: "Addedd fees details for student with Id: " + studentId,
+                  fees: fees
+                };
+    
+                return res.status(200).json(response);
+              })
+              .catch((err) => {
+                console.log('Err', err);
+                const response = {
+                  resultShort: "failure",
+                  resultLong: "Error Adding Fees details",
+                };
+                return res.json(response);
+              })
           }
-          Fees.create({feesAmount, discount, paidAmount, balance, academicYear, reamarks, studentId})
-            .then((fees) => {
-              const response = {
-                resultShort: "success",
-                resultLong: "Addedd fees details for student with Id: " + studentId,
-                fees: fees
-              };
-  
-              res.status(200).json(response);
-            })
-            .catch((err) => {
-              console.log('Err', err);
-              const response = {
-                resultShort: "failure",
-                resultLong: "Error Adding Fees details",
-              };
-              return res.json(response);
-            })
         }
       }
     })
-  // Fees.create({feesAmount, discount, paidAmount, balance, academicYear, reamarks, studentId})
-  //   .then((fees) => {
-  //     const response = {
-  //       resultShort: "success",
-  //       resultLong: "Addedd fees details for student with Id: " + studentId,
-  //       fees: fees
-  //     };
+    .catch(err => {
+      const response = {
+        resultShort: 'failure',
+        resultLong: "Failure in adding fees details"
+      }
+      return res.json(response)
+    })
+}
 
-  //     res.status(200).json(response);
-  //   })
-  //   .catch((err)=> {
-      // const response = {
-      //   resultShort: "failure",
-      //   resultLong: "Error Adding Fees details",
-      // };
-      // return res.json(response);
-  //   })
+const getFeesDetailsByStudentId = (req, res, next) => {
+  const studentId = req.params.studentId;
+  Fees.findAll({where: {studentId: studentId}})
+    .then((fees) => {
+      const response = {
+        resultShort: "success",
+        resultLong: "Successfully retrieved fees details for student with id: " + studentId,
+        fees: fees
+      }
+
+      return res.status(200).json(response)
+    })
+    .catch((err) => {
+      const response = {
+        resultShort: "failure",
+        resultLong: "Failed to retrieve fees details for student with id: " + studentId
+      }
+      return res.json(response)
+    })
 }
 
 module.exports = {
@@ -384,5 +395,6 @@ module.exports = {
   addTeacher,
   addParent,
   addStudentEducationDetails,
-  addFeesDetails
+  addFeesDetails,
+  getFeesDetailsByStudentId
 };

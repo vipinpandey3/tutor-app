@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
 const FeesTable = (props) => {
     const styles = useStyles();
     const { feesTableHeader, FeesData, downloadReciept, editFees, deleteFees } = props
-    console.log('Fees 1', feesTableHeader)
     return (
         <TableContainer>
             <Table>
@@ -69,7 +68,7 @@ const FeesTable = (props) => {
                         {
                             feesTableHeader.length > 0 ? (
                                 feesTableHeader.map((cellValue) => (
-                                    <TableCell>
+                                    <TableCell key={cellValue.id}>
                                         {cellValue.label}
                                     </TableCell>
                                 ))
@@ -91,7 +90,7 @@ const FeesTable = (props) => {
                                                 const value= data[rowCell.id];
                                                 if(rowCell.avatar) {
                                                     return (
-                                                        <TableCell >
+                                                        <TableCell key={rowCell.id} >
                                                             <Avatar variant="rounded" className={styles[rowCell.className]}>
                                                                 {value}
                                                             </Avatar>

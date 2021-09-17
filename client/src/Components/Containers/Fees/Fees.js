@@ -20,121 +20,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-// const feesTableHeader = [
-//     {
-//         id: "studentId",
-//         label: "Student Id",
-//         avatar: false
-//     },
-//     {
-//         id: 'studentName',
-//         label: "Student Name",
-//         avatar: false
-//     },
-//     {
-//         id: "feesAmount",
-//         label: "Fees amount",
-//         className: "greenBackground",
-//         avatar: true
-//     },
-//     {
-//         id: 'discountAmount',
-//         label: "Discount amount",
-//         className: "redBackground",
-//         avatar: true
-//     },
-//     {
-//         id: "finalAmount",
-//         label: "Final Amount",
-//         avatar: false
-//     },
-//     {
-//         id: "recievedAmount",
-//         label: "Recieved Amount",
-        
-//     },
-//     {
-//         id: "refundAmount",
-//         label: 'Refund Amount',
-//         className: "blueBackground",
-//         avatar: true
-//     },
-//     {
-//         id: "pendingAmount",
-//         label: 'Pending Amount',
-//         avatar: false
-//     },
-// ]
-
-// let feesData = [
-//     {
-//         studentId: '120',
-//         studentName: "Vipin Pandey",
-//         feesAmount: '50000.00',
-//         discountAmount: "5000.00",
-//         discount: '5',
-//         finalAmount: "45000.00",
-//         recievedAmount: "20000.00",
-//         refundAmount: "0.00",
-//         pendingAmount: "25000.00"
-//     },
-//     {
-//         studentId: '121',
-//         studentName: "Vipin Pandey",
-//         feesAmount: '50000.00',
-//         discountAmount: "5000.00",
-//         finalAmount: "45000.00",
-//         recievedAmount: "20000.00",
-//         refundAmount: "0.00",
-//         pendingAmount: "25000.00",
-//         discount: '5',
-//     },
-//     {
-//         studentId: '122',
-//         studentName: "Vipin Pandey",
-//         feesAmount: '50000.00',
-//         discountAmount: "5000.00",
-//         discount: '5',
-//         finalAmount: "45000.00",
-//         recievedAmount: "20000.00",
-//         refundAmount: "0.00",
-//         pendingAmount: "25000.00"
-//     },
-//     {
-//         studentId: '123',
-//         studentName: "Vipin Pandey",
-//         feesAmount: '50000.00',
-//         discountAmount: "5000.00",
-//         finalAmount: "45000.00",
-//         recievedAmount: "20000.00",
-//         refundAmount: "0.00",
-//         pendingAmount: "25000.00",
-//         discount: '5',
-//     },
-//     {
-//         studentId: '124',
-//         studentName: "Vipin Pandey",
-//         feesAmount: '50000.00',
-//         discountAmount: "5000.00",
-//         finalAmount: "45000.00",
-//         recievedAmount: "20000.00",
-//         refundAmount: "0.00",
-//         pendingAmount: "25000.00",
-//         discount: '5',
-//     },
-//     {
-//         studentId: '125',
-//         studentName: "Vipin Pandey",
-//         feesAmount: '50000.00',
-//         discountAmount: "5000.00",
-//         finalAmount: "45000.00",
-//         recievedAmount: "20000.00",
-//         refundAmount: "0.00",
-//         pendingAmount: "25000.00",
-//         discount: '5'
-//     }
-// ]
-
 const feesInput = [
     {
         id: "studentId",
@@ -195,7 +80,6 @@ const Fees = () => {
     const styles = useStyles()
     const [showFeesForm, setShowFeesForm] = useState(false);
     const [searchValue, setSearchValue] = useState('')
-    // const [feesPaidData, setFeesPaidData] = useState([])
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
     const {fetchFees} = useContext(FeesContext);
     const [feesDetails, setFeesDetails] = useState({
@@ -241,7 +125,6 @@ const Fees = () => {
                     attributes: result.feeAttributes,
                     feesData: result.feesDetails
                 })
-                console.log('feeData', feesDetails);
             })
             .catch(err => {
                 console.log('err', err)
@@ -253,15 +136,12 @@ const Fees = () => {
     }
 
     const editFees = (data) => {
-        console.log("Edit Data", data);
         setShowFeesForm(true);
         setFormValue(data);
     };
 
     const deleteFees = (data) => {
-        const newArray = feesData.filter(objValue => {
-                return objValue.studentId !== data.studentId
-        });
+        console.log('deleteFees')
     }
 
     return (

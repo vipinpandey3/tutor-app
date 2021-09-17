@@ -22,7 +22,6 @@ export const StudentContextPorvider = (props) => {
     })
     
     const addStudent = async (studentData) => {
-        console.log('values in context', studentData);
         await fetch("http://localhost:5000/admin/add-student", {
             headers: {
                 'Accept': 'application/json',
@@ -47,7 +46,7 @@ export const StudentContextPorvider = (props) => {
         return res;
     }
 
-    const fetchStudents = async() => {
+    const fetchStudents = async () => {
         const response = await fetch("http://localhost:5000/admin/get-students");
         if(!response.ok) {
             throw new Error("Something went wrong")

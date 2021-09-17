@@ -65,7 +65,6 @@ const Students = () => {
   };
 
   const redirectToStudentDetailsPage = (studentId) => {
-    console.log("student Id", studentId);
     history.push(`/students/${studentId}`);
   };
 

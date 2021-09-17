@@ -10,10 +10,18 @@ export const StudentContextPorvider = (props) => {
         parentsDetail: {},
         educationDetails: []
     });
-    const [studentParentDetails, setStudeParentDetails] = useState({})
-
+    const [feesDetails, setFeesDetails] = useState({
+        feesTableHeaders: [
+            "Date",
+            "Fees Amount",
+            "Discount Amount",
+            "Paid Fees",
+            "Remaining Fees",
+        ],
+        feesDetailsRow: []
+    })
+    
     const addStudent = async (studentData) => {
-        console.log('values in context', studentData);
         await fetch("http://localhost:5000/admin/add-student", {
             headers: {
                 'Accept': 'application/json',
@@ -38,14 +46,15 @@ export const StudentContextPorvider = (props) => {
         return res;
     }
 
-    const fetchStudents = async() => {
+    const fetchStudents = async () => {
         const response = await fetch("http://localhost:5000/admin/get-students");
         if(!response.ok) {
             throw new Error("Something went wrong")
         }
 
         const data = await response.json();
-        setStudents(data.students)
+        return data
+        // setStudents(data.students)
     }
 
     const fetchStudentDetails = async (studentId) => {
@@ -76,20 +85,38 @@ export const StudentContextPorvider = (props) => {
         return res;
     }
 
+    const fetchStudentFeesDetails = async (studentId) => {
+        const response = await fetch(`http://localhost:5000/admin/getFeesDetailsById/${studentId}`);
+        if(!response.ok) {
+            throw new Error('Something went wrong');
+        }
+
+        const data = await response.json();
+        setFeesDetails({
+            feesTableHeaders: data.header,
+            feesDetailsRow: data.fees
+        })
+        return data;
+    }
+
     // useEffect(() => {
     //     fetchStudents().catch(err => console.log(err))
     // }, []) 
 
     return (
         <StudentContext.Provider value={{
+            // States/Variables
             students,
             studentDetails,
-            studentParentDetails,
+            feesDetails,
+
+            // Function/Methods
             addStudent,
             addParent,
             fetchStudents,
             fetchStudentDetails,
-            storStudentEducationDetails
+            storStudentEducationDetails,
+            fetchStudentFeesDetails
         }}>
             {props.children}
         </StudentContext.Provider>

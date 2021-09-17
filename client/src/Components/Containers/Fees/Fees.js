@@ -1,11 +1,12 @@
 import { Grid, makeStyles, Paper, Toolbar } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Text from '../../Common/Text'
 import FeesTable from './FeesTable';
 import Button from '../../Common/Button'
 import MatButton from '../../Common/Button';
 import FeesForm from './FeesForm';
 import Input from '../../Common/Input';
+import { FeesContext } from '../../../context/fees-context';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -18,121 +19,6 @@ const useStyles = makeStyles((theme) => ({
         // marginTop: "10px"
     }
 }))
-
-const feesTableHeader = [
-    {
-        id: "studentId",
-        label: "Student Id",
-        avatar: false
-    },
-    {
-        id: 'studentName',
-        label: "Student Name",
-        avatar: false
-    },
-    {
-        id: "feesAmount",
-        label: "Fees amount",
-        className: "greenBackground",
-        avatar: true
-    },
-    {
-        id: 'discountAmount',
-        label: "Discount amount",
-        className: "redBackground",
-        avatar: true
-    },
-    {
-        id: "finalAmount",
-        label: "Final Amount",
-        avatar: false
-    },
-    {
-        id: "recievedAmount",
-        label: "Recieved Amount",
-        
-    },
-    {
-        id: "refundAmount",
-        label: 'Refund Amount',
-        className: "blueBackground",
-        avatar: true
-    },
-    {
-        id: "pendingAmount",
-        label: 'Pending Amount',
-        avatar: false
-    },
-]
-
-let feesData = [
-    {
-        studentId: '120',
-        studentName: "Vipin Pandey",
-        feesAmount: '50000.00',
-        discountAmount: "5000.00",
-        discount: '5',
-        finalAmount: "45000.00",
-        recievedAmount: "20000.00",
-        refundAmount: "0.00",
-        pendingAmount: "25000.00"
-    },
-    {
-        studentId: '121',
-        studentName: "Vipin Pandey",
-        feesAmount: '50000.00',
-        discountAmount: "5000.00",
-        finalAmount: "45000.00",
-        recievedAmount: "20000.00",
-        refundAmount: "0.00",
-        pendingAmount: "25000.00",
-        discount: '5',
-    },
-    {
-        studentId: '122',
-        studentName: "Vipin Pandey",
-        feesAmount: '50000.00',
-        discountAmount: "5000.00",
-        discount: '5',
-        finalAmount: "45000.00",
-        recievedAmount: "20000.00",
-        refundAmount: "0.00",
-        pendingAmount: "25000.00"
-    },
-    {
-        studentId: '123',
-        studentName: "Vipin Pandey",
-        feesAmount: '50000.00',
-        discountAmount: "5000.00",
-        finalAmount: "45000.00",
-        recievedAmount: "20000.00",
-        refundAmount: "0.00",
-        pendingAmount: "25000.00",
-        discount: '5',
-    },
-    {
-        studentId: '124',
-        studentName: "Vipin Pandey",
-        feesAmount: '50000.00',
-        discountAmount: "5000.00",
-        finalAmount: "45000.00",
-        recievedAmount: "20000.00",
-        refundAmount: "0.00",
-        pendingAmount: "25000.00",
-        discount: '5',
-    },
-    {
-        studentId: '125',
-        studentName: "Vipin Pandey",
-        feesAmount: '50000.00',
-        discountAmount: "5000.00",
-        finalAmount: "45000.00",
-        recievedAmount: "20000.00",
-        refundAmount: "0.00",
-        pendingAmount: "25000.00",
-        discount: '5'
-    }
-]
 
 const feesInput = [
     {
@@ -184,7 +70,7 @@ const initiateFeesFormValue = {
     studentName: '',
     feesAmount: '',
     discount: '',
-    // finalAmount: s'',
+    balance: '',
     recievedAmount: '',
     refundAmount: '',
     date: new Date().toISOString().slice(0, 10), 
@@ -194,8 +80,12 @@ const Fees = () => {
     const styles = useStyles()
     const [showFeesForm, setShowFeesForm] = useState(false);
     const [searchValue, setSearchValue] = useState('')
-    const [feesPaidData, setFeesPaidData] = useState([])
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
+    const {fetchFees} = useContext(FeesContext);
+    const [feesDetails, setFeesDetails] = useState({
+        attributes: [],
+        feesData: []
+    })
 
     const hadleFeesForm = () => {
         setShowFeesForm(true);
@@ -205,7 +95,7 @@ const Fees = () => {
         value.finalAmount = parseInt(value.feesAmount) - (parseInt(value.discount)/100 * parseInt(value.feesAmount))
         value.pendingAmount = parseInt(value.finalAmount) - parseInt(value.recievedAmount)
         console.log('value', value);
-        setFeesPaidData([...feesPaidData, value])
+        // setFeesPaidData([...feesPaidData, value])
         setShowFeesForm(false);
     }
 
@@ -214,36 +104,44 @@ const Fees = () => {
     }
 
     useEffect(() => {
-        console.log("value, ", typeof(parseInt(searchValue)));
-        if(searchValue) {
-            const newData = feesData.filter(data => {
-                console.log('Log', data);
-                if(parseInt(searchValue) === parseInt(data.studentId) || data.studentName.includes(searchValue) ) {
-                    return data
-                }
+        // console.log("value, ", typeof(parseInt(searchValue)));
+        // if(searchValue) {
+        //     const newData = feesData.filter(data => {
+        //         console.log('Log', data);
+        //         if(parseInt(searchValue) === parseInt(data.studentId) || data.studentName.includes(searchValue) ) {
+        //             return data
+        //         }
+        //     })
+        //     setFeesPaidData(newData)
+        // } else {
+        //     setFeesPaidData(feesData)
+        // }
+    }, [searchValue]);
+
+    useEffect(() => {
+        fetchFees()
+            .then(result => {
+                setFeesDetails({
+                    attributes: result.feeAttributes,
+                    feesData: result.feesDetails
+                })
             })
-            setFeesPaidData(newData)
-        } else {
-            setFeesPaidData(feesData)
-        }
-    }, [searchValue])
+            .catch(err => {
+                console.log('err', err)
+            })
+    }, [])
 
     const downloadReciept = (data) => {
         console.log("Download Data", data);
     }
 
     const editFees = (data) => {
-        console.log("Edit Data", data);
         setShowFeesForm(true);
         setFormValue(data);
     };
 
     const deleteFees = (data) => {
-        const newArray = feesData.filter(objValue => {
-                return objValue.studentId !== data.studentId
-        });
-
-        setFeesPaidData(newArray);
+        console.log('deleteFees')
     }
 
     return (
@@ -265,7 +163,7 @@ const Fees = () => {
                         <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Fees</MatButton>
                     </Grid>
                 </Grid>
-                <FeesTable downloadReciept={downloadReciept} deleteFees={deleteFees} editFees={editFees} feesTableHeader={feesTableHeader} FeesData={feesPaidData} />
+                <FeesTable downloadReciept={downloadReciept} deleteFees={deleteFees} editFees={editFees} feesTableHeader={feesDetails.attributes ? feesDetails.attributes : [] } FeesData={feesDetails.feesData ? feesDetails.feesData : []} />
             </Paper>
         </>
     )

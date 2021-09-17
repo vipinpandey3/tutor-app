@@ -49,7 +49,6 @@ function Table(props) {
     orderBy,
     order,
   } = useTable(tableRecords, filterFunction);
-  console.log('Test')
   return (
     <>
       <MuiTable className={classes.table}>

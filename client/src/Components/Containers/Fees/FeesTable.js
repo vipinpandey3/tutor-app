@@ -66,11 +66,13 @@ const FeesTable = (props) => {
                 <TableHead>
                     <TableRow>
                         {
-                            feesTableHeader.map((cellValue) => (
-                                <TableCell>
-                                    {cellValue.label}
-                                </TableCell>
-                            ))
+                            feesTableHeader.length > 0 ? (
+                                feesTableHeader.map((cellValue) => (
+                                    <TableCell key={cellValue.id}>
+                                        {cellValue.label}
+                                    </TableCell>
+                                ))
+                            ) : (<p>Row Header</p>)
                         }
                         <TableCell>
                             Actions
@@ -79,37 +81,39 @@ const FeesTable = (props) => {
                 </TableHead>
                 <TableBody>
                     {
-                       FeesData.map(data => {
-                           return (
-                               <TableRow hover key={data.studentId}>
-                                   {
-                                       feesTableHeader.map((rowCell) => {
-                                           const value= data[rowCell.id];
-                                           if(rowCell.avatar) {
-                                               return (
-                                                    <TableCell >
-                                                        <Avatar variant="rounded" className={styles[rowCell.className]}>
+                       FeesData.length > 0 ? (
+                            FeesData.map(data => {
+                                return (
+                                    <TableRow hover key={data.studentId}>
+                                        {
+                                            feesTableHeader.map((rowCell) => {
+                                                const value= data[rowCell.id];
+                                                if(rowCell.avatar) {
+                                                    return (
+                                                        <TableCell key={rowCell.id} >
+                                                            <Avatar variant="rounded" className={styles[rowCell.className]}>
+                                                                {value}
+                                                            </Avatar>
+                                                        </TableCell>
+                                                    )
+                                                } else {
+                                                    return (
+                                                        <TableCell >
                                                             {value}
-                                                        </Avatar>
-                                                    </TableCell>
-                                               )
-                                           } else {
-                                                return (
-                                                    <TableCell >
-                                                       {value}
-                                                    </TableCell>
-                                                )
-                                           }
-                                       })
-                                   }
-                                   <TableCell>
-                                        <DeleteIcon onClick={()=> deleteFees(data)} className={styles.redIcon} />
-                                        <GetAppIcon onClick={() => downloadReciept(data)}  className={styles.greenIcon}/>
-                                        <EditIcon onClick={() => editFees(data)} className={styles.blueIcon} />
-                                   </TableCell>
-                               </TableRow>
-                           )
-                       }) 
+                                                        </TableCell>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                        <TableCell>
+                                            <DeleteIcon onClick={()=> deleteFees(data)} className={styles.redIcon} />
+                                            <GetAppIcon onClick={() => downloadReciept(data)}  className={styles.greenIcon}/>
+                                            <EditIcon onClick={() => editFees(data)} className={styles.blueIcon} />
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })
+                       ) : (<p>No Data FOund</p>)
                     }
                 </TableBody> 
             </Table>

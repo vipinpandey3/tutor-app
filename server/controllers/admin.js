@@ -7,6 +7,8 @@ const Parent = require("../models/Parents");
 const StudentEducationDetails = require("../models/student-education-details");
 const Fees = require('../models/fees')
 
+const attributes = require('../attributes/attributes.json');
+
 const getStudent = (req, res, next) => {
   Students.findAll()
     .then((students) => {
@@ -279,7 +281,7 @@ const addFeesDetails = (req, res, next) => {
   let balance = req.body.balance;
   let academicYear = req.body.academicYear;
   let reamarks = req.body.reamarks;
-  let studentId = req.body.studentId
+  let studentId = req.body.studentId;
   Fees.findAll({where: {
     studentId: studentId
   }})
@@ -367,12 +369,48 @@ const addFeesDetails = (req, res, next) => {
 
 const getFeesDetailsByStudentId = (req, res, next) => {
   const studentId = req.params.studentId;
+  const tableHeader = [
+    {
+      id: "uuid",
+      label: "Bill Number"
+    },
+    {
+      id: 'date',
+      label: "Date"
+    },
+    {
+      id: "feesAmount",
+      label: "Fees Amount",
+    },
+    {
+      id: "discount",
+      label: "Discount"
+    },
+    {
+      id: "paidAmount",
+      label: "Paid Amount"
+    },
+    {
+      id: "balance",
+      label: "Balance Amount"
+    },
+    {
+      id: 'reamarks',
+      label: "Remarks"
+    }
+  ]
   Fees.findAll({where: {studentId: studentId}})
     .then((fees) => {
+      console.log("fees 1", fees)
+      fees.map(feeDetails => {
+        feeDetails.reamarks = feeDetails.reamarks ? feeDetails.reamarks : "-";
+        feeDetails.date = new Date(feeDetails.createdAt).toLocaleDateString()
+      })
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrieved fees details for student with id: " + studentId,
-        fees: fees
+        fees: fees,
+        header: tableHeader
       }
 
       return res.status(200).json(response)
@@ -386,6 +424,49 @@ const getFeesDetailsByStudentId = (req, res, next) => {
     })
 }
 
+const getAllFeesData = () => {
+  console.log('Inside get all fees data');
+  const feesAttributes = attributes[0].columnsHeader
+  
+  let feesDetails = [];
+  let feesItem = {}
+  return new Promise((resolve, reject) => {
+    Fees.findAll()
+      .then((fees) => {
+        let a = 1;
+        for (let i = 0; i < fees.length; i++) {
+          Students.findByPk(fees[i].studentId)
+            .then(student => {
+              feesItem = {
+                ...fees[i],
+                studentName: student.firstName + student.lastName,
+                id: student.aadharNo
+              }
+              feesDetails.push({
+                studentName: student.firstName + student.lastName,
+                id: student.aadharNo,
+                FeesId: fees[i].id,
+                uuid: fees[i].uuid,
+                feesAmount: fees[i].feesAmount,
+                discount:fees[i].discount,
+                paidAmount:fees[i].paidAmount,
+                balance:fees[i].balance,
+                academicYear:fees[i].academicYear,
+                reamarks:fees[i].reamarks,
+                createdAt:fees[i].createdAt
+              })
+              if(i === fees.length - 1) {
+                resolve({feesDetails, feesAttributes});
+              }
+            })
+          }
+      })
+      .catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
 module.exports = {
   getStudent,
   getStudentById,
@@ -396,5 +477,6 @@ module.exports = {
   addParent,
   addStudentEducationDetails,
   addFeesDetails,
-  getFeesDetailsByStudentId
+  getFeesDetailsByStudentId,
+  getAllFeesData
 };

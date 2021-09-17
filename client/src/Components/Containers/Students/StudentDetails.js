@@ -58,41 +58,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const feesHeaders = [
-  "Date",
-  "Fees Amount",
-  "Discount Amount",
-  "Paid Fees",
-  "Remaining Fees",
-];
-
-const FeesArray = [
-  {
-    id: 1,
-    feesAmount: 50000,
-    discountedFees: 2000,
-    paidFees: 5000,
-    remainingFees: 43000,
-    date: "21/10/2020",
-  },
-  {
-    id: 2,
-    feesAmount: 50000,
-    paidFees: 10000,
-    remainingFees: 33000,
-    date: "21/12/2020",
-    discountedFees: "-",
-  },
-  {
-    id: 3,
-    feesAmount: 50000,
-    paidFees: 5000,
-    remainingFees: 28000,
-    date: "21/12/2020",
-    discountedFees: "-",
-  },
-];
-
 const StudentDetails = () => {
   // const [studentRecord, setStudentRecord] = useState({});
   const [showForms, setShowForm] = useState({
@@ -100,19 +65,33 @@ const StudentDetails = () => {
     educationDetailsForm: false,
   });
   const [totalPaid, setTotalPaid] = useState(0);
-  const { fetchStudentDetails, studentDetails } = useContext(StudentContext);
+  const { fetchStudentDetails, studentDetails, fetchStudentFeesDetails } = useContext(StudentContext);
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
+  const [feesDetails, setFeesDetails] = useState({
+    feesTableHeaders: [],
+    feesDetailsRow: []
+})
 
   useEffect(() => {
     fetchStudentDetails(studentId).catch((err) => {
       console.log("err", err);
     });
-    const totalPaid = FeesArray.reduce((accumulatedPaid, currentPaid) => {
-      let total = accumulatedPaid + currentPaid.paidFees;
+    fetchStudentFeesDetails(studentId).then(result => {
+      setFeesDetails({
+        feesDetailsRow: result.fees,
+        feesTableHeaders: result.header
+      })
+    }).catch(err => {
+      console.log('err', err);
+    })
+    console.log('Fees-Details', feesDetails)
+    const totalPaid = feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
+      let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
       return total;
     }, 0);
+    console.log('total paid', totalPaid)
     setTotalPaid(totalPaid);
   }, []);
 
@@ -518,28 +497,33 @@ const StudentDetails = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {feesHeaders.map((header, index) => {
-                return <TableCell key={index}>{header}</TableCell>;
+              {feesDetails.feesTableHeaders.map((header, index) => {
+                return (
+                  <TableCell key={index}>{header.label}</TableCell>
+                )
               })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {FeesArray.map((fees) => {
+            {feesDetails.feesDetailsRow.map(row => {
               return (
-                <TableRow key={fees.id}>
-                  <TableCell>{fees.date}</TableCell>
-                  <TableCell>{fees.feesAmount}</TableCell>
-                  <TableCell>{fees.discountedFees}</TableCell>
-                  <TableCell>{fees.paidFees}</TableCell>
-                  <TableCell>{fees.remainingFees}</TableCell>
+                <TableRow key={row.id}>
+                  {
+                    feesDetails.feesTableHeaders.map((rowCell,index) => {
+                      const value = row[rowCell.id];
+                      return <TableCell key={index}>{value}</TableCell>
+                    })
+                  }
                 </TableRow>
-              );
+              )
             })}
             <TableRow>
               <TableCell></TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell style={{ textAlign: "right" }}>Total Paid</TableCell>
               <TableCell>{totalPaid}</TableCell>
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableBody>

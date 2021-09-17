@@ -1,0 +1,49 @@
+[
+    {
+        "index": 0,
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "studentId",
+                "avatar": false
+            },
+            {
+                "id": "studentName",
+                "label": "Student Name",
+                "avatar": false
+            },
+            {
+                "id": "uuid",
+                "label": "Reciept Number"
+            },
+            {
+                "id": "feesAmount",
+                "label": "Fees Amount",
+                "avatar": false
+            },
+            {
+                "id": "discount",
+                "label": "Discount",
+                "avatar": false
+            },
+            {
+                "id": "paidAmount",
+                "label": "Paid Amount",
+                "avatar": false
+            },
+            {
+                "id": "balance",
+                "label": "Balance",
+                "avatar": false
+            },
+            {
+                "id": "academicYear",
+                "label": "Academy Year"
+            },
+            {
+                "date": "date",
+                "label": "Date"
+            }
+        ]
+    }
+]

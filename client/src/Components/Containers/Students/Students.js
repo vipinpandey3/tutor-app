@@ -39,7 +39,8 @@ const headCells = [
 const Students = () => {
   const history = useHistory();
   const classes = useStyles();
-  const { students, fetchStudents } = useContext(StudentContext);
+  const [students, setStudents] = useState([])
+  const { fetchStudents } = useContext(StudentContext);
   const [showForm, setForm] = useState(false);
   const [filterFunction, setFilterFunction] = useState({
     fn: (item) => {
@@ -48,8 +49,11 @@ const Students = () => {
   });
 
   useEffect(() => {
-    console.log('Test 1')
-    fetchStudents().catch(err => {
+    fetchStudents()
+      .then(result => {
+        setStudents(result.students);
+      })
+      .catch(err => {
       console.log(err);
     })
   }, [])
@@ -103,6 +107,7 @@ const Students = () => {
             </Toolbar>
           </Grid>
         </Grid>
+        
         <Table
           records={students}
           headCells={headCells}

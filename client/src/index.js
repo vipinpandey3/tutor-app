@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { StudentContextPorvider } from "./context/student-context";
+import { FeesContextProvider } from "./context/fees-context";
 
 ReactDOM.render(
   <StudentContextPorvider>
-    <Router>
-      <App />
-    </Router>
+    <FeesContextProvider>
+      <Router>
+        <App />
+      </Router>
+    </FeesContextProvider>
   </StudentContextPorvider>,
   document.getElementById("root")
 );

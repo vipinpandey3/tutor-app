@@ -26,4 +26,21 @@ router.post('/add-feesDetails', adminController.addFeesDetails);
 
 router.get('/getFeesDetailsById/:studentId', adminController.getFeesDetailsByStudentId);
 
+router.get('/getAllFees', (req, res, next) => {
+    adminController.getAllFeesData()
+        .then(result => {
+            const response = {
+                resultShort: "success",
+                resultLong: "Successfully retrieved all fees data",
+                feesDetails: result.feesDetails,
+                feeAttributes: result.feesAttributes
+            }
+
+            return res.status(200).json(response)
+        })
+        .catch(err => {
+            return res.json({resultShort: 'failure', resultLong: "Failed to get fees details"});
+        })
+})
+
 module.exports = router;

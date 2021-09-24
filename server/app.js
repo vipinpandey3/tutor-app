@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const adminRoute = require("./routes/admin");
+const facultyRoute = require('./routes/faculty');
 const sequelize = require("./models/database");
 const Student = require("./models/student");
 const Teacher = require("./models/teacher");
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/admin", adminRoute);
+app.use('/faculty', facultyRoute);
 Student.hasOne(Parent);
 // Student.hasMany(Teacher);
 // Teacher.hasMany(Student);

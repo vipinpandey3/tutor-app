@@ -67,3 +67,10 @@ code {
 .MuiAccordion-root.Mui-expanded {
   margin: 16px;
 }
+
+.searchInput {
+  height: 50px;
+  width: 80%;
+  flex: 1;
+  padding-left: 10px;
+}

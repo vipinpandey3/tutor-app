@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FeesForm = (props) => {
   const styles = useStyles();
-  const { formTitle, initiateFeesFormValue, feesInput, getFeesFormValue } =
+  const { formTitle, initiateFeesFormValue, feesInput, getFeesFormValue, setShowFeesForm } =
     props;
   const [feesFormValue, setFeesFormValue] = useState(initiateFeesFormValue);
 
@@ -26,10 +26,17 @@ const FeesForm = (props) => {
     });
   };
 
+  const handleCancle = () => {
+    setShowFeesForm(false);
+    setFeesFormValue(initiateFeesFormValue);
+  }
+
   const formSubmit = (e) => {
     getFeesFormValue(feesFormValue);
     e.preventDefault();
   };
+
+  
 
   return (
     <>
@@ -92,7 +99,7 @@ const FeesForm = (props) => {
                 style={{ flex: "1", width: "90%" }}
                 color="primary"
                 type="button"
-                // onClick={handleCancle}
+                onClick={handleCancle}
                 size="large"
               >
                 Cancle
@@ -106,7 +113,7 @@ const FeesForm = (props) => {
                 type="submit"
                 size="large"
               >
-                Schedule Exam
+                Generate Bill
               </MatButton>
             </Grid>
           </Grid>

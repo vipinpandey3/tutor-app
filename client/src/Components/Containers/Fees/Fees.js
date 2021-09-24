@@ -1,5 +1,5 @@
-import { Grid, makeStyles, Paper, Toolbar } from '@material-ui/core'
-import React, { useContext, useEffect, useState } from 'react'
+import { Grid, makeStyles, Paper, TextField, Toolbar } from '@material-ui/core'
+import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
 import Text from '../../Common/Text'
 import FeesTable from './FeesTable';
 import Button from '../../Common/Button'
@@ -7,6 +7,7 @@ import MatButton from '../../Common/Button';
 import FeesForm from './FeesForm';
 import Input from '../../Common/Input';
 import { FeesContext } from '../../../context/fees-context';
+import { saveAs } from 'file-saver'
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -20,87 +21,70 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const feesInput = [
-    {
-        id: "studentId",
-        name: "studentId",
-        label: "Student Id",
-        type: 'input'
-    },
-    {
-        id: "studentName",
-        name: "studentName",
-        label: "Student Name",
-        type: 'input'
-    },
-    {
-        id: "feesAmount",
-        name: "feesAmount",
-        label: "Fees Amount",
-        type: 'input'
-    },
-    {
-        id: "discount",
-        name: "discount",
-        label: "Discount %",
-        type: 'input'
-    },
-    {
-        id: "recievedAmount",
-        name: "recievedAmount",
-        label: "Recieved Amount",
-        type: 'input'
-    },
-    {
-        id: "refundAmount",
-        name: "refundAmount",
-        label: "Refund Amount",
-        type: 'input'
-    },
-    {
-        id: 'date',
-        name: 'date',
-        label: "Date",
-        type: 'date'
-    }
-]
-
 const initiateFeesFormValue = {
-    studentId: '',
-    studentName: '',
-    feesAmount: '',
-    discount: '',
-    balance: '',
-    recievedAmount: '',
-    refundAmount: '',
-    date: new Date().toISOString().slice(0, 10), 
+    date: new Date().toISOString().slice(0, 10),
+    feesAmount: "",
+    paidAmount: "",
+    discount: "",
+    balance: "",
+    academicYear: "",
+    reamarks: "",
+    studentId: ""
 }
 
 const Fees = () => {
     const styles = useStyles()
     const [showFeesForm, setShowFeesForm] = useState(false);
-    const [searchValue, setSearchValue] = useState('')
+    // const [searchValue, setSearchValue] = useState('')
+    const searchRef = createRef()
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
-    const {fetchFees} = useContext(FeesContext);
+    const {fetchFees, fetchFeesFormFields, addFeesIntoDatabase, searchFees, downloadFeesbyId} = useContext(FeesContext);
+    const [formFields, setFormFields] = useState([])
     const [feesDetails, setFeesDetails] = useState({
         attributes: [],
         feesData: []
     })
 
+    const getFormFields = () => {
+        fetchFeesFormFields()
+            .then(result => {
+                setFormFields(result.formFields)
+            })
+            .catch(err => {
+                console.log('Err', err)
+            })
+    }
+
     const hadleFeesForm = () => {
+        getFormFields();
         setShowFeesForm(true);
     }
 
     const getFeesFormValue = (value) => {
-        value.finalAmount = parseInt(value.feesAmount) - (parseInt(value.discount)/100 * parseInt(value.feesAmount))
-        value.pendingAmount = parseInt(value.finalAmount) - parseInt(value.recievedAmount)
-        console.log('value', value);
-        // setFeesPaidData([...feesPaidData, value])
+        value.balance = parseInt(value.finalAmount) - parseInt(value.recievedAmount)
+        addFeesIntoDatabase(value)
+            .then(result => {
+                console.log('Result',result)
+            })
+            .catch((err) => {
+                console.log("err", err);
+            })
         setShowFeesForm(false);
     }
 
-    const searchPaidFees = (e) => {
-        setSearchValue(e.target.value)
+    const searchPaidFees = (event) => {
+        if (event.code === 'Enter') {
+            searchFees(searchRef.current.value)
+                .then(result => {
+                    setFeesDetails({
+                        ...feesDetails,
+                        feesData: result.feesArray
+                    })
+                })
+                .catch(err => {
+                    console.log('err', err);
+                })
+        }
     }
 
     useEffect(() => {
@@ -116,7 +100,7 @@ const Fees = () => {
         // } else {
         //     setFeesPaidData(feesData)
         // }
-    }, [searchValue]);
+    }, [searchRef]);
 
     useEffect(() => {
         fetchFees()
@@ -132,7 +116,25 @@ const Fees = () => {
     }, [])
 
     const downloadReciept = (data) => {
-        console.log("Download Data", data);
+        console.log('result', data)
+        downloadFeesbyId(data.uuid)
+            .then(result => {
+                const url = window.URL.createObjectURL(
+                    new Blob([result]),
+                  );
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute(
+                    'download',
+                    `FileName.pdf`,
+                  );
+                  document.body.appendChild(link);
+                  link.click();
+                  link.parentNode.removeChild(link);
+            })
+            .catch((error) => {
+                console.log('err in file', error)
+            })
     }
 
     const editFees = (data) => {
@@ -146,7 +148,7 @@ const Fees = () => {
 
     return (
         <>
-            {showFeesForm && <FeesForm formTitle="Fees Details" getFeesFormValue={getFeesFormValue} feesInput={feesInput} initiateFeesFormValue={formValue} />}
+            {showFeesForm && <FeesForm formTitle="Fees Details" setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={3}>
@@ -154,10 +156,7 @@ const Fees = () => {
                     </Grid>
                     <Grid item sm></Grid>
                     <Grid item xs={3}>
-                        <Toolbar>
-                            <Input className={styles.seachInput} style={{width: '90%'}} onChange={searchPaidFees} value={searchValue} name="paidFees" label="Paid Fees" />
-                        </Toolbar>
-                        {/* <input className={styles.seachInput} onChange={searchPaidFees} value={paidFees} name="paidFees" placeholder="Search"  /> */}
+                            <input  onKeyDown={searchPaidFees} className="searchInput" ref={searchRef} name="paidFees" placeholder="Search"  />
                     </Grid>
                     <Grid item xs={2}>
                         <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Fees</MatButton>

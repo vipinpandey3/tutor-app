@@ -5,7 +5,7 @@ const Student = require("../models/student");
 const Teacher = require("../models/teacher");
 const Parent = require("../models/Parents");
 const StudentEducationDetails = require("../models/student-education-details");
-const Fees = require('../models/fees')
+const Fees = require('../models/fees'); 
 
 const attributes = require('../attributes/attributes.json');
 
@@ -426,8 +426,7 @@ const getFeesDetailsByStudentId = (req, res, next) => {
 
 const getAllFeesData = () => {
   console.log('Inside get all fees data');
-  const feesAttributes = attributes[0].columnsHeader
-  
+  const feesAttributes = attributes[0].columnsHeader 
   let feesDetails = [];
   let feesItem = {}
   return new Promise((resolve, reject) => {
@@ -453,7 +452,8 @@ const getAllFeesData = () => {
                 balance:fees[i].balance,
                 academicYear:fees[i].academicYear,
                 reamarks:fees[i].reamarks,
-                createdAt:fees[i].createdAt
+                createdAt:fees[i].createdAt,
+                studentId: fees[i].studentId
               })
               if(i === fees.length - 1) {
                 resolve({feesDetails, feesAttributes});
@@ -464,6 +464,18 @@ const getAllFeesData = () => {
       .catch((err) => {
         return reject(err)
       })
+  })
+}
+
+const getFeesFormFields = () => {
+  console.log('Inside Fees form function');
+  const feesFormAttributes = attributes[1].attributes;
+  return new Promise((resolve, reject) => {
+    if(feesFormAttributes && feesFormAttributes.length > 0) {
+      return resolve(feesFormAttributes);
+    } else {
+      return reject([])
+    }
   })
 }
 
@@ -478,5 +490,6 @@ module.exports = {
   addStudentEducationDetails,
   addFeesDetails,
   getFeesDetailsByStudentId,
-  getAllFeesData
+  getAllFeesData,
+  getFeesFormFields
 };

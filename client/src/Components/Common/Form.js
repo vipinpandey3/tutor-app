@@ -22,10 +22,15 @@ const Form = (props) => {
   const classes = useStyles();
 
   
-  const { initialFormValues, formComponent, addValues, items, selectOptions } = props;
+  const { initialFormValues, formComponent, addValues, items, selectOptions, setShowFeesForm } = props;
   const { values, errors, handleInputChange, resetForm } =
     useForm(initialFormValues);
     
+  const hideFormFields  = () => {
+    setShowFeesForm(false);
+    resetForm()
+  }
+
   const formSubmitHandler = (e) => {
     addValues(values);
     e.preventDefault();
@@ -157,7 +162,7 @@ const Form = (props) => {
             <MatButton text="Submit" type="submit">
               Submit
             </MatButton>
-            <MatButton text="Reset" color="default" onClick={resetForm}>
+            <MatButton text="Reset" color="default" onClick={hideFormFields}>
               Reset
             </MatButton>
           </div>

@@ -45,5 +45,58 @@
                 "label": "Date"
             }
         ]
+    },
+    {
+        "index": 1,
+        "attributes": [
+            {
+                "id": "studentId",
+                "name": "studentId",
+                "label": "Student Id",
+                "type": "input"
+            },
+            {
+                "id": "studentName",
+                "name": "studentName",
+                "label": "Student Name",
+                "type": "input"
+            },
+            {
+                "id": "feesAmount",
+                "name": "feesAmount",
+                "label": "Fees Amount",
+                "type": "input"
+            },
+            {
+                "id": "discount",
+                "name": "discount",
+                "label": "Discount %",
+                "type": "input"
+            },
+            {
+                "id": "paidAmount",
+                "name": "paidAmount",
+                "label": "Recieved Amount",
+                "type": "input"
+            },
+            {
+                "id": "balance",
+                "name": "balance",
+                "label": "Balance Amount",
+                "type": "input"
+            },
+            {
+                "id": "reamarks",
+                "name": "reamarks",
+                "label": "Remarks",
+                "type": "input"
+            },
+            {
+                "id": "date",
+                "name": "date",
+                "label": "Date",
+                "type": "date"
+            }
+        ]
     }
 ]

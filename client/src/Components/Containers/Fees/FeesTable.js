@@ -67,8 +67,8 @@ const FeesTable = (props) => {
                     <TableRow>
                         {
                             feesTableHeader.length > 0 ? (
-                                feesTableHeader.map((cellValue) => (
-                                    <TableCell key={cellValue.id}>
+                                feesTableHeader.map((cellValue, index) => (
+                                    <TableCell key={index}>
                                         {cellValue.label}
                                     </TableCell>
                                 ))
@@ -84,13 +84,13 @@ const FeesTable = (props) => {
                        FeesData.length > 0 ? (
                             FeesData.map(data => {
                                 return (
-                                    <TableRow hover key={data.studentId}>
+                                    <TableRow hover key={data.uuid}>
                                         {
-                                            feesTableHeader.map((rowCell) => {
+                                            feesTableHeader.map((rowCell, index) => {
                                                 const value= data[rowCell.id];
                                                 if(rowCell.avatar) {
                                                     return (
-                                                        <TableCell key={rowCell.id} >
+                                                        <TableCell key={index} >
                                                             <Avatar variant="rounded" className={styles[rowCell.className]}>
                                                                 {value}
                                                             </Avatar>
@@ -98,7 +98,7 @@ const FeesTable = (props) => {
                                                     )
                                                 } else {
                                                     return (
-                                                        <TableCell >
+                                                        <TableCell key={index}>
                                                             {value}
                                                         </TableCell>
                                                     )

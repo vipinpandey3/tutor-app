@@ -21,6 +21,7 @@ const Student = sequelize.define('student', {
     emailId: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true
     },
     address: {
         type: Sequelize.TEXT,

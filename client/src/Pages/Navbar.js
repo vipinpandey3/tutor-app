@@ -73,6 +73,12 @@ const Navbar = () => {
     }
   }
 
+  const logoutHandler = () => {
+    setOpen(false);
+    localStorage.removeItem('token');
+    window.location.reload();
+  }
+
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
   useEffect(() => {
@@ -123,6 +129,9 @@ const Navbar = () => {
                   role={undefined}
                   transition
                   disablePortal
+                  style={{
+                    zIndex: 10000
+                  }}
                 >
                   {({ TransitionProps, placement }) => (
                     <Grow
@@ -145,7 +154,7 @@ const Navbar = () => {
                             <MenuItem onClick={handleClose}>
                               My account
                             </MenuItem>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                            <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                           </MenuList>
                         </ClickAwayListener>
                       </Paper>

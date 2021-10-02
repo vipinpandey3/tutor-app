@@ -11,6 +11,9 @@ import TutorDetails from './Components/Containers/Tutors/TutorDetails'
 import Sidebar from './Pages/Sidebar';
 import Navbar from './Pages/Navbar';
 import Fees from './Components/Containers/Fees/Fees'
+import Login from './Pages/Login';
+import { useEffect, useState } from 'react';
+import Routes from './Components/Containers/Route';
 
 const theme = createTheme({
   palette: {
@@ -71,42 +74,42 @@ const useStyles = makeStyles({
     width: '100%'
   }
 })
-
 function App() {
   const classes = useStyles();
+
+  const [tokenState, setTokenState] = useState(false);
+
+  const getToken = async() => {
+    const authToken = localStorage.getItem('token');
+    console.log('authTOken', authToken)
+    return authToken
+  }
+
+  useEffect(() => {
+    getToken()
+      .then(token => {
+        if(token !== null || token !== 'undefined') {
+          setTokenState(true)
+        } else {
+          setTokenState(false)
+        }
+      })
+      .catch(err => {
+        setTokenState(false)
+      })
+    if(!tokenState) {
+      return <Login setTokenState={setTokenState} />
+    }
+  }, [])
+
   return (
-    <ThemeProvider theme={theme} >
-      <Sidebar />
-      <div className={classes.appMain}>
-        <Navbar />
-        <Switch>
-          <Route path="/dashboard" exact>
-            <Dashboard />
-          </Route>
-          <Route path="/tutors" exact>
-            <Tutors />
-          </Route>
-          <Route path="/tutors/:tutorId" exact>
-            <TutorDetails />
-          </Route>
-          <Route path="/students" exact>
-            <Students />
-          </Route>
-          <Route path="/students/:studentId" exact>
-            <StudentDetails />
-          </Route>
-          <Route path="/exams" exact>
-            <Exams />
-          </Route>
-          <Route path="/fees" exact>
-            <Fees />
-          </Route>
-          <Route path="*" >
-            <Dashboard />
-          </Route>
-        </Switch>
-      </div>
-    </ThemeProvider>
+    <div>
+      <ThemeProvider theme={theme} >
+      {
+        tokenState ? <Routes tokenState={tokenState} /> : <Login setTokenState={setTokenState} /> 
+      }
+      </ThemeProvider>
+    </div>
   );
 }
 

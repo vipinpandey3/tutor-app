@@ -5,7 +5,14 @@ export const FeesContext = createContext();
 export const FeesContextProvider = (props) => {
 
     const fetchFees = async() => {
-        const response = await fetch('http://localhost:5000/admin//getAllFees');
+        const response = await fetch('http://localhost:5000/admin/getAllFees', {
+                                mode: 'no-cors',
+                                headers:{
+                                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbElkIjoiMTIzNDU2NzgiLCJpYXQiOjE2MzI5MzA2NjIsImV4cCI6MTYzMjkzNDI2Mn0.b7Fv1ZtOmFsoe9WFK-pJjiHZhouvDVlCERsFpxqb12o',
+                                    // ... add other header lines like: 'Content-Type': 'application/json'
+                                },
+                                method: 'GET'   
+                            });
         if(!response.ok) {
             throw new Error('Something went wrong');   
         }
@@ -24,7 +31,6 @@ export const FeesContextProvider = (props) => {
     }
 
     const addFeesIntoDatabase = async (feesValue) => {
-        console.log('value', feesValue);
         const response = fetch('http://localhost:5000/admin/add-feesDetails', {
             headers: {
                 'Accept': "application/json",

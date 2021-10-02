@@ -1,8 +1,8 @@
 const express = require("express");
-
 const router = express.Router();
-
 const adminController = require("../controllers/admin");
+const UserService = require("../services/userServices")
+
 
 router.get("/get-students", adminController.getStudent);
 
@@ -27,6 +27,7 @@ router.post('/add-feesDetails', adminController.addFeesDetails);
 router.get('/getFeesDetailsById/:studentId', adminController.getFeesDetailsByStudentId);
 
 router.get('/getAllFees', (req, res, next) => {
+    console.log('req', req)
     adminController.getAllFeesData()
         .then(result => {
             const response = {
@@ -63,5 +64,14 @@ router.get('/getFeesFormFields', (req, res, next) => {
             return res.json(response);
         })
 });
+
+// router.post('/add-user', (req, res, next) => {
+//     UserService.addUser(req)
+//         .then(user => {
+//             console.log
+//         })
+// });
+
+router.post('/add-user', UserService.addUser)
 
 module.exports = router;

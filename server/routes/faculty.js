@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.get('/searchFees/:searchParams', (req, res, next) => {
     console.log('Inside the searchfees route');
-    console.log('res.bosy', req.params)
     const searchParams = req.params.searchParams;
     Faculty.getFeesDetailsBySearchParam(searchParams)
         .then(feesArray => {

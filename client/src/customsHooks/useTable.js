@@ -19,7 +19,8 @@ export default function useTable(data, filterFunction) {
     }
 
     const recordsAfterPagingAndSorting = () => {
-        return stableSort(filterFunction.fn(data), getComparator(order, orderBy)).slice(page*rowsPerPage, (page + 1)*rowsPerPage)
+        // return stableSort(filterFunction.fn(data), getComparator(order, orderBy)).slice(page*rowsPerPage, (page + 1)*rowsPerPage)
+        return stableSort(data, getComparator(order, orderBy)).slice(page*rowsPerPage, (page + 1)*rowsPerPage)
     }
 
     const stableSort = (array, comparator) => {

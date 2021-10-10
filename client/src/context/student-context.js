@@ -1,9 +1,18 @@
 import { createContext, useEffect, useState } from "react";
-
+import axios from 'axios';
 
 export const StudentContext = createContext();
 
 export const StudentContextPorvider = (props) => {
+
+    const reqHeader = {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbElkIjoiJDJhJDA4JFlRbm1ka3JQcFVoRnJTVDg1TzVyOS5XMlE3NUIxVXRqaEZicElaS2tXZGxqamJDVU8ycnNTIiwiaWF0IjoxNjMzODUyODg5LCJleHAiOjE2MzM4ODE2ODl9.53OAPwSOBwltE8jLLxVMaoiJJxCioFrjJvqFDghfOyo",
+          Accept: "appplication/json",
+        },
+    };
+
     const [students, setStudents] = useState([])
     const [studentDetails, setStudeDetails] = useState({
         studentDetail: {},
@@ -22,86 +31,101 @@ export const StudentContextPorvider = (props) => {
     })
     
     const addStudent = async (studentData) => {
-        await fetch("http://localhost:5000/admin/add-student", {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-            method: "POST",
-            body: JSON.stringify(studentData)
-        })
+        try {
+            return await axios.post('/admin/add-student', studentData, reqHeader)
+                            .then((response) => {
+                                return response.data
+                            })
+        } catch (error) {
+            console.log("Error", error)
+        }
     }
 
     const addParent = async (parentsValue) => {
-        const response = await fetch("http://localhost:5000/admin/add-parent", {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-            method: "POST",
-            body: JSON.stringify(parentsValue)
-        })
+        try {
+            return await axios.post('/admin/add-parent', parentsValue, reqHeader)
+                        .then((response) => {
+                            return response.data;
+                        })
+        } catch(error) {
+            console.log('Error', error);
+        }
+        // const response = await fetch("http://localhost:5000/admin/add-parent", {
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //       },
+        //     method: "POST",
+        //     body: JSON.stringify(parentsValue)
+        // })
 
-        const res = response.json();
-        return res;
+        // const res = response.json();
+        // return res;
     }
 
     const fetchStudents = async () => {
-        const response = await fetch("http://localhost:5000/admin/get-students");
-        if(!response.ok) {
-            throw new Error("Something went wrong")
+        try {
+            return await axios.get('/admin/get-students', reqHeader)
+                        .then((response) => {
+                            return response.data
+                        })
+        } catch (error) {
+            console.log('Error', error)
         }
-
-        const data = await response.json();
-        return data
-        // setStudents(data.students)
     }
 
     const fetchStudentDetails = async (studentId) => {
-        const response = await fetch(`http://localhost:5000/admin/studentDetails/${studentId}`);
-        if(!response.ok) {
-            throw new Error('Something went wrong');
+        try {
+            return await axios.get(`/admin/studentDetails/${studentId}`, reqHeader)
+                        .then((response) => {
+                            setStudeDetails({
+                                studentDetail: response.data.studentDetails,
+                                parentsDetail: response.data.parentDetails,
+                                educationDetails: response.data.educationDetails
+                            });
+                            return response.data;
+                        })
+        } catch (error) {
+            console.log('Error', error)
         }
-
-        const data = await response.json();
-        setStudeDetails({
-            studentDetail: data.studentDetails,
-            parentsDetail: data.parentDetails,
-            educationDetails: data.educationDetails
-        });
     }
 
     const storStudentEducationDetails = async(values) => {
-        const response = await fetch('http://localhost:5000/admin/add-studentEducation-details', {
-            headers: {
-                'Accept': "application/json",
-                "Content-Type": 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(values)
-        });
+        try {
+            return await axios.post('/admin/add-studentEducation-details', values, reqHeader)
+                            .then((response) => {
+                                return response.data;
+                            })
+        } catch (error) {
+            console.log('Error', error)
+        }
+        // const response = await fetch('http://localhost:5000/admin/add-studentEducation-details', {
+        //     headers: {
+        //         'Accept': "application/json",
+        //         "Content-Type": 'application/json'
+        //     },
+        //     method: 'POST',
+        //     body: JSON.stringify(values)
+        // });
 
-        const res = await response.json();
-        return res;
+        // const res = await response.json();
+        // return res;
     }
 
     const fetchStudentFeesDetails = async (studentId) => {
-        const response = await fetch(`http://localhost:5000/admin/getFeesDetailsById/${studentId}`);
-        if(!response.ok) {
-            throw new Error('Something went wrong');
+        try {
+            return await axios.get(`/admin/getFeesDetailsById/${studentId}`,reqHeader)
+                            .then((response) => {
+                                setFeesDetails({
+                                    feesTableHeaders: response.data.header,
+                                    feesDetailsRow: response.data.fees
+                                })
+                                return response.data;
+                            })
+        } catch (error) {
+            console.log('Error', error);
         }
-
-        const data = await response.json();
-        setFeesDetails({
-            feesTableHeaders: data.header,
-            feesDetailsRow: data.fees
-        })
-        return data;
     }
-
-    // useEffect(() => {
-    //     fetchStudents().catch(err => console.log(err))
-    // }, []) 
 
     return (
         <StudentContext.Provider value={{

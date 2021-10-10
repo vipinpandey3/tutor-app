@@ -1,13 +1,10 @@
-import { Grid, makeStyles, Paper, TextField, Toolbar } from '@material-ui/core'
+import { Grid, makeStyles, Paper} from '@material-ui/core'
 import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
 import Text from '../../Common/Text'
 import FeesTable from './FeesTable';
-import Button from '../../Common/Button'
 import MatButton from '../../Common/Button';
 import FeesForm from './FeesForm';
-import Input from '../../Common/Input';
 import { FeesContext } from '../../../context/fees-context';
-import { saveAs } from 'file-saver'
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -48,6 +45,7 @@ const Fees = () => {
     const getFormFields = () => {
         fetchFeesFormFields()
             .then(result => {
+                console.log('result', result)
                 setFormFields(result.formFields)
             })
             .catch(err => {
@@ -105,6 +103,7 @@ const Fees = () => {
     useEffect(() => {
         fetchFees()
             .then(result => {
+                console.log('Rsult', result)
                 setFeesDetails({
                     attributes: result.feeAttributes,
                     feesData: result.feesDetails

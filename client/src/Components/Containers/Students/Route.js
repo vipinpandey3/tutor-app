@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../../Pages/Navbar';
 import Sidebar from '../../Pages/Sidebar';
-import {Route} from 'react-router-dom'
+import {Switch, Route} from 'react-router-dom'
 import Dashboard from '../../Pages/Dashboard';
 import Fees from './Fees/Fees';
 import Exams from './Exams/Exams';
@@ -25,7 +25,9 @@ const Routes= (props) => {
         <>
             {tokenState && <Sidebar />}
             <div className={classes.appMain}>
-                {tokenState && <Navbar  />}                
+                {tokenState && <Navbar  />}
+                <Switch >
+                
                 <Route path="/dashboard" exact>
                   <Dashboard />
                 </Route>
@@ -50,6 +52,7 @@ const Routes= (props) => {
                 <Route path="*" >
                   <Dashboard />
                 </Route>
+              </Switch>
             </div>
         </>
     )

@@ -98,5 +98,140 @@
                 "type": "date"
             }
         ]
+    },
+    {
+        "index": 2,
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "User Id"
+            },
+            {
+                "id": "name",
+                "label": "User Name"
+            },
+            {
+                "id": "emailId",
+                "label": "User Email"
+            },
+            {
+                "id": "role",
+                "label": "User Role"
+            },
+            {
+                "id": "phone",
+                "label": "User Phone"
+            },
+            {
+                "id": "panNumber",
+                "label": "PAN"
+            }
+        ]
+    },
+    {
+        "index": 3,
+        "attributes": [
+            {
+                "id": "firstName",
+                "name": "firstName",
+                "label": "User FirstName",
+                "type": "input"
+            },
+            {
+                "id": "lastName",
+                "name": "lastName",
+                "label": "User LastName",
+                "type": "input"
+            },
+            {
+                "id": "emailId",
+                "name": "emailId",
+                "label": "User Email",
+                "type": "input"
+            },
+            {
+                "id": "password",
+                "name": "password",
+                "label": "Password",
+                "type": "input"
+            },
+            {
+                "id": "phone",
+                "name": "phone",
+                "label": "User Phone",
+                "input": "input"
+            },
+            {
+                "id": "pan",
+                "name": "pan",
+                "label": "PAN",
+                "type": "input"
+            },
+            {
+                "id": "role",
+                "name": "role",
+                "label": "Role",
+                "type": "input"
+            },
+            {
+                "id": "dob",
+                "name": "dob",
+                "label": "Date of Birth",
+                "type": "date"
+            },
+            {
+                "id": "address",
+                "name": "address",
+                "label": "Address",
+                "type": "input"
+            },
+            {
+                "id": "remarks",
+                "name": "remarks",
+                "label": "Remarks",
+                "type": "input"
+            }
+        ]
+    },
+    {
+        "index": 3,
+        "attributes": [
+            {
+                "id": "firstName",
+                "name": "firstName",
+                "label": "First Name",
+                "type": "input"
+            },
+            {
+                "id": "lastName",
+                "name": "lastName",
+                "label": "Last Name",
+                "type": "input"
+            },
+            {
+                "id": "firstName",
+                "name": "firstName",
+                "label": "First Name",
+                "type": "input"
+            },
+            {
+                "id": "password",
+                "name": "password",
+                "label": "First Name",
+                "type": "input"
+            },
+            {
+                "id": "firstName",
+                "name": "firstName",
+                "label": "First Name",
+                "type": "input"
+            },
+            {
+                "id": "firstName",
+                "name": "firstName",
+                "label": "First Name",
+                "type": "input"
+            }
+        ]
     }
 ]

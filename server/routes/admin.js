@@ -65,13 +65,74 @@ router.get('/getFeesFormFields', (req, res, next) => {
         })
 });
 
-// router.post('/add-user', (req, res, next) => {
-//     UserService.addUser(req)
-//         .then(user => {
-//             console.log
-//         })
-// });
+router.get('/get-userFormFields', (req, res, next) => {
+    UserService.getUserFormsFields()
+        .then(attributes => {
+            const response = {
+                resultShort: "success",
+                resultLong: "Successfully retrieved User formFields",
+                formAttributes: attributes,
+            }
+            return res.status(200).json(response);
+        })
+        .catch((error) => {
+            const response = {
+                resultShort: "Failure",
+                resultLong: "Failed to retrieve FormFields"
+            }
+            return res.status(400).json(response);
+        })
+})
 
-router.post('/add-user', UserService.addUser)
+router.post('/add-user', UserService.addUser);
+
+router.post('/update-user', (req, res, next) => {
+    UserService.updateUser(req.body)
+        .then(user => {
+            if(user.password) {
+                delete user['password'];
+            }
+            const response = {
+                resultShort: 'success',
+                resultLong: 'Updated user with emaild: ' + req.body.emailId,
+                user: user
+            }
+
+            return res.status(200).json(response);
+        })
+        .catch(err => {
+            console.log('err', err)
+            const response = {
+                resultShort: "failure",
+                resultLong: 'Failed to update User'
+            }
+            return res.status(400).json(response);
+        })
+})
+
+router.get('/get-users', UserService.getAllUser)
+
+router.get('/searchUser/:userParams', (req, res, next) => {
+    console.log('Inside the /searchUser/:userParams');
+    const searchparams = req.params.userParams;
+    console.log('User Params', searchparams)
+    return UserService.getUserBySearchParams(searchparams)
+        .then(userArry => {
+            console.log('Userarray', userArry)
+            const response = {
+                resultShort: "success",
+                resultLong: 'Successfully retrieved User data for: ' + searchparams,
+                users: userArry
+            }
+            return res.status(200).json(response)
+        })
+        .catch(err => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: 'Failed to retrived any data'
+            }
+            return res.json(response);
+        })
+})
 
 module.exports = router;

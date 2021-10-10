@@ -2,29 +2,38 @@ const express = require('express');
 var passport = require('passport');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const UserService = require('../services/userServices');
 
 router.post('/login', (req, res, next) => {
+    console.log('Inside the Login Path')
     const userEmail = req.body.emailId;
-    console.log('password', req.body);
+    console.log('req.body', req.body);
     return UserService.getUser(userEmail)
         .then(user => {
-            if(user.password !== req.body.password) {
-                const response = {
-                    resultShort: 'failure',
-                    resultLong: 'Failed to log in',
+            bcrypt.compare(req.body.password, user.password, function(err, result) {
+                if(err) {
+                    console.log('err', err);
+                    const response = {
+                        resultShort: 'failure',
+                        resultLong: 'Failed to log in',
+                    }
+                    return res.status(200).json(response);
                 }
-                return res.status(200).json(response);
-            } else {
-                const token = jwt.sign({emailId: user.password}, process.env.SECRET_KEY, { expiresIn: '1h' })
+
+                const token = jwt.sign({emailId: user.password}, process.env.SECRET_KEY, { expiresIn: '8h' })
+                const userObj = {
+                    emailId: user.emailId,
+                    role: user.role
+                }
                 const response = {
                     resultShort: 'success',
                     resultLong: 'Logged In user',
-                    user: user,
+                    userObj: userObj,
                     authKey: token
                 }
                 return res.status(200).json(response);
-            }
+            })
         })
         .catch(err => {
             console.log(err);
@@ -39,3 +48,24 @@ router.post('/login', (req, res, next) => {
 // })
 
 module.exports = router;
+
+
+
+
+            // if(user.password !== req.body.password) {
+            //     console.log('User', user);
+            //     const response = {
+            //         resultShort: 'failure',
+            //         resultLong: 'Failed to log in',
+            //     }
+            //     return res.status(200).json(response);
+            // } else {
+            //     const token = jwt.sign({emailId: user.password}, process.env.SECRET_KEY, { expiresIn: '1h' })
+            //     const response = {
+            //         resultShort: 'success',
+            //         resultLong: 'Logged In user',
+            //         user: user,
+            //         authKey: token
+            //     }
+            //     return res.status(200).json(response);
+            // }

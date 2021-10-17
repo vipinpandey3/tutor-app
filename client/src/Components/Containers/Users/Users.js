@@ -6,7 +6,10 @@ import {MdGroupAdd} from 'react-icons/md'
 import UserTable from './UserTable'
 import { UserContext } from '../../../context/User-context'
 import {AiFillCloseCircle} from 'react-icons/ai'
-import UserForm from './UserForm'
+import UserForm from './UserForm';
+import {useSelector} from 'react-redux';
+import {fetchUser} from '../../../redux/actions/users'
+
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -36,8 +39,13 @@ const initialUserValues = {
 
 
 const Users = () => {
-    const styles = useStyles()
-    const {getUsers, searchUser, getUserFormFields, createUser} = useContext(UserContext)
+    const styles = useStyles();
+    const {getUsers, searchUser, getUserFormFields, createUser} = useContext(UserContext);
+    // const loading = useSelector(state => state.loading);
+    // const userData = useSelector(state => state.users)
+    // const showUserForm = useSelector(state => state.userForm);
+    // const message = useSelector(state => state.message);
+    // const attributes = useSelector(state => state.userAttributes)
     const [userObj, setUserObject] = useState({
         attributes: [],
         userData: []
@@ -88,10 +96,10 @@ const Users = () => {
     const fetchUser = () => {
         getUsers()
             .then(usersObj => {
-                setUserObject({
-                    attributes: usersObj.attributes,
-                    userData: usersObj.userData
-                })
+                // setUserObject({
+                //     attributes: usersObj.attributes,
+                //     userData: usersObj.userData
+                // })
             })
             .catch(error => {
                 console.log('Error', error)
@@ -113,7 +121,7 @@ const Users = () => {
     }, [])
     return (
         <React.Fragment>
-            { showUserForm && <UserForm fetchUser={fetchUser} setShowUserForm={setShowUserForm} createUser={createUser} userInputs={formFields} initialUserValues={initialUserValues} />}
+            { showUserForm && <UserForm fetchUser={fetchUser} createUser={createUser} userInputs={formFields} initialUserValues={initialUserValues} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={6}>

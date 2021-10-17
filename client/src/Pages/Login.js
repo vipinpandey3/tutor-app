@@ -1,8 +1,9 @@
 import { Grid, makeStyles, Paper } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import MatButton from '../Components/Common/Button'
 import Input from '../Components/Common/Input'
 import {useHistory, Redirect} from 'react-router-dom'
+import { AuthContext } from '../context/auth-context'
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -14,10 +15,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
     const styles = useStyles();
-    const history = useHistory()
+    let history = useHistory()
     const [emailId, setEmaildId] = useState('');
     const [password, setPassword] = useState()
-    const {setTokenState} = props
+    // const {loginHandler, setIsAuthenticated} = props
+    const {login} = useContext(AuthContext)
     const handleEmailId = (e) => {
         setEmaildId(e.target.value);
     }
@@ -26,22 +28,9 @@ const Login = (props) => {
         setPassword(e.target.value)
     }
 
-    const LoginHandler = async(userObj) => {
-        setTokenState(false)
-        const response = await fetch('http://localhost:5000/login', {
-            headers: {
-                'Accept': "application/json",
-                "Content-Type": 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(userObj)
-        })
-        if(!response.ok) {
-            throw new Error('Something Went Wrong');
-        }
-        const data = await response.json();
-        return data
-    }
+    // const LoginHandler = async(userObj) => {
+    //     loginHandler(user)
+    // }
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -49,21 +38,25 @@ const Login = (props) => {
             emailId: emailId,
             password: password
         }
-        LoginHandler(loginObj)
-            .then(data => {
-                if(data.resultShort === "failure") {
-                    console.log('Err', data.resultLong)
-                } else {
-                    localStorage.setItem('token', data.authKey);
-                    console.log('ResultLong', data.resultLong);
-                    setTokenState(true);
-                    return <Redirect to="/login" />
-                    // window.location.reload();
-                }
+        login(loginObj)
+            .then(result => {
+                return history.push('/dashboard')
             })
-            .catch(err => {
-                console.log('err', err);
-            })
+        // loginHandler(loginObj)
+        //     .then(data => {
+        //         if(data.resultShort === "failure") {
+        //             console.log('Err', data.resultLong)
+        //         } else {
+        //             localStorage.setItem('token', data.authKey);
+        //             console.log('ResultLong', data.resultLong);
+        //             setIsAuthenticated(true);
+        //             // window.location.reload();
+        //             history.push('/dashboard')
+        //         }
+        //     })
+        //     .catch(err => {
+        //         console.log('err', err);
+        //     })
     }
 
     return (

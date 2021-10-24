@@ -1,12 +1,13 @@
 const express = require("express");
 const bodyParser = require('body-parser');
+var fileUpload = require('express-fileupload');
 const adminRoute = require("./routes/admin");
 const facultyRoute = require('./routes/faculty');
 const sequelize = require("./models/database");
 const Student = require("./models/student");
 const Teacher = require("./models/teacher");
-const StudentTeacherMap = require("./models/student-teacher-map");
-const StudentParentMap = require("./models/student-parent-map");
+// const StudentTeacherMap = require("./models/student-teacher-map");
+// const StudentParentMap = require("./models/student-parent-map");
 const Parent = require("./models/Parents");
 const User = require('./models/user');
 const StudentEducationDetails = require('./models/student-education-details');
@@ -17,6 +18,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use(fileUpload())
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

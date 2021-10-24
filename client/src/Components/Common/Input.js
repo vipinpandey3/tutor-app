@@ -14,7 +14,7 @@ const useStyles= makeStyles((theme) => ({
 const Input = (props) => {
   // const { value, onChange, type, placeHolder, className } = props;
   const styles = useStyles()
-  const { name, label, value, onChange, error = null, size, ...other } = props;
+  const { name, label, value, onChange, type, error = null, size, ...other } = props;
   return (
     // <input
     //   value={value}
@@ -29,6 +29,7 @@ const Input = (props) => {
       name={name}
       value={value}
       onChange={onChange}
+      type={type ? type : 'text'}
       siza={size}
       {...other}
       className={styles.inputField}

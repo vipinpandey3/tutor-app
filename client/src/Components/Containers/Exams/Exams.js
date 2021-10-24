@@ -153,7 +153,7 @@ const Exams = () => {
             </Grid>
             <Grid item sm></Grid>
             <Grid item xs={3}>
-              <Input style={{ width: "100%" }} label="Search Student" valur={searchStudent} onChange={handleSearchInput} />
+              <Input style={{ width: "100%" }} label="Search Student" value={searchStudent} onChange={handleSearchInput} />
             </Grid>
           </Grid>
           <Grid container>

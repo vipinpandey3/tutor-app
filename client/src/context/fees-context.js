@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import axios from "axios"
 
 export const FeesContext = createContext();
 
@@ -65,13 +66,29 @@ export const FeesContextProvider = (props) => {
         return res;
     }
 
+    const uploadFile = async(data) => {
+        console.log('Data', data)
+        try {
+            return await axios.post('http://localhost:5000/faculty/uploadFile', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(result => {
+                console.log('Result')
+            } )
+        } catch(error) {
+            console.log('Error', error)
+        }
+    }
+
     return (
         <FeesContext.Provider value={{
             fetchFees,
             fetchFeesFormFields,
             addFeesIntoDatabase,
             searchFees,
-            downloadFeesbyId
+            downloadFeesbyId,
+            uploadFile
         }}>
             {props.children}
         </FeesContext.Provider>

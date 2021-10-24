@@ -8,6 +8,7 @@ import FeesForm from './FeesForm';
 import Input from '../../Common/Input';
 import { FeesContext } from '../../../context/fees-context';
 import { saveAs } from 'file-saver'
+import FeesFileUpload from './FeesFileUpload';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -43,7 +44,9 @@ const Fees = () => {
     const [feesDetails, setFeesDetails] = useState({
         attributes: [],
         feesData: []
-    })
+    });
+    const [fileInput, setFileInput] = useState(null);
+    const [showFileImport, setShowFileImport] = useState(true);
 
     const getFormFields = () => {
         fetchFeesFormFields()
@@ -146,9 +149,14 @@ const Fees = () => {
         console.log('deleteFees')
     }
 
+    const handleFileInput = () => {
+
+    }
+
     return (
         <>
             {showFeesForm && <FeesForm formTitle="Fees Details" setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
+            {showFileImport && <FeesFileUpload setShowFileImport={setShowFileImport} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={3}>
@@ -158,11 +166,14 @@ const Fees = () => {
                     <Grid item xs={3}>
                             <input  onKeyDown={searchPaidFees} className="searchInput" ref={searchRef} name="paidFees" placeholder="Search"  />
                     </Grid>
+                    {/* <Grid item xs={3}>
+                        <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput" value={fileInput} type="file" onChange={handleFileInput} />
+                    </Grid> */}
                     <Grid item xs={2}>
                         <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Fees</MatButton>
                     </Grid>
-                </Grid>
                 <FeesTable downloadReciept={downloadReciept} deleteFees={deleteFees} editFees={editFees} feesTableHeader={feesDetails.attributes ? feesDetails.attributes : [] } FeesData={feesDetails.feesData ? feesDetails.feesData : []} />
+                </Grid>
             </Paper>
         </>
     )

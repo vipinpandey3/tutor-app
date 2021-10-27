@@ -19,6 +19,11 @@ const ExcelImport = sequelize.define('ExcelImport', {
     filePath: {
         type: Sequelize.CHAR,
         allowNull: true,
+    },
+    userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1
     }
 },
 {

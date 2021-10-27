@@ -49,13 +49,21 @@ const fileUpload = (req, res, next) => {
     }
     return ImportService.SaveFileDetailsInDB(inputFileObject)
         .then(dbFile => {
-            console.log('DBFile', dbFile);
-            const result ={
-                resultShort: "Success",
-                resultLong: "File is saved to DB"
-            }
-
-            return res.status(200).json(result)
+            ImportService.importExceldata(dbFile)
+                .then(resultObj => {
+                    const result ={
+                        resultShort: "Success",
+                        resultLong: "Data is saved in the DB"
+                    }
+                    return res.status(200).json(result)
+                })
+                .catch(error => {
+                    const result = {
+                        resultShort: "Failure",
+                        resultLong: "Failed to upload file"
+                    }
+                    return res.status(400).json(result)
+                })
         })
         .catch((error) => {
             const result = {
@@ -64,25 +72,6 @@ const fileUpload = (req, res, next) => {
             }
             return res.status(400).json(result)
         })
-    // return new Promise((resolve, resolve) => {
-        // ImportService.SaveFileDetailsInDB(inputFileObject)
-        //     .then(dbFile => {
-        //         console.log('DBFile', dbFile);
-        //         const result ={
-        //             resultShort: "Success",
-        //             resultLong: "File is saved to DB"
-        //         }
-
-        //         return res.status(200).json(result)
-        //     })
-        //     .catch((error) => {
-        //         const result = {
-        //             resultShort: "Failure",
-        //             resultLong: "Failed to upload file"
-        //         }
-        //         return res.status(400).json(result)
-        //     })
-    // })
 }
 
 module.exports = {

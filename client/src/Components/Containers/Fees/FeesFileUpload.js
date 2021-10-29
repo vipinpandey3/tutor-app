@@ -41,16 +41,15 @@ const FeesFileUpload = (props) => {
 
     return (
         <Paper className={styles.paperContent}>
-            <Grid container>
-                <form onSubmit={hadleFeesForm}>
-                    <Grid item xs={6}>
-                        <input type="file" onChange={saveFile} />
+            <Grid>
+                <form onSubmit={hadleFeesForm} style={{display: "flex"}}>
+                    <Grid item xs={9} >
+                        {/* <input type="file" onChange={saveFile} className="fileInput" /> */}
                     {/* <input type="file" ref={fileInput} /> */}
-                    {/* <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput" value={fileInput} type="file" onChange={handleFileInput} /> */}
+                    <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput"  type="file" onChange={saveFile} />
                     </Grid>
-                    <Grid item xs={6}>
-                        <button>Submit</button>
-                        {/* <MatButton variant="contained" style={{ flex: "1", width: "90%" }}>Upload File</MatButton> */}
+                    <Grid item xs={3}>
+                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }}>Upload File</MatButton>
                     </Grid>
                 </form>
             </Grid>

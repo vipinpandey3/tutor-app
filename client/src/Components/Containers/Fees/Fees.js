@@ -9,6 +9,7 @@ import Input from '../../Common/Input';
 import { FeesContext } from '../../../context/fees-context';
 import { saveAs } from 'file-saver'
 import FeesFileUpload from './FeesFileUpload';
+import {AiOutlineUpload} from 'react-icons/ai'
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -46,7 +47,7 @@ const Fees = () => {
         feesData: []
     });
     const [fileInput, setFileInput] = useState(null);
-    const [showFileImport, setShowFileImport] = useState(true);
+    const [showFileImport, setShowFileImport] = useState(false);
 
     const getFormFields = () => {
         fetchFeesFormFields()
@@ -149,8 +150,8 @@ const Fees = () => {
         console.log('deleteFees')
     }
 
-    const handleFileInput = () => {
-
+    const handleUpload = () => {
+        setShowFileImport(true)
     }
 
     return (
@@ -169,6 +170,9 @@ const Fees = () => {
                     {/* <Grid item xs={3}>
                         <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput" value={fileInput} type="file" onChange={handleFileInput} />
                     </Grid> */}
+                    <Grid item xs={3}>
+                    <MatButton onClick={handleUpload} variant="contained" startIcon={<AiOutlineUpload />} style={{ flex: "1", width: "80%" }}>Fees</MatButton>
+                    </Grid>
                     <Grid item xs={2}>
                         <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Fees</MatButton>
                     </Grid>

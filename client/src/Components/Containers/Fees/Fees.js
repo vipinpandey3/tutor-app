@@ -1,6 +1,6 @@
 import { Grid, makeStyles, Paper, TextField, Toolbar } from '@material-ui/core'
-import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
-import Text from '../../Common/Text'
+import React, { createRef, useContext, useEffect, useState } from 'react'
+import Text from '../../Common/Text';
 import FeesTable from './FeesTable';
 import Button from '../../Common/Button'
 import MatButton from '../../Common/Button';

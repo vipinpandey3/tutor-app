@@ -36,7 +36,10 @@ router.post('/login', (req, res, next) => {
             })
         })
         .catch(err => {
-            console.log(err);
+            return res.json(400).json({
+                resultShort: 'failure',
+                resultLong: "Unable to login"
+            })
         })
 })
 
@@ -48,24 +51,3 @@ router.post('/login', (req, res, next) => {
 // })
 
 module.exports = router;
-
-
-
-
-            // if(user.password !== req.body.password) {
-            //     console.log('User', user);
-            //     const response = {
-            //         resultShort: 'failure',
-            //         resultLong: 'Failed to log in',
-            //     }
-            //     return res.status(200).json(response);
-            // } else {
-            //     const token = jwt.sign({emailId: user.password}, process.env.SECRET_KEY, { expiresIn: '1h' })
-            //     const response = {
-            //         resultShort: 'success',
-            //         resultLong: 'Logged In user',
-            //         user: user,
-            //         authKey: token
-            //     }
-            //     return res.status(200).json(response);
-            // }

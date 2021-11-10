@@ -8,13 +8,13 @@ export const FeesContextProvider = (props) => {
   const reqHeader = {
     headers: {
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbElkIjoiJDJhJDA4JHR2YXlaWGU5SDFvZTNlTWdQZy5MTWVURlZsS0FMTnZWcFF6SVdOTDV3d2F2Zy9NeDBVc3hDIiwiaWF0IjoxNjMzODQ5MDI2LCJleHAiOjE2MzM4NTI2MjZ9.Hn1pUMjkcnQwR30niuIFYw5b9MIFKrcCnHz5nWhyurk",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbElkIjoiJDJhJDA4JFlRbm1ka3JQcFVoRnJTVDg1TzVyOS5XMlE3NUIxVXRqaEZicElaS2tXZGxqamJDVU8ycnNTIiwiaWF0IjoxNjM2NDc5Nzk3LCJleHAiOjE2MzY1MDg1OTd9.J0ngmN2Y_5ZaSYF8pLgUl-NIk0kcFvaryPCGB-xDWc8",
       Accept: "appplication/json",
     },
   };
   const fetchFees = async () => {
     try {
-      return await axios.get("/admin/getAllFees", reqHeader)
+      return await axios.get("/admin/getAllFees")
         .then(res => {
           // console.log("res", res.data);
           return res.data

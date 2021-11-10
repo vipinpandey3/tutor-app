@@ -14,31 +14,18 @@ export const UserContextProvide = (props) => {
 
     const createUser = async(userValues) => {
         try {
-            return await axios.post('/admin/add-user', userValues, reqHeader)
+            return await axios.post('/admin/add-user', userValues)
                             .then(response => {
                                 return response.data
                             })
         } catch (error) {
             console.log('Error', error)
         }
-        // const response = await fetch('http://localhost:5000/admin/add-user', {
-        //     headers: {
-        //         Accept: "application/json",
-        //         "Content-Type": "application/json",
-        //     },
-        //     method: "POST",
-        //     body: JSON.stringify(userValues)
-        // })
-        // if(!response.ok) {
-        //     throw new Error("Something went wrong");
-        // }
-        // const res = await response.json();
-        // return res;
     }
 
     const getUsers = async() => {
         try {
-            return await axios.get("/admin/get-users", reqHeader)
+            return await axios.get("/admin/get-users")
                         .then((response) => {
                             return response.data
                         })
@@ -60,7 +47,7 @@ export const UserContextProvide = (props) => {
 
     const getUserFormFields = async() => {
         try {
-            return await axios.get('/admin/get-userFormFields', reqHeader)
+            return await axios.get('/admin/get-userFormFields')
                             .then((response) => {
                                 return response.data
                             })

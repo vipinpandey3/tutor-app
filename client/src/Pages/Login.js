@@ -28,10 +28,6 @@ const Login = (props) => {
         setPassword(e.target.value)
     }
 
-    // const LoginHandler = async(userObj) => {
-    //     loginHandler(user)
-    // }
-
     const submitHandler = (e) => {
         e.preventDefault();
         const loginObj =  {
@@ -42,21 +38,6 @@ const Login = (props) => {
             .then(result => {
                 return history.push('/dashboard')
             })
-        // loginHandler(loginObj)
-        //     .then(data => {
-        //         if(data.resultShort === "failure") {
-        //             console.log('Err', data.resultLong)
-        //         } else {
-        //             localStorage.setItem('token', data.authKey);
-        //             console.log('ResultLong', data.resultLong);
-        //             setIsAuthenticated(true);
-        //             // window.location.reload();
-        //             history.push('/dashboard')
-        //         }
-        //     })
-        //     .catch(err => {
-        //         console.log('err', err);
-        //     })
     }
 
     return (
@@ -64,10 +45,10 @@ const Login = (props) => {
             <form onSubmit={submitHandler}>
                 <Grid container>
                     <Grid item xs={12} style={{marginTop: "20px"}}>
-                        <Input value={emailId} style={{width: '100%'}} name="emaildId" onChange={handleEmailId} label="Email Id" />
+                        <Input value={emailId} style={{width: '100%'}} onChange={handleEmailId} label="Email Id" />
                     </Grid>
                     <Grid item sm={12} style={{marginTop: "20px"}}>
-                        <Input value={password} style={{width: '100%'}} name="password" onChange={handlePaswordInput} label="Password" type="password" />
+                        <Input value={password} style={{width: '100%'}} onChange={handlePaswordInput} label="Password" type="password" />
                     </Grid>
                 </Grid>
                 <Grid container>

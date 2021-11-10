@@ -32,7 +32,6 @@ const initiateFeesFormValue = {
 const Fees = () => {
     const styles = useStyles()
     const [showFeesForm, setShowFeesForm] = useState(false);
-    // const [searchValue, setSearchValue] = useState('')
     const searchRef = createRef()
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
     const {fetchFees, fetchFeesFormFields, addFeesIntoDatabase, searchFees, downloadFeesbyId} = useContext(FeesContext);
@@ -84,21 +83,6 @@ const Fees = () => {
                 })
         }
     }
-
-    useEffect(() => {
-        // console.log("value, ", typeof(parseInt(searchValue)));
-        // if(searchValue) {
-        //     const newData = feesData.filter(data => {
-        //         console.log('Log', data);
-        //         if(parseInt(searchValue) === parseInt(data.studentId) || data.studentName.includes(searchValue) ) {
-        //             return data
-        //         }
-        //     })
-        //     setFeesPaidData(newData)
-        // } else {
-        //     setFeesPaidData(feesData)
-        // }
-    }, [searchRef]);
 
     useEffect(() => {
         fetchFees()

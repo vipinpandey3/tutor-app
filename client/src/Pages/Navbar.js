@@ -15,10 +15,11 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { Popper } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-// import Button from '../Components/Common/Button'
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AuthContext } from "../context/auth-context";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,10 +51,11 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
   const loggedInUser = "Vipin";
-
+  const authContext = useContext(AuthContext);
+  const {logout} = authContext
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-
+  const history = useHistory()
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -75,8 +77,8 @@ const Navbar = () => {
 
   const logoutHandler = () => {
     setOpen(false);
-    localStorage.removeItem('token');
-    window.location.reload();
+    logout();
+    history.push('/login')
   }
 
   // return focus to the button when we transitioned from !open -> open

@@ -48,4 +48,6 @@ router.get('/downloadFeesReciept/:feesUUID', (req, res, next) => {
         })
 })
 
+router.post('/uploadFile', Faculty.fileUpload)
+
 module.exports = router

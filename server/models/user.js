@@ -15,6 +15,11 @@ const User = sequelize.define('user', {
     emailId: {
         type: Sequelize.STRING,
         allowNull: false,
+    },
+    status: {
+        type: Sequelize.CHAR,
+        allowNull: false,
+        default: "active"
     }
 })
 

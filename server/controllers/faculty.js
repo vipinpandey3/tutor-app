@@ -2,7 +2,7 @@ const Student = require('../models/student');
 const Fees = require('../models/fees');
 const FeesService = require('../services/feesServices');
 const StudentService = require('../services/studentServices');
-
+const ImportService = require('../services/importService');
 const attributes = require('../attributes/attributes.json');
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
@@ -40,6 +40,41 @@ const getFeesDetailsBySearchParam = (seacrchParams) => {
     })
 }
 
+const fileUpload = (req, res, next) => {
+    const inputfile = req.files.file;
+    const userId = 1;
+    const inputFileObject = {
+        inputfile: inputfile,
+        userid: userId
+    }
+    return ImportService.SaveFileDetailsInDB(inputFileObject)
+        .then(dbFile => {
+            ImportService.importExceldata(dbFile)
+                .then(resultObj => {
+                    const result ={
+                        resultShort: "Success",
+                        resultLong: "Data is saved in the DB"
+                    }
+                    return res.status(200).json(result)
+                })
+                .catch(error => {
+                    const result = {
+                        resultShort: "Failure",
+                        resultLong: "Failed to upload file"
+                    }
+                    return res.status(400).json(result)
+                })
+        })
+        .catch((error) => {
+            const result = {
+                resultShort: "Failure",
+                resultLong: "Failed to upload file"
+            }
+            return res.status(400).json(result)
+        })
+}
+
 module.exports = {
-    getFeesDetailsBySearchParam
+    getFeesDetailsBySearchParam,
+    fileUpload
 }

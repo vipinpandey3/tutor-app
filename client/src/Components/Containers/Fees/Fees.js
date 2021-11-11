@@ -1,6 +1,6 @@
 import { Grid, makeStyles, Paper, TextField, Toolbar } from '@material-ui/core'
-import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
-import Text from '../../Common/Text'
+import React, { createRef, useContext, useEffect, useState } from 'react'
+import Text from '../../Common/Text';
 import FeesTable from './FeesTable';
 import Button from '../../Common/Button'
 import MatButton from '../../Common/Button';
@@ -8,6 +8,8 @@ import FeesForm from './FeesForm';
 import Input from '../../Common/Input';
 import { FeesContext } from '../../../context/fees-context';
 import { saveAs } from 'file-saver'
+import FeesFileUpload from './FeesFileUpload';
+import {AiOutlineUpload} from 'react-icons/ai'
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -43,7 +45,9 @@ const Fees = () => {
     const [feesDetails, setFeesDetails] = useState({
         attributes: [],
         feesData: []
-    })
+    });
+    const [fileInput, setFileInput] = useState(null);
+    const [showFileImport, setShowFileImport] = useState(false);
 
     const getFormFields = () => {
         fetchFeesFormFields()
@@ -146,9 +150,14 @@ const Fees = () => {
         console.log('deleteFees')
     }
 
+    const handleUpload = () => {
+        setShowFileImport(true)
+    }
+
     return (
         <>
             {showFeesForm && <FeesForm formTitle="Fees Details" setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
+            {showFileImport && <FeesFileUpload setShowFileImport={setShowFileImport} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={3}>
@@ -158,11 +167,17 @@ const Fees = () => {
                     <Grid item xs={3}>
                             <input  onKeyDown={searchPaidFees} className="searchInput" ref={searchRef} name="paidFees" placeholder="Search"  />
                     </Grid>
+                    {/* <Grid item xs={3}>
+                        <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput" value={fileInput} type="file" onChange={handleFileInput} />
+                    </Grid> */}
+                    <Grid item xs={3}>
+                    <MatButton onClick={handleUpload} variant="contained" startIcon={<AiOutlineUpload />} style={{ flex: "1", width: "80%" }}>Fees</MatButton>
+                    </Grid>
                     <Grid item xs={2}>
                         <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Fees</MatButton>
                     </Grid>
-                </Grid>
                 <FeesTable downloadReciept={downloadReciept} deleteFees={deleteFees} editFees={editFees} feesTableHeader={feesDetails.attributes ? feesDetails.attributes : [] } FeesData={feesDetails.feesData ? feesDetails.feesData : []} />
+                </Grid>
             </Paper>
         </>
     )

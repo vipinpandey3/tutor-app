@@ -13,6 +13,9 @@ const User = require('./models/user');
 const StudentEducationDetails = require('./models/student-education-details');
 const Fees = require('./models/fees');
 const ExcelImport = require('./models/excelImport');
+const SubjectMaster = require('./models/subjectMatser');
+const StandardMaster = require('./models/standardMaster');
+const ExamStdMap = require('./models/examStdMap')
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,6 +56,8 @@ Teacher.belongsTo(User);
 StudentEducationDetails.belongsTo(Student)
 Fees.belongsTo(Student);
 ExcelImport.belongsTo(User);
+
+
 
 
 sequelize

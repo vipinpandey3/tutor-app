@@ -36,4 +36,4 @@ const StandardtMasters = sequelize.define('StandardMaster', {
 }
 )
 
-module.exports = SubjectMasters;
+module.exports = StandardtMasters;

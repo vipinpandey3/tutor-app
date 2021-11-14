@@ -36,4 +36,4 @@ const ExamStdMap = sequelize.define('ExamStdMap', {
 }
 )
 
-module.exports = SubjectMasters;
+module.exports = ExamStdMap;

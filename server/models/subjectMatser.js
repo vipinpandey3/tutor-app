@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
-const SubjectMasters = sequelize.define('SubjectMaster', {
+const SubjectMaster = sequelize.define('SubjectMaster', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -43,6 +43,6 @@ const SubjectMasters = sequelize.define('SubjectMaster', {
 {
     freezeTableName: true
 }
-)
+);
 
-module.exports = SubjectMasters;
+module.exports = SubjectMaster

@@ -13,9 +13,10 @@ const User = require('./models/user');
 const StudentEducationDetails = require('./models/student-education-details');
 const Fees = require('./models/fees');
 const ExcelImport = require('./models/excelImport');
-const SubjectMaster = require('./models/subjectMatser');
 const StandardMaster = require('./models/standardMaster');
 const ExamStdMap = require('./models/examStdMap')
+const Exam = require('./models/exam');
+const SubjectMasters = require("./models/subjectMatser");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,20 +45,21 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoute);
 app.use('/faculty', facultyRoute);
 Student.hasOne(Parent);
-// Student.hasMany(Teacher);
-// Teacher.hasMany(Student);
 Parent.belongsTo(Student);
 Student.belongsTo(User)
-// User.hasMany(Student);
-// User.hasMany(Teacher);
-// Teacher.belongsTo(Student, {through: StudentTeacherMap});
 Teacher.belongsTo(User);
-// Student.hasMany(StudentEducationDetails);
 StudentEducationDetails.belongsTo(Student)
 Fees.belongsTo(Student);
 ExcelImport.belongsTo(User);
-
-
+ExamStdMap.belongsTo(StandardMaster, {
+  foreignKey: 'stdId',
+  as: "StdMap"
+}),
+ExamStdMap.belongsTo(Exam, {
+  foreignKey: "ExamId",
+  as: "ExamMap"
+}),
+SubjectMasters.belongsTo(StandardMaster);
 
 
 sequelize
@@ -77,5 +79,3 @@ sequelize
     app.listen(5000)
   })
   .catch((e) => console.log(e));
-
-// app.listen(5000);

@@ -6,8 +6,6 @@ const facultyRoute = require('./routes/faculty');
 const sequelize = require("./models/database");
 const Student = require("./models/student");
 const Teacher = require("./models/teacher");
-// const StudentTeacherMap = require("./models/student-teacher-map");
-// const StudentParentMap = require("./models/student-parent-map");
 const Parent = require("./models/Parents");
 const User = require('./models/user');
 const StudentEducationDetails = require('./models/student-education-details');
@@ -44,6 +42,8 @@ app.use((req, res, next) => {
 
 app.use("/admin", adminRoute);
 app.use('/faculty', facultyRoute);
+
+
 Student.hasOne(Parent);
 Parent.belongsTo(Student);
 Student.belongsTo(User)
@@ -51,14 +51,16 @@ Teacher.belongsTo(User);
 StudentEducationDetails.belongsTo(Student)
 Fees.belongsTo(Student);
 ExcelImport.belongsTo(User);
-ExamStdMap.belongsTo(StandardMaster, {
-  foreignKey: 'stdId',
-  as: "StdMap"
-}),
-ExamStdMap.belongsTo(Exam, {
+Exam.belongsToMany(StandardMaster, {
+  as: "Exam",
   foreignKey: "ExamId",
-  as: "ExamMap"
-}),
+  through: ExamStdMap
+});
+StandardMaster.belongsToMany(Exam, {
+  as: "Standard",
+  foreignKey: "standardId",
+  through: ExamStdMap
+});
 SubjectMasters.belongsTo(StandardMaster);
 
 
@@ -66,11 +68,10 @@ sequelize
   .sync({force: false})
   .then(() => {
     return User.findByPk(1);
-    app.listen(5000);
   })
   .then((user) => {
     if(!user) {
-      return User.create({name: "Vipin Pandey", emailId: "Vipin@gmail.com" })
+      return User.create({name: "Vipin Pandey", emailId: "Vipin@gmail.com" , status: "active"})
     }
     return user
   })

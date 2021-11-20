@@ -4,6 +4,11 @@ const FeesService = require('../services/feesServices');
 const StudentService = require('../services/studentServices');
 const ImportService = require('../services/importService');
 const attributes = require('../attributes/attributes.json');
+const Exam = require('../models/exam');
+const StandardMaster = require('../models/standardMaster');
+const ExamStdMap = require('../models/examStdMap');
+const { QueryTypes } = require('sequelize');
+const sequelize = require('../models/database');
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function');
@@ -41,6 +46,7 @@ const getFeesDetailsBySearchParam = (seacrchParams) => {
 }
 
 const fileUpload = (req, res, next) => {
+    console.log("Inside FileUpload function");
     const inputfile = req.files.file;
     const userId = 1;
     const inputFileObject = {
@@ -74,7 +80,155 @@ const fileUpload = (req, res, next) => {
         })
 }
 
+const createExam = (req, res, next) => {
+    console.log('Inside Create Exam Function')
+    const reqBody = req.body;
+    const createdBy = req.user.id;
+    const examSubjects = {subjects: reqBody.subjects};
+    const timeStart = reqBody.timeStart
+    const timeEnd = reqBody.timeEnd;
+    const examDate = reqBody.examDate;
+    const academicYear = reqBody.academicYear;
+    const examType = reqBody.examType;
+    const marks = reqBody.marks
+    const standardId = req.body.std;
+    console.log("ReqBody", reqBody)
+    return Exam.create({examSubjects, timeStart, timeEnd, examDate, marks, examType, academicYear})
+            .then((exam) => {
+                console.log("Exam created", exam);
+                const ExamId = exam.id
+                StandardMaster.findByPk(standardId)
+                    .then((std) => {
+                        const status = 1
+                        ExamStdMap.create({ExamId, standardId, createdBy, status})
+                        .then((examStdObj) => {
+                            console.log("Exam Standard Map Created", examStdObj);
+                            const result = {
+                                resultShort: "success",
+                                resultLong: 'Exam schedule created for standard' + std.remarks
+                            };
+                            return res.status(200).json(result)
+                        })
+                        .catch(error => {
+                            console.log('Eror in creating ExamSTDMap')
+                            console.log('Error', error)
+                            const result = {
+                                resultShort: "Failure",
+                                resultLong: "Failed to create exam schedule"
+                            };
+                            return res.status(400).json(result)
+                        })
+                    })
+                    .catch(error => {
+                        console.log("Error getting Standard", error)
+                        const result = {
+                            resultShort: "Failure",
+                            resultLong: "Failed to create exam schedule"
+                        };
+                        return res.status(400).json(result)
+                    })
+            }) 
+            .catch(error => {
+                console.log("Error creating Exam entry in database", error)
+                const result = {
+                    resultShort: "Failure",
+                    resultLong: "Failed to create exam schedule"
+                };
+                return res.status(400).json(result)
+            })   
+};
+
+const getExams = (req, res, next) => {
+    console.log("Inside the Get Exam Function");
+    getAllExam()
+    .then(examsObj => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Successfully retrieved all the exam',
+            exams: examsObj
+        }
+        return res.status(200).json(result);
+    })
+    .catch(error => {
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Failed to get exam'
+        }
+        return res.json(400).status(result);
+    })
+}
+
+const getAllExam = () => {
+    console.log('Inside getAllExam Function');
+    return new Promise((resolve, reject) => {
+        // ExamStdMap.findAll({
+        //     logging: console.log,
+        //     where: {
+        //         status: 1,
+        //     },
+        //     incude: [
+        //         {
+        //             model: Exam,
+        //         },
+        //         {
+        //             model: StandardMaster
+        //         }
+        //     ]
+        // })
+        sequelize.query("select * from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join StandardMaster sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
+        .then(exams => {
+            console.log('Exams', exams);
+            return resolve(exams)
+        })
+        .catch(error => {
+            return reject(error);
+        })
+    })
+}
+
 module.exports = {
     getFeesDetailsBySearchParam,
-    fileUpload
+    fileUpload,
+    createExam,
+    getExams
 }
+
+
+
+// return Exam.findAll({
+        //     order: ['examDate'],
+        //     attributes: ['id', 'examDate', 'timeStart', 'timeEnd', 'marks', 'examType', 'acdemicYear', 'examSubjects'],
+        //     include: [
+        //         {
+        //             model: ExamStdMap,
+        //             as: "Exam",
+        //             required: true,
+        //             through: {
+        //                 attributes: ['ExamId']
+        //             },
+        //             include: [
+        //                 {
+        //                     model: StandardMaster,
+        //                     as: 'Standard'
+        //                 }
+        //             ]
+        //         }
+        //     ]
+        // })
+        // return ExamStdMap.findAll({
+        //     where: {
+        //         status: 1
+        //     },
+        //     include: [
+        //         {
+        //             model: Exam,
+        //             as: 'Exam',
+        //             attributes: ['id', 'examDate', 'timeStart', 'timeEnd', 'marks', 'examType', 'acdemicYear', 'examSubjects']
+        //         },
+        //         {
+        //             model: StandardMaster,
+        //             as: 'Standard',
+        //             attributes: ['remarks']
+        //         }
+        //     ]
+        // })

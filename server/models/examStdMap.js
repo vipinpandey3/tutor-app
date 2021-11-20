@@ -7,14 +7,6 @@ const ExamStdMap = sequelize.define('ExamStdMap', {
         autoIncrement: true,
         primaryKey: true
     },
-    ExamId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-    stdId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
     remarks: {
         type: Sequelize.JSON,
         allowNull: true,
@@ -24,7 +16,7 @@ const ExamStdMap = sequelize.define('ExamStdMap', {
         allowNull: false,
         default: 1
     },
-    // 1 - Active, 0-InActive
+    //  0 - cancel, 1 - Active, 2-Done, 3-Postpone 
     status: {
         type: Sequelize.INTEGER,
         allowNull: false,

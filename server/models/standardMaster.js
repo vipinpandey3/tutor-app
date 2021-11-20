@@ -16,7 +16,7 @@ const StandardtMasters = sequelize.define('StandardMaster', {
         allowNull: false
     },
     remarks: {
-        type: Sequelize.JSON,
+        type: Sequelize.STRING,
         allowNull: true,
     },
     createdBy: {

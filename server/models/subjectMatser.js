@@ -20,7 +20,7 @@ const SubjectMaster = sequelize.define('SubjectMaster', {
         allowNull: false
     },
     remarks: {
-        type: Sequelize.JSON,
+        type: Sequelize.STRING,
         allowNull: true,
     },
     createdBy: {

@@ -142,10 +142,14 @@ const getExams = (req, res, next) => {
     console.log("Inside the Get Exam Function");
     getAllExam()
     .then(examsObj => {
+        const ExamTableHeader = attributes[2].attributes;
+        const ExamNestedTableHeader = attributes[3].attributes
         const result = {
             resultShort: 'success',
             resultLong: 'Successfully retrieved all the exam',
-            exams: examsObj
+            exams: examsObj,
+            examTableHeader: ExamTableHeader,
+            examNestedTableHeader: ExamNestedTableHeader
         }
         return res.status(200).json(result);
     })
@@ -175,7 +179,8 @@ const getAllExam = () => {
         //         }
         //     ]
         // })
-        sequelize.query("select * from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join StandardMaster sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
+        // sequelize.query("select * from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join StandardMaster sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
+        sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
         .then(exams => {
             console.log('Exams', exams);
             return resolve(exams)

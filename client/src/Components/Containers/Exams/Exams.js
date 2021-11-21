@@ -12,7 +12,8 @@ import {
   TableRow,
   Toolbar,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ExamContext } from "../../../context/exam-context";
 import MatButton from "../../Common/Button";
 import Input from "../../Common/Input";
 import Text from "../../Common/Text";
@@ -24,6 +25,7 @@ import {
   examDateRows
 } from "./ExamData";
 import ExamForm from "./ExamForm";
+import ExamTable from "./ExamTable";
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -112,6 +114,29 @@ const Exams = () => {
   const [formTitle, setFormTitle] = useState("Schedule Exam")
   const [showExamForm, setShowExamForm] = useState(false);
   const [searchStudent, setSearchStudent] = useState("")
+  const {fetchAllExams} = useContext(ExamContext);
+  const [examData, setExamData] = useState({
+    rows: [],
+    examTableHeader: [],
+    examNestedTableHeader: []
+  })
+
+  useEffect(() => {
+    fetchAllExams()
+    . then(data => {
+      if(data.resultShort && data.resultShort === 'success') {
+        setExamData({
+          ...examData,
+          rows: data.exams,
+          examTableHeader: data.examTableHeader,
+          examNestedTableHeader: data.examNestedTableHeader
+        })
+      }
+    })
+    // return () => {
+    //   cleanup
+    // }
+  }, [])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -203,106 +228,7 @@ const Exams = () => {
       </Paper>
       { showExamForm &&  <ExamForm hindeForm={hindeForm} initialExamFormValue={initialExamFormValue} formTitle={formTitle} SchduleExam={SchduleExam} examFormInput={examFormInput} />}      
       <Paper className={styles.paperCotent}>
-        <Grid container className={styles.flexContainer}>
-            <Grid container>
-                <Grid item className="ptb_15">
-                    <Text variant="subtitle1" component="subtitle1">
-                        Upcoming Exams
-                    </Text>
-                </Grid>
-                <Grid item sm></Grid>
-                <Grid item alignItems="flex-end">
-                    <Toolbar>
-                    <MatButton
-                      variant="contained"  
-                      onClick={CreateNewExam}
-                      color="primary"
-                      size="medium"
-                    >
-                        Schedule New Exam
-                    </MatButton>
-                    </Toolbar>
-                </Grid>
-            </Grid>
-        </Grid>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-        <TableContainer>
-          <Table
-            className={styles.table}
-            aria-labelledby="tableTitle"
-            // size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    // indeterminate={numSelected > 0 && numSelected < rowCount}
-                    // checked={rowCount > 0 && numSelected === rowCount}
-                    // onChange={onSelectAllClick}
-                    inputProps={{ 'aria-label': 'select all desserts' }}
-                  />
-                </TableCell>
-                {examDateHeader.map((headCell) => (
-                  <TableCell
-                    key={headCell.id}
-                    // sortDirection={orderBy === headCell.id ? order : false}
-                  >
-                      {headCell.headerName}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { examDateRows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = "" ;//isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  return (
-                    <TableRow hover role="checkbox" aria-checked={isItemSelected}  key={row.id} selected={isItemSelected}
-                      // onClick={(event) => handleClick(event, row.name)} 
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      {/* {
-                        examDateHeader.map((column) => {
-                          const value = row[column.id];
-                          return <TableCell key={column.id}>{value}</TableCell>
-                        })
-                      } */}
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.examId}
-                      </TableCell>
-                      <TableCell >{row.startDate}</TableCell>
-                      <TableCell >{row.endDate}</TableCell>
-                      <TableCell >{row.examType}</TableCell>
-                      <TableCell >{row.std}</TableCell>
-
-                    </TableRow>
-                  );
-                })}
-              {/* {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <ExamTable rows={examData.rows} ExamTableHeader={examData.examTableHeader} ExamNestedTableHeader={examData.examNestedTableHeader} />
       </Paper>
     </>
   );

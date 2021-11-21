@@ -298,11 +298,12 @@ const addFeesDetails = (req, res, next) => {
             return res.status(200).json(response);
           })
           .catch((err)=> {
+            console.log("Error", err)
             const response = {
               resultShort: "failure",
-              resultLong: "Error Adding Fees details",
+              resultLong: "Error Adding Fees details for Student with id " + studentId,
             };
-            return res.json(response);
+            return res,status(400).json(response);
           })
       } else {
         const lastPaidFees = fees[fees.length - 1]

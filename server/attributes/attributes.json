@@ -98,5 +98,59 @@
                 "type": "date"
             }
         ]
+    },
+    {
+        "index": 2,
+        "attributes": [
+            {
+                "id": "ExamId",
+                "label": "ExamId"
+            },
+            {
+                "id": "timeStart",
+                "label": "ExamTimeStart"
+            },
+            {
+                "id": "timeEnd",
+                "label": "ExamTimeEnd" 
+            },
+            {
+                "id": "ExamStartDate",
+                "label": "ExamStartDate"
+            },
+            {
+                "id": "AcademicYear",
+                "label": "AcademicYear"
+            },
+            {
+                "id": "ExamType",
+                "label": "ExamType"
+            },
+            {
+                "id": "ExamStatus",
+                "label": "ExamStatus"
+            }
+        ]
+    },
+    {
+        "index": 3,
+        "attributes": [
+            {
+                "id": "date",
+                "label": "Date"
+            },
+            {
+                "id": "subject",
+                "label": "Subject"
+            },
+            {
+                "id": "hours",
+                "label": "Hours"
+            },
+            {
+                "id": "marks",
+                "label": "Marks"
+            }
+        ]
     }
 ]

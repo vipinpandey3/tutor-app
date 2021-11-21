@@ -1,6 +1,8 @@
 client/node_modules/**
+client/
 server/node_modules/**
 
 server/config/**
 server/migrations/**
 server/models/index.js
+common/**

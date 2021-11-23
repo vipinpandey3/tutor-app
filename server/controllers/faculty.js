@@ -1,5 +1,3 @@
-const Student = require('../models/student');
-const Fees = require('../models/fees');
 const FeesService = require('../services/feesServices');
 const StudentService = require('../services/studentServices');
 const ImportService = require('../services/importService');
@@ -9,6 +7,7 @@ const StandardMaster = require('../models/standardMaster');
 const ExamStdMap = require('../models/examStdMap');
 const { QueryTypes } = require('sequelize');
 const sequelize = require('../models/database');
+const OptionServices = require('../services/optionServices');
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function');
@@ -78,6 +77,52 @@ const fileUpload = (req, res, next) => {
             }
             return res.status(400).json(result)
         })
+}
+
+const getExamFormFields = (req, res, next) => {
+    return new Promise((resolve, reject) => {
+        var examFormFields = attributes[4].attributes;
+        var optionObjPromise = []
+        for (let i = 0; i < examFormFields.length; i++) {
+            if(examFormFields[i]['method']) {
+                const methodPromise = getInputOptions(examFormFields[i]);
+                methodPromise                
+                    .then(data => {
+                        examFormFields[i].option = data
+                    })
+                    .catch((error) => {
+                        console.log("Error from MadePromise function", error)
+                        examFormFields[i].option = [];
+                    })
+                optionObjPromise.push(methodPromise)
+            }
+        }
+        Promise.all(optionObjPromise)
+            .then(data => {
+                return resolve(examFormFields);
+            })
+            .catch((error) => {
+                return reject(error);
+            })
+    })
+}
+
+const getInputOptions = (optionObject) => {
+    console.log('Inside the GetInputOption for optionObject with method', optionObject.method);
+    return new Promise((resolve, reject) => {
+        // if(optionObject.service === "standardData") {
+            OptionServices[optionObject.method]()
+                .then(data => {
+                    return resolve(data)
+                })
+                .catch(error => {
+                    console.log('Error', error);
+                    return reject(error)
+                })
+        // } else if(optionObject.service) {
+
+        // }
+    })
 }
 
 const createExam = (req, res, next) => {
@@ -194,46 +239,7 @@ const getAllExam = () => {
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
+    getExamFormFields,
     createExam,
     getExams
 }
-
-
-
-// return Exam.findAll({
-        //     order: ['examDate'],
-        //     attributes: ['id', 'examDate', 'timeStart', 'timeEnd', 'marks', 'examType', 'acdemicYear', 'examSubjects'],
-        //     include: [
-        //         {
-        //             model: ExamStdMap,
-        //             as: "Exam",
-        //             required: true,
-        //             through: {
-        //                 attributes: ['ExamId']
-        //             },
-        //             include: [
-        //                 {
-        //                     model: StandardMaster,
-        //                     as: 'Standard'
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // })
-        // return ExamStdMap.findAll({
-        //     where: {
-        //         status: 1
-        //     },
-        //     include: [
-        //         {
-        //             model: Exam,
-        //             as: 'Exam',
-        //             attributes: ['id', 'examDate', 'timeStart', 'timeEnd', 'marks', 'examType', 'acdemicYear', 'examSubjects']
-        //         },
-        //         {
-        //             model: StandardMaster,
-        //             as: 'Standard',
-        //             attributes: ['remarks']
-        //         }
-        //     ]
-        // })

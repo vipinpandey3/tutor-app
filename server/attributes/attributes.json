@@ -152,5 +152,58 @@
                 "label": "Marks"
             }
         ]
+    },
+    {
+        "index": 4,
+        "attributes": [
+            {
+                "id": "examType",
+                "name": "examType",
+                "label": "Exam Type",
+                "type": "select",
+                "option": [],
+                "service": "examTypeData",
+                "method": "getExamTypeData"
+            },
+            {
+                "id": "timeStart",
+                "name": "timeStart",
+                "label": "Time Start",
+                "type": "time"
+            },
+            {
+                "id": "timeEnd",
+                "name": "timeEnd",
+                "label": "Time End",
+                "type": "time"
+            },
+            {
+                "id": "examDate",
+                "name": "examDate",
+                "label": "Exam Start Date",
+                "type": "Date"
+            },
+            {
+                "id": "academicYear",
+                "name": "academicYear",
+                "label": " Academic Year",
+                "type": "Date"
+            },
+            {
+                "id": "marks",
+                "label": "Marks",
+                "name": "marks",
+                "type": "input"
+            },
+            {
+                "id": "standard",
+                "name": "standard",
+                "label": "Standard",
+                "type": "select",
+                "option": [],
+                "service": "standardData",
+                "method": "getStandardData"
+            }
+        ]
     }
 ]

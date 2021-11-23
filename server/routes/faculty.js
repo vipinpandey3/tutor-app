@@ -54,4 +54,24 @@ router.post('/create-exam', Faculty.createExam);
 
 router.get('/get-exams', Faculty.getExams);
 
+router.get('/getExamFormFields', (req, res, next) => {
+    Faculty.getExamFormFields()
+        .then((data) => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrived form inputs',
+                formFields: data
+            }
+            return res.status(200).json(result)
+        })
+        .catch(error => {
+            console.log('Error Final', error)
+            const result = {
+                resultShort: "failure",
+                resultLong: "Failed to retriev form inputs",
+            }
+            return res.status(400).json(result);
+        })
+})
+
 module.exports = router

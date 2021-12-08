@@ -103,8 +103,8 @@
         "index": 2,
         "attributes": [
             {
-                "id": "ExamId",
-                "label": "ExamId"
+                "id": "Standard",
+                "label": "Standard"
             },
             {
                 "id": "timeStart",
@@ -172,27 +172,15 @@
                 "type": "time"
             },
             {
-                "id": "timeEnd",
-                "name": "timeEnd",
-                "label": "Time End",
-                "type": "time"
-            },
-            {
                 "id": "examDate",
                 "name": "examDate",
                 "label": "Exam Start Date",
-                "type": "Date"
+                "type": "date"
             },
             {
                 "id": "academicYear",
                 "name": "academicYear",
                 "label": " Academic Year",
-                "type": "Date"
-            },
-            {
-                "id": "marks",
-                "label": "Marks",
-                "name": "marks",
                 "type": "input"
             },
             {
@@ -202,7 +190,67 @@
                 "type": "select",
                 "option": [],
                 "service": "standardData",
-                "method": "getStandardData"
+                "method": "getStandardData",
+                "updateChildInput": true,
+                "childId": "subject",
+                "updatedChildIdKeys": {
+                    "class": "show"
+                },
+                "resetChildIdKey": {
+                    "class": "hide"
+                }
+            },
+            {
+                "id": "subject",
+                "name": "subjects",
+                "label": "Subjects",
+                "type": "multiselect",
+                "options": []
+            },
+            {
+                "id": "hours",
+                "name": "hours",
+                "label": "Hours",
+                "type": "select",
+                "options": [],
+                "class": "show",
+                "service": "hoursData",
+                "method": "getHoursdata"
+            },
+            {
+                "id": "marks",
+                "name": "marks",
+                "label": "Marks",
+                "type": "select",
+                "options": [],
+                "service": "marksData",
+                "method": "getMarksData"
+            }
+        ]
+    },
+    {
+        "index": 5,
+        "name": "examType",
+        "type": [
+            {
+                "id": 1,
+                "type": "Daily"
+            },
+            {
+                "id": 2,
+                "type": "Weekly"
+            },
+            {
+                "id": 3,
+                "type": "Monthly"
+            },
+            {
+                "id": 4,
+                "type": "Half-Sem"
+            },
+            {
+                "id": 5,
+                "type": "Semester"
             }
         ]
     }

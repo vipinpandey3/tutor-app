@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Checkbox,
   Grid,
@@ -64,45 +65,56 @@ const TableHeaderRow = () => {
   );
 };
 
-const examFormInput = [
-  {
-    id: "startDate",
-    name: "startDate",
-    label: "Start Date",
-    type: 'date'
-  },
-  {
-    id: "endDate",
-    name: "endDate",
-    label: "Start Date",
-    type: 'date'
-  },
-  {
-    id: "std",
-    name: "std",
-    label: "Standard",
-    type: 'input'
-  },
-  {
-    id: "batched",
-    name: "batches",
-    label: "Batches",
-    type: 'input'
-  },
-  {
-    id: "subjects",
-    name: "subjects",
-    label: "Subjects",
-    type: "input"
-  }
-]
+// const examFormInput = [
+//   {
+//     id: "startDate",
+//     name: "startDate",
+//     label: "Start Date",
+//     type: 'date'
+//   },
+//   {
+//     id: "endDate",
+//     name: "endDate",
+//     label: "Start Date",
+//     type: 'date'
+//   },
+//   {
+//     id: "std",
+//     name: "std",
+//     label: "Standard",
+//     type: 'input'
+//   },
+//   {
+//     id: "batched",
+//     name: "batches",
+//     label: "Batches",
+//     type: 'input'
+//   },
+//   {
+//     id: "subjects",
+//     name: "subjects",
+//     label: "Subjects",
+//     type: "input"
+//   }
+// ]
+
+// const initialExamFormValue = {
+//   startDate: new Date().toISOString().slice(0, 10),
+//   endDate: new Date().toISOString().slice(0, 10),
+//   std: '',
+//   batches: '',
+//   subjects: ''
+// }
 
 const initialExamFormValue = {
-  startDate: new Date().toISOString().slice(0, 10),
-  endDate: new Date().toISOString().slice(0, 10),
-  std: '',
-  batches: '',
-  subjects: ''
+  examType: "",
+  timeStart: "10.00",
+  examDate: new Date(),
+  academicYear: "",
+  marks: "",
+  standard: "",
+  subjects: [],
+  hours: 1
 }
 
 const Exams = () => {
@@ -114,7 +126,9 @@ const Exams = () => {
   const [formTitle, setFormTitle] = useState("Schedule Exam")
   const [showExamForm, setShowExamForm] = useState(false);
   const [searchStudent, setSearchStudent] = useState("")
-  const {fetchAllExams} = useContext(ExamContext);
+  const [examFormField, setExamFormFields] = useState([]);
+  // Destructuring Fees Context Functions
+  const {fetchAllExams, fetchExamFormFields, fetchSubjectByStandard, createExam} = useContext(ExamContext);
   const [examData, setExamData] = useState({
     rows: [],
     examTableHeader: [],
@@ -122,8 +136,7 @@ const Exams = () => {
   })
 
   useEffect(() => {
-    fetchAllExams()
-    . then(data => {
+    fetchAllExams().then(data => {
       if(data.resultShort && data.resultShort === 'success') {
         setExamData({
           ...examData,
@@ -131,22 +144,33 @@ const Exams = () => {
           examTableHeader: data.examTableHeader,
           examNestedTableHeader: data.examNestedTableHeader
         })
-      }
-    })
-    // return () => {
-    //   cleanup
-    // }
+      }})
   }, [])
 
+  const loadExam = () => {
+    fetchAllExams().then(data => {
+      if(data.resultShort && data.resultShort === 'success') {
+        setExamData({
+          ...examData,
+          rows: data.exams,
+          examTableHeader: data.examTableHeader,
+          examNestedTableHeader: data.examNestedTableHeader
+        })
+      }})
+  }
+
+  // eslint-disable-next-line no-unused-vars
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value)
     setPage(0);
   }
 
+  // eslint-disable-next-line no-unused-vars
   const CreateNewExam = () => {
     setShowExamForm(true)
     setFormTitle("ReschduleExam");
@@ -157,6 +181,7 @@ const Exams = () => {
     setShowExamForm(flag)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const handleSearchInput = (e) => {
     setSearchStudent(e.target.value);
     console.log('e.target.value', e.target.value);
@@ -166,9 +191,47 @@ const Exams = () => {
     setShowExamForm(false)
   }
 
+  const fetchFeesForms = () => {
+    fetchExamFormFields().then((data) => {
+      console.log('Data.formFields', data.formFields);
+      setExamFormFields(data.formFields)
+    })
+    .catch(error => {
+      console.log("Error", error)
+    })
+  }
+  
+  const showExamFormFields = () => {
+    fetchFeesForms()
+    setShowExamForm(true)
+  }
+
   return (
     <>
+      { showExamForm &&  <ExamForm hindeForm={hindeForm} loadExam={loadExam} initialExamFormValue={initialExamFormValue} formTitle={formTitle} SchduleExam={SchduleExam} examFormInput={examFormField} fetchSubjectByStandard={fetchSubjectByStandard} createExam={createExam} />}      
       <Paper className={styles.paperCotent}>
+        <Grid container>
+          <Grid item xs={3}>
+              <Text variable="subtitle1" component="subtitle1">Upcoming Exam</Text>
+          </Grid>
+          <Grid item sm></Grid>
+          <Grid item xs={3}>
+            <MatButton onClick={showExamFormFields} variant="contained" style={{ flex: "1", width: "90%" }}>Create Exam</MatButton>
+          </Grid>
+        </Grid>
+        {
+          examData.examTableHeader && <ExamTable rows={examData.rows} ExamTableHeader={examData.examTableHeader} ExamNestedTableHeader={examData.examNestedTableHeader} />
+        }
+      </Paper>
+    </>
+  );
+};
+
+export default Exams;
+
+
+// eslint-disable-next-line no-lone-blocks
+{/* <Paper className={styles.paperCotent}>
         <Grid container>
           <Grid container>
             <Grid item xs={3}>
@@ -225,13 +288,4 @@ const Exams = () => {
             </Grid>
           </Grid>
         </Grid>
-      </Paper>
-      { showExamForm &&  <ExamForm hindeForm={hindeForm} initialExamFormValue={initialExamFormValue} formTitle={formTitle} SchduleExam={SchduleExam} examFormInput={examFormInput} />}      
-      <Paper className={styles.paperCotent}>
-        <ExamTable rows={examData.rows} ExamTableHeader={examData.examTableHeader} ExamNestedTableHeader={examData.examNestedTableHeader} />
-      </Paper>
-    </>
-  );
-};
-
-export default Exams;
+      </Paper> */}

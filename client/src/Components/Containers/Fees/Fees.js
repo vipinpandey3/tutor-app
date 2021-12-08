@@ -91,20 +91,20 @@ const Fees = () => {
         }
     }
 
-    useEffect(() => {
-        // console.log("value, ", typeof(parseInt(searchValue)));
-        // if(searchValue) {
-        //     const newData = feesData.filter(data => {
-        //         console.log('Log', data);
-        //         if(parseInt(searchValue) === parseInt(data.studentId) || data.studentName.includes(searchValue) ) {
-        //             return data
-        //         }
-        //     })
-        //     setFeesPaidData(newData)
-        // } else {
-        //     setFeesPaidData(feesData)
-        // }
-    }, [searchRef]);
+    // useEffect(() => {
+    //     // console.log("value, ", typeof(parseInt(searchValue)));
+    //     // if(searchValue) {
+    //     //     const newData = feesData.filter(data => {
+    //     //         console.log('Log', data);
+    //     //         if(parseInt(searchValue) === parseInt(data.studentId) || data.studentName.includes(searchValue) ) {
+    //     //             return data
+    //     //         }
+    //     //     })
+    //     //     setFeesPaidData(newData)
+    //     // } else {
+    //     //     setFeesPaidData(feesData)
+    //     // }
+    // }, [searchRef]);
 
     useEffect(() => {
         fetchFees()
@@ -120,7 +120,6 @@ const Fees = () => {
     }, [])
 
     const downloadReciept = (data) => {
-        console.log('result', data)
         downloadFeesbyId(data.uuid)
             .then(result => {
                 const url = window.URL.createObjectURL(

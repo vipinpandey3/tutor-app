@@ -15,13 +15,13 @@ export default function Select(props) {
       variant="outlined"
       {...(error && { error: true, helpertext: error })}
     >
-      <InputLabel>{label}</InputLabel>
-      <MuiSelect label={label} name={name} value={value} onChange={onChange}>
+      <InputLabel id="select-label-text">{label}</InputLabel>
+      <MuiSelect label={label} name={name} labelId="select-label-text" id="select-helper" value={value} onChange={onChange}>
         <MenuItem value="">None</MenuItem>
         {options.map((item, index) => {
           return (
-            <MenuItem key={index} value={item.id}>
-              {item.title}
+            <MenuItem key={index} value={item.type}>
+              {item.type}
             </MenuItem>
           );
         })}

@@ -74,4 +74,6 @@ router.get('/getExamFormFields', (req, res, next) => {
         })
 })
 
+router.get('/getSubjects/:stdId', Faculty.getSubjectsByStandard);
+
 module.exports = router

@@ -20,7 +20,8 @@ const ExamTable = (props) => {
 
     const toggleRow = (id) => {
         setOpen(prevState => !prevState)
-        rows[id].expanded = open
+        console.log('Id', id);
+        rows[id-1].expanded = open
     }
 
     return (
@@ -39,7 +40,7 @@ const ExamTable = (props) => {
                 <TableBody>
                     {
                         rows.map((row, index) => {
-                            console.log('Rows.examId', row.ExamId);
+                            console.log('Index', row.ExamId)
                             return (
                                 <>
                                     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>

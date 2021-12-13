@@ -18,13 +18,6 @@ import { ExamContext } from "../../../context/exam-context";
 import MatButton from "../../Common/Button";
 import Input from "../../Common/Input";
 import Text from "../../Common/Text";
-import {
-  examResultData as rows,
-  examDataColumnHeader as columns,
-  examDateRows as examRows,
-  examDateColumnHeader as examDateHeader,
-  examDateRows
-} from "./ExamData";
 import ExamForm from "./ExamForm";
 import ExamTable from "./ExamTable";
 
@@ -47,24 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TableHeaderRow = () => {
-  return (
-    <>
-      <TableRow>
-        {columns.map((header) => (
-          <TableCell
-            key={header.id}
-            align={header.align}
-            style={{ minWidth: header.minWidth }}
-          >
-            {header.label}
-          </TableCell>
-        ))}
-      </TableRow>
-    </>
-  );
-};
-
 const initialExamFormValue = {
   examType: "",
   timeStart: "10.00",
@@ -78,9 +53,6 @@ const initialExamFormValue = {
 
 const Exams = () => {
   const styles = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selected, setSelected] = useState([]);
   
   const [formTitle, setFormTitle] = useState("Schedule Exam")
   const [showExamForm, setShowExamForm] = useState(false);
@@ -110,28 +82,9 @@ const Exams = () => {
       }})
   }
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value)
-    setPage(0);
-  }
-
-  const CreateNewExam = () => {
-    setShowExamForm(true)
-    setFormTitle("ReschduleExam");
-  }
-
   const SchduleExam = (formValue, flag) => {
     console.log('form value', formValue);
     setShowExamForm(flag)
-  }
-
-  const handleSearchInput = (e) => {
-    setSearchStudent(e.target.value);
-    console.log('e.target.value', e.target.value);
   }
 
   const hindeForm = () => {

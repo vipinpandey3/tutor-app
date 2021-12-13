@@ -12,16 +12,24 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { visuallyHidden } from '@mui/utils';
+import useTable from '../../../customsHooks/useTable';
 
 const ExamTable = (props) => {
-    
     const {rows, ExamTableHeader, ExamNestedTableHeader} = props; 
     const [open, setOpen] = useState(false)
+
+    const {stableSort, handleTableSorting, Pagination, getComparator, setOrder, setOrderBy, orderBy, order, page, rowsPerPage} = useTable(rows)
 
     const toggleRow = (id) => {
         setOpen(prevState => !prevState)
         console.log('Id', id);
         rows[id-1].expanded = open
+    }
+
+    const createSortHandler = (property) => (event) => {
+        handleTableSorting(property)
     }
 
     return (
@@ -32,19 +40,35 @@ const ExamTable = (props) => {
                     <TableCell />
                     {
                         ExamTableHeader.map(cellValue => {
-                            return <TableCell key={cellValue.id}>{cellValue.label}</TableCell>
+                            return (
+                                <TableCell key={cellValue.id}>
+                                    <TableSortLabel
+                                        active={orderBy === cellValue.id}
+                                        direction={orderBy === cellValue.id ? order : 'asc'}
+                                        onClick={createSortHandler(cellValue.id)}
+                                    >
+                                       {cellValue.label}
+                                        {orderBy === cellValue.id ? (
+                                            <Box component="span" sx={visuallyHidden}>
+                                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                            </Box>
+                                        ) : null}
+                                    </TableSortLabel>
+                                </TableCell>
+                            )
                         })
                     }
                 </TableRow>
                 </TableHead>
                 <TableBody>
                     {
-                        rows.map((row, index) => {
-                            console.log('Index', row.ExamId)
+                        stableSort(rows, getComparator(order, orderBy))
+                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((row, index) => {
                             return (
                                 <>
                                     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                                        <TableCell>
+                                        <TableCell key={index + 0.}>
                                             <IconButton
                                                 aria-label="expand row"
                                                 size="small"
@@ -57,7 +81,7 @@ const ExamTable = (props) => {
                                                 ExamTableHeader.map(cellValue => {
                                                     const value = row[cellValue.id];
                                                     return (
-                                                        <TableCell component="th" scope="row">
+                                                        <TableCell key={value} component="th" scope="row">
                                                             {value}
                                                         </TableCell>
                                                     )
@@ -116,6 +140,7 @@ const ExamTable = (props) => {
                     }
                 </TableBody>
             </Table>
+            <Pagination />
         </TableContainer>
     )
 }

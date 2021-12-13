@@ -65,47 +65,6 @@ const TableHeaderRow = () => {
   );
 };
 
-// const examFormInput = [
-//   {
-//     id: "startDate",
-//     name: "startDate",
-//     label: "Start Date",
-//     type: 'date'
-//   },
-//   {
-//     id: "endDate",
-//     name: "endDate",
-//     label: "Start Date",
-//     type: 'date'
-//   },
-//   {
-//     id: "std",
-//     name: "std",
-//     label: "Standard",
-//     type: 'input'
-//   },
-//   {
-//     id: "batched",
-//     name: "batches",
-//     label: "Batches",
-//     type: 'input'
-//   },
-//   {
-//     id: "subjects",
-//     name: "subjects",
-//     label: "Subjects",
-//     type: "input"
-//   }
-// ]
-
-// const initialExamFormValue = {
-//   startDate: new Date().toISOString().slice(0, 10),
-//   endDate: new Date().toISOString().slice(0, 10),
-//   std: '',
-//   batches: '',
-//   subjects: ''
-// }
-
 const initialExamFormValue = {
   examType: "",
   timeStart: "10.00",
@@ -136,15 +95,7 @@ const Exams = () => {
   })
 
   useEffect(() => {
-    fetchAllExams().then(data => {
-      if(data.resultShort && data.resultShort === 'success') {
-        setExamData({
-          ...examData,
-          rows: data.exams,
-          examTableHeader: data.examTableHeader,
-          examNestedTableHeader: data.examNestedTableHeader
-        })
-      }})
+    loadExam()
   }, [])
 
   const loadExam = () => {
@@ -159,18 +110,15 @@ const Exams = () => {
       }})
   }
 
-  // eslint-disable-next-line no-unused-vars
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
-  // eslint-disable-next-line no-unused-vars
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value)
     setPage(0);
   }
 
-  // eslint-disable-next-line no-unused-vars
   const CreateNewExam = () => {
     setShowExamForm(true)
     setFormTitle("ReschduleExam");
@@ -181,7 +129,6 @@ const Exams = () => {
     setShowExamForm(flag)
   }
 
-  // eslint-disable-next-line no-unused-vars
   const handleSearchInput = (e) => {
     setSearchStudent(e.target.value);
     console.log('e.target.value', e.target.value);

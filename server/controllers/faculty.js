@@ -226,14 +226,14 @@ const getStandardId = (std) => {
 
 const getExams = (req, res, next) => {
     console.log("Inside the Get Exam Function");
-    getAllExam()
+    const currentDate = moment().format('YYYY-MM-DD')
+    getAllExam(currentDate)
     .then(examsObj => {
         const ExamTableHeader = attributes[2].attributes;
         const ExamNestedTableHeader = attributes[3].attributes
         examsObj.forEach(exam => {
             exam.exapanded = false
         })
-        console.log('ExamObj', examsObj);
         const result = {
             resultShort: 'success',
             resultLong: 'Successfully retrieved all the exam',
@@ -252,11 +252,16 @@ const getExams = (req, res, next) => {
     })
 }
 
-const getAllExam = () => {
+const getAllExam = (currentDate) => {
     console.log('Inside getAllExam Function');
     return new Promise((resolve, reject) => {
         // sequelize.query("select * from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join StandardMaster sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
-        sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
+        sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1 and e.examDate >= ?", 
+            { 
+                replacements: [currentDate],
+                type: QueryTypes.SELECT 
+            }
+        )
         .then(exams => {
             return resolve(exams)
         })

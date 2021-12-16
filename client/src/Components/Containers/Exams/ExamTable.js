@@ -13,23 +13,47 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import TableSortLabel from '@mui/material/TableSortLabel';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { visuallyHidden } from '@mui/utils';
 import useTable from '../../../customsHooks/useTable';
+import {makeStyles} from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+    redIcon: {
+        '&.MuiSvgIcon-root': {
+            color: 'red'
+        }
+    },
+    blueIcon: {
+        '&.MuiSvgIcon-root': {
+            color: 'blue'
+        }
+    }
+}))
 
 const ExamTable = (props) => {
-    const {rows, ExamTableHeader, ExamNestedTableHeader} = props; 
+    const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam, loadExam, editExam} = props; 
     const [open, setOpen] = useState(false)
+    const styles = useStyles()
 
-    const {stableSort, handleTableSorting, Pagination, getComparator, setOrder, setOrderBy, orderBy, order, page, rowsPerPage} = useTable(rows)
+    const {stableSort, handleTableSorting, Pagination, getComparator, orderBy, order, page, rowsPerPage} = useTable(rows)
 
     const toggleRow = (id) => {
         setOpen(prevState => !prevState)
-        console.log('Id', id);
-        rows[id-1].expanded = open
+        rows[id].expanded = open
     }
 
     const createSortHandler = (property) => (event) => {
         handleTableSorting(property)
+    }
+
+    const disableExamRow = (data) => {
+        disableExam(data)
+            .then(res => {
+                if(res.resultShort === "success") {
+                    loadExam()
+                }
+            })
     }
 
     return (
@@ -58,6 +82,9 @@ const ExamTable = (props) => {
                             )
                         })
                     }
+                    <TableCell>
+                        Actions
+                    </TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
@@ -72,21 +99,27 @@ const ExamTable = (props) => {
                                             <IconButton
                                                 aria-label="expand row"
                                                 size="small"
-                                                onClick={() => {toggleRow(row.ExamId)}}
+                                                onClick={() => {toggleRow(index)}}
                                             >
                                                 {row.expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                             </IconButton>
                                         </TableCell>
-                                            {
-                                                ExamTableHeader.map(cellValue => {
-                                                    const value = row[cellValue.id];
-                                                    return (
-                                                        <TableCell key={value} component="th" scope="row">
-                                                            {value}
-                                                        </TableCell>
-                                                    )
-                                                })
-                                            }
+                                        {
+                                            ExamTableHeader.map(cellValue => {
+                                                const value = row[cellValue.id];
+                                                return (
+                                                    <TableCell key={value} component="th" scope="row">
+                                                        {value}
+                                                    </TableCell>
+                                                )
+                                            })
+                                        }
+                                        <TableCell>
+                                            <DeleteIcon onClick={()=> disableExamRow(row)} className={styles.redIcon}/>
+                                            {/* <DeleteIcon onClick={()=> disableExam(row)} className={styles.redIcon} /> */}
+                                            {/* <GetAppIcon onClick={() => downloadReciept(data)}  className={styles.greenIcon}/> */}
+                                            {/* <EditIcon onClick={() => editExam(row)} className={styles.blueIcon} /> */}
+                                        </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
@@ -140,7 +173,7 @@ const ExamTable = (props) => {
                     }
                 </TableBody>
             </Table>
-            <Pagination />
+            {rows.length > 5 && <Pagination />}
         </TableContainer>
     )
 }

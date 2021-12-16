@@ -54,12 +54,17 @@ const initialExamFormValue = {
 const Exams = () => {
   const styles = useStyles();
   
-  const [formTitle, setFormTitle] = useState("Schedule Exam")
+  const [formTitle, setFormTitle] = useState({
+    title: '"Schedule Exam"',
+    buttonTitle: "Schedule Exam"
+  })
   const [showExamForm, setShowExamForm] = useState(false);
   const [searchStudent, setSearchStudent] = useState("")
+  const [editFormFieldValue, setEditFormFieldValues] = useState([])
   const [examFormField, setExamFormFields] = useState([]);
+  const [editFormFlag, setEditExamFormFlag] = useState(false)
   // Destructuring Fees Context Functions
-  const {fetchAllExams, fetchExamFormFields, fetchSubjectByStandard, createExam} = useContext(ExamContext);
+  const {fetchAllExams, fetchExamFormFields, fetchSubjectByStandard, createExam, disableExam, getExamById} = useContext(ExamContext);
   const [examData, setExamData] = useState({
     rows: [],
     examTableHeader: [],
@@ -93,7 +98,6 @@ const Exams = () => {
 
   const fetchFeesForms = () => {
     fetchExamFormFields().then((data) => {
-      console.log('Data.formFields', data.formFields);
       setExamFormFields(data.formFields)
     })
     .catch(error => {
@@ -101,14 +105,43 @@ const Exams = () => {
     })
   }
   
+  // const showExamFormFields = (title, buttonTitle, flag=false) => {
+  //   fetchFeesForms()
+  //   setFormTitle({
+  //     ...formTitle,
+  //     title: title,
+  //     buttonTitle: buttonTitle
+  //   })
+  //   setEditExamFormFlag(flag)
+  //   setShowExamForm(true)
+  // }
+
   const showExamFormFields = () => {
     fetchFeesForms()
     setShowExamForm(true)
   }
 
+  // const editExam = (data) => {
+  //   getExamById(data.ExamId)
+  //     .then(result => {
+  //       showExamFormFields('Edit Exam', "Update Exam", true)
+  //       setEditFormFieldValues(result.examData)
+  //     })    
+  // }
+
   return (
     <>
-      { showExamForm &&  <ExamForm hindeForm={hindeForm} loadExam={loadExam} initialExamFormValue={initialExamFormValue} formTitle={formTitle} SchduleExam={SchduleExam} examFormInput={examFormField} fetchSubjectByStandard={fetchSubjectByStandard} createExam={createExam} />}      
+      { showExamForm &&  <ExamForm 
+                            hindeForm={hindeForm} 
+                            loadExam={loadExam} 
+                            initialExamFormValue={initialExamFormValue} 
+                            formTitle={formTitle} 
+                            SchduleExam={SchduleExam} 
+                            examFormInput={examFormField} 
+                            fetchSubjectByStandard={fetchSubjectByStandard} 
+                            createExam={createExam}
+                          />
+      }      
       <Paper className={styles.paperCotent}>
         <Grid container>
           <Grid item xs={3}>
@@ -120,7 +153,13 @@ const Exams = () => {
           </Grid>
         </Grid>
         {
-          examData.examTableHeader && <ExamTable rows={examData.rows} ExamTableHeader={examData.examTableHeader} ExamNestedTableHeader={examData.examNestedTableHeader} />
+          examData.examTableHeader && <ExamTable 
+                                          rows={examData.rows} 
+                                          ExamTableHeader={examData.examTableHeader} 
+                                          ExamNestedTableHeader={examData.examNestedTableHeader}
+                                          disableExam={disableExam}
+                                          loadExam={loadExam}
+                                          />
         }
       </Paper>
     </>

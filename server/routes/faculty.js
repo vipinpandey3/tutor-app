@@ -76,4 +76,8 @@ router.get('/getExamFormFields', (req, res, next) => {
 
 router.get('/getSubjects/:stdId', Faculty.getSubjectsByStandard);
 
+router.post('/disableExam', Faculty.disableExam);
+
+router.get('/get_Exam_Details/:examId', Faculty.getExamDetailsById)
+
 module.exports = router

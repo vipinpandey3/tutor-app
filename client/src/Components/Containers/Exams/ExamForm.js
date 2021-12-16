@@ -38,9 +38,6 @@ const ExamForm = (props) => {
   const [subjectOptions, setSubjectOptions] = useState([])
   const [subjects, setSubjects] = useState([])
 
-  console.log('initialExamFormValue', initialExamFormValue);
-  console.log("ExamFormInput", examFormInput);
-
   const valueChange = (e) => {
     if(e.target.name === "standard") {
       console.log('e.target.value', e.target.value);
@@ -100,7 +97,7 @@ const ExamForm = (props) => {
         <Grid container>
           <Grid item xs={3}>
             <Text variant="subtitle1" component="h6">
-              {formTitle}
+              {formTitle.title}
             </Text>
           </Grid>
         </Grid>
@@ -165,7 +162,7 @@ const ExamForm = (props) => {
               onClick={handleSubmit}
               size="large"
             >
-              Schedule Exam
+              {formTitle.buttonTitle}
             </MatButton>
           </Grid>
         </Grid>

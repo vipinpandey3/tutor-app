@@ -55,6 +55,37 @@ export const ExamContextProvider = (props) => {
         }
     }
 
+    const disableExam = async (data) => {
+        console.log('Exam Deletion function', data)
+        const postObj = {
+            examId: data.ExamId
+        }
+        try {
+            return await axios.post('/faculty/disableExam', postObj)
+                .then(result => {
+                    if(result.data.resultShort && result.data.resultShort === 'success') {
+                        return result.data
+                    }
+                });
+        } catch(e) {
+            console.log('Error while deleting exam', e)
+        }
+    }
+
+    const getExamById = async(id) => {
+        console.log('Exam Id', id)
+        try {
+            return await axios.get(`/faculty/get_Exam_Details/${id}`)
+            .then(result => {
+                if(result.data.resultShort && result.data.resultShort === 'success') {
+                    return result.data
+                }
+            });
+        } catch(e) {
+            console.log('Error while Fetching Exam Details', e)
+        }
+    }
+
     return (
         <ExamContext.Provider
             value={{
@@ -62,7 +93,9 @@ export const ExamContextProvider = (props) => {
                 fetchAllExams,
                 fetchExamFormFields,
                 fetchSubjectByStandard,
-                createExam
+                createExam,
+                disableExam,
+                getExamById
             }}
         >
             {props.children}

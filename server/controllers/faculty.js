@@ -9,6 +9,7 @@ const { QueryTypes } = require('sequelize');
 const sequelize = require('../models/database');
 const OptionServices = require('../services/optionServices');
 const moment = require('moment');
+const SubjectMaster = require('../models/subjectMatser');
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function');
@@ -293,11 +294,114 @@ const getSubjectsByStandard = (req, res) => {
         })
 }
 
+const disableExam = (req, res) => {
+    console.log("Inside disableExam Function");
+    const examId = req.body.examId;
+    console.log('Examid', examId);
+    ExamStdMap.update({status: 0},{where : {ExamId: examId}})
+        .then(resultObj => {
+            console.log('resultObj', resultObj)
+            if(!resultObj) {
+                console.log('disableExam Failure', resultObj)
+                return res.status(200).json({
+                    resultShort: 'failed',
+                    resultLong: 'Exam Disable Failed'
+                })
+            }
+            const result = {
+                resultShort: "success",
+                resultLong: "Successfully deleted Exam",
+            }
+            return res.status(200).json(result)
+        })
+        .catch(error => {
+            const result = {
+                resultShort: "failure",
+                resultLong: "Failure while deleting Exam",
+            }
+            return res.status(400).json(result)
+        })
+}
+
+const getExamDetailsById = (req, res) => {
+    console.log('Inside getExamDetailsById function for: ['+ req.params.examId + '].' );
+    const examId = req.params.examId;
+    // return new Promise((resolve, reject) => {
+        sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where e.id = ?",
+            { 
+                replacements: [examId],
+                type: QueryTypes.SELECT 
+            }
+        )
+        .then(examObj => {
+            const examSubjectSchedule = examObj[0].examSubjects;
+            // let subjectArray = []
+            // examSubjectSchedule.subjects.forEach((subjObj => {
+            //     subjectArray.push(subjObj.subject)
+            // }));
+            // examObj[0].subjects = subjectArray;
+            return StandardMaster.findAll({where: {remarks: examObj[0].Standard}})
+                .then((stdObj) => {
+                    const stdId = stdObj[0].id;
+                    console.log('stdObj[0].id ============>', stdId)
+                    return SubjectMaster.findAll(
+                        {
+                            where: {
+                                stdId: stdId
+                            },
+                            attributes: ['id', ['subjectName', 'type']]
+                        }
+                    )
+                    .then((subjectObj) => {
+                        examObj[0].subjects = JSON.parse(JSON.stringify(subjectObj))
+                        delete examObj[0].examSubjects
+                        delete examObj[0].timeEnd
+                        const result = {
+                            resultShort: 'success',
+                            resultLong: 'Successfully retrived data with related to the Exam Id: ' + examId,
+                            examData: examObj[0]
+                        }
+                        return res.status(200).json(result);
+                    })
+                    .catch((error) => {
+                        console.log('Error', error)
+                        const result = {
+                            resultShort: 'failure',
+                            resultLong: 'Error getting subjects with Standard ' + stdId,
+                            examData: examObj
+                        }
+                        return res.status(500).json(result);
+                    })
+                })
+                .catch((error) => {
+                    console.log('Error', error)
+                    const result = {
+                        resultShort: 'failure',
+                        resultLong: 'Error getting standard for exam with Id: ' + examId,
+                        examData: examObj
+                    }
+                    return res.status(500).json(result);
+                })
+        })
+        .catch((error) => {
+            console.log('Error', error)
+            const result = {
+                resultShort: 'failure',
+                resultLong: 'Failure while retriving data with related to the Exam Id: ' + examId,
+                examData: examObj
+            }
+            return res.status(500).json(result);
+        })
+    // })
+}
+
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
     getExamFormFields,
     createExam,
     getExams,
-    getSubjectsByStandard
+    getSubjectsByStandard,
+    disableExam,
+    getExamDetailsById
 }

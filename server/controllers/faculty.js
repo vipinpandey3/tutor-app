@@ -274,24 +274,36 @@ const getAllExam = (currentDate) => {
 
 const getSubjectsByStandard = (req, res) => {
     console.log('Inside the Get Subject By Standard');
-    const stdId = req.params.stdId;
-    OptionServices.getSubjectOptionForStandard(stdId)
-        .then(data => {
-            const result = {
-                resultShort: 'success',
-                resultLong: 'Fetched subject for Standard ' + stdId,
-                subjects: data
-            }
-            return res.status(200).json(result);
-        })
-        .catch(error => {
-            console.log('Error while fetching Subject for ', stdId)
-            const result = {
-                resultShort: 'failure',
-                resultLong: 'Error while getting Subject for ' + stdId,
-            }
-            return res.status(400).json(result);
-        })
+    const std = req.params.stdId;
+    StandardMaster.findAll({where: {remarks: std}})
+    .then(standard => {
+        const stdId = standard[0].id
+        OptionServices.getSubjectOptionForStandard(stdId)
+            .then(data => {
+                const result = {
+                    resultShort: 'success',
+                    resultLong: 'Fetched subject for Standard ' + stdId,
+                    subjects: data
+                }
+                return res.status(200).json(result);
+            })
+            .catch(error => {
+                console.log('Error while fetching Subject for ', stdId)
+                const result = {
+                    resultShort: 'failure',
+                    resultLong: 'Error while getting Subject for ' + stdId,
+                }
+                return res.status(400).json(result);
+            })
+    })
+    .catch(error => {
+        console.log('Error while getting student for ', stdId)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Error while getting Standard Id: '
+        }
+        return res.status(400).json(result); 
+    })
 }
 
 const disableExam = (req, res) => {

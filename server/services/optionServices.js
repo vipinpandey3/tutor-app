@@ -110,6 +110,7 @@ const getMarksData = () => {
 }
 
 const getSubjectOptionForStandard = async(id) => {
+    console.log('Id =>>>>>>>.', id)
     const subjectOption = await SubjectMaster.findAll({
         where: {
             stdId: id

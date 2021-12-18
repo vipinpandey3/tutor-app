@@ -38,8 +38,7 @@ const MultiSelect = (props) => {
                 {
                   options.length > 0 && options.map((option) => (
                     <MenuItem key={option.id} value={option.type}>
-                      <Checkbox checked={value.indexOf(option) > -1} />
-                      <ListItemText primary={option.type} />
+                      {option.type}
                     </MenuItem>
                   ))
                 }

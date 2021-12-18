@@ -43,12 +43,8 @@ function Table(props) {
   const [tableRecords, setTableRecords] = useState(records);
   // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
   const {
-    TblePagination,
-    recordsAfterPagingAndSorting,
-    handleTableSorting,
-    orderBy,
-    order,
-  } = useTable(tableRecords, filterFunction);
+    stableSort, handleTableSorting, Pagination, getComparator, orderBy, order, page, rowsPerPage
+  } = useTable(tableRecords);
   return (
     <>
       <MuiTable className={classes.table}>
@@ -75,7 +71,9 @@ function Table(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {recordsAfterPagingAndSorting().map((row) => {
+          {stableSort(tableRecords, getComparator(order, orderBy))
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .map((row) => {
             return (
               <TableRow
                 key={row.id}
@@ -108,38 +106,12 @@ function Table(props) {
                     <CloseOutlinedIcon fontSize="small" />
                   </ActionButton>
                 </TableCell>
-                {/* <TableCell>{row.firstName}</TableCell>
-                <TableCell>{row.lastName}</TableCell>
-                <TableCell>{row.emailId}</TableCell>
-                <TableCell>{row.aadharNo}</TableCell>
-                <TableCell>{row.gender}</TableCell>
-                <TableCell>
-                  <ActionButton
-                    onClick={() => openInPopup(row)}
-                    color="primary"
-                  >
-                    <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                  <ActionButton
-                    color="secondary"
-                    onClick={() => {
-                      // setConfirmDialog({
-                      //     isOpen: true,
-                      //     title: "Are you sure you want to delete tutor?",
-                      //     subTitle: "Operation once done can not be undone?",
-                      //     onConfirm: () => {onDeleteT(tutor.id)}
-                      // })
-                    }}
-                  >
-                    <CloseOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell> */}
               </TableRow>
             );
           })}
         </TableBody>
       </MuiTable>
-      <TblePagination />
+      <Pagination />
     </>
   );
 }

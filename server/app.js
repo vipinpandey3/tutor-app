@@ -6,13 +6,15 @@ const facultyRoute = require('./routes/faculty');
 const sequelize = require("./models/database");
 const Student = require("./models/student");
 const Teacher = require("./models/teacher");
-// const StudentTeacherMap = require("./models/student-teacher-map");
-// const StudentParentMap = require("./models/student-parent-map");
 const Parent = require("./models/Parents");
 const User = require('./models/user');
 const StudentEducationDetails = require('./models/student-education-details');
 const Fees = require('./models/fees');
 const ExcelImport = require('./models/excelImport');
+const StandardMaster = require('./models/standardMaster');
+const ExamStdMap = require('./models/examStdMap')
+const Exam = require('./models/exam');
+const SubjectMasters = require("./models/subjectMatser");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -40,30 +42,36 @@ app.use((req, res, next) => {
 
 app.use("/admin", adminRoute);
 app.use('/faculty', facultyRoute);
+
+
 Student.hasOne(Parent);
-// Student.hasMany(Teacher);
-// Teacher.hasMany(Student);
 Parent.belongsTo(Student);
 Student.belongsTo(User)
-// User.hasMany(Student);
-// User.hasMany(Teacher);
-// Teacher.belongsTo(Student, {through: StudentTeacherMap});
 Teacher.belongsTo(User);
-// Student.hasMany(StudentEducationDetails);
 StudentEducationDetails.belongsTo(Student)
 Fees.belongsTo(Student);
 ExcelImport.belongsTo(User);
+Exam.belongsToMany(StandardMaster, {
+  as: "Exam",
+  foreignKey: "ExamId",
+  through: ExamStdMap
+});
+StandardMaster.belongsToMany(Exam, {
+  as: "Standard",
+  foreignKey: "standardId",
+  through: ExamStdMap
+});
+SubjectMasters.belongsTo(StandardMaster);
 
 
 sequelize
   .sync({force: false})
   .then(() => {
     return User.findByPk(1);
-    app.listen(5000);
   })
   .then((user) => {
     if(!user) {
-      return User.create({name: "Vipin Pandey", emailId: "Vipin@gmail.com" })
+      return User.create({name: "Vipin Pandey", emailId: "Vipin@gmail.com" , status: "active"})
     }
     return user
   })
@@ -72,5 +80,3 @@ sequelize
     app.listen(5000)
   })
   .catch((e) => console.log(e));
-
-// app.listen(5000);

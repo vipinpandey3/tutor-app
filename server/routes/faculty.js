@@ -50,4 +50,34 @@ router.get('/downloadFeesReciept/:feesUUID', (req, res, next) => {
 
 router.post('/uploadFile', Faculty.fileUpload)
 
+router.post('/create-exam', Faculty.createExam);
+
+router.get('/get-exams', Faculty.getExams);
+
+router.get('/getExamFormFields', (req, res, next) => {
+    Faculty.getExamFormFields()
+        .then((data) => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrived form inputs',
+                formFields: data
+            }
+            return res.status(200).json(result)
+        })
+        .catch(error => {
+            console.log('Error Final', error)
+            const result = {
+                resultShort: "failure",
+                resultLong: "Failed to retriev form inputs",
+            }
+            return res.status(400).json(result);
+        })
+})
+
+router.get('/getSubjects/:stdId', Faculty.getSubjectsByStandard);
+
+router.post('/disableExam', Faculty.disableExam);
+
+router.get('/get_Exam_Details/:examId', Faculty.getExamDetailsById)
+
 module.exports = router

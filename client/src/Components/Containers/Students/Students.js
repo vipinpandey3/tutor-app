@@ -39,8 +39,17 @@ const headCells = [
 const Students = () => {
   const history = useHistory();
   const classes = useStyles();
-  const [students, setStudents] = useState([])
-  const { fetchStudents } = useContext(StudentContext);
+  const [students, setStudents] = useState({
+    studentRows: [],
+    studenetTableAttributes: []
+  })
+  const { fetchStudents, 
+          addStudent, 
+          addParent, 
+          fetchStudentDetails, 
+          storStudentEducationDetails, 
+          fetchStudentFeesDetails
+        } = useContext(StudentContext);
   const [showForm, setForm] = useState(false);
   const [filterFunction, setFilterFunction] = useState({
     fn: (item) => {
@@ -51,11 +60,12 @@ const Students = () => {
   useEffect(() => {
     fetchStudents()
       .then(result => {
-        setStudents(result.students);
+        console.log(result)
+        setStudents({
+          studentRows: result.students,
+          studenetTableAttributes: result.attributes
+        })
       })
-      .catch(err => {
-      console.log(err);
-    })
   }, [])
 
   const searchUser = (event) => {};
@@ -107,13 +117,15 @@ const Students = () => {
           </Grid>
         </Grid>
         
-        <Table
-          records={students}
-          headCells={headCells}
+       {
+         students.studentRows && students.studentRows.length > 0 &&  <Table
+          records={students.studentRows}
+          headCells={students.studenetTableAttributes}
           filterFunction={filterFunction}
           openInPopup={toggleForm}
           redirectToDetailsPage={redirectToStudentDetailsPage}
         />
+       }
       </Paper>
       {/* <Popup 
         title="Students Form"

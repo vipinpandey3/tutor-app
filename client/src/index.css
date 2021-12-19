@@ -75,10 +75,12 @@ code {
   padding-left: 10px;
 }
 
-
-
 .fileInput {
   border: 1px solid black;
   flex: 1;
   margin-right: 300px;
+}
+
+.selectInput {
+  width: 90% !important;
 }

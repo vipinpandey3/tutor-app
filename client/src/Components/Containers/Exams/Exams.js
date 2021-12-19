@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Checkbox,
   Grid,
@@ -12,18 +13,13 @@ import {
   TableRow,
   Toolbar,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ExamContext } from "../../../context/exam-context";
 import MatButton from "../../Common/Button";
 import Input from "../../Common/Input";
 import Text from "../../Common/Text";
-import {
-  examResultData as rows,
-  examDataColumnHeader as columns,
-  examDateRows as examRows,
-  examDateColumnHeader as examDateHeader,
-  examDateRows
-} from "./ExamData";
 import ExamForm from "./ExamForm";
+import ExamTable from "./ExamTable";
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -44,87 +40,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TableHeaderRow = () => {
-  return (
-    <>
-      <TableRow>
-        {columns.map((header) => (
-          <TableCell
-            key={header.id}
-            align={header.align}
-            style={{ minWidth: header.minWidth }}
-          >
-            {header.label}
-          </TableCell>
-        ))}
-      </TableRow>
-    </>
-  );
-};
-
-const examFormInput = [
-  {
-    id: "startDate",
-    name: "startDate",
-    label: "Start Date",
-    type: 'date'
-  },
-  {
-    id: "endDate",
-    name: "endDate",
-    label: "Start Date",
-    type: 'date'
-  },
-  {
-    id: "std",
-    name: "std",
-    label: "Standard",
-    type: 'input'
-  },
-  {
-    id: "batched",
-    name: "batches",
-    label: "Batches",
-    type: 'input'
-  },
-  {
-    id: "subjects",
-    name: "subjects",
-    label: "Subjects",
-    type: "input"
-  }
-]
-
 const initialExamFormValue = {
-  startDate: new Date().toISOString().slice(0, 10),
-  endDate: new Date().toISOString().slice(0, 10),
-  std: '',
-  batches: '',
-  subjects: ''
+  examType: "",
+  timeStart: "10.00",
+  examDate: new Date(),
+  academicYear: "",
+  marks: "",
+  standard: "",
+  subjects: [],
+  hours: 1
 }
 
 const Exams = () => {
   const styles = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selected, setSelected] = useState([]);
   
-  const [formTitle, setFormTitle] = useState("Schedule Exam")
+  const [formTitle, setFormTitle] = useState({
+    title: '"Schedule Exam"',
+    buttonTitle: "Schedule Exam"
+  })
   const [showExamForm, setShowExamForm] = useState(false);
   const [searchStudent, setSearchStudent] = useState("")
+  const [editFormFieldValue, setEditFormFieldValues] = useState([])
+  const [examFormField, setExamFormFields] = useState([]);
+  const [editFormFlag, setEditExamFormFlag] = useState(false)
+  // Destructuring Fees Context Functions
+  const {fetchAllExams, fetchExamFormFields, fetchSubjectByStandard, createExam, disableExam, getExamById} = useContext(ExamContext);
+  const [examData, setExamData] = useState({
+    rows: [],
+    examTableHeader: [],
+    examNestedTableHeader: []
+  })
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
+  useEffect(() => {
+    loadExam()
+  }, [])
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value)
-    setPage(0);
-  }
-
-  const CreateNewExam = () => {
-    setShowExamForm(true)
-    setFormTitle("ReschduleExam");
+  const loadExam = () => {
+    fetchAllExams().then(data => {
+      if(data.resultShort && data.resultShort === 'success') {
+        setExamData({
+          ...examData,
+          rows: data.exams,
+          examTableHeader: data.examTableHeader,
+          examNestedTableHeader: data.examNestedTableHeader
+        })
+      }})
   }
 
   const SchduleExam = (formValue, flag) => {
@@ -132,18 +92,85 @@ const Exams = () => {
     setShowExamForm(flag)
   }
 
-  const handleSearchInput = (e) => {
-    setSearchStudent(e.target.value);
-    console.log('e.target.value', e.target.value);
-  }
-
   const hindeForm = () => {
     setShowExamForm(false)
   }
 
+  const fetchFeesForms = () => {
+    fetchExamFormFields().then((data) => {
+      setExamFormFields(data.formFields)
+    })
+    .catch(error => {
+      console.log("Error", error)
+    })
+  }
+  
+  // const showExamFormFields = (title, buttonTitle, flag=false) => {
+  //   fetchFeesForms()
+  //   setFormTitle({
+  //     ...formTitle,
+  //     title: title,
+  //     buttonTitle: buttonTitle
+  //   })
+  //   setEditExamFormFlag(flag)
+  //   setShowExamForm(true)
+  // }
+
+  const showExamFormFields = () => {
+    fetchFeesForms()
+    setShowExamForm(true)
+  }
+
+  // const editExam = (data) => {
+  //   getExamById(data.ExamId)
+  //     .then(result => {
+  //       showExamFormFields('Edit Exam', "Update Exam", true)
+  //       setEditFormFieldValues(result.examData)
+  //     })    
+  // }
+
   return (
     <>
+      { showExamForm &&  <ExamForm 
+                            hindeForm={hindeForm} 
+                            loadExam={loadExam} 
+                            initialExamFormValue={initialExamFormValue} 
+                            formTitle={formTitle} 
+                            SchduleExam={SchduleExam} 
+                            examFormInput={examFormField} 
+                            fetchSubjectByStandard={fetchSubjectByStandard} 
+                            createExam={createExam}
+                          />
+      }      
       <Paper className={styles.paperCotent}>
+        <Grid container>
+          <Grid item xs={3}>
+              <Text variable="subtitle1" component="subtitle1">Upcoming Exam</Text>
+          </Grid>
+          <Grid item sm></Grid>
+          <Grid item xs={3}>
+            <MatButton onClick={showExamFormFields} variant="contained" style={{ flex: "1", width: "90%" }}>Create Exam</MatButton>
+          </Grid>
+        </Grid>
+        {
+          examData.examTableHeader && <ExamTable 
+                                          rows={examData.rows} 
+                                          ExamTableHeader={examData.examTableHeader} 
+                                          ExamNestedTableHeader={examData.examNestedTableHeader}
+                                          disableExam={disableExam}
+                                          loadExam={loadExam}
+                                          />
+        }
+      </Paper>
+    </>
+  );
+};
+
+export default Exams;
+
+
+// eslint-disable-next-line no-lone-blocks
+{/* <Paper className={styles.paperCotent}>
         <Grid container>
           <Grid container>
             <Grid item xs={3}>
@@ -200,112 +227,4 @@ const Exams = () => {
             </Grid>
           </Grid>
         </Grid>
-      </Paper>
-      { showExamForm &&  <ExamForm hindeForm={hindeForm} initialExamFormValue={initialExamFormValue} formTitle={formTitle} SchduleExam={SchduleExam} examFormInput={examFormInput} />}      
-      <Paper className={styles.paperCotent}>
-        <Grid container className={styles.flexContainer}>
-            <Grid container>
-                <Grid item className="ptb_15">
-                    <Text variant="subtitle1" component="subtitle1">
-                        Upcoming Exams
-                    </Text>
-                </Grid>
-                <Grid item sm></Grid>
-                <Grid item alignItems="flex-end">
-                    <Toolbar>
-                    <MatButton
-                      variant="contained"  
-                      onClick={CreateNewExam}
-                      color="primary"
-                      size="medium"
-                    >
-                        Schedule New Exam
-                    </MatButton>
-                    </Toolbar>
-                </Grid>
-            </Grid>
-        </Grid>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-        <TableContainer>
-          <Table
-            className={styles.table}
-            aria-labelledby="tableTitle"
-            // size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    // indeterminate={numSelected > 0 && numSelected < rowCount}
-                    // checked={rowCount > 0 && numSelected === rowCount}
-                    // onChange={onSelectAllClick}
-                    inputProps={{ 'aria-label': 'select all desserts' }}
-                  />
-                </TableCell>
-                {examDateHeader.map((headCell) => (
-                  <TableCell
-                    key={headCell.id}
-                    // sortDirection={orderBy === headCell.id ? order : false}
-                  >
-                      {headCell.headerName}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { examDateRows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = "" ;//isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  return (
-                    <TableRow hover role="checkbox" aria-checked={isItemSelected}  key={row.id} selected={isItemSelected}
-                      // onClick={(event) => handleClick(event, row.name)} 
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      {/* {
-                        examDateHeader.map((column) => {
-                          const value = row[column.id];
-                          return <TableCell key={column.id}>{value}</TableCell>
-                        })
-                      } */}
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.examId}
-                      </TableCell>
-                      <TableCell >{row.startDate}</TableCell>
-                      <TableCell >{row.endDate}</TableCell>
-                      <TableCell >{row.examType}</TableCell>
-                      <TableCell >{row.std}</TableCell>
-
-                    </TableRow>
-                  );
-                })}
-              {/* {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </>
-  );
-};
-
-export default Exams;
+      </Paper> */}

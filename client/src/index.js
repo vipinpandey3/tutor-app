@@ -5,13 +5,16 @@ import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { StudentContextPorvider } from "./context/student-context";
 import { FeesContextProvider } from "./context/fees-context";
+import { ExamContextProvider } from "./context/exam-context";
 
 ReactDOM.render(
   <StudentContextPorvider>
     <FeesContextProvider>
-      <Router>
-        <App />
-      </Router>
+      <ExamContextProvider>
+        <Router>
+          <App />
+        </Router>
+      </ExamContextProvider>
     </FeesContextProvider>
   </StudentContextPorvider>,
   document.getElementById("root")

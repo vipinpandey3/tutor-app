@@ -6,16 +6,17 @@ const Teacher = require("../models/teacher");
 const Parent = require("../models/Parents");
 const StudentEducationDetails = require("../models/student-education-details");
 const Fees = require('../models/fees'); 
-
 const attributes = require('../attributes/attributes.json');
 
 const getStudent = (req, res, next) => {
+  const columnsAttributes = attributes[6].columnsHeader
   Students.findAll()
     .then((students) => {
       const respose = {
         resultShort: "success",
         resultLong: "Successfully retrived all Students",
         students: students,
+        attributes: columnsAttributes
       };
 
       res.status(200).json(respose);

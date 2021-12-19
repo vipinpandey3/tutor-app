@@ -101,6 +101,7 @@
     },
     {
         "index": 2,
+        "name": "examTable",
         "attributes": [
             {
                 "id": "Standard",
@@ -112,7 +113,7 @@
             },
             {
                 "id": "timeEnd",
-                "label": "ExamTimeEnd" 
+                "label": "ExamTimeEnd"
             },
             {
                 "id": "ExamStartDate",
@@ -134,6 +135,7 @@
     },
     {
         "index": 3,
+        "name": "nestedTableHeader",
         "attributes": [
             {
                 "id": "date",
@@ -251,6 +253,36 @@
             {
                 "id": 5,
                 "type": "Semester"
+            }
+        ]
+    },
+    {
+        "index": 6,
+        "name": "studentTableHeader",
+        "columnsHeader": [
+            {
+                "id": "firstName",
+                "label": "First Name"
+            },
+            {
+                "id": "lastName",
+                "label": "Last Name"
+            },
+            {
+                "id": "emailId",
+                "label": "EmailId"
+            },
+            {
+                "id": "gender",
+                "label": "Gender"
+            },
+            {
+                "id": "dob",
+                "label": "Date of Birth"
+            },
+            {
+                "id": "aadharNo",
+                "label": "Aadhar Number"
             }
         ]
     }

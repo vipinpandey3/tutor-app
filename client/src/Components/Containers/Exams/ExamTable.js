@@ -116,9 +116,6 @@ const ExamTable = (props) => {
                                         }
                                         <TableCell>
                                             <DeleteIcon onClick={()=> disableExamRow(row)} className={styles.redIcon}/>
-                                            {/* <DeleteIcon onClick={()=> disableExam(row)} className={styles.redIcon} /> */}
-                                            {/* <GetAppIcon onClick={() => downloadReciept(data)}  className={styles.greenIcon}/> */}
-                                            {/* <EditIcon onClick={() => editExam(row)} className={styles.blueIcon} /> */}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>

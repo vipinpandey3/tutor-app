@@ -24,7 +24,7 @@ export const StudentContextPorvider = (props) => {
     const addStudent = async (studentData) => {
         try {
             return await axios.post('/admin/add-student', studentData)
-                .then(result => {
+                .then((result) => {
                     if(result.data.resultShort === 'success') {
                         return result.data
                     }
@@ -99,6 +99,48 @@ export const StudentContextPorvider = (props) => {
         }
     }
 
+    const studentFormFields = async() => {
+        try {
+            return await axios.get('/admin/get-student-formFields')
+                .then(result => {
+                    if(result.data.resultShort === 'success') {
+                        return result.data
+                    }
+                })
+        } catch(error) {
+            console.log("Error while retrieving student form fields", error)
+        }
+    }
+
+    const fetchParentFields = async(flag) => {
+        const postObj = {
+            flag: flag
+        }
+        try {
+            return await axios.post('admin/get-parent-formFields', postObj)
+                .then(result => {
+                    if(result.data.resultShort === 'success') {
+                        return result.data
+                    }
+                })
+        } catch (error) {
+            console.log("Error while retrieving parent form fields", error)
+        }
+    }
+
+    const updateParents = async(values) => {
+        try {
+            return await axios.post('admin/update-parents-details', values)
+                .then(result => {
+                    if(result.data.resultShort === 'success') {
+                        return result.data
+                    }
+                })
+        } catch (error) {
+            console.log("Error while updating parent details", error)
+        }
+    }
+
     return (
         <StudentContext.Provider value={{
             // States/Variables
@@ -112,7 +154,10 @@ export const StudentContextPorvider = (props) => {
             fetchStudents,
             fetchStudentDetails,
             storStudentEducationDetails,
-            fetchStudentFeesDetails
+            fetchStudentFeesDetails,
+            studentFormFields,
+            fetchParentFields,
+            updateParents
         }}>
             {props.children}
         </StudentContext.Provider>

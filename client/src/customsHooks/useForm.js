@@ -5,6 +5,7 @@ export default function useForm(
 //   validOnChange = false,
 ) {
   const [values, setValues] = useState(initialFormValues);
+  const [dateValue, setDateValue] = useState(initialFormValues)
 
   const [errors, setErrors] = useState({});
 
@@ -14,11 +15,15 @@ export default function useForm(
       ...values,
       [name]: value,
     });
-
-    // if (validOnChange) {
-    //   // validate({ [name]: value });
-    // }
   };
+
+  const handleDateChange = (e) => {
+    console.log('Element', e)
+    setDateValue({
+      ...dateValue, e
+    })
+    console.log('DateValue', dateValue);
+  }
 
   const resetForm = () => {
     setValues(initialFormValues);
@@ -27,10 +32,12 @@ export default function useForm(
 
   return {
     values,
+    dateValue,
     setValues,
     errors,
     setErrors,
     handleInputChange,
     resetForm,
+    handleDateChange
   };
 }

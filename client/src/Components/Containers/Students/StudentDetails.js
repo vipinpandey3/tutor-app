@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
   columnContainer: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "rows",
   },
   noPadding: {
     padding: "0px",
@@ -56,7 +56,23 @@ const useStyles = makeStyles((theme) => ({
   "MuiAccordion-root": {
     paddingTop: "5px",
   },
+  alignRight: {
+    marginLeft: '119px'
+  }
 }));
+
+const parentFormInitialValue = {
+  fatherName: "",
+  fatherAadhar: "",
+  motherName: "",
+  motherAadhar: "",
+  fatherEmailId: "",
+  motherEmailId: "",
+  fatherHighestQualification: "",
+  motherHighestQualification: "",
+  motherdob: "",
+  fatherDob: "",
+};
 
 const StudentDetails = () => {
   // const [studentRecord, setStudentRecord] = useState({});
@@ -65,19 +81,47 @@ const StudentDetails = () => {
     educationDetailsForm: false,
   });
   const [totalPaid, setTotalPaid] = useState(0);
-  const { fetchStudentDetails, studentDetails, fetchStudentFeesDetails } = useContext(StudentContext);
+  const { fetchStudentDetails, fetchStudentFeesDetails, fetchParentFields } = useContext(StudentContext);
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
+  const [details, setDetails] = useState({
+    studentDetail: {},
+    educationDetails: {},
+    parentDetails: {}
+  })
+  const [formFields, setFormFields] = useState({
+    parentFormFields: [],
+    educationFormFields: []
+  })
   const [feesDetails, setFeesDetails] = useState({
     feesTableHeaders: [],
     feesDetailsRow: []
-})
+  })
+
+  const [formDetails, setFormDetails] = useState({
+    title: "Add Parents",
+    buttonName: 'Submit',
+    editFlag: false
+  })
+
+  const loadStudentDteails = () => {
+    fetchStudentDetails(studentId)
+      .then((result) => {
+        console.log("result.parentDetails", result.parentDetails)
+        setDetails({
+          studentDetail: result.studentDetails,
+          parentDetails: result.parentDetails,
+          educationDetails: result.educationDetails
+        })
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  }
 
   useEffect(() => {
-    fetchStudentDetails(studentId).catch((err) => {
-      console.log("err", err);
-    });
+    loadStudentDteails()
     fetchStudentFeesDetails(studentId).then(result => {
       setFeesDetails({
         feesDetailsRow: result.fees,
@@ -86,21 +130,22 @@ const StudentDetails = () => {
     }).catch(err => {
       console.log('err', err);
     })
-    console.log('Fees-Details', feesDetails)
     const totalPaid = feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
       let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
       return total;
     }, 0);
-    console.log('total paid', totalPaid)
     setTotalPaid(totalPaid);
   }, []);
 
-  const toggleForm = (value) => {
+  const fetchFormForm = (value) => {
     if (value === "parentForm") {
-      setShowForm({
-        educationDetailsForm: false,
-        parentForms: true,
-      });
+      fetchParentFields(true)
+        .then(result => {
+          if(result.formFields && result.formFields.length > 0) {
+            setFormFields({...formFields, parentFormFields: result.formFields})
+            setShowForm({educationDetailsForm: false,parentForms: true,});
+          }
+        })
     }
     if (value === "educationForm") {
       setShowForm({
@@ -110,38 +155,53 @@ const StudentDetails = () => {
     }
   };
 
+  const editParentsDetails  = () => {
+    fetchParentFields(false)
+        .then(result => {
+          if(result.formFields && result.formFields.length > 0) {
+            setFormFields({...formFields, parentFormFields: result.formFields})
+            setShowForm({educationDetailsForm: false,parentForms: true,});
+            setFormDetails({
+              title: "Update Parents",
+              buttonName: 'Update',
+              editFlag: true
+            })
+          }
+        })
+  }
+
   const fetchStudentEducationDetails = (event) => {};
   return (
     <>
       <Paper className={`${styles.paperContent} `}>
         <Grid container>
           <Grid item xs={2} className={styles.flexcontainer}>
-            <Text variant="subtitle1" component="subtitle1">
+            <Text variant="subtitle1">
               FullName:
             </Text>
             <Text variant="subtitle1" component="h6" className={styles.block}>
-              {studentDetails.studentDetail.firstName}{" "}
-              {studentDetails.studentDetail.lastName}
+              {details.studentDetail.firstName}{" "}
+              {details.studentDetail.lastName}
             </Text>
           </Grid>
           <Grid item xs={3} className={styles.flexcontainer}>
-            <Text variant="subtitle1" component="subtitle1">
+            <Text variant="subtitle1">
               Email:
             </Text>
             <Text variant="subtitle1" component="h6" className={styles.block}>
-              {studentDetails.studentDetail.emailId}
+              {details.studentDetail.emailId}
             </Text>
           </Grid>
           <Grid item xs={2} className={styles.flexcontainer}>
-            <Text variant="subtitle1" component="subtitle1">
+            <Text variant="subtitle1">
               Contact:
             </Text>
             <Text variant="subtitle1" component="h6" className={styles.block}>
-              8652521189
+              {details.studentDetail.mobile}
             </Text>
           </Grid>
           <Grid item xs={2} className={styles.flexcontainer}>
-            <Text variant="subtitle1" component="subtitle1">
+            <Text variant="subtitle1">
               Stream:
             </Text>
             <Text variant="subtitle1" component="h6" className={styles.block}>
@@ -149,11 +209,11 @@ const StudentDetails = () => {
             </Text>
           </Grid>
           <Grid item xs={3} className={styles.flexcontainer}>
-            <Text variant="subtitle1" component="subtitle1">
+            <Text variant="subtitle1">
               DOB:
             </Text>
             <Text variant="subtitle1" component="h6" className={styles.block}>
-              {studentDetails.dob}
+              {details.studentDetail.dob}
             </Text>
           </Grid>
           <Grid
@@ -161,11 +221,11 @@ const StudentDetails = () => {
             xs={6}
             className={`${styles.flexcontainer} ${styles.paddingTop}`}
           >
-            <Text variant="subtitle1" component="subtitle1">
+            <Text variant="subtitle1">
               Address:
             </Text>
             <Text variant="subtitle1" component="h6" className={styles.block}>
-              {studentDetails.address}
+              {details.studentDetail.address}
             </Text>
           </Grid>
         </Grid>
@@ -176,6 +236,11 @@ const StudentDetails = () => {
             setShowParentForm={setShowForm}
             showForms={showForms}
             studentId={studentId}
+            formFields={formFields.parentFormFields}
+            loadStudentDteails={loadStudentDteails}
+            formDetails={formDetails}
+            parentFormInitialValue={ !details.parentDetails ? parentFormInitialValue : details.parentDetails }
+            setFormDetails={setFormDetails}
           />
         </Paper>
       )}
@@ -188,20 +253,21 @@ const StudentDetails = () => {
           </Grid>
           <Grid item xs={3}>
             <MatButton
+              className={styles.alignRight}
               variant="outlined"
               startIcon={<AddIcon />}
-              onClick={() => toggleForm("parentForm")}
+              onClick={() => details.parentDetails ? editParentsDetails() : fetchFormForm("parentForm")}
             >
-              {studentDetails.parentsDetail
+              {details.parentDetails.hasOwnProperty('id')
                 ? "Edit Parents Details"
                 : "Add Parents Details"}
             </MatButton>
           </Grid>
-          {studentDetails.parentsDetail ? (
+          {details.parentDetails ? (
             <>
               <Grid container>
-                <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
-                  <Text variant="subtitle1" component="subtitle1">
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="Subtitle1" >
                     Father Name:
                   </Text>
                   <Text
@@ -209,11 +275,11 @@ const StudentDetails = () => {
                     component="h6"
                     className={styles.block}
                   >
-                    {studentDetails.parentsDetail.fatherName}
+                    {details.parentDetails.fatherName}
                   </Text>
                 </Grid>
-                <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
-                  <Text variant="subtitle1" component="subtitle1">
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="subtitle1" >
                     Father Education:
                   </Text>
                   <Text
@@ -221,11 +287,11 @@ const StudentDetails = () => {
                     component="h6"
                     className={styles.block}
                   >
-                    {studentDetails.parentsDetail.fatherHighestQualifaction}
+                    {details.parentDetails.fatherHighestQualifaction}
                   </Text>
                 </Grid>
-                <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
-                  <Text variant="subtitle1" component="subtitle1">
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="subtitle1" >
                     Father Aadhar:
                   </Text>
                   <Text
@@ -233,14 +299,26 @@ const StudentDetails = () => {
                     component="h6"
                     className={styles.block}
                   >
-                    {studentDetails.parentsDetail.fatherAadhar}
+                    {details.parentDetails.fatherAadhar}
+                  </Text>
+                </Grid>
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="subtitle1" >
+                    Father DOB:
+                  </Text>
+                  <Text
+                    variant="subtitle1"
+                    component="h6"
+                    className={styles.block}
+                  >
+                    {details.parentDetails.fatherDob}
                   </Text>
                 </Grid>
               </Grid>
 
               <Grid container>
-                <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
-                  <Text variant="subtitle1" component="subtitle1">
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="subtitle1" >
                     Mother Name:
                   </Text>
                   <Text
@@ -248,11 +326,11 @@ const StudentDetails = () => {
                     component="h6"
                     className={styles.block}
                   >
-                    {studentDetails.parentsDetail.motherName}
+                    {details.parentDetails.motherName}
                   </Text>
                 </Grid>
-                <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
-                  <Text variant="subtitle1" component="subtitle1">
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="subtitle1" >
                     Mother Education:
                   </Text>
                   <Text
@@ -260,11 +338,11 @@ const StudentDetails = () => {
                     component="h6"
                     className={styles.block}
                   >
-                    {studentDetails.parentsDetail.motherHighestQualification}
+                    {details.parentDetails.motherHighestQualification}
                   </Text>
                 </Grid>
-                <Grid item xs={4} className={`${styles.flexcontainer} pt_5`}>
-                  <Text variant="subtitle1" component="subtitle1">
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="subtitle1" >
                     Mother Aadhar:
                   </Text>
                   <Text
@@ -272,7 +350,19 @@ const StudentDetails = () => {
                     component="h6"
                     className={styles.block}
                   >
-                    {studentDetails.parentsDetail.motherAadhar}
+                    {details.parentDetails.motherAadhar}
+                  </Text>
+                </Grid>
+                <Grid item xs={3} className={`${styles.flexcontainer} pt_5`}>
+                  <Text variant="subtitle1" >
+                    Mother DOB
+                  </Text>
+                  <Text
+                    variant="subtitle1"
+                    component="h6"
+                    className={styles.block}
+                  >
+                    {details.parentDetails.motherdob}
                   </Text>
                 </Grid>
               </Grid>
@@ -315,7 +405,7 @@ const StudentDetails = () => {
           <Grid container className={styles.columnContainer}>
             <Grid container>
               <Grid item xs={6} className={styles.flexcontainer}>
-                <Text variant="subtitle1" component="subtitle1">
+                <Text variant="subtitle1" >
                   FullName:
                 </Text>
                 <Text
@@ -323,22 +413,22 @@ const StudentDetails = () => {
                   component="h6"
                   className={styles.block}
                 >
-                  {`${studentDetails.studentDetail.lastName} ${studentDetails.studentDetail.firstName}`}
+                  {`${details.studentDetail.lastName} ${details.studentDetail.firstName}`}
                 </Text>
               </Grid>
               <Grid>
                 <MatButton
                     variant="outlined"
                     startIcon={<AddIcon />}
-                    onClick={() => toggleForm("educationForm")}
+                    onClick={() => fetchFormForm("educationForm")}
                 >
                     "Add Details"
                 </MatButton>
               </Grid>
             </Grid>
             <hr></hr>
-            <Grid>
-              {studentDetails.educationDetails.map((details) => {
+            {/* <Grid>
+              {details.educationDetails.map((details) => {
                 return (
                   <div key={details.id}>
                     <Grid container className="padding_top_10">
@@ -347,7 +437,7 @@ const StudentDetails = () => {
                         xs={6}
                         className={`${styles.flexcontainer} ${styles.paddingTop}`}
                       >
-                        <Text variant="subtitle1" component="subtitle1">
+                        <Text variant="subtitle1" >
                           {" "}
                           Standard:
                         </Text>
@@ -360,7 +450,7 @@ const StudentDetails = () => {
                         </Text>
                       </Grid>
                       <Grid item xs={3} className={`${styles.flexcontainer}`}>
-                        <Text variant="subtitle1" component="subtitle1">
+                        <Text variant="subtitle1">
                           Year:
                         </Text>
                         <Text
@@ -377,7 +467,7 @@ const StudentDetails = () => {
                           startIcon={<AddIcon />}
                           onClick={() => toggleForm("educationForm")}
                         >
-                          {studentDetails.parentsDetail
+                          {details.parentsDetail
                             ? "Edit Details"
                             : "Add Details"}
                         </MatButton>
@@ -387,7 +477,7 @@ const StudentDetails = () => {
                         xs={6}
                         className={`${styles.flexcontainer} ${styles.paddingTop}`}
                       >
-                        <Text variant="subtitle1" component="subtitle1">
+                        <Text variant="subtitle1">
                           Institute Name:
                         </Text>
                         <Text
@@ -403,7 +493,7 @@ const StudentDetails = () => {
                         xs={6}
                         className={`${styles.flexcontainer} ${styles.paddingTop}`}
                       >
-                        <Text variant="subtitle1" component="subtitle1">
+                        <Text variant="subtitle1">
                           Seat Number:
                         </Text>
                         <Text
@@ -421,7 +511,7 @@ const StudentDetails = () => {
                       >
                         <Text
                           variant="subtitle1"
-                          component="subtitle1"
+                        
                           className={`${styles.block} ${styles.noPadding}`}
                         >
                           Final Exam Subject & Score Cards
@@ -432,7 +522,7 @@ const StudentDetails = () => {
                         xs={6}
                         className={`${styles.flexcontainer} ${styles.paddingTop}`}
                       >
-                        <Text variant="subtitle1" component="subtitle1">
+                        <Text variant="subtitle1">
                           Total Marks:
                         </Text>
                         <Text
@@ -450,7 +540,7 @@ const StudentDetails = () => {
                         xs={3}
                         className={`${styles.flexcontainer} ${styles.paddingTop}`}
                       >
-                        <Text variant="subtitle1" component="subtitle1">
+                        <Text variant="subtitle1">
                           English:
                         </Text>
                         <Text
@@ -466,7 +556,7 @@ const StudentDetails = () => {
                         xs={3}
                         className={`${styles.flexcontainer} ${styles.paddingTop}`}
                       >
-                        <Text variant="subtitle1" component="subtitle1">
+                        <Text variant="subtitle1">
                           French:
                         </Text>
                         <Text
@@ -482,14 +572,14 @@ const StudentDetails = () => {
                   </div>
                 );
               })}
-            </Grid>
+            </Grid> */}
           </Grid>
         </AccordionDetails>
       </Accordion>
       <Paper className={`${styles.paperContent} `}>
         <Grid container>
           <Grid item xs={12}>
-            <Text variant="subtitle1" component="subtitle1">
+            <Text variant="subtitle1">
               Fee details
             </Text>
           </Grid>

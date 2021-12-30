@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ import RadioGroup from "./RadioGroup";
 import Select from "./Select";
 import DatePicker from "./DatePicker";
 import Checkbox from "./Checkbox";
+import Text from "./Text";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,8 +24,8 @@ const Form = (props) => {
   const classes = useStyles();
 
   
-  const { initialFormValues, formComponent, addValues, items, selectOptions, setShowFeesForm } = props;
-  const { values, errors, handleInputChange, resetForm } =
+  const { initialFormValues, formComponent, addValues, items, selectOptions, setShowFeesForm, formDetails, updateParentDetails } = props;
+  const { values, errors, handleInputChange, handleDateChange, resetForm, dateValue } =
     useForm(initialFormValues);
     
   const hideFormFields  = () => {
@@ -32,18 +34,29 @@ const Form = (props) => {
   }
 
   const formSubmitHandler = (e) => {
-    addValues(values);
+    if(formDetails.editFlag) {
+      updateParentDetails(values, dateValue)
+    } else {
+      addValues(values, dateValue);
+    }
     e.preventDefault();
   }
 
   return (
     <form className={classes.root} autoComplete="off" onSubmit={formSubmitHandler}>
       <Grid container>
+          <Grid item xs={3}>
+            <Text variant="subtitle1">
+              {formDetails.title}
+            </Text>
+          </Grid>
+        </Grid>
+      <Grid container>
         {/* <Grid item xs={12}> */}
           {formComponent.map((formElement) => {
             if (formElement.type === "input") {
               return (
-                <Grid item xs={6}>
+                <Grid item xs={formElement.size}>
                   <Input
                     key={formElement.id}
                     name={formElement.name}
@@ -59,7 +72,7 @@ const Form = (props) => {
           {formComponent.map((formElement) => {
             if (formElement.type === "radio") {
               return (
-                <Grid item xs={6}>
+                <Grid item xs={formElement.size}>
                   <RadioGroup
                     key={formElement.id}
                     name={formElement.name}
@@ -72,7 +85,7 @@ const Form = (props) => {
               );
             } else if (formElement.type === "select") {
               return (
-                <Grid item xs={6}>
+                <Grid item xs={formElement.size}>
                   <Select
                     key={formElement.id}
                     name={formElement.name}
@@ -86,24 +99,24 @@ const Form = (props) => {
               );
             } else if (formElement.type === "date") {
               return (
-                <Grid item xs={6}>
+                <Grid item xs={formElement.size}>
                   <DatePicker
                     key={formElement.id}
                     name={formElement.name}
                     label={formElement.label}
-                    value={values.hireDate}
+                    value={values[formElement.name]}
                     onChange={handleInputChange}
                   />
                 </Grid>
               );
             } else if (formElement.type === "checkbox") {
               return (
-                <Grid item xs={6}>
+                <Grid item xs={formElement.size}>
                   <Checkbox
                     key={formElement.id}
                     name={formElement.name}
                     label={formElement.label}
-                    value={values.isPermanent}
+                    value={values[formElement.name]}
                     onChange={handleInputChange}
                   />
                 </Grid>
@@ -112,7 +125,33 @@ const Form = (props) => {
           })}
         {/* </Grid> */}
         <Grid item xs={12}>
-          {/* {formComponent.map((formElement) => {
+          <div>
+            <MatButton text="Submit" type="submit">
+              {formDetails.buttonName}
+            </MatButton>
+            <MatButton text="Reset" color="default" onClick={hideFormFields}>
+              Reset
+            </MatButton>
+          </div>
+        </Grid>
+      </Grid>
+    </form>
+  );
+};
+
+export default Form;
+
+
+
+
+
+
+
+
+
+
+
+{/* {formComponent.map((formElement) => {
             if (formElement.type === "radio") {
               return (
                 <RadioGroup
@@ -158,18 +197,3 @@ const Form = (props) => {
               );
             }
           })} */}
-          <div>
-            <MatButton text="Submit" type="submit">
-              Submit
-            </MatButton>
-            <MatButton text="Reset" color="default" onClick={hideFormFields}>
-              Reset
-            </MatButton>
-          </div>
-        </Grid>
-      </Grid>
-    </form>
-  );
-};
-
-export default Form;

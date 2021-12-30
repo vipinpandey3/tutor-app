@@ -1,5 +1,5 @@
 const StandardMaster = require('../models/standardMaster');
-const SubjectMaster = require('../models/subjectMatser')
+const SubjectMaster = require('../models/subjectMatser');
 
 const getStandardData = async () => {
     console.log('Inside the get standard data as option');
@@ -121,10 +121,66 @@ const getSubjectOptionForStandard = async(id) => {
     return subjectOption;
 }
 
+const getStudentGenderData = () => {
+    return new Promise((resolve, reject) => {
+        const genderItems = [
+            {
+                id: 1,
+                type: "Male"
+            },
+            {
+                id: 2,
+                type: "Female"
+            },
+            {
+                id: 3,
+                type: "Others"
+            }
+        ]
+        
+        if(genderItems.length > 0) {
+            return resolve(genderItems);
+        } else {
+            return reject([]);
+        }
+    })
+}
+
+const getStudentStreamData = () => {
+    return new Promise((resolve, reject) => {
+        const streams = [
+            {
+                id: 1,
+                type: "Science"
+            },
+            {
+                id: 2,
+                type: "Commerce"
+            },
+            {
+                id: 3,
+                type: "Arts",
+            },
+            {
+                id: 4,
+                type: "Common"
+            }
+        ]
+
+        if(streams.length > 0) {
+            return resolve(streams);
+        }else {
+            return reject([]);
+        }
+    })
+}
+
 module.exports = {
     getStandardData,
     getExamTypeData,
     getHoursdata,
     getMarksData,
-    getSubjectOptionForStandard
+    getSubjectOptionForStandard,
+    getStudentGenderData,
+    getStudentStreamData
 }

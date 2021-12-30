@@ -157,6 +157,7 @@
     },
     {
         "index": 4,
+        "name": "examFormFields",
         "attributes": [
             {
                 "id": "examType",
@@ -284,6 +285,210 @@
                 "id": "aadharNo",
                 "label": "Aadhar Number"
             }
+        ]
+    },
+    {
+        "index": 7,
+        "name": "studentFormFields",
+        "formFields": [
+            {
+                "id": "firstName",
+                "name": "firstName",
+                "label": "FirstName",
+                "type": "input"
+            },
+            {
+                "id": "lastName",
+                "name": "lastName",
+                "label": "lastName",
+                "type": "input"
+            },
+            {
+                "id": "emailId",
+                "name": "emailId",
+                "label": "Email",
+                "type": "input"
+            },
+            {
+                "id": "mobile",
+                "name": "mobile",
+                "label": "Mobile",
+                "type": "input"
+            },
+            {
+                "id": "address",
+                "name": "address",
+                "label": "Address",
+                "type": "input"
+            },
+            {
+                "id": "aadharNo",
+                "name": "aadharNo",
+                "label": "Aadhar Number",
+                "type": "input"
+            },
+            {
+                "id": "gender",
+                "name": "gender",
+                "label": "Gender",
+                "type": "select",
+                "option": [],
+                "service": "studentGender",
+                "method": "getStudentGenderData"
+            },
+            {
+                "id": "dob",
+                "name": "dob",
+                "label": "Date of Birth",
+                "type": "date"
+            },
+            {
+                "id": "stream",
+                "name": "stream",
+                "label": "Stream",
+                "type": "select",
+                "option": [],
+                "service": "studentStream",
+                "method": "getStudentStreamData"
+            }
+        ]
+    },
+    {
+        "index": 8,
+        "name": "studentParentFormFields",
+        "formFields": [
+            {
+                "id": "fatherName",
+                "name": "fatherName",
+                "label": "Father Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherAadhar",
+                "name": "fatherAadhar",
+                "label": "Father Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherName",
+                "name": "motherName",
+                "label": "Mother Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherAadhar",
+                "name": "motherAadhar",
+                "label": "Mother Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherEmailId",
+                "name": "fatherEmailId",
+                "label": "Father Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherEmailId",
+                "name": "motherEmailId",
+                "label": "Mother Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherHighestQualifaction",
+                "name": "fatherHighestQualifaction",
+                "label": "Father Highest Education",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherHighestQualification",
+                "name": "motherHighestQualification",
+                "label": "Mother Highest Eduation",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherDob",
+                "name": "fatherDob",
+                "label": "Father DOB",
+                "type": "date",
+                "size": 4
+              },
+              {
+                "id": "motherdob",
+                "name": "motherdob",
+                "label": "Mother DOB",
+                "type": "date",
+                "size": 4
+              }
+        ]
+    },
+    {
+        "index": 9,
+        "name": "studentParentUpdateFormFields",
+        "formFields": [
+            {
+                "id": "fatherName",
+                "name": "fatherName",
+                "label": "Father Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherAadhar",
+                "name": "fatherAadhar",
+                "label": "Father Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherName",
+                "name": "motherName",
+                "label": "Mother Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherAadhar",
+                "name": "motherAadhar",
+                "label": "Mother Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherEmailId",
+                "name": "fatherEmailId",
+                "label": "Father Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherEmailId",
+                "name": "motherEmailId",
+                "label": "Mother Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherHighestQualifaction",
+                "name": "fatherHighestQualifaction",
+                "label": "Father Highest Education",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherHighestQualification",
+                "name": "motherHighestQualification",
+                "label": "Mother Highest Eduation",
+                "type": "input",
+                "size": 4
+              }
         ]
     }
 ]

@@ -1,26 +1,77 @@
 import React, { useContext } from 'react';
 import { StudentContext } from '../../../context/student-context';
 import Form from '../../Common/Form';
-import { parentFormInitialValue, parentFormInput, studentEducationForms, studentEducationInitialValue } from './StudentsRecords';
+import { studentEducationForms, studentEducationInitialValue } from './StudentsRecords';
 
 
 export const ParentForms = (props) => {
-    const { setShowParentForm, studentId, showForms } = props
-    const {addParent} = useContext(StudentContext);
-    const addParentData = (value) => {
+    const { setShowParentForm, studentId, showForms, formFields, loadStudentDteails, parentFormInitialValue, formDetails, setFormDetails } = props
+    const {addParent, updateParents} = useContext(StudentContext);
+    
+    const addParentData = (value, dateValue) => {
+        console.log('DateValue', dateValue)
         value.studentId = studentId
         addParent(value)
-        setShowParentForm({
-            ...showForms,
-            parentForms: false
-        })
+            .then(result => {
+                if(result.resultShort === 'success') {
+                    loadStudentDteails()
+                    setShowParentForm({
+                        ...showForms,
+                        parentForms: false
+                    })
+                } else {
+                    setShowParentForm({
+                        ...showForms,
+                        parentForms: false
+                    })
+                }
+            })
+            .catch(error => {
+                console.log('Error whiel adding Parents', error)
+                setShowParentForm({
+                    ...showForms,
+                    parentForms: false
+                })
+            })
     }
+
+    const updateParentDetails = (values) => {
+        updateParents(values)
+            .then(result => {
+                if(result.resultShort === 'success') {
+                    loadStudentDteails()
+                    setShowParentForm({
+                        ...showForms,
+                        parentForms: false
+                    })
+                    setFormDetails({
+                        title: "Add Parents",
+                        buttonName: 'Submit',
+                        editFlag: false
+                    })
+                } else {
+                    setShowParentForm({
+                        ...showForms,
+                        parentForms: false
+                    })
+                }
+            })
+            .catch(error => {
+                setShowParentForm({
+                    ...showForms,
+                    parentForms: false
+                })
+            })
+    }
+
     return (
         <>
             <Form
-                formComponent={parentFormInput}
+                formComponent={formFields}
                 addValues={addParentData}
                 initialFormValues={parentFormInitialValue}
+                formDetails={formDetails}
+                updateParentDetails={updateParentDetails}
             />
         </>
     )

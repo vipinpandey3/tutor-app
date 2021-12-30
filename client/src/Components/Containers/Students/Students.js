@@ -11,11 +11,10 @@ import Input from "../../Common/Input";
 import Table from "../../Common/Table";
 import SearchIcon from "@material-ui/icons/Search";
 import MatButton from "../../Common/Button";
-import Popup from "../../Common/Popup";
 import AddIcon from "@material-ui/icons/Add";
 import StudentForm from "./StudentForm";
-import StudentsRecords from "./StudentsRecords";
 import { StudentContext } from "../../../context/student-context";
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -27,15 +26,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const headCells = [
-  { id: "firstName", label: "First Name" },
-  { id: "lastName", label: "Last Name" },
-  { id: "emailId", label: "EmailId" },
-  { id: "gender", label: "Gender" },
-  { id: "dob", label: "Date of Birth" },
-  { id: "aadharNo", label: "Aadhar Number" },
-];
-
+const initialcFormValues = {
+  firstName: "",
+  lastName: "",
+  emailId: "",
+  mobile: "",
+  address: "",
+  aadharNo: "",
+  gender: "Male",
+  dob: moment().format('YYYY-MM-DD'),
+  stream: 'Common',
+};
 const Students = () => {
   const history = useHistory();
   const classes = useStyles();
@@ -43,36 +44,48 @@ const Students = () => {
     studentRows: [],
     studenetTableAttributes: []
   })
-  const { fetchStudents, 
-          addStudent, 
-          addParent, 
-          fetchStudentDetails, 
-          storStudentEducationDetails, 
-          fetchStudentFeesDetails
-        } = useContext(StudentContext);
+  const { fetchStudents, addStudent, studentFormFields} = useContext(StudentContext);
   const [showForm, setForm] = useState(false);
+  const [formFields, setFormFields] = useState([])
   const [filterFunction, setFilterFunction] = useState({
     fn: (item) => {
       return item;
     },
   });
 
-  useEffect(() => {
+  const [formTitle, setFormTitle] = useState({
+    title: 'Create Student',
+    buttonTitle: 'Submit'
+  })
+
+  const loadUsers = () => {
+    console.log('toggleForm button clicked')
     fetchStudents()
       .then(result => {
-        console.log(result)
         setStudents({
           studentRows: result.students,
           studenetTableAttributes: result.attributes
         })
       })
+  }
+
+  useEffect(() => {
+    loadUsers();
   }, [])
 
   const searchUser = (event) => {};
 
-  const toggleForm = () => {
-    setForm(true);
+  const loadForm = () => {
+    studentFormFields()
+      .then(result => {
+        setFormFields(result.formFields)
+        setForm(true)
+      })
   };
+
+  const toggleForm = (flag) => {
+    setForm(flag)
+  }
 
   const redirectToStudentDetailsPage = (studentId) => {
     history.push(`/students/${studentId}`);
@@ -81,9 +94,14 @@ const Students = () => {
   return (
     <>
       {showForm && (
-        <Paper className={classes.paperCotent}>
-          <StudentForm />
-        </Paper>
+          <StudentForm 
+            initialcFormValues={initialcFormValues} 
+            formTitle={formTitle}
+            addStudent={addStudent}
+            formFields={formFields}
+            toggleForm={toggleForm}
+            loadUsers={loadUsers}
+          />
       )}
       <Paper className={classes.paperCotent}>
         <Grid container>
@@ -109,7 +127,7 @@ const Students = () => {
               <MatButton
                 variant="outlined"
                 startIcon={<AddIcon />}
-                onClick={toggleForm}
+                onClick={loadForm}
               >
                 Add New
               </MatButton>
@@ -122,18 +140,11 @@ const Students = () => {
           records={students.studentRows}
           headCells={students.studenetTableAttributes}
           filterFunction={filterFunction}
-          openInPopup={toggleForm}
+          openInPopup={loadForm}
           redirectToDetailsPage={redirectToStudentDetailsPage}
         />
        }
       </Paper>
-      {/* <Popup 
-        title="Students Form"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-      >
-          <StudentForm />
-      </Popup> */}
     </>
   );
 };

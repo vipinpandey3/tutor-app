@@ -64,4 +64,65 @@ router.get('/getFeesFormFields', (req, res, next) => {
         })
 });
 
+router.get('/get-student-formFields', (req, res) => {
+    return adminController.getStudentFormFields(req, res)
+        .then(studentFormFields => {
+            const response = {
+                resultShort: "success",
+                resultLong: "Retrieved all forms fields for students",
+                formFields: studentFormFields
+            };
+
+            return res.status(200).json(response)
+        })
+        .catch(err => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: "Failed to retrieve formfields"
+            }
+            return res.json(response);
+        })
+})
+
+router.post('/get-parent-formFields', (req, res) => {
+    console.log('In /get-parent-formFields route')
+    return adminController.getParentFormFields(req, res)
+        .then(formFields => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'Retrieved all forms fields for',
+                formFields: formFields
+            }
+
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: "Failed to retrieve formfields"
+            }
+            return res.status(500).json(response);
+        })
+})
+
+router.post('/update-parents-details', (req, res) => {
+    console.log('In /update-parents-details')
+    return adminController.updateParentDetails(req, res)
+        .then(updatedObj => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'Parents details updated.',
+            }
+
+            return res.status(200).json(result);
+        })
+        .catch(error => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: "Failed to rparents details"
+            }
+            return res.status(500).json(response);
+        })
+})
+
 module.exports = router;

@@ -8,7 +8,7 @@ const StudentEducationDetails = require("../models/student-education-details");
 const Fees = require('../models/fees'); 
 const attributes = require('../attributes/attributes.json');
 const OptionServices = require('../services/optionServices')
-const moment = require('moment')
+const moment = require('moment');
 
 const getStudent = (req, res, next) => {
   const columnsAttributes = attributes[6].columnsHeader
@@ -33,23 +33,32 @@ const getStudent = (req, res, next) => {
 };
 
 const getStudentById = (req, res, next) => {
+  console.log('Inside getStudentById function');
+  const studentDetailAttributes = attributes[11].studentDetailsAttributes;
+  const parentDetailsAttributes = attributes[11].parentDetailsAttributes
+  const educationDetailsAttributes = attributes[11].studentEducationDetailsAttributes
+  const educationDBAttributes = attributes[11].educationDetailsDBAttributes;
+  const studentDBAttributes = attributes[11].studentsDBAttributes;
+  const parentDBAttributes = attributes[11].parentDBAttributes;
   const studentId = req.params.studentId;
-  console.log("Student Id", studentId);
-  Student.findByPk(studentId)
+  Student.findByPk(studentId, {attributes: studentDBAttributes})
     .then((student) => {
-      Parent.findAll({ where: { studentId: student.id } })
+      Parent.findAll({attributes: parentDBAttributes},{ where: { studentId: student.id } })
         .then((parent) => {
-          console.log('Parent', parent[0]);
-          StudentEducationDetails.findAll({where: {studentId: student.id}})
+          StudentEducationDetails.findAll({attributes: educationDBAttributes},{where: {studentId: student.id}})
           .then(educationDetails => {
+            console.log('"educationDetails', JSON.stringify(educationDetails))
             const response = {
               resultShort: "success",
               resultLong: "Student details Found",
               studentDetails: student,
               parentDetails: parent[0],
-              educationDetails: educationDetails
+              educationDetails: educationDetails,
+              studentDetailAttributes: studentDetailAttributes,
+              parentDetailsAttributes: parentDetailsAttributes,
+              educationDetailsAttributes: educationDetailsAttributes
             };
-            res.status(200).json(response);
+            return res.status(200).json(response);
           })
           .catch(err => {
             const response = {
@@ -251,6 +260,8 @@ const addStudentEducationDetails = (req, res, next) => {
   const universityName = req.body.universityName;
   const percentage = req.body.percentage;
   const studentId = req.body.studentId;
+
+  console.log('addStudentEducationDetails', req.body)
 
   StudentEducationDetails.create({
     std,
@@ -535,7 +546,6 @@ const getInputOptions = (optionObject) => {
 
 const getParentFormFields = (req, res) => {
   console.log('Inside getParentFormFields function')
-  console.log('FOrmFields', req.body.flag)
   const flag = req.body.flag;
   let parentFormFields
   return new Promise((resolve, reject) => {
@@ -601,6 +611,51 @@ const updateParentDetails = (req, res) => {
   })
 }
 
+const fetchEducationFormFields = (req, res) => {
+  console.log('Inside fetchEducationFormFields function')
+  const educationFormFields = attributes[10].formFields
+  return new Promise((resolve, reject) => {
+    if(educationFormFields && educationFormFields.length > 0) {
+      var optionObjPromise = [];
+      for (let i = 0; i < educationFormFields.length; i++) {
+          if(educationFormFields[i]['method']) {
+              const methodPromise = getInputOptions(educationFormFields[i]);
+              methodPromise                
+                  .then(data => {
+                      educationFormFields[i].option = data
+                  })
+                  .catch((error) => {
+                      console.log("Error from MadePromise function", error)
+                      educationFormFields[i].option = [];
+                  })
+              optionObjPromise.push(methodPromise)
+          }
+      }
+      Promise.all(optionObjPromise)
+          .then(data => {
+              return resolve(educationFormFields);
+          })
+          .catch((error) => {
+              return reject(error);
+          })
+    }
+  })
+}
+
+const updateStudentEducationDetails = (req, res) => {
+  console.log('Inside updateStudentEducationDetails function');
+  return  StudentEducationDetails.update(req.body, {where: {id: req.body.id}})
+    .then((updatedObj) => {
+      console.log("updatedObj", updatedObj)
+      return Promise.resolve(updatedObj)
+    })
+    .catch(error => {
+      console.log("Error while updating student education details", error);
+      return Promise.reject(error)
+    })
+
+}
+
 module.exports = {
   getStudent,
   getStudentById,
@@ -616,5 +671,7 @@ module.exports = {
   getFeesFormFields,
   getStudentFormFields,
   getParentFormFields,
-  updateParentDetails
+  updateParentDetails,
+  fetchEducationFormFields,
+  updateStudentEducationDetails
 };

@@ -117,8 +117,9 @@ export const StudentContextPorvider = (props) => {
             flag: flag
         }
         try {
-            return await axios.post('admin/get-parent-formFields', postObj)
+            return await axios.post('/admin/get-parent-formFields', postObj)
                 .then(result => {
+                    console.log('result.data.resultShort', result.data.resultShort)
                     if(result.data.resultShort === 'success') {
                         return result.data
                     }
@@ -141,6 +142,32 @@ export const StudentContextPorvider = (props) => {
         }
     }
 
+    const fetchEducationFormFields = async() => {
+        try {
+            return await axios.get('/admin/get-education-formFields')
+                .then(result => {
+                    if(result.data.resultShort === 'success') {
+                        return result.data
+                    }
+                })
+        } catch(error) {
+            console.log('Error while fetching education formfields', error)
+        }
+    }
+
+    const updateStudentEducationDetails = async(value) => {
+        try {
+            return await axios.post('/admin/update-education-details', value)
+                .then(result => {
+                    if(result.data.resultShort === 'success') {
+                        return result.data
+                    }
+                })
+        } catch(error) {
+            console.log('Error while updating education details', error)
+        }
+    }
+
     return (
         <StudentContext.Provider value={{
             // States/Variables
@@ -157,7 +184,9 @@ export const StudentContextPorvider = (props) => {
             fetchStudentFeesDetails,
             studentFormFields,
             fetchParentFields,
-            updateParents
+            updateParents,
+            fetchEducationFormFields,
+            updateStudentEducationDetails
         }}>
             {props.children}
         </StudentContext.Provider>

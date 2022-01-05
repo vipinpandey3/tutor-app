@@ -125,4 +125,45 @@ router.post('/update-parents-details', (req, res) => {
         })
 })
 
+router.get('/get-education-formFields', (req, res) => {
+    console.log('In /get-education-formFields route')
+    return adminController.fetchEducationFormFields(req, res)
+        .then(formFields => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'Retrieved all forms fields for educationdetails',
+                formFields: formFields
+            }
+
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: "Failed to retrieve formfields"
+            }
+            return res.status(500).json(response);
+        })
+})
+
+router.post("/update-education-details", (req, res) => {
+    console.log('Inside /update-education-details route')
+    return adminController.updateStudentEducationDetails(req, res)
+    .then(updatedObj => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Student education details updated.',
+        }
+
+        return res.status(200).json(result);
+    })
+    .catch(error => {
+        const response = {
+            resultShort: 'failure',
+            resultLong: "Failed to update education details"
+        }
+        return res.status(500).json(response);
+    })
+})
+
 module.exports = router;

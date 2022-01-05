@@ -490,5 +490,251 @@
                 "size": 4
               }
         ]
+    },
+    {
+        "index": 10,
+        "name": "StudentEducationDetails",
+        "formFields": [
+            {
+                "id": "std",
+                "name": "std",
+                "label": "Standard",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "seatNumber",
+                "name": "seatNumber",
+                "label": "Seat Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "year",
+                "name": "year",
+                "type": "input",
+                "size": 4,
+                "label": "Academic Year"
+              },
+              {
+                "id": "totalMarks",
+                "name": "totalMarks",
+                "type": "input",
+                "size": 4,
+                "label": "Total Marks(Eg: 400/600)"
+              },
+              {
+                "id": "instituteName",
+                "name": "instituteName",
+                "type": "input",
+                "size": 4,
+                "label": "Institute/College Name"
+              },
+              {
+                "id": "universityName",
+                "name": "universityName",
+                "type": "input",
+                "size": 4,
+                "label": "Univeristy/Board Name"
+              }
+        ]
+    },
+    {
+        "index": 11,
+        "name": "studenDetailsAttributes",
+        "studentDetailsAttributes": [
+            {
+                "id": "firstName",
+                "name": "FirstName",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "lastName",
+                "name": "LastName",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "emailId",
+                "name": "Email",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "religion",
+                "name": "Religion",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "gender",
+                "name": "Gender",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "dob",
+                "name": "DOB",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "aadharNo",
+                "name": "Aadhar No",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "panNo",
+                "name": "Pan No",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "address",
+                "name": "Address",
+                "size": "6",
+                "class": "flexcontainer"
+            }
+        ],
+        "parentDetailsAttributes": [
+            {
+                "id": "fatherName",
+                "name": "Father Name",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherName",
+                "name": "Mother Name",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherEmailId",
+                "name": "Father Email",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherAadhar",
+                "name": "Father Aadhar",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherAadhar",
+                "name": "Mother Aadhar",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherEmailId",
+                "name": "Mother Email",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherDob",
+                "name": "Father DOB",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherDob",
+                "name": "Father DOB",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherHighestQualifaction",
+                "name": "Father Qualification",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherHighestQualification",
+                "name": "mother Qualification",
+                "size": "3",
+                "class": "flexcontainer"
+            }
+        ],
+        "studentEducationDetailsAttributes": [
+            {
+                "id": "std",
+                "name": "Standard",
+                "size": "12",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "seatNumber",
+                "name": "Seat Number",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "year",
+                "name": "Year",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "totalMarks",
+                "name": "totalMarks",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "instituteName",
+                "name": "Institute Name",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "universityName",
+                "name": "University Name",
+                "size": "3",
+                "class": "flexcontainer"
+            }
+        ],
+        "educationDetailsDBAttributes": [
+            "id",
+            "std",
+            "seatNumber",
+            "year",
+            "fieldJSON1",
+            "totalMarks",
+            "instituteName",
+            "universityName",
+            "studentId"
+        ],
+        "studentsDBAttributes": [
+            "id",
+            "firstName",
+            "lastName",
+            "emailId",
+            "address",
+            "dob",
+            "religion",
+            "gender",
+            "aadharNo",
+            "panNo",
+            "userId"
+        ],
+        "parentDBAttributes": [
+            "id",
+            "fatherName",
+            "motherName",
+            "fatherEmailId",
+            "motherEmailId",
+            "fatherAadhar",
+            "motherAadhar",
+            "fatherDob",
+            "motherdob",
+            "fatherHighestQualifaction",
+            "motherHighestQualification",
+            "studentId"
+        ]
     }
 ]

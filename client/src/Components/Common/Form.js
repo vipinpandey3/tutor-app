@@ -1,7 +1,7 @@
 /* eslint-disable no-lone-blocks */
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Input from "./Input";
 import MatButton from "./Button";
 import useForm from "../../customsHooks/useForm";
@@ -24,7 +24,7 @@ const Form = (props) => {
   const classes = useStyles();
 
   
-  const { initialFormValues, formComponent, addValues, items, selectOptions, setShowFeesForm, formDetails, updateParentDetails } = props;
+  const { initialFormValues, formComponent, addValues, items, selectOptions, setShowFeesForm, formDetails, updateDetails } = props;
   const { values, errors, handleInputChange, handleDateChange, resetForm, dateValue } =
     useForm(initialFormValues);
     
@@ -34,12 +34,12 @@ const Form = (props) => {
   }
 
   const formSubmitHandler = (e) => {
+    e.preventDefault();
     if(formDetails.editFlag) {
-      updateParentDetails(values, dateValue)
+      updateDetails(values)
     } else {
       addValues(values, dateValue);
     }
-    e.preventDefault();
   }
 
   return (
@@ -56,7 +56,7 @@ const Form = (props) => {
           {formComponent.map((formElement) => {
             if (formElement.type === "input") {
               return (
-                <Grid item xs={formElement.size}>
+                <Grid key={formElement.id} item xs={formElement.size}>
                   <Input
                     key={formElement.id}
                     name={formElement.name}
@@ -72,7 +72,7 @@ const Form = (props) => {
           {formComponent.map((formElement) => {
             if (formElement.type === "radio") {
               return (
-                <Grid item xs={formElement.size}>
+                <Grid key={formElement.id} item xs={formElement.size}>
                   <RadioGroup
                     key={formElement.id}
                     name={formElement.name}
@@ -85,7 +85,7 @@ const Form = (props) => {
               );
             } else if (formElement.type === "select") {
               return (
-                <Grid item xs={formElement.size}>
+                <Grid key={formElement.id} item xs={formElement.size}>
                   <Select
                     key={formElement.id}
                     name={formElement.name}
@@ -99,7 +99,7 @@ const Form = (props) => {
               );
             } else if (formElement.type === "date") {
               return (
-                <Grid item xs={formElement.size}>
+                <Grid key={formElement.id} item xs={formElement.size}>
                   <DatePicker
                     key={formElement.id}
                     name={formElement.name}
@@ -111,7 +111,7 @@ const Form = (props) => {
               );
             } else if (formElement.type === "checkbox") {
               return (
-                <Grid item xs={formElement.size}>
+                <Grid key={formElement.id} item xs={formElement.size}>
                   <Checkbox
                     key={formElement.id}
                     name={formElement.name}

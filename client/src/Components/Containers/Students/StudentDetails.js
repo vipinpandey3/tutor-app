@@ -154,14 +154,21 @@ const StudentDetails = () => {
         feesDetailsRow: result.fees,
         feesTableHeaders: result.header
       })
+      const totalPaid = feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
+        let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
+        return total;
+      }, 0);
+      console.log("totalPaid", totalPaid)
+      setTotalPaid(totalPaid);
     }).catch(err => {
       console.log('err', err);
     })
-    const totalPaid = feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
-      let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
-      return total;
-    }, 0);
-    setTotalPaid(totalPaid);
+    // const totalPaid = feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
+    //   let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
+    //   return total;
+    // }, 0);
+    // console.log("totalPaid", totalPaid)
+    // setTotalPaid(totalPaid);
   }, []);
 
   const fetchFormForm = (value) => {
@@ -484,161 +491,3 @@ const StudentDetails = () => {
 };
 
 export default StudentDetails;
-
-
-
-
-
-
-
-
-
-
-
-// eslint-disable-next-line no-lone-blocks
-{/* <Grid>
-              {details.educationDetails.map((details) => {
-                return (
-                  <div key={details.id}>
-                    <Grid container className="padding_top_10">
-                      <Grid
-                        item
-                        xs={6}
-                        className={`${styles.flexcontainer} ${styles.paddingTop}`}
-                      >
-                        <Text variant="subtitle1" >
-                          {" "}
-                          Standard:
-                        </Text>
-                        <Text
-                          variant="subtitle1"
-                          component="h6"
-                          className={styles.block}
-                        >
-                          {details.std}
-                        </Text>
-                      </Grid>
-                      <Grid item xs={3} className={`${styles.flexcontainer}`}>
-                        <Text variant="subtitle1">
-                          Year:
-                        </Text>
-                        <Text
-                          variant="subtitle1"
-                          component="h6"
-                          className={styles.block}
-                        >
-                          {details.year}
-                        </Text>
-                      </Grid>
-                      <Grid item xs={3} className={`${styles.flexcontainer}`}>
-                        <MatButton
-                          variant="outlined"
-                          startIcon={<AddIcon />}
-                          // onClick={() => toggleForm("educationForm")}
-                        >
-                          {details.parentsDetail
-                          ? "Edit Details"
-                            : "Add Details"}
-                        </MatButton>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={6}
-                        className={`${styles.flexcontainer} ${styles.paddingTop}`}
-                      >
-                        <Text variant="subtitle1">
-                          Institute Name:
-                        </Text>
-                        <Text
-                          variant="subtitle1"
-                          component="h6"
-                          className={styles.block}
-                        >
-                          {details.instituteName}
-                        </Text>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={6}
-                        className={`${styles.flexcontainer} ${styles.paddingTop}`}
-                      >
-                        <Text variant="subtitle1">
-                          Seat Number:
-                        </Text>
-                        <Text
-                          variant="subtitle1"
-                          component="h6"
-                          className={styles.block}
-                        >
-                          {details.seatNumber}
-                        </Text>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={6}
-                        className={`${styles.flexcontainer} ${styles.paddingTop}`}
-                      >
-                        <Text
-                          variant="subtitle1"
-                        
-                          className={`${styles.block} ${styles.noPadding}`}
-                        >
-                          Final Exam Subject & Score Cards
-                        </Text>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={6}
-                        className={`${styles.flexcontainer} ${styles.paddingTop}`}
-                      >
-                        <Text variant="subtitle1">
-                          Total Marks:
-                        </Text>
-                        <Text
-                          variant="subtitle1"
-                          component="h6"
-                          className={styles.block}
-                        >
-                          {details.totalMarks}
-                        </Text>
-                      </Grid>
-                    </Grid>
-                    <Grid container className="pbt_10">
-                      <Grid
-                        item
-                        xs={3}
-                        className={`${styles.flexcontainer} ${styles.paddingTop}`}
-                      >
-                        <Text variant="subtitle1">
-                          English:
-                        </Text>
-                        <Text
-                          variant="subtitle1"
-                          component="h6"
-                          className={styles.block}
-                        >
-                          54/100
-                        </Text>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={3}
-                        className={`${styles.flexcontainer} ${styles.paddingTop}`}
-                      >
-                        <Text variant="subtitle1">
-                          French:
-                        </Text>
-                        <Text
-                          variant="subtitle1"
-                          component="h6"
-                          className={styles.block}
-                        >
-                          46/100
-                        </Text>
-                      </Grid>
-                    </Grid>
-                    <hr></hr>
-                  </div>
-                );
-              })}
-            </Grid> */}

@@ -736,5 +736,40 @@
             "motherHighestQualification",
             "studentId"
         ]
+    },
+    {
+       "index": 12,
+       "name": "studentFeesDetails",
+       "columnAttributes": [
+        {
+            "id": "uuid",
+            "label": "Bill Number"
+          },
+          {
+            "id": "date",
+            "label": "Date"
+          },
+          {
+            "id": "feesAmount",
+            "label": "Fees Amount"
+          },
+          {
+            "id": "discount",
+            "label": "Discount"
+          },
+          {
+            "id": "paidAmount",
+            "label": "Paid Amount"
+          },
+          {
+            "id": "balance",
+            "label": "Balance Amount"
+          },
+          {
+            "id": "reamarks",
+            "label": "Remarks"
+          }
+       ],
+       "feesDBAttributes": ["uuid", "date", "feesAmount", "discount", "paidAmount", "balance", "reamarks"]
     }
 ]

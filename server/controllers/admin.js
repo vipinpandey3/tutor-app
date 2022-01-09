@@ -386,43 +386,16 @@ const addFeesDetails = (req, res, next) => {
 
 const getFeesDetailsByStudentId = (req, res, next) => {
   const studentId = req.params.studentId;
-  const tableHeader = [
-    {
-      id: "uuid",
-      label: "Bill Number"
-    },
-    {
-      id: 'date',
-      label: "Date"
-    },
-    {
-      id: "feesAmount",
-      label: "Fees Amount",
-    },
-    {
-      id: "discount",
-      label: "Discount"
-    },
-    {
-      id: "paidAmount",
-      label: "Paid Amount"
-    },
-    {
-      id: "balance",
-      label: "Balance Amount"
-    },
-    {
-      id: 'reamarks',
-      label: "Remarks"
-    }
-  ]
-  Fees.findAll({where: {studentId: studentId}})
+  const tableHeader = attributes[12].columnAttributes;
+  const feesDBAttributes = attributes[12].feesDBAttributes;
+  console.log('studentId ============>', studentId)
+  Fees.findAll({where: {studentId: studentId}}, {attributes: feesDBAttributes})
     .then((fees) => {
-      console.log("fees 1", fees)
       fees.map(feeDetails => {
         feeDetails.reamarks = feeDetails.reamarks ? feeDetails.reamarks : "-";
         feeDetails.date = new Date(feeDetails.createdAt).toLocaleDateString()
       })
+      console.log('Fees', fees)
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrieved fees details for student with id: " + studentId,

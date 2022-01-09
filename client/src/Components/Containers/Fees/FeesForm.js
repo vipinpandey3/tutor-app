@@ -32,8 +32,8 @@ const FeesForm = (props) => {
   }
 
   const formSubmit = (e) => {
-    getFeesFormValue(feesFormValue);
     e.preventDefault();
+    getFeesFormValue(feesFormValue);
   };
 
   

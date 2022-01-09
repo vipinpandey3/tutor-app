@@ -65,15 +65,18 @@ const Fees = () => {
     }
 
     const getFeesFormValue = (value) => {
-        value.balance = parseInt(value.finalAmount) - parseInt(value.recievedAmount)
+        value.balance = parseInt(value.feesAmount) - (parseInt(value.paidAmount) + parseInt(value.discount));
         addFeesIntoDatabase(value)
             .then(result => {
-                console.log('Result',result)
+                if(result && result.resultShort === "success") {
+                    setShowFeesForm(false);
+                } else {
+                    setShowFeesForm(true);
+                }
             })
             .catch((err) => {
-                console.log("err", err);
+                console.log("Error while adding Fees", err)
             })
-        setShowFeesForm(false);
     }
 
     const searchPaidFees = (event) => {
@@ -166,9 +169,6 @@ const Fees = () => {
                     <Grid item xs={3}>
                             <input  onKeyDown={searchPaidFees} className="searchInput" ref={searchRef} name="paidFees" placeholder="Search"  />
                     </Grid>
-                    {/* <Grid item xs={3}>
-                        <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput" value={fileInput} type="file" onChange={handleFileInput} />
-                    </Grid> */}
                     <Grid item xs={3}>
                     <MatButton onClick={handleUpload} variant="contained" startIcon={<AiOutlineUpload />} style={{ flex: "1", width: "80%" }}>Fees</MatButton>
                     </Grid>

@@ -25,29 +25,29 @@ export const FeesContextProvider = (props) => {
     }
 
     const addFeesIntoDatabase = async (feesValue) => {
-        console.log('value', feesValue);
-        const response = fetch('http://localhost:5000/admin/add-feesDetails', {
-            headers: {
-                'Accept': "application/json",
-                "Content-Type": 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(feesValue)
-        });
-        if(!response.ok) {
-            throw new Error('something went wrong')       
+        try {
+            return await axios.post('http://localhost:5000/admin/add-feesDetails', feesValue)
+                .then(res => {
+                    if(res.data.resultShort && res.data.resultShort === 'success') {
+                        return res.data
+                    }
+                })
+        } catch(error) {
+            console.log('Error while adding fees', error);
         }
-        const res = response.json();
-        return res;
     }
 
     const searchFees = async(searchParams) => {
-        const response = await fetch(`http://localhost:5000/faculty/searchFees/${searchParams}`);
-        if(!response.ok) {
-            throw new Error('something went wrong')
+        try {
+            return await axios.get(`http://localhost:5000/faculty/searchFees/${searchParams}`)
+            .then(res => {
+                if(res.data.resultShort && res.data.resultShort === 'success') {
+                    return res.data
+                }
+            })
+        } catch(error) {
+            console.log('Error while fetching fees', error)
         }
-        const res = await response.json();
-        return res
     }
 
     const downloadFeesbyId = async(uuid) => {
@@ -67,7 +67,6 @@ export const FeesContextProvider = (props) => {
     }
 
     const uploadFile = async(data) => {
-        console.log('Data', data)
         try {
             return await axios.post('http://localhost:5000/faculty/uploadFile', data, {
                 headers: {

@@ -121,9 +121,6 @@ const getInputOptions = (optionObject) => {
                     console.log('Error', error);
                     return reject(error)
                 })
-        // } else if(optionObject.service) {
-
-        // }
     })
 }
 

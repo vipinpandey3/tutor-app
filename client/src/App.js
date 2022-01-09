@@ -1,5 +1,5 @@
 // import styles from './App.module.css';
-import { CssBaseline, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import {  makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { createTheme } from '@material-ui/core'
 import { Route, Switch } from 'react-router-dom'
 import Dashboard from './Pages/Dashboard';

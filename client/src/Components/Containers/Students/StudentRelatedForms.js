@@ -78,13 +78,13 @@ export const ParentForms = (props) => {
 }
 
 export const StudentEducationForms = (props) => {
-    const {setShowEdutionForm, studentId, showForms, formFields, formDetails, setFormDetails, educationFormIntialValue, loadStudentDteails} = props;
+    const {setShowEdutionForm, studentId, showForms, formFields, formDetails, setFormDetails, educationFormIntialValue, loadStudentDteails, hideForm} = props;
     const { storStudentEducationDetails, updateStudentEducationDetails } = useContext(StudentContext)
     const addStudentEducationDetails = (value) => {
         value.studentId = studentId;
         storStudentEducationDetails(value)
             .then(result => {
-                if(result.resultShort === 'success') {
+                if(result.resultShort === 'succes') {
                     setShowEdutionForm({
                         ...showForms,
                         educationDetailsForm: false
@@ -116,10 +116,7 @@ export const StudentEducationForms = (props) => {
             .then(result => {
                 if(result.resultShort && result.resultShort === 'success') {
                     console.log("result.resultShort", result.resultShort)
-                    setShowEdutionForm({
-                        ...showForms,
-                        educationDetailsForm: false
-                    });
+                    hideForm("educationDetailsForm", false)
                     loadStudentDteails();
                     setFormDetails({
                         title: "Add Education Details",
@@ -150,6 +147,7 @@ export const StudentEducationForms = (props) => {
                 addValues={addStudentEducationDetails}
                 updateDetails={updateEducationDetails}
                 formDetails={formDetails}
+                resetForm={() => {hideForm("educationDetailsForm", false)}}
             />   
         </>
     )

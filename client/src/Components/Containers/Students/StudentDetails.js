@@ -74,15 +74,15 @@ const parentFormInitialValue = {
   fatherDob: "",
 };
 
-// const studentEducationInitialValue = {
-//   std: "",
-//   seatNumber: "",
-//   year: "",
-//   totalMarks: "",
-//   instituteName: "",
-//   universityName: "",
-//   percentage: "",
-// };
+const educationInitialValue = {
+  std: "",
+  seatNumber: "",
+  year: "",
+  totalMarks: "",
+  instituteName: "",
+  universityName: "",
+  percentage: "",
+};
 
 const StudentDetails = () => {
   // const [studentRecord, setStudentRecord] = useState({});
@@ -104,15 +104,8 @@ const StudentDetails = () => {
     educationDetailsAttributes: []
   })
 
-  const [studentEducationInitialValue, setStudentEducationInitialValue] = useState({
-    std: "",
-    seatNumber: "",
-    year: "",
-    totalMarks: "",
-    instituteName: "",
-    universityName: "",
-    percentage: "",
-  })
+  const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
+  const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
 
   const [formFields, setFormFields] = useState({
     parentFormFields: [],
@@ -203,6 +196,7 @@ const StudentDetails = () => {
         .then(result => {
           if(result.formFields && result.formFields.length > 0) {
             setFormFields({...formFields, parentFormFields: result.formFields})
+            setParentInititalValue(details.parentDetails)
             setShowForm({educationDetailsForm: false,parentForms: true,});
             setParentFormDetails({
               title: "Update Parents",
@@ -234,6 +228,18 @@ const StudentDetails = () => {
         .catch(error => {
           console.log('Error while fetching education form fields', error)
         })
+  }
+
+  const hideForm = (formName, flag) => {
+    setShowForm({
+      ...showForms,
+      [formName]: flag
+    }); 
+    if(formName === "educationDetailsForm") {
+      setStudentEducationInitialValue(educationInitialValue)
+    } else {
+      setParentInititalValue(parentFormInitialValue);
+    }
   }
 
   const fetchStudentEducationDetails = (event) => {};
@@ -269,8 +275,9 @@ const StudentDetails = () => {
             formFields={formFields.parentFormFields}
             loadStudentDteails={loadStudentDteails}
             formDetails={parentFormDetails}
-            parentFormInitialValue={ !details.parentDetails ? parentFormInitialValue : details.parentDetails }
+            parentFormInitialValue={parentIntitialValue}
             setFormDetails={setParentFormDetails}
+            hideForm={hideForm}
           />
         </Paper>
       )}
@@ -333,6 +340,7 @@ const StudentDetails = () => {
             setFormDetails={setEducationFormDetails}
             loadStudentDteails={loadStudentDteails}
             educationFormIntialValue={studentEducationInitialValue}
+            hideForm={hideForm}
           />
         </Paper>
       )}
@@ -419,6 +427,7 @@ const StudentDetails = () => {
                           </MatButton>
                         </Grid>
                       </Grid>
+                      <hr></hr>
                     </div>
                   )
                 })

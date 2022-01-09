@@ -77,7 +77,7 @@ export const StudentContextPorvider = (props) => {
         try {
             return await axios.post('/admin/add-studentEducation-details', values)
                 .then((result) => {
-                    if(result.data.resultShort === 'success') {
+                    if(result.data.resultShort === 'succes') {
                         return result.data
                     }
                 })

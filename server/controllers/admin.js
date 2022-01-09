@@ -43,11 +43,10 @@ const getStudentById = (req, res, next) => {
   const studentId = req.params.studentId;
   Student.findByPk(studentId, {attributes: studentDBAttributes})
     .then((student) => {
-      Parent.findAll({attributes: parentDBAttributes},{ where: { studentId: student.id } })
+      Parent.findAll({ where: { studentId: student.id } }, {attributes: parentDBAttributes})
         .then((parent) => {
-          StudentEducationDetails.findAll({attributes: educationDBAttributes},{where: {studentId: student.id}})
+          StudentEducationDetails.findAll({where: {studentId: student.id}}, {attributes: educationDBAttributes})
           .then(educationDetails => {
-            console.log('"educationDetails', JSON.stringify(educationDetails))
             const response = {
               resultShort: "success",
               resultLong: "Student details Found",

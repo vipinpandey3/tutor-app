@@ -125,12 +125,18 @@ const addStudentInDatabase = (req, res, next) => {
 };
 
 const getTeacher = (req, res, next) => {
-  Teachers.findAll()
+  console.log('In /get-teachers routes')
+  console.log('Inside the getTeacher function')
+  const turorTableAtttibutes = attributes[14].columnsHeader;
+  const tutorDBAttributes = attributes[14].tutorDBAttributes
+  return Teachers.findAll()
     .then((teachers) => {
+      console.log("Teachers", teachers)
       const respose = {
         resultShort: "success",
         resultLong: "Successfully retrived all Teachers",
-        teachers: teachers,
+        data: teachers,
+        turorTableAtttibutes: turorTableAtttibutes
       };
 
       res.status(200).json(respose);
@@ -145,12 +151,15 @@ const getTeacher = (req, res, next) => {
 
 const getTeacherById = (req, res, next) => {
   const teacherId = req.params.teacherId;
-  Teachers.findByPk(teacherId)
+  const turorTableAtttibutes = attributes[14].columnsHeader;
+  const tutorDBAttributes = attributes[14].tutorDBAttributes
+  Teachers.findByPk(teacherId, {attributes: tutorDBAttributes})
     .then((teacher) => {
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrived Teacher" + teacherId,
         data: teacher,
+        turorTableAtttibutes: turorTableAtttibutes
       };
       res.status(200).json(response);
     })
@@ -164,9 +173,10 @@ const getTeacherById = (req, res, next) => {
 };
 
 const addTeacher = (req, res, next) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const fullName = firstName + lastName;
+  console.log("In /add-teacher routes");
+  console.log("Inside addTeacher function");
+  console.log("Request body", req.body);
+  const fullName = req.body.fullName;
   const emailId = req.body.emailId;
   const address = req.body.address;
   const dob = req.body.dob;
@@ -174,7 +184,7 @@ const addTeacher = (req, res, next) => {
   const gender = req.body.gender;
   const aadharNo = req.body.aadharNo;
   const userId = req.user.id;
-  const panNo = req.body.panNo;
+  let panNo = req.body.panNo ? req.body.panNo : 'null';
   Teacher.create({
     fullName,
     emailId,
@@ -188,8 +198,8 @@ const addTeacher = (req, res, next) => {
   })
     .then((teacher) => {
       const response = {
-        resultShort: "Success",
-        resultLong: "User created with use id: " + teacher.id,
+        resultShort: "success",
+        resultLong: "Teacher created with use id: " + teacher.id,
       };
       res.status(200).json(response);
     })
@@ -628,6 +638,34 @@ const updateStudentEducationDetails = (req, res) => {
 
 }
 
+const getchTutorFormFields = () => {
+  return new Promise((resolve, reject) => {
+    var examFormFields = attributes[13].formFields;
+    var optionObjPromise = []
+    for (let i = 0; i < examFormFields.length; i++) {
+        if(examFormFields[i]['method']) {
+            const methodPromise = getInputOptions(examFormFields[i]);
+            methodPromise                
+                .then(data => {
+                    examFormFields[i].option = data
+                })
+                .catch((error) => {
+                    console.log("Error from MadePromise function", error)
+                    examFormFields[i].option = [];
+                })
+            optionObjPromise.push(methodPromise)
+        }
+    }
+    Promise.all(optionObjPromise)
+        .then(data => {
+            return resolve(examFormFields);
+        })
+        .catch((error) => {
+            return reject(error);
+        })
+})
+}
+
 module.exports = {
   getStudent,
   getStudentById,
@@ -645,5 +683,6 @@ module.exports = {
   getParentFormFields,
   updateParentDetails,
   fetchEducationFormFields,
-  updateStudentEducationDetails
+  updateStudentEducationDetails,
+  getchTutorFormFields
 };

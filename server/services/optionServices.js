@@ -121,7 +121,7 @@ const getSubjectOptionForStandard = async(id) => {
     return subjectOption;
 }
 
-const getStudentGenderData = () => {
+const getGenderData = () => {
     return new Promise((resolve, reject) => {
         const genderItems = [
             {
@@ -175,12 +175,87 @@ const getStudentStreamData = () => {
     })
 }
 
+const getBranchData = () => {
+    return new Promise((resolve, reject) => {
+        const branchList = [
+            {
+                id: 1,
+                type: "Mumbai"
+            },
+            {
+                id: 1,
+                type: "Bangluru"
+            },
+            {
+                id: 1,
+                type: "Delhi"
+            },
+            {
+                id: 1,
+                type: "Varanasi"
+            }
+        ];
+
+        if(branchList.length > 0) {
+            return resolve(branchList);
+        } else {
+            return reject([]);
+        }
+    })
+}
+
+const getReligiondata = () => {
+    return new Promise((resolve, reject) => {
+        const religionList = [
+            {
+                id: 1,
+                type: "Hindu"
+            },
+            {
+                id: 1,
+                type: "Budhhist`"
+            },
+            {
+                id: 1,
+                type: "Jain"
+            },
+            {
+                id: 1,
+                type: "Sikh"
+            }
+        ];
+
+        if(religionList.length > 0) {
+            return resolve(religionList);
+        } else {
+            return reject([]);
+        }
+    })
+}
+
+const getInputOptions = (optionObject) => {
+    console.log('Inside the GetInputOption for optionObject with method', optionObject.method);
+    return new Promise((resolve, reject) => {
+        console.log("optionObject", optionObject)
+        optionObject['method']()
+            .then(data => {
+                return resolve(data)
+            })
+            .catch(error => {
+                console.log('Error', error);
+                return reject(error)
+            })
+    })
+}
+
 module.exports = {
     getStandardData,
     getExamTypeData,
     getHoursdata,
     getMarksData,
     getSubjectOptionForStandard,
-    getStudentGenderData,
-    getStudentStreamData
+    getGenderData,
+    getStudentStreamData,
+    getReligiondata,
+    getBranchData
 }

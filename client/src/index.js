@@ -6,17 +6,20 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { StudentContextPorvider } from "./context/student-context";
 import { FeesContextProvider } from "./context/fees-context";
 import { ExamContextProvider } from "./context/exam-context";
+import { TutorContextProvider } from './context/tutor-context';
 
 ReactDOM.render(
-  <StudentContextPorvider>
-    <FeesContextProvider>
-      <ExamContextProvider>
-        <Router>
-          <App />
-        </Router>
-      </ExamContextProvider>
-    </FeesContextProvider>
-  </StudentContextPorvider>,
+  <TutorContextProvider>
+    <StudentContextPorvider>
+      <FeesContextProvider>
+        <ExamContextProvider>
+          <Router>
+            <App />
+          </Router>
+        </ExamContextProvider>
+      </FeesContextProvider>
+    </StudentContextPorvider>
+  </TutorContextProvider>,
   document.getElementById("root")
 );
 

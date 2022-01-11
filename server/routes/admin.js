@@ -164,6 +164,27 @@ router.post("/update-education-details", (req, res) => {
         }
         return res.status(500).json(response);
     })
+});
+
+router.get('/get-tutor-formFields', (req, res) => {
+    console.log('Inside the /get-tutor-formFields route')
+    adminController.getchTutorFormFields()
+    .then((data) => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'successfully retrived form inputs',
+            formFields: data
+        }
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error Final', error)
+        const result = {
+            resultShort: "failure",
+            resultLong: "Failed to retriev form inputs",
+        }
+        return res.status(400).json(result);
+    });
 })
 
 module.exports = router;

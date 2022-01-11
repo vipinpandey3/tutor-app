@@ -333,8 +333,8 @@
                 "label": "Gender",
                 "type": "select",
                 "option": [],
-                "service": "studentGender",
-                "method": "getStudentGenderData"
+                "service": "genderData",
+                "method": "getGenderData"
             },
             {
                 "id": "dob",
@@ -771,5 +771,98 @@
           }
        ],
        "feesDBAttributes": ["uuid", "date", "feesAmount", "discount", "paidAmount", "balance", "reamarks"]
+    },
+    {
+        "index": 13,
+        "name": "getTutorFormFields",
+        "formFields": [
+            {
+                "id": "fullName",
+                "name": "fullName",
+                "label": "FullName",
+                "type": "input"
+            },
+            {
+                "id": "emailId",
+                "name": "emailId",
+                "label": "Email",
+                "type": "input"
+            },
+            {
+                "id": "gender",
+                "name": "gender",
+                "label": "Gender",
+                "type": "select",
+                "option": [],
+                "service": "genderData",
+                "method": "getGenderData"
+            },
+            {
+                "id": "dob",
+                "name": "dob",
+                "label": "Date of Birth",
+                "type": "date"
+            },
+            {
+                "id": "religion",
+                "name": "religion",
+                "label": "Religion",
+                "type": "select",
+                "option": [],
+                "service": "religionData",
+                "method": "getReligiondata"
+            },
+            {
+                "id": "address",
+                "name": "address",
+                "label": "Address",
+                "type": "input"
+            },
+            {
+                "id": "aadharNo",
+                "name": "aadharNo",
+                "label": "Aadhar No",
+                "type": "input"
+            }
+        ]
+    },
+    {
+        "index": 14,
+        "name": "getAllTeachers",
+        "columnsHeader": [
+            {
+                "id": "fullName",
+                "label": "Full Name"
+            },
+            {
+                "id": "emailId",
+                "label": "Email Id"
+            },
+            {
+                "id": "aadharNo",
+                "label": "Aadhar Number"
+            },
+            {
+                "id": "dob",
+                "label": "Date of Birth"
+            },
+            {
+                "id": "gender",
+                "label": "Gender"
+            },
+            {
+                "id": "religion",
+                "label": "Religion"
+            }
+        ],
+        "tutorDBAttributes": [
+            "fullName",
+            "emailId",
+            "aadharNo",
+            "dob",
+            "gender",
+            "religion",
+            "mobile"
+        ]
     }
 ]

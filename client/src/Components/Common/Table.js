@@ -39,12 +39,13 @@ function Table(props) {
     filterFunction,
     openInPopup,
     redirectToDetailsPage,
+    edit
   } = props;
-  const [tableRecords, setTableRecords] = useState(records);
+  // const [tableRecords, setTableRecords] = useState(records);
   // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
   const {
     stableSort, handleTableSorting, Pagination, getComparator, orderBy, order, page, rowsPerPage
-  } = useTable(tableRecords);
+  } = useTable(records);
   return (
     <>
       <MuiTable className={classes.table}>
@@ -71,23 +72,22 @@ function Table(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {stableSort(tableRecords, getComparator(order, orderBy))
+          {stableSort(records, getComparator(order, orderBy))
           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           .map((row) => {
             return (
               <TableRow
                 key={row.id}
-                onClick={() => {
-                  redirectToDetailsPage(row.id);
-                }}
               >
-                {headCells.map((rowCell) => {
+                {headCells.map((rowCell, index) => {
                   const value = row[rowCell.id];
-                  return <TableCell>{value}</TableCell>;
+                  return <TableCell key={index} onClick={() => {
+                    redirectToDetailsPage(row.id);
+                  }}>{value}</TableCell>;
                 })}
                 <TableCell>
                   <ActionButton
-                    onClick={() => openInPopup(row)}
+                    onClick={() => edit(row)}
                     color="primary"
                   >
                     <EditOutlinedIcon fontSize="small" />

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const initialFormValues = {
   fullName: "",
   emailId: "",
-  mobile: "",
+  mobileNo: "",
   branch: "Mumbai",
   gender: "Male",
   religion: "Hindu",

@@ -19,6 +19,11 @@ export const ParentForms = (props) => {
                         ...showForms,
                         parentForms: false
                     })
+                    setFormDetails({
+                        title: "Add Parents",
+                        buttonName: 'Submit',
+                        editFlag: false
+                    })
                 } else {
                     setShowParentForm({
                         ...showForms,

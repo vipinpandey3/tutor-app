@@ -23,7 +23,6 @@ router.get('/searchFees/:searchParams', (req, res, next) => {
                 resultShort: 'failure',
                 resultLong: 'Failed to retrived any data'
             }
-
             return res.json(response);
         })
 });

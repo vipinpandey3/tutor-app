@@ -1,9 +1,10 @@
-const StandardMaster = require('../models/standardMaster');
-const SubjectMaster = require('../models/subjectMatser');
+// const StandardMaster = require('../models/standardMaster');
+// const SubjectMaster = require('../models/subjectMatser');
+const models = require('../models')
 
 const getStandardData = async () => {
     console.log('Inside the get standard data as option');
-    const standardData = await StandardMaster.findAll(
+    const standardData = await models.StandardMaster.findAll(
         {
             where: {
                 status: 1
@@ -111,9 +112,9 @@ const getMarksData = () => {
 
 const getSubjectOptionForStandard = async(id) => {
     console.log('Id =>>>>>>>.', id)
-    const subjectOption = await SubjectMaster.findAll({
+    const subjectOption = await models.SubjectMaster.findAll({
         where: {
-            stdId: id
+            StandardMasterId: id
         },
         attributes: ['id', ['subjectName', 'type']]
     })

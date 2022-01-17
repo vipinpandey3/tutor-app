@@ -50,8 +50,8 @@
         "index": 1,
         "attributes": [
             {
-                "id": "studentId",
-                "name": "studentId",
+                "id": "StudentId",
+                "name": "StudentId",
                 "label": "Student Id",
                 "type": "input"
             },
@@ -789,6 +789,12 @@
                 "type": "input"
             },
             {
+                "id": "mobileNo",
+                "name": "mobileNo",
+                "label": "Mobile Number",
+                "type": "input"
+            },
+            {
                 "id": "gender",
                 "name": "gender",
                 "label": "Gender",
@@ -839,6 +845,10 @@
                 "label": "Email Id"
             },
             {
+                "id": "mobileNo",
+                "label": "Mobile No"
+            },
+            {
                 "id": "aadharNo",
                 "label": "Aadhar Number"
             },
@@ -858,11 +868,68 @@
         "tutorDBAttributes": [
             "fullName",
             "emailId",
+            "mobileNo",
             "aadharNo",
             "dob",
             "gender",
-            "religion",
-            "mobile"
+            "religion"
+        ]
+    },
+    {
+        "index": 15,
+        "name": "getTuorrById",
+        "tutorDetailsAttributes": [
+            {
+                "id": "fullName",
+                "name": "Full Name",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "emailId",
+                "name": "EmailId",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "mobileNo",
+                "name": "Mobile No",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "aadharNo",
+                "name": "Aadhar No",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "dob",
+                "name": "Date of Birth",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "gender",
+                "name": "Gender",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "religion",
+                "name": "Religion",
+                "size": 3,
+                "class": "flexcontainer"
+            }
+        ],
+        "tutorDBAttributes": [
+            "fullName",
+            "emailId",
+            "mobileNo",
+            "aadharNo",
+            "dob",
+            "gender",
+            "religion"
         ]
     }
 ]

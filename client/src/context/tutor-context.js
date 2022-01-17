@@ -42,12 +42,24 @@ export const TutorContextProvider = (props) => {
         }
     }
 
+    const getTutorDetails = async(teacherId) => {
+        try {
+            return await axios.get(`/admin/teachersDetails/${teacherId}`)
+                .then(result => {
+                    return result.data
+                })
+        } catch (error) {
+            console.log("Error getting tuttor details", error);
+        }
+    }
+
     return (
         <TutorContext.Provider
             value={{
                 fetchTutorForms,
                 addTutors,
-                fetchTutors
+                fetchTutors,
+                getTutorDetails
             }}
         >
             {props.children}

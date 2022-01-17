@@ -1,37 +1,27 @@
-
 module.exports = function(sequelize, DataTypes) {
-    let Student = sequelize.define('Student', {
+    let Tutor = sequelize.define('Tutor', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,
             primaryKey: true
         },
-        firstName: {
-            type: DataTypes.STRING,
+        fullName: {
+            type: DataTypes.TEXT,
             allowNull: false,
-            defaultValue: '-'
-        },
-        lastName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: '-'
-        },
-        emailId: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            defaultValue: 'John Doe'
         },
         address: {
             type: DataTypes.TEXT,
-            allowNull: false,
+            allowNull: true,
         },
         dob: {
             type: DataTypes.STRING,
+            allowNull: false,
         },
         religion: {
             type: DataTypes.CHAR(55),
-            defaultValue: 'Hindu',
-            allowNull: false,
+            defaultValue: "Hindu",
         },
         gender: {
             type: DataTypes.CHAR(55),
@@ -40,21 +30,29 @@ module.exports = function(sequelize, DataTypes) {
         },
         aadharNo: {
             type: DataTypes.STRING(16),
-            allowNull: false,
+            allowNull: true,
             unique: true
         },
         panNo: {
             type: DataTypes.CHAR(55),
             allowNull: true,
+            unique: false
+        },
+        emailId: {
+            type: DataTypes.CHAR(55),
+            allowNull: false,
+            unique: true
+        },
+        mobileNo: {
+            type: DataTypes.STRING(16),
+            allowNull: false,
             unique: true
         }
-    })
+    });
 
-    Student.associate = function(models) {
-        Student.hasMany(models.Fees, {foreignKey: "StudentId"})
-        Student.belongsTo(models.Parent)
-        Student.hasMany(models.StudentEducationDetails, {foreignKey: "StudentId"});
+    Tutor.associate = function(models) {
+        Tutor.hasMany(models.TutorEducationDetails, {foreignKey: "TutorId"});
     };
 
-    return Student
+    return Tutor;
 }

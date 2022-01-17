@@ -1,6 +1,5 @@
-
 module.exports = function(sequelize, DataTypes) {
-    let StudentEducationDetails = sequelize.define('StudentEducationDetails', {
+    let TutorEducationDetails = sequelize.define("TutorEducationDetails", {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -37,10 +36,9 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    StudentEducationDetails.associate = function(models) {
-        StudentEducationDetails.belongsTo(models.Student);
-    }
+    TutorEducationDetails.associate = function(models) {
+        TutorEducationDetails.belongsTo(models.Tutor)
+    };
 
-    return StudentEducationDetails
-
+    return TutorEducationDetails;
 }

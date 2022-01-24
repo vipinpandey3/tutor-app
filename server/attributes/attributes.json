@@ -930,6 +930,92 @@
             "dob",
             "gender",
             "religion"
+        ],
+        "educationAttributes": [
+            {
+                "id": "std",
+                "name": "Standard",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "seatNumber",
+                "name": "Seat Number",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "year",
+                "name": "Academic Year",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "totalMarks",
+                "name": "Total Marks",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "instituteName",
+                "name": "Institute Name",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "universityName",
+                "name": "University Name",
+                "size": 3,
+                "class": "flexcontainer"
+            }
+        ]
+    },
+    {
+        "index": 16,
+        "name": "TutorEducationDetails",
+        "formFields": [
+            {
+                "id": "std",
+                "name": "std",
+                "label": "Standard",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "seatNumber",
+                "name": "seatNumber",
+                "label": "Seat Number",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "year",
+                "name": "year",
+                "type": "input",
+                "size": 4,
+                "label": "Academic Year"
+            },
+            {
+                "id": "totalMarks",
+                "name": "totalMarks",
+                "type": "input",
+                "size": 4,
+                "label": "Total Marks(Eg: 400/600)"
+            },
+            {
+                "id": "instituteName",
+                "name": "instituteName",
+                "type": "input",
+                "size": 4,
+                "label": "Institute/College Name"
+            },
+            {
+                "id": "universityName",
+                "name": "universityName",
+                "type": "input",
+                "size": 4,
+                "label": "Univeristy/Board Name"
+            }
         ]
     }
 ]

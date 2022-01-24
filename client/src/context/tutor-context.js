@@ -53,13 +53,49 @@ export const TutorContextProvider = (props) => {
         }
     }
 
+    const fetchTutorEducationFormFields = async() => {
+        try {
+            return await axios.get('/admin/getTutorFormFields')
+                .then(result => {
+                    return result.data
+                })
+        } catch (error) {
+            console.log("Error while getting education form fields for users", error)
+        }
+    }
+
+    const addTutorEducation = async(values) => {
+        try {
+            return await axios.post('/admin/addTutorEducation', values)
+            .then(result => {
+                return result.data
+            })
+        } catch (error) {
+            console.log("Error While adding tutor education details", error)
+        }
+    }
+
+    const updateTutorEducationDetail = async(values) => {
+        try {
+            return await axios.post('/admin/updateTutorEducation', values)
+            .then(result => {
+                return result.data
+            })
+        } catch(error) {
+            console.log("Error while updating tutor", error)
+        }
+    }
+
     return (
         <TutorContext.Provider
             value={{
                 fetchTutorForms,
                 addTutors,
                 fetchTutors,
-                getTutorDetails
+                getTutorDetails,
+                fetchTutorEducationFormFields,
+                addTutorEducation,
+                updateTutorEducationDetail
             }}
         >
             {props.children}

@@ -11,12 +11,10 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableSortLabel,
   TableBody,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import Text from "../../Common/Text";
-import { parentFormInput } from "./StudentsRecords";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { StudentContext } from "../../../context/student-context";
 import { ParentForms, StudentEducationForms } from "./StudentRelatedForms";
@@ -209,7 +207,6 @@ const StudentDetails = () => {
   };
 
   const editParentsDetails  = () => {
-    console.log("details", details.parentDetails)
     fetchParentFields(false)
         .then(result => {
           if(result.formFields && result.formFields.length > 0) {

@@ -135,14 +135,23 @@ const getTeacherById = (req, res, next) => {
   const teacherId = req.params.teacherId;
   const tutorDetailsAttributes = attributes[15].tutorDetailsAttributes;
   const tutorDBAttributes = attributes[15].tutorDBAttributes
-  models.Tutor.findByPk(teacherId, {attributes: tutorDBAttributes})
+  const educationAttrbutes = attributes[15].educationAttributes
+  models.Tutor.findByPk(teacherId, {
+    include: [
+      {
+        model: models.TutorEducationDetails
+      }
+    ]
+  },{attributes: tutorDBAttributes} 
+  )
     .then((teacher) => {
-      console.log("TEacher =========>", teacher)
+      console.log("TEacher =========>", JSON.stringify(teacher))
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrived Teacher" + teacherId,
         data: teacher,
         attributes: tutorDetailsAttributes,
+        educationAttributes: educationAttrbutes
       };
       return res.status(200).json(response);
     })
@@ -571,7 +580,6 @@ const getParentFormFields = (req, res) => {
   })
 }
 
-
 const updateParentDetails = (req, res) => {
   console.log('Inside updateParentDetails function')
   const requestBody = req.body;
@@ -634,7 +642,7 @@ const fetchEducationFormFields = (req, res) => {
 
 const updateStudentEducationDetails = (req, res) => {
   console.log('Inside updateStudentEducationDetails function');
-  return  StudentEducationDetails.update(req.body, {where: {id: req.body.id}})
+  return  models.StudentEducationDetails.update(req.body, {where: {id: req.body.id}})
     .then((updatedObj) => {
       console.log("updatedObj", updatedObj)
       return Promise.resolve(updatedObj)
@@ -648,30 +656,96 @@ const updateStudentEducationDetails = (req, res) => {
 
 const getchTutorFormFields = () => {
   return new Promise((resolve, reject) => {
-    var examFormFields = attributes[13].formFields;
+    var tutorFormFields = attributes[13].formFields;
     var optionObjPromise = []
-    for (let i = 0; i < examFormFields.length; i++) {
-        if(examFormFields[i]['method']) {
-            const methodPromise = getInputOptions(examFormFields[i]);
+    for (let i = 0; i < tutorFormFields.length; i++) {
+        if(tutorFormFields[i]['method']) {
+            const methodPromise = getInputOptions(tutorFormFields[i]);
             methodPromise                
                 .then(data => {
-                    examFormFields[i].option = data
+                    tutorFormFields[i].option = data
                 })
                 .catch((error) => {
                     console.log("Error from MadePromise function", error)
-                    examFormFields[i].option = [];
+                    tutorFormFields[i].option = [];
                 })
             optionObjPromise.push(methodPromise)
         }
     }
     Promise.all(optionObjPromise)
         .then(data => {
-            return resolve(examFormFields);
+            return resolve(tutorFormFields);
         })
         .catch((error) => {
             return reject(error);
         })
 })
+}
+
+const getTutorEducationFormFields = () => {
+  return new Promise((resolve, reject) => {
+    var tutorEducationFormfields = attributes[16].formFields;
+    var optioPromise = [];
+    for(let i = 0; i < tutorEducationFormfields.length; i++) {
+      if(tutorEducationFormfields[i]['method']) {
+        const methodPromise = getInputOptions(tutorEducationFormfields[i]);
+        methodPromise.then(data => {
+          tutorEducationFormfields[i].option = data
+        })
+        .catch((error) => {
+          console.log("Error from method promise", error);
+          tutorEducationFormfields[i].option = []
+        })
+        optioPromise.push(methodPromise)
+         
+      }
+    }
+    Promise.all((optioPromise))
+    .then(data => {
+      return resolve(tutorEducationFormfields)
+    })
+    .catch((error) => {
+      console.log('Error', error)
+      return reject(error)
+    })
+  })
+}
+
+const addTutorEducation = (req) => {
+  const TutorId = req.body.TutorId;
+  const std = req.body.std;
+  const seatNumber = req.body.seatNumber;
+  const year = req.body.year;
+  const totalMarks = req.body.totalMarks;
+  const instituteName = req.body.instituteName;
+  const universityName = req.body.universityName;
+  const percentage = req.body.percentage;
+
+  return new Promise((resolve, reject) => {
+    return models.TutorEducationDetails.create({std, seatNumber, year, totalMarks, instituteName, universityName, percentage, TutorId})
+    .then(res => {
+      if(res) {
+        resolve(res)
+      }
+    })
+    .catch(error => {
+      reject(error)
+    })
+  })
+}
+
+const updateTutorEducationById = (req) => {
+  console.log('Inside updateTutorEducationById function');
+  console.log("Req.body", JSON.stringify(req.body))
+  return  models.TutorEducationDetails.update(req.body, {where: {id: req.body.id}})
+    .then((updatedObj) => {
+      console.log("updatedObj =========>", updatedObj)
+      return Promise.resolve(updatedObj)
+    })
+    .catch(error => {
+      console.log("Error while updating student education details", error);
+      return Promise.reject(error)
+    })
 }
 
 module.exports = {
@@ -692,5 +766,8 @@ module.exports = {
   updateParentDetails,
   fetchEducationFormFields,
   updateStudentEducationDetails,
-  getchTutorFormFields
+  getchTutorFormFields,
+  getTutorEducationFormFields,
+  addTutorEducation,
+  updateTutorEducationById
 };

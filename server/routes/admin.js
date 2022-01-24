@@ -1,7 +1,5 @@
 const express = require("express");
-
 const router = express.Router();
-
 const adminController = require("../controllers/admin");
 
 router.get("/get-students", adminController.getStudent);
@@ -166,9 +164,9 @@ router.post("/update-education-details", (req, res) => {
     })
 });
 
-router.get('/get-tutor-formFields', (req, res) => {
+router.get('/getTutorFormFields', (req, res) => {
     console.log('Inside the /get-tutor-formFields route')
-    adminController.getchTutorFormFields()
+    adminController.getTutorEducationFormFields()
     .then((data) => {
         const result = {
             resultShort: 'success',
@@ -185,6 +183,50 @@ router.get('/get-tutor-formFields', (req, res) => {
         }
         return res.status(400).json(result);
     });
+})
+
+router.post('/addTutorEducation', (req, res) => {
+    console.log('in /addTutorEducation route');
+    return adminController.addTutorEducation(req)
+        .then(data => {
+            const result = {
+                resultShort: "success",
+                resultLong: "Successfullt added tutors education"
+            }
+
+            return res.status(200).json(result)
+        })
+        .catch(error => {
+            console.log("Error while adding tutor education", error);
+            const result = {
+                resultShort: "success",
+                resultLong: "Error while adding tutor education"
+            }
+
+            return res.status(500).json(result)
+        })
+})
+
+router.post('/updateTutorEducation', (req, res) => {
+    console.log("Inside /updateTutorEducation route")
+    return adminController.updateTutorEducationById(req)
+    .then(data => {
+        const result = {
+            resultShort: "success",
+            resultLong: "Successfullt added tutors education"
+        }
+
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log("Error while adding tutor education", error);
+        const result = {
+            resultShort: "success",
+            resultLong: "Error while adding tutor education"
+        }
+
+        return res.status(500).json(result)
+    })    
 })
 
 module.exports = router;

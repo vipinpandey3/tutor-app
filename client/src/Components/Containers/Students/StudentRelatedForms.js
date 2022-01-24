@@ -9,7 +9,6 @@ export const ParentForms = (props) => {
     const {addParent, updateParents} = useContext(StudentContext);
     
     const addParentData = (value, dateValue) => {
-        console.log('DateValue', dateValue)
         value.studentId = studentId
         addParent(value)
             .then(result => {

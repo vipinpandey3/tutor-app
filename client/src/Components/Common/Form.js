@@ -28,7 +28,6 @@ const Form = (props) => {
   const { values, errors, handleInputChange, handleDateChange, dateValue } =
     useForm(initialFormValues);
 
-
   const formSubmitHandler = (e) => {
     e.preventDefault();
     if(formDetails.editFlag) {

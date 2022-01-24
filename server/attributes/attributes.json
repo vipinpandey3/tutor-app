@@ -50,8 +50,8 @@
         "index": 1,
         "attributes": [
             {
-                "id": "studentId",
-                "name": "studentId",
+                "id": "StudentId",
+                "name": "StudentId",
                 "label": "Student Id",
                 "type": "input"
             },
@@ -333,8 +333,8 @@
                 "label": "Gender",
                 "type": "select",
                 "option": [],
-                "service": "studentGender",
-                "method": "getStudentGenderData"
+                "service": "genderData",
+                "method": "getGenderData"
             },
             {
                 "id": "dob",
@@ -771,5 +771,251 @@
           }
        ],
        "feesDBAttributes": ["uuid", "date", "feesAmount", "discount", "paidAmount", "balance", "reamarks"]
+    },
+    {
+        "index": 13,
+        "name": "getTutorFormFields",
+        "formFields": [
+            {
+                "id": "fullName",
+                "name": "fullName",
+                "label": "FullName",
+                "type": "input"
+            },
+            {
+                "id": "emailId",
+                "name": "emailId",
+                "label": "Email",
+                "type": "input"
+            },
+            {
+                "id": "mobileNo",
+                "name": "mobileNo",
+                "label": "Mobile Number",
+                "type": "input"
+            },
+            {
+                "id": "gender",
+                "name": "gender",
+                "label": "Gender",
+                "type": "select",
+                "option": [],
+                "service": "genderData",
+                "method": "getGenderData"
+            },
+            {
+                "id": "dob",
+                "name": "dob",
+                "label": "Date of Birth",
+                "type": "date"
+            },
+            {
+                "id": "religion",
+                "name": "religion",
+                "label": "Religion",
+                "type": "select",
+                "option": [],
+                "service": "religionData",
+                "method": "getReligiondata"
+            },
+            {
+                "id": "address",
+                "name": "address",
+                "label": "Address",
+                "type": "input"
+            },
+            {
+                "id": "aadharNo",
+                "name": "aadharNo",
+                "label": "Aadhar No",
+                "type": "input"
+            }
+        ]
+    },
+    {
+        "index": 14,
+        "name": "getAllTeachers",
+        "columnsHeader": [
+            {
+                "id": "fullName",
+                "label": "Full Name"
+            },
+            {
+                "id": "emailId",
+                "label": "Email Id"
+            },
+            {
+                "id": "mobileNo",
+                "label": "Mobile No"
+            },
+            {
+                "id": "aadharNo",
+                "label": "Aadhar Number"
+            },
+            {
+                "id": "dob",
+                "label": "Date of Birth"
+            },
+            {
+                "id": "gender",
+                "label": "Gender"
+            },
+            {
+                "id": "religion",
+                "label": "Religion"
+            }
+        ],
+        "tutorDBAttributes": [
+            "fullName",
+            "emailId",
+            "mobileNo",
+            "aadharNo",
+            "dob",
+            "gender",
+            "religion"
+        ]
+    },
+    {
+        "index": 15,
+        "name": "getTuorrById",
+        "tutorDetailsAttributes": [
+            {
+                "id": "fullName",
+                "name": "Full Name",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "emailId",
+                "name": "EmailId",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "mobileNo",
+                "name": "Mobile No",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "aadharNo",
+                "name": "Aadhar No",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "dob",
+                "name": "Date of Birth",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "gender",
+                "name": "Gender",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "religion",
+                "name": "Religion",
+                "size": 3,
+                "class": "flexcontainer"
+            }
+        ],
+        "tutorDBAttributes": [
+            "fullName",
+            "emailId",
+            "mobileNo",
+            "aadharNo",
+            "dob",
+            "gender",
+            "religion"
+        ],
+        "educationAttributes": [
+            {
+                "id": "std",
+                "name": "Standard",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "seatNumber",
+                "name": "Seat Number",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "year",
+                "name": "Academic Year",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "totalMarks",
+                "name": "Total Marks",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "instituteName",
+                "name": "Institute Name",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "universityName",
+                "name": "University Name",
+                "size": 3,
+                "class": "flexcontainer"
+            }
+        ]
+    },
+    {
+        "index": 16,
+        "name": "TutorEducationDetails",
+        "formFields": [
+            {
+                "id": "std",
+                "name": "std",
+                "label": "Standard",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "seatNumber",
+                "name": "seatNumber",
+                "label": "Seat Number",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "year",
+                "name": "year",
+                "type": "input",
+                "size": 4,
+                "label": "Academic Year"
+            },
+            {
+                "id": "totalMarks",
+                "name": "totalMarks",
+                "type": "input",
+                "size": 4,
+                "label": "Total Marks(Eg: 400/600)"
+            },
+            {
+                "id": "instituteName",
+                "name": "instituteName",
+                "type": "input",
+                "size": 4,
+                "label": "Institute/College Name"
+            },
+            {
+                "id": "universityName",
+                "name": "universityName",
+                "type": "input",
+                "size": 4,
+                "label": "Univeristy/Board Name"
+            }
+        ]
     }
 ]

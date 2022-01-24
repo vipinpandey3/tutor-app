@@ -1,18 +1,13 @@
-const Students = require("../models/student");
-const Parents = require("../models/Parents");
-const Teachers = require("../models/teacher");
-const Student = require("../models/student");
-const Teacher = require("../models/teacher");
-const Parent = require("../models/Parents");
 const StudentEducationDetails = require("../models/student-education-details");
 const Fees = require('../models/fees'); 
 const attributes = require('../attributes/attributes.json');
 const OptionServices = require('../services/optionServices')
 const moment = require('moment');
+const models = require('../models')
 
 const getStudent = (req, res, next) => {
   const columnsAttributes = attributes[6].columnsHeader
-  Students.findAll()
+  models.Student.findAll()
     .then((students) => {
       const respose = {
         resultShort: "success",
@@ -41,50 +36,35 @@ const getStudentById = (req, res, next) => {
   const studentDBAttributes = attributes[11].studentsDBAttributes;
   const parentDBAttributes = attributes[11].parentDBAttributes;
   const studentId = req.params.studentId;
-  Student.findByPk(studentId, {attributes: studentDBAttributes})
-    .then((student) => {
-      Parent.findAll({ where: { studentId: student.id } }, {attributes: parentDBAttributes})
-        .then((parent) => {
-          StudentEducationDetails.findAll({where: {studentId: student.id}}, {attributes: educationDBAttributes})
-          .then(educationDetails => {
-            const response = {
-              resultShort: "success",
-              resultLong: "Student details Found",
-              studentDetails: student,
-              parentDetails: parent[0],
-              educationDetails: educationDetails,
-              studentDetailAttributes: studentDetailAttributes,
-              parentDetailsAttributes: parentDetailsAttributes,
-              educationDetailsAttributes: educationDetailsAttributes
-            };
-            return res.status(200).json(response);
-          })
-          .catch(err => {
-            const response = {
-              resultShort: "failure",
-              resultLong:
-                "Failed to retrieve Education Details for student with id: " + student.id,
-            };
-            res.json(response);  
-          } )
-        })
-        .catch((err) => {
-          const response = {
-            resultShort: "failure",
-            resultLong:
-              "Failed to retrieve parent details for id: " + student.id,
-          };
-
-          res.json(response);
-        });
+  return models.Student.findByPk(studentId, {
+    include: [
+      {
+        model: models.Parent
+      },
+      {
+        model: models.StudentEducationDetails
+      }
+    ]
+  })
+  .then((studentDetails) => {
+    console.log('Student ======>', JSON.stringify(studentDetails))
+    const response = {
+      resultShort: "success",
+      resultLong: "Student details Found",
+      studentDetails: studentDetails,
+      studentDetailAttributes: studentDetailAttributes,
+      parentDetailsAttributes: parentDetailsAttributes,
+      educationDetailsAttributes: educationDetailsAttributes
+    };
+    return res.status(200).json(response);
     })
-    .catch((err) => {
-      const response = {
-        resultShort: "failure",
-        resultLong: "Failed to retrieve student data with Id: " + studentId,
-      };
-      res.json(response);
-    });
+  .catch((err) => {
+    const response = {
+      resultShort: "failure",
+      resultLong: "Failed to retrieve student data with Id: " + studentId,
+    };
+    res.json(response);
+  });
 };
 
 const addStudentInDatabase = (req, res, next) => {
@@ -92,12 +72,12 @@ const addStudentInDatabase = (req, res, next) => {
   const lastName = req.body.lastName;
   const emailId = req.body.emailId;
   const address = req.body.address;
-  const dob = moment(req.body.dob).formate('YYYY-MM-DD');
+  const dob = moment(req.body.dob).format('YYYY-MM-DD');
   const religion = req.body.religion;
   const gender = req.body.gender;
   const aadharNo = req.body.aadharNo;
   const userId = req.user.id;
-  Student.create({
+  models.Student.create({
     firstName,
     lastName,
     emailId,
@@ -125,12 +105,18 @@ const addStudentInDatabase = (req, res, next) => {
 };
 
 const getTeacher = (req, res, next) => {
-  Teachers.findAll()
+  console.log('In /get-teachers routes')
+  console.log('Inside the getTeacher function')
+  const turorTableAtttibutes = attributes[14].columnsHeader;
+  const tutorDBAttributes = attributes[14].tutorDBAttributes
+  return models.Tutor.findAll()
     .then((teachers) => {
+      console.log("Teachers", teachers)
       const respose = {
         resultShort: "success",
         resultLong: "Successfully retrived all Teachers",
-        teachers: teachers,
+        data: teachers,
+        turorTableAtttibutes: turorTableAtttibutes
       };
 
       res.status(200).json(respose);
@@ -144,17 +130,33 @@ const getTeacher = (req, res, next) => {
 };
 
 const getTeacherById = (req, res, next) => {
+  console.log("in /teachersDetails/:teacherId route")
+  console.log("in getTeacherById function");
   const teacherId = req.params.teacherId;
-  Teachers.findByPk(teacherId)
+  const tutorDetailsAttributes = attributes[15].tutorDetailsAttributes;
+  const tutorDBAttributes = attributes[15].tutorDBAttributes
+  const educationAttrbutes = attributes[15].educationAttributes
+  models.Tutor.findByPk(teacherId, {
+    include: [
+      {
+        model: models.TutorEducationDetails
+      }
+    ]
+  },{attributes: tutorDBAttributes} 
+  )
     .then((teacher) => {
+      console.log("TEacher =========>", JSON.stringify(teacher))
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrived Teacher" + teacherId,
         data: teacher,
+        attributes: tutorDetailsAttributes,
+        educationAttributes: educationAttrbutes
       };
-      res.status(200).json(response);
+      return res.status(200).json(response);
     })
     .catch((err) => {
+      console.log('Error while fetching tutor-details by Id', err)
       const response = {
         resultShort: "failure",
         resultLong: "Failed to retrieve teacher data with Id: " + teacherId,
@@ -164,20 +166,23 @@ const getTeacherById = (req, res, next) => {
 };
 
 const addTeacher = (req, res, next) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const fullName = firstName + lastName;
+  console.log("In /add-teacher routes");
+  console.log("Inside addTeacher function");
+  console.log("Request body", req.body);
+  const fullName = req.body.fullName;
   const emailId = req.body.emailId;
+  const mobileNo = req.body.mobileNo
   const address = req.body.address;
-  const dob = req.body.dob;
+  const dob = moment(req.body.dob).format('YYYY-MM-DD');
   const religion = req.body.religion;
   const gender = req.body.gender;
   const aadharNo = req.body.aadharNo;
   const userId = req.user.id;
-  const panNo = req.body.panNo;
-  Teacher.create({
+  let panNo = req.body.panNo ? req.body.panNo : 'null';
+  models.Tutor.create({
     fullName,
     emailId,
+    mobileNo,
     address,
     dob,
     religion,
@@ -188,8 +193,8 @@ const addTeacher = (req, res, next) => {
   })
     .then((teacher) => {
       const response = {
-        resultShort: "Success",
-        resultLong: "User created with use id: " + teacher.id,
+        resultShort: "success",
+        resultLong: "Teacher created with use id: " + teacher.id,
       };
       res.status(200).json(response);
     })
@@ -217,7 +222,7 @@ const addParent = (req, res, next) => {
   const fatherDob = moment(req.body.fatherDob).format('YYYY-MM-DD');
   const studentId = req.body.studentId
 
-  Parents.create({
+  models.Parent.create({
     fatherName,
     motherName,
     motherAadhar,
@@ -228,16 +233,35 @@ const addParent = (req, res, next) => {
     motherHighestQualification,
     motherdob,
     fatherDob,
-    studentId,
   })
     .then((parent) => {
-      console.log("Parent", parent);
-      const response = {
-        resultShort: "success",
-        resultLong: "Parents created for student with Id: " + studentId,
-        parentId: parent.id
-      };
-      return res.status(200).json(response);
+      return models.Student.update({
+          ParentId: parent.id
+        },
+        {
+          where: {
+            id: studentId
+          }
+        }
+      )
+      .then(updatedObj => {
+        console.log("Parent", parent);
+        const response = {
+          resultShort: "success",
+          resultLong: "Parents created for student with Id: " + studentId,
+          parentId: parent.id
+        };
+        return res.status(200).json(response);
+      })
+      .catch(error => {
+        console.log("Error updating parent id for student", error);
+        const response = {
+          resultShort: "success",
+          resultLong: "Error updating parent id for student " + studentId,
+          parentId: parent.id
+        };
+        return res.status(500).json(response);
+      })
     })
     .catch((err) => {
       console.log('Failure while adding parent details', err)
@@ -258,11 +282,9 @@ const addStudentEducationDetails = (req, res, next) => {
   const instituteName = req.body.instituteName;
   const universityName = req.body.universityName;
   const percentage = req.body.percentage;
-  const studentId = req.body.studentId;
+  const StudentId = req.body.studentId;
 
-  console.log('addStudentEducationDetails', req.body)
-
-  StudentEducationDetails.create({
+  return models.StudentEducationDetails.create({
     std,
     seatNumber,
     year,
@@ -270,7 +292,7 @@ const addStudentEducationDetails = (req, res, next) => {
     instituteName,
     universityName,
     percentage,
-    studentId,
+    StudentId,
   })
     .then(details => {
       const response = {
@@ -297,14 +319,17 @@ const addFeesDetails = (req, res, next) => {
   let balance = req.body.balance;
   let academicYear = req.body.academicYear;
   let reamarks = req.body.reamarks;
-  let studentId = req.body.studentId;
-  Fees.findAll({where: {
-    studentId: studentId
+  let StudentId = req.body.StudentId;
+  console.log("Req.body", req.body);
+  return models.Fees.findAll({where: {
+    StudentId: StudentId
   }})
     .then(fees => {
       if(fees.length <= 0) {
-        Fees.create({feesAmount, discount, paidAmount, balance, academicYear, reamarks, studentId})
+        console.log("Fees length is less then zero")
+        return models.Fees.create(req.body)
           .then((fees) => {
+            console.log("Fees", fees)
             const response = {
               resultShort: "success",
               resultLong: "Addedd fees details for student with Id: " + studentId,
@@ -314,7 +339,7 @@ const addFeesDetails = (req, res, next) => {
             return res.status(200).json(response);
           })
           .catch((err)=> {
-            console.log("Error", err)
+            console.log("Error ===========>", err)
             const response = {
               resultShort: "failure",
               resultLong: "Error Adding Fees details for Student with id " + studentId,
@@ -353,11 +378,11 @@ const addFeesDetails = (req, res, next) => {
               }
             }
           } else {
-            Fees.create({feesAmount, discount, paidAmount, balance, academicYear, reamarks, studentId})
+            return models.Fees.create({feesAmount, discount, paidAmount, balance, academicYear, reamarks, StudentId})
               .then((fees) => {
                 const response = {
                   resultShort: "success",
-                  resultLong: "Addedd fees details for student with Id: " + studentId,
+                  resultLong: "Addedd fees details for student with Id: " + StudentId,
                   fees: fees
                 };
     
@@ -376,6 +401,7 @@ const addFeesDetails = (req, res, next) => {
       }
     })
     .catch(err => {
+      console.log('Error', err)
       const response = {
         resultShort: 'failure',
         resultLong: "Failure in adding fees details"
@@ -389,7 +415,7 @@ const getFeesDetailsByStudentId = (req, res, next) => {
   const tableHeader = attributes[12].columnAttributes;
   const feesDBAttributes = attributes[12].feesDBAttributes;
   console.log('studentId ============>', studentId)
-  Fees.findAll({where: {studentId: studentId}}, {attributes: feesDBAttributes})
+  models.Fees.findAll({where: {studentId: studentId}}, {attributes: feesDBAttributes})
     .then((fees) => {
       fees.map(feeDetails => {
         feeDetails.reamarks = feeDetails.reamarks ? feeDetails.reamarks : "-";
@@ -420,12 +446,13 @@ const getAllFeesData = () => {
   let feesDetails = [];
   let feesItem = {}
   return new Promise((resolve, reject) => {
-    Fees.findAll()
+    models.Fees.findAll()
       .then((fees) => {
         let a = 1;
         for (let i = 0; i < fees.length; i++) {
-          Students.findByPk(fees[i].studentId)
+          models.Student.findByPk(fees[i].StudentId)
             .then(student => {
+              console.log("Students =========>", student)
               feesItem = {
                 ...fees[i],
                 studentName: student.firstName + student.lastName,
@@ -553,7 +580,6 @@ const getParentFormFields = (req, res) => {
   })
 }
 
-
 const updateParentDetails = (req, res) => {
   console.log('Inside updateParentDetails function')
   const requestBody = req.body;
@@ -616,7 +642,7 @@ const fetchEducationFormFields = (req, res) => {
 
 const updateStudentEducationDetails = (req, res) => {
   console.log('Inside updateStudentEducationDetails function');
-  return  StudentEducationDetails.update(req.body, {where: {id: req.body.id}})
+  return  models.StudentEducationDetails.update(req.body, {where: {id: req.body.id}})
     .then((updatedObj) => {
       console.log("updatedObj", updatedObj)
       return Promise.resolve(updatedObj)
@@ -626,6 +652,100 @@ const updateStudentEducationDetails = (req, res) => {
       return Promise.reject(error)
     })
 
+}
+
+const getchTutorFormFields = () => {
+  return new Promise((resolve, reject) => {
+    var tutorFormFields = attributes[13].formFields;
+    var optionObjPromise = []
+    for (let i = 0; i < tutorFormFields.length; i++) {
+        if(tutorFormFields[i]['method']) {
+            const methodPromise = getInputOptions(tutorFormFields[i]);
+            methodPromise                
+                .then(data => {
+                    tutorFormFields[i].option = data
+                })
+                .catch((error) => {
+                    console.log("Error from MadePromise function", error)
+                    tutorFormFields[i].option = [];
+                })
+            optionObjPromise.push(methodPromise)
+        }
+    }
+    Promise.all(optionObjPromise)
+        .then(data => {
+            return resolve(tutorFormFields);
+        })
+        .catch((error) => {
+            return reject(error);
+        })
+})
+}
+
+const getTutorEducationFormFields = () => {
+  return new Promise((resolve, reject) => {
+    var tutorEducationFormfields = attributes[16].formFields;
+    var optioPromise = [];
+    for(let i = 0; i < tutorEducationFormfields.length; i++) {
+      if(tutorEducationFormfields[i]['method']) {
+        const methodPromise = getInputOptions(tutorEducationFormfields[i]);
+        methodPromise.then(data => {
+          tutorEducationFormfields[i].option = data
+        })
+        .catch((error) => {
+          console.log("Error from method promise", error);
+          tutorEducationFormfields[i].option = []
+        })
+        optioPromise.push(methodPromise)
+         
+      }
+    }
+    Promise.all((optioPromise))
+    .then(data => {
+      return resolve(tutorEducationFormfields)
+    })
+    .catch((error) => {
+      console.log('Error', error)
+      return reject(error)
+    })
+  })
+}
+
+const addTutorEducation = (req) => {
+  const TutorId = req.body.TutorId;
+  const std = req.body.std;
+  const seatNumber = req.body.seatNumber;
+  const year = req.body.year;
+  const totalMarks = req.body.totalMarks;
+  const instituteName = req.body.instituteName;
+  const universityName = req.body.universityName;
+  const percentage = req.body.percentage;
+
+  return new Promise((resolve, reject) => {
+    return models.TutorEducationDetails.create({std, seatNumber, year, totalMarks, instituteName, universityName, percentage, TutorId})
+    .then(res => {
+      if(res) {
+        resolve(res)
+      }
+    })
+    .catch(error => {
+      reject(error)
+    })
+  })
+}
+
+const updateTutorEducationById = (req) => {
+  console.log('Inside updateTutorEducationById function');
+  console.log("Req.body", JSON.stringify(req.body))
+  return  models.TutorEducationDetails.update(req.body, {where: {id: req.body.id}})
+    .then((updatedObj) => {
+      console.log("updatedObj =========>", updatedObj)
+      return Promise.resolve(updatedObj)
+    })
+    .catch(error => {
+      console.log("Error while updating student education details", error);
+      return Promise.reject(error)
+    })
 }
 
 module.exports = {
@@ -645,5 +765,9 @@ module.exports = {
   getParentFormFields,
   updateParentDetails,
   fetchEducationFormFields,
-  updateStudentEducationDetails
+  updateStudentEducationDetails,
+  getchTutorFormFields,
+  getTutorEducationFormFields,
+  addTutorEducation,
+  updateTutorEducationById
 };

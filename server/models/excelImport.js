@@ -1,34 +1,33 @@
-const Sequelize = require('sequelize');
-const sequelize = require('./database');
-
-const ExcelImport = sequelize.define('ExcelImport', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+module.exports = function(sequelize, DataTypes) {
+    let ExcelImport = sequelize.define('ExcelImport', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        fileName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        uploadedBy: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
+        },
+        filePath: {
+            type: DataTypes.CHAR,
+            allowNull: true,
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
+        }
     },
-    fileName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
-    uploadedBy: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 1
-    },
-    filePath: {
-        type: Sequelize.CHAR,
-        allowNull: true,
-    },
-    userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 1
+    {
+        freezeTableName: true,
     }
-},
-{
-    freezeTableName: true,
-}
-);
+    );
 
-module.exports = ExcelImport
+    return ExcelImport
+}

@@ -1,52 +1,63 @@
-const Sequelize = require('sequelize');
-const sequelize = require('./database');
-
-const Exam = sequelize.define('Exam', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+module.exports = function(sequelize, DataTypes) {
+    let Exam = sequelize.define('Exam', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        examSubjects: {
+            type: DataTypes.JSON,
+            allowNull: false,
+        },
+        timeStart: {
+            type: DataTypes.TIME,
+            allowNull: false
+        },
+        timeEnd: {
+            type: DataTypes.TIME,
+            allowNull: false
+        },
+        examDate: {
+            type: DataTypes.DATEONLY,
+            allowNull: false
+        },
+        remarks: {
+            type: DataTypes.JSON,
+            allowNull: true
+        },
+        marks: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        // 1-Daily, 2-Weekly, 3-Monthly, 4-Half-Sem,5-Semester,
+        examType: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValues: 5
+        },
+        academicYear: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValues: '2021-2022'
+        }
     },
-    examSubjects: {
-        type: Sequelize.JSON,
-        allowNull: false,
-    },
-    timeStart: {
-        type: Sequelize.TIME,
-        allowNull: false
-    },
-    timeEnd: {
-        type: Sequelize.TIME,
-        allowNull: false
-    },
-    examDate: {
-        type: Sequelize.DATEONLY,
-        allowNull: false
-    },
-    remarks: {
-        type: Sequelize.JSON,
-        allowNull: true
-    },
-    marks: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-    // 1-Daily, 2-Weekly, 3-Monthly, 4-Half-Sem,5-Semester,
-    examType: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValues: 5
-    },
-    academicYear: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValues: '2021-2022'
+    {
+        freezeTableName: true,
     }
-},
-{
-    freezeTableName: true,
-}
-)
+    );
 
-module.exports = Exam
+    Exam.associate = function(models) {
+        // Exam.belongsTo(models.)
+        Exam.belongsToMany(models.StandardMaster, {
+            as: "ExamMap",
+            foreignKey: "ExamId",
+            through: {
+                model: models.ExamStdMap,
+                unique: false
+            }
+        })
+    };
+
+    return Exam
+}
 

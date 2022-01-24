@@ -6,7 +6,7 @@ const Exam = require('../models/exam');
 const StandardMaster = require('../models/standardMaster');
 const ExamStdMap = require('../models/examStdMap');
 const { QueryTypes } = require('sequelize');
-const sequelize = require('../models/database');
+const models = require('../models');
 const OptionServices = require('../services/optionServices');
 const moment = require('moment');
 const SubjectMaster = require('../models/subjectMatser');
@@ -126,7 +126,6 @@ const getInputOptions = (optionObject) => {
 
 const createExam = (req, res, next) => {
     console.log('Inside Create Exam Function')
-    console.log('reqBody', req.body)
     const reqBody = req.body;
     const createdBy = req.user.id;
     const hours = req.body.hours
@@ -158,17 +157,17 @@ const createExam = (req, res, next) => {
         if(types.type === examTypeName) {
             examType = types.id
         }
-    })
-    console.log('examTypeId', examType)
+    });
     const examSubjects = {subjects: subArry};
-    return Exam.create({examSubjects, timeStart, timeEnd, examDate, marks, examType, academicYear})
+    return models.Exam.create({examSubjects, timeStart, timeEnd, examDate, marks, examType, academicYear})
             .then((exam) => {
                 console.log("Exam created", exam);
                 const ExamId = exam.id
                 getStandardId(standardId)
-                    .then(standardId => {
+                    .then(StandardId => {
+                        console.log("standardId", StandardId)
                         const status = 1
-                        ExamStdMap.create({ExamId, standardId, createdBy, status})
+                        models.ExamStdMap.create({ExamId, StandardId, createdBy, status})
                             .then((examStdObj) => {
                                 const result = {
                                     resultShort: "success",
@@ -207,7 +206,7 @@ const createExam = (req, res, next) => {
 
 const getStandardId = (std) => {
     console.log('Inside getStandardId function');
-    return StandardMaster.findAll({where: {remarks: std}})
+    return models.StandardMaster.findAll({where: {remarks: std}})
         .then(stdArr => {
             const arry = stdArr
             if(arry && arry.length > 0) {
@@ -253,17 +252,34 @@ const getExams = (req, res, next) => {
 const getAllExam = (currentDate) => {
     console.log('Inside getAllExam Function');
     return new Promise((resolve, reject) => {
+        // return models.ExamStdMap.findAll({where: {status: 1}})
+        // models.Exam.findAll({
+        //     include: [
+        //         {
+        //             model: models.ExamStdMap,
+        //             through: 'ExamId',
+        //             include: [
+        //                 {
+        //                     model: models.StandardMaster,
+        //                     through: 'ExamId',
+        //                 }
+        //             ]
+        //         },
+        //     ]
+        // })
         // sequelize.query("select * from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join StandardMaster sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
-        sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1 and e.examDate >= ?", 
+        return models.sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1 and e.examDate >= ?", 
             { 
                 replacements: [currentDate],
                 type: QueryTypes.SELECT 
             }
         )
         .then(exams => {
+            console.log("Exams", exams)
             return resolve(exams)
         })
         .catch(error => {
+            console.log("Error", error);
             return reject(error);
         })
     })
@@ -272,7 +288,7 @@ const getAllExam = (currentDate) => {
 const getSubjectsByStandard = (req, res) => {
     console.log('Inside the Get Subject By Standard');
     const std = req.params.stdId;
-    StandardMaster.findAll({where: {remarks: std}})
+    models.StandardMaster.findAll({where: {remarks: std}})
     .then(standard => {
         const stdId = standard[0].id
         OptionServices.getSubjectOptionForStandard(stdId)

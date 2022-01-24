@@ -133,17 +133,16 @@ const Students = () => {
               </MatButton>
             </Toolbar>
           </Grid>
-        </Grid>
-        
-       {
-         students.studentRows && students.studentRows.length > 0 &&  <Table
-          records={students.studentRows}
-          headCells={students.studenetTableAttributes}
-          filterFunction={filterFunction}
-          openInPopup={loadForm}
-          redirectToDetailsPage={redirectToStudentDetailsPage}
-        />
-       }
+        </Grid>        
+        {
+          students.studentRows && students.studentRows.length > 0 &&  <Table
+            records={students.studentRows}
+            headCells={students.studenetTableAttributes}
+            filterFunction={filterFunction}
+            openInPopup={loadForm}
+            redirectToDetailsPage={redirectToStudentDetailsPage}
+          />
+        }
       </Paper>
     </>
   );

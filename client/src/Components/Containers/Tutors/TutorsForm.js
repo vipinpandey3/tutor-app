@@ -1,77 +1,131 @@
-import React, { useEffect, useState } from "react";
+import { Grid, makeStyles, Paper } from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
+import MatButton from "../../Common/Button";
 import Form from "../../Common/Form";
+import Text from "../../Common/Text";
+import Input from '../../Common/Input';
+import DatePicker from "../../Common/DatePicker";
+import Select from "../../Common/Select";
+import {TutorContext} from '../../../context/tutor-context'
 
-const initialFormValues = {
-  id: 0,
-  fullName: "",
-  email: "",
-  mobile: "",
-  branch: "",
-  gender: "male",
-  departmentId: "",
-  hireDate: new Date(),
-  isPermanent: false,
-};
+const useStyles = makeStyles((theme) => ({
+  // root: {
+  //   "& .MuiFormControl-root": {
+  //     width: "80%",
+  //     margin: theme.spacing(1),
+  //   },
+  // },
+  paperConent: {
+    padding: theme.spacing(3),
+    margin: theme.spacing(5),
+  },
+  contentMargin: {
+    margin: "10px 0",
+    '& .MuiFormControl-root': {
+      width: '90% !important'
+    }
+  },
+}));
 
-const formComponent = [
-  {
-    id: 1,
-    name: "fullName",
-    label: "FullName",
-    type: "input",
-  },
-  {
-    id: 2,
-    name: "email",
-    label: "Email",
-    type: "input",
-  },
-  {
-    id: 3,
-    name: "mobile",
-    label: "Mobile",
-    type: "input",
-  },
-  {
-    id: 4,
-    name: "branch",
-    label: "Branch",
-    type: "input",
-  },
-  {
-    id: 5,
-    name: "gender",
-    label: "Gender",
-    type: "radio",
-  },
-  {
-    id: 6,
-    name: "department",
-    label: "Department",
-    type: "select",
-  },
-  {
-    id: 7,
-    name: "addmissionDate",
-    label: "Date of Adddmission",
-    type: "date",
-  },
-  {
-    id: 8,
-    name: "batch",
-    label: "Batch",
-    type: "checkbox",
-  },
-];
+const TutorsForm = (props) => {
+  const styles = useStyles();
+  const {formValues, formDetails, formComponent, setFormValues, toggleForm } =  props;
+  const {addTutors} = useContext(TutorContext)
 
-const TutorsForm = () => {
-    const [forms, setForms] = useState(formComponent)
+  const valueChange = (e) => {
+    const {name, value} = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value
+    })
+  }
+  
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if(formDetails.editFlag === "true") {
+
+    } else {
+      addTutors(formValues)
+        .then(result => {
+          if(result && result.resultShort === 'success') {
+            toggleForm(false, false, "Add Tutor", "Submit");
+          } else {
+            toggleForm(true, false, "Add Tutor", "Submit");
+          }
+        })
+    }
+  }
+
+  const handleCancle = () => {
+    toggleForm(false, false, "Add Tutor", "Submit");
+  }
 
   return (
-    <>
-      <Form initialFormValues={initialFormValues} formComponent={forms} />
-    </>
+    <form>
+      <Paper className={styles.paperConent}>
+        <Grid container>
+          <Grid item xs={3}>
+            <Text variant="subtitle1" component="h6">
+              {formDetails.title}
+            </Text>
+          </Grid>
+        </Grid>
+        <Grid container>
+          {formComponent.map((input) => {
+            if(input.type === 'input') {
+              return (
+                <Grid key={input.id} item xs={6} className={styles.contentMargin}>
+                <Input style={{ width: "90%" }} size="medium" name={input.name} value={formValues[input.name]} label={input.label} onChange={valueChange}/>
+              </Grid>
+              )
+            } else if(input.type === 'date') {
+              return (
+                <Grid key={input.id} item xs={6} className={styles.contentMargin}>
+                  <DatePicker style={{ width: "90%" }} name={input.name} value={formValues[input.name]} onChange={valueChange} label={input.label}/>
+                </Grid>
+              )
+            } else if(input.type === 'select') {
+              return (
+                <Grid key={input.id} item xs={6} className={styles.contentMargin}>
+                    {/* <DatePicker style={{ width: "90%" }} name={input.name} value={formValue[input.name]} onChange={valueChange} label={input.label}/> */}
+                  <Select style={{width: "90%"}} value={formValues[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.option} />
+                </Grid>
+              )
+            }
+          })}
+        </Grid>
+        <Grid container>
+          <Grid item sm></Grid>
+          <Grid item xs={2}>
+            <MatButton
+              variant="outlined"
+              style={{ flex: "1", width: "85%" }}
+              color="primary"
+              type="button"
+              onClick={handleCancle}
+              size="large"
+            >
+              Cancle
+            </MatButton>
+          </Grid>
+          <Grid item xs={2}>
+            <MatButton
+              variant="contained"
+              style={{ flex: "1", width: "85%" }}
+              color="primary"
+              type="submit"
+              onClick={onSubmit}
+              size="large"
+            >
+              {formDetails.buttonName}
+            </MatButton>
+          </Grid>
+        </Grid>
+      </Paper>
+    </form>
   );
 };
+
 
 export default TutorsForm;

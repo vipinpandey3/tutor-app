@@ -11,17 +11,16 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableSortLabel,
   TableBody,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import Text from "../../Common/Text";
-import { parentFormInput } from "./StudentsRecords";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { StudentContext } from "../../../context/student-context";
 import { ParentForms, StudentEducationForms } from "./StudentRelatedForms";
 import MatButton from "../../Common/Button";
 import AddIcon from "@material-ui/icons/Add";
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
@@ -70,8 +69,8 @@ const parentFormInitialValue = {
   motherEmailId: "",
   fatherHighestQualification: "",
   motherHighestQualification: "",
-  motherdob: "",
-  fatherDob: "",
+  motherdob: moment().format('YYYY-MM-DD'),
+  fatherDob: moment().format('YYYY-MM-DD'),
 };
 
 const educationInitialValue = {
@@ -133,10 +132,11 @@ const StudentDetails = () => {
   const loadStudentDteails = () => {
     fetchStudentDetails(studentId)
       .then((result) => {
+        console.log("result", result)
         setDetails({
           studentDetail: result.studentDetails,
-          parentDetails: result.parentDetails,
-          educationDetails: result.educationDetails,
+          parentDetails: result.studentDetails.Parent,
+          educationDetails: result.studentDetails.StudentEducationDetails,
           studentDetailAttributes: result.studentDetailAttributes,
           parentDetailsAttributes: result.parentDetailsAttributes,
           educationDetailsAttributes: result.educationDetailsAttributes
@@ -172,16 +172,24 @@ const StudentDetails = () => {
   }, []);
 
   const fetchFormForm = (value) => {
+    console.log("value", value)
     if (value === "parentForm") {
+      console.log("Details", details.parentDetails)
       fetchParentFields(true)
         .then(result => {
           if(result.formFields && result.formFields.length > 0) {
             setFormFields({...formFields, parentFormFields: result.formFields})
+            setParentFormDetails({
+              title: "Add Parents",
+              buttonName: 'Submit',
+              editFlag: false
+            })
             setShowForm({educationDetailsForm: false, parentForms: true});
           }
         })
     }
     if (value === "educationForm") {
+      console.log("educationForm", value)
       fetchEducationFormFields()
         .then(result => {
           if(result.formFields && result.formFields.length > 0) {
@@ -300,7 +308,7 @@ const StudentDetails = () => {
               className={styles.alignRight}
               variant="outlined"
               startIcon={<AddIcon />}
-              onClick={() => details.parentDetails ? editParentsDetails() : fetchFormForm("parentForm")}
+              onClick={() =>Object.keys(details.parentDetails).length < 0 ? editParentsDetails() : fetchFormForm("parentForm")}
             >
               {details.parentDetails.hasOwnProperty('id')
                 ? "Edit Parents Details"

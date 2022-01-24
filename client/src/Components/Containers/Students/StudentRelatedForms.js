@@ -9,7 +9,6 @@ export const ParentForms = (props) => {
     const {addParent, updateParents} = useContext(StudentContext);
     
     const addParentData = (value, dateValue) => {
-        console.log('DateValue', dateValue)
         value.studentId = studentId
         addParent(value)
             .then(result => {
@@ -18,6 +17,11 @@ export const ParentForms = (props) => {
                     setShowParentForm({
                         ...showForms,
                         parentForms: false
+                    })
+                    setFormDetails({
+                        title: "Add Parents",
+                        buttonName: 'Submit',
+                        editFlag: false
                     })
                 } else {
                     setShowParentForm({

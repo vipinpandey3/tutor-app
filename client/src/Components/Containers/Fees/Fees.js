@@ -31,7 +31,7 @@ const initiateFeesFormValue = {
     balance: "",
     academicYear: "",
     reamarks: "",
-    studentId: ""
+    StudentId: ""
 }
 
 const Fees = () => {

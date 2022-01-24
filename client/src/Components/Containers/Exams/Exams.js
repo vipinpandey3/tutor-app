@@ -1,22 +1,12 @@
-/* eslint-disable no-unused-vars */
+// /* eslint-disable no-unused-vars */
 import {
-  Checkbox,
   Grid,
   makeStyles,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Toolbar,
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import { ExamContext } from "../../../context/exam-context";
 import MatButton from "../../Common/Button";
-import Input from "../../Common/Input";
 import Text from "../../Common/Text";
 import ExamForm from "./ExamForm";
 import ExamTable from "./ExamTable";

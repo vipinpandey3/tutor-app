@@ -52,6 +52,7 @@ module.exports = function(sequelize, DataTypes) {
 
     Tutor.associate = function(models) {
         Tutor.hasMany(models.TutorEducationDetails, {foreignKey: "TutorId"});
+        Tutor.hasMany(models.TutorAttendence, {foreignKey: "TutorId"})
     };
 
     return Tutor;

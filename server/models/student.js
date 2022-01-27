@@ -54,6 +54,7 @@ module.exports = function(sequelize, DataTypes) {
         Student.hasMany(models.Fees, {foreignKey: "StudentId"})
         Student.belongsTo(models.Parent)
         Student.hasMany(models.StudentEducationDetails, {foreignKey: "StudentId"});
+        Student.hasMany(models.StudentAttendence, {foreignKey: "StundetId"});
     };
 
     return Student

@@ -257,7 +257,9 @@ const StudentDetails = () => {
     }
   }
 
-  const fetchStudentEducationDetails = (event) => {};
+  const fetchStudentEducationDetails = (event) => {
+    console.log("fetchStudentEducationDetails",event)
+  };
   return (
     <>
       <Paper className={`${styles.paperContent} `}>

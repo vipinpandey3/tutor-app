@@ -111,7 +111,6 @@ const getTeacher = (req, res, next) => {
   const tutorDBAttributes = attributes[14].tutorDBAttributes
   return models.Tutor.findAll()
     .then((teachers) => {
-      console.log("Teachers", teachers)
       const respose = {
         resultShort: "success",
         resultLong: "Successfully retrived all Teachers",
@@ -145,7 +144,6 @@ const getTeacherById = (req, res, next) => {
   },{attributes: tutorDBAttributes} 
   )
     .then((teacher) => {
-      console.log("TEacher =========>", JSON.stringify(teacher))
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrived Teacher" + teacherId,

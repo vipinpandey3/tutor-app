@@ -6,10 +6,10 @@ const Exam = require('../models/exam');
 const StandardMaster = require('../models/standardMaster');
 const ExamStdMap = require('../models/examStdMap');
 const { QueryTypes } = require('sequelize');
-const models = require('../models');
 const OptionServices = require('../services/optionServices');
 const moment = require('moment');
 const SubjectMaster = require('../models/subjectMatser');
+const models = require('../models/index')
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function');
@@ -420,6 +420,72 @@ const getExamDetailsById = (req, res) => {
     // })
 }
 
+const getTutorById = (req, res) => {
+    console.log('Inside the /getSTutorId/:tutorId route');
+    console.log('Inside the getTutorById function');
+    const tutorId = req.params.tutorId;
+    models.Tutor.findByPk(tutorId, {attributes: ['id','fullName']})
+        .then(tutorObj => {
+            let tutorDetails = [];
+            let object = {};
+            if(tutorObj) {
+                object.fullName = tutorObj.fullName;
+                object.id = tutorObj.id;
+                models.TutorAttendence.findAll({where: {TutorId: tutorId}})
+                .then((attendenceObj) => {
+                    if(attendenceObj.length > 0) {
+                        console.log("attendenceObj", attendenceObj)
+                        object.lastAttendenceDate = attendenceObj[attendenceObj.length - 1].inTime;
+                        object.lastInTime = attendenceObj[attendenceObj.length - 1].attendenceDate;
+                        const result = {
+                            resultShort: 'success',
+                            resultLong: "Tutor result fetched successfully",
+                            tutorDetails: object
+                        }
+                        cosnole.log("Result", result)
+                        return res.status(200).json(result)
+                    } else {
+                        
+                        object.lastAttendenceDate = null;
+                        object.lastInTime = null
+                        tutorDetails.push(object)
+                        console.log("tutorDetails ========", tutorDetails);
+                        const result = {
+                            resultShort: 'success',
+                            resultLong: "Tutor result fetched successfully",
+                            tutorDetails: tutorDetails,
+                            attributes: attributes[17].columnsHeader
+                        }
+                        console.log('Result', result)
+                        return res.status(200).json(result);
+                    }
+                })
+                .catch(error => {
+                    console.log('Error while fetching tutor attendence details', error)
+                    const result = {
+                        resultShort: "failure",
+                        resultLong: "Error while fetching tutor attendence details"
+                    }
+                    return res.status(500).json(result);
+                })
+            } else {
+                const  result = {
+                    resultShort: "success",
+                    resultLong: "Somethinf went wrong"
+                }
+                return res.status(200).json(result)
+            }
+        })
+        .catch(error => {
+            console.log('Error while getting User', error)
+            const result = {
+                resultShort: 'failure',
+                resultLong: "Failure in getting tutor with id: " + tutorId
+            };
+            return res.status(500).status(result);
+        })
+}
+
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
@@ -428,5 +494,6 @@ module.exports = {
     getExams,
     getSubjectsByStandard,
     disableExam,
-    getExamDetailsById
+    getExamDetailsById,
+    getTutorById
 }

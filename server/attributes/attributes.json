@@ -1017,5 +1017,27 @@
                 "label": "Univeristy/Board Name"
             }
         ]
+    },
+    {
+        "index": 17,
+        "name": "tutorAttedencemarkTable",
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "Tutor Id"
+            },
+            {
+                "id": "fullName",
+                "label": "Tutor Name"
+            },
+            {
+                "id": "lastAttendenceDate",
+                "label": "Last Attendence Date"
+            },
+            {
+                "id": "lastInTime",
+                "label": "Ins Time"
+            }
+        ]
     }
 ]

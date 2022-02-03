@@ -84,7 +84,6 @@ const educationInitialValue = {
 };
 
 const StudentDetails = () => {
-  // const [studentRecord, setStudentRecord] = useState({});
   const [showForms, setShowForm] = useState({
     parentForms: false,
     educationDetailsForm: false,

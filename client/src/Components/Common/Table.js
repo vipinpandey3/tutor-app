@@ -36,13 +36,14 @@ function Table(props) {
   const {
     headCells,
     records,
-    filterFunction,
-    openInPopup,
     redirectToDetailsPage,
     edit
   } = props;
+  // filterFunction,
+  // openInPopup,
   // const [tableRecords, setTableRecords] = useState(records);
   // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
+  console.log('Records', records)
   const {
     stableSort, handleTableSorting, Pagination, getComparator, orderBy, order, page, rowsPerPage
   } = useTable(records);
@@ -53,7 +54,7 @@ function Table(props) {
           <TableRow>
             {headCells.map((cell, index) => {
               return (
-                <TableCell>
+                <TableCell key={index}>
                   {cell.disableSorting ? (
                     cell.label
                   ) : (
@@ -68,7 +69,7 @@ function Table(props) {
                 </TableCell>
               );
             })}
-            <TableCell>Actions</TableCell>
+            <TableCell key={'Actions'}>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -85,7 +86,7 @@ function Table(props) {
                     redirectToDetailsPage(row.id);
                   }}>{value}</TableCell>;
                 })}
-                <TableCell>
+                <TableCell key={'actionButtons'}>
                   <ActionButton
                     onClick={() => edit(row)}
                     color="primary"

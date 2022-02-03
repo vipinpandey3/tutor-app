@@ -1,4 +1,5 @@
-import { Accordion, Grid, makeStyles, Paper } from "@material-ui/core";
+import { Grid, makeStyles, Paper } from "@material-ui/core";
+import { AccordionDetails, AccordionSummary, Typography, Accordion } from "@mui/material";
 import React, { useState } from "react";
 import {
   CartesianGrid,
@@ -11,6 +12,9 @@ import {
   Pie,
   Cell
 } from "recharts";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import StudentAttendence from "./StudentAttendence/StudentAttendence";
+import TutorAttendence from "./TutorAttendence/TutorAttendence";
 
 const data = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2000 },
@@ -79,11 +83,17 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 const useStyles = makeStyles((theme) => ({
     paperContent: {
         margin: theme.spacing(5),
-        padding: theme.spacing(3)
+        padding: theme.spacing(3),
+        "&.MuiAccordion-root.Mui-expanded": {
+          margin: theme.spacing(2),
+        }
     },
     rowContainer: {
         display: 'flex',
         flexDirection: 'row'
+    },
+    noPadding: {
+      padding: "0px",
     },
     pieChartContainer: {
         height: '200px',
@@ -106,8 +116,8 @@ const Dashboard = () => {
     const [expanded, setExpanded] = useState(false);
 
     const handleChange = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false);
-    }
+      setExpanded(isExpanded ? panel : false);
+    };
   return (
     <>
         <Paper className={styles.paperContent}>
@@ -143,9 +153,39 @@ const Dashboard = () => {
                 </Grid>
             </Grid>
         </Paper>
-        <Accordion expanded={expanded === "studentAttendence"} onChange={handleChange}>
-
-        </Accordion>
+        {/* <Paper className={styles.paperContent} > */}
+          {/* <Accordion className={`${styles.paperContent} ${styles.noPadding}`} expanded={expanded === "studentAttendence"} onChange={handleChange('studentAttendence')}>
+            <AccordionSummary 
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="studentAttendencebh-content"
+              id="studentAttendencebh-header"
+            >
+              <Typography sx={{width: '33%', flexShrink: 0 }}>
+                Student Attendence
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <StudentAttendence />
+            </AccordionDetails>
+          </Accordion> */}
+        {/* </Paper> */}
+        {/* <Paper className={styles.paperContent} > */}
+          <Accordion  className={`${styles.paperContent} ${styles.noPadding}`} expanded={expanded === 'tutorAttendence'} onChange={handleChange('tutorAttendence')}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="tutorAttendencebh-content"
+              id="tutorAttendencebh-header"
+            >
+              <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                Tutor Attendence
+              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <TutorAttendence />
+            </AccordionDetails>
+          </Accordion>
+        {/* </Paper> */}
     </>
   );
 };

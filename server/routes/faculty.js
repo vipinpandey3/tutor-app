@@ -78,4 +78,11 @@ router.post('/disableExam', Faculty.disableExam);
 
 router.get('/get_Exam_Details/:examId', Faculty.getExamDetailsById)
 
+router.get('/getTutorById/:tutorId', Faculty.getTutorById)
+
+router.get('/getAllStudentAttendence');
+
+router.get('/searchTutorAttendencebyId/:tutorId');
+
+
 module.exports = router

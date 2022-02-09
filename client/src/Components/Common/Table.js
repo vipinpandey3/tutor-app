@@ -43,7 +43,6 @@ function Table(props) {
   // openInPopup,
   // const [tableRecords, setTableRecords] = useState(records);
   // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
-  console.log('Records', records)
   const {
     stableSort, handleTableSorting, Pagination, getComparator, orderBy, order, page, rowsPerPage
   } = useTable(records);
@@ -51,7 +50,7 @@ function Table(props) {
     <>
       <MuiTable className={classes.table}>
         <TableHead>
-          <TableRow>
+          <TableRow key="header">
             {headCells.map((cell, index) => {
               return (
                 <TableCell key={index}>

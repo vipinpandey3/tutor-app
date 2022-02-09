@@ -1,5 +1,5 @@
-import { Grid, InputAdornment, makeStyles, Toolbar } from '@material-ui/core';
-import React, { createRef, useState } from 'react';
+import {Table as MuiTable, Grid, InputAdornment, makeStyles, TableBody, TableCell, TableHead, TableRow, Toolbar } from '@material-ui/core';
+import React, { useState } from 'react';
 import SearchIcon from "@material-ui/icons/Search";
 import { useContext } from 'react';
 import { useEffect } from 'react';
@@ -7,77 +7,21 @@ import { DashboardContext } from '../../../../context/dashboard-context';
 import Input from '../../../Common/Input';
 import Table from '../../../Common/Table';
 import MatButton from '../../../Common/Button';
+import ActionButton from '../../../Common/ActionButton';
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 
 const useStyles = makeStyles((theme) => ({
   seacrhInput: {
     width: "60%",
+  },
+  largeFont: {
+    fontSize: '20px'
   }
 }))
 
-const records = [
-  {
-    id: 1234,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
-  },
-  {
-    id: 12345,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
-  },
-  {
-    id: 1236,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
-  },
-  {
-    id: 1237,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
-  }
-]
-
-const headers = [
-  {
-    "id": "id",
-    "label": "Id",
-  },
-  {
-    "id": "name",
-    "label": "Student Name",
-  },
-  {
-    "id": "std",
-    "label": "Standard",
-  },
-  {
-    "id": "date",
-    "label": "Date"
-  },
-  {
-    "id": "inTime",
-    "label": "In Time"
-  },
-  {
-    "id": "outTime",
-    "label": "Out Time"
-  }
-]
-
 const TutorAttendence = () => {
-  const {getTutorById, refreshPage, getAllTutorAttendence, searchTutorAttendencebyId, markTutorAttendceById} = useContext(DashboardContext)
+  const {getTutorById, updateTutorAttendence, markTutorAbsence, getAllTutorAttendence, searchTutorAttendencebyId, markTutorAttendceById} = useContext(DashboardContext)
   const styles = useStyles();
   const [showTables, setShowTables] = useState({
     searchUserInput: false,
@@ -87,33 +31,33 @@ const TutorAttendence = () => {
   })
 
   const [tutorAttendenceRecord, setTutorAttendence] = useState({
-    attedenceRows: records,
-    attendenceTableAttributes: headers
+    attedenceRows: [],
+    attendenceTableAttributes: []
   });
 
   const [inputValue, setInputValue] = useState("")
 
-  const [markeAttendence, setMarkAttendence] = useState(false);
-  const [markeAttendenceTable, setMarkAttendenceTable]= useState(false);
   const [markeAttendenceTableData, setMarkAttendenceTableData] = useState({
     rows: [],
     attributes: []
   })
 
-  const [tutor, setTutor] = useState({
-    row: [],
-    attributes: []
-  })
+  const loadAttendence = () => {
+    getAllTutorAttendence()
+    .then(result => {
+      if(result.resultShort === 'success') {
+        setTutorAttendence({
+          attendenceTableAttributes: result.attributes,
+          attedenceRows: result.attendence,
+        })
+      }
+    })
+  }
 
   useEffect(() => {
-  }, [])
-  const filterFunction = () => {
+    loadAttendence()
+  }, []);
 
-  }
-
-  const editAttendence = () => {
-
-  }
 
   const searchTutorAttendence = (event) => {
     console.log('Event', event)
@@ -131,7 +75,7 @@ const TutorAttendence = () => {
     }
   }
 
-  const markTutorAttendce = () => {
+  const searchTutorForAttendence = () => {
     toggleElements(true, false, false, true)
   }
 
@@ -176,9 +120,43 @@ const TutorAttendence = () => {
   }
 
   const markeTutorAttendence = (row) => {
-    console.log('Row data', row)
+    markTutorAttendceById(row.id)
+    .then(result => {
+      if(result.resultShort === 'success') {
+        toggleElements(false, true, false, true);
+      }
+    })
+    .catch(error => {
+      toggleElements(true, false, true, false);
+    })
   }
-  
+
+  const updateAttendence = (row, type) => {
+    console.log('updateAttendence', row, type)
+    if(type === 'timeOut') {
+      return updateTutorAttendence(row.attendenceId)
+      .then(result => {
+        if(result.resultShort === 'success') {
+          loadAttendence();
+        }
+      })
+      .catch(error => {
+        console.log('Error while calling markTutorAbsence method')
+      })
+    }
+    if(type === 'absent') {
+      return markTutorAbsence(row.attendenceId)
+      .then(result => {
+        if(result.resultShort === 'success') {
+          loadAttendence();
+        }
+      })
+      .catch(error => {
+        console.log('Error while calling markTutorAbsence method')
+      })
+    }
+  }
+
   return (
     <>
       {
@@ -230,11 +208,11 @@ const TutorAttendence = () => {
                 </Toolbar>
               </Grid>
               <Grid item sm></Grid>
-              <Grid item>
+              <Grid item xs={3}>
                 <Toolbar>
                   <MatButton
                     variant="outlined"
-                    onClick={markTutorAttendce}
+                    onClick={searchTutorForAttendence}
                   >
                     Mark Attendence
                   </MatButton>
@@ -243,15 +221,85 @@ const TutorAttendence = () => {
           </Grid>
         )
       }
-      { showTables.showattendenceTable && <Table
-          records={tutorAttendenceRecord.attedenceRows}
-          headCells={tutorAttendenceRecord.attendenceTableAttributes}
-          openInPopup={editAttendence}
-        />
-        }
+      { showTables.showattendenceTable && 
+        <MuiTable>
+          <TableHead>
+            <TableRow key="header">
+              {
+                tutorAttendenceRecord.attendenceTableAttributes.map((cell, index) => {
+                  return (
+                    <TableCell key={index}>
+                      {
+                        cell.label
+                      }
+                    </TableCell>
+                  )
+                })
+              }
+              <TableCell key={'Actions'}>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              tutorAttendenceRecord.attedenceRows.map((details, index) => {
+                return (
+                  <TableRow 
+                    key={details.id}
+                  >
+                    {
+                      tutorAttendenceRecord.attendenceTableAttributes.map((rowCell, cellIndex) => {
+                        const value = details[rowCell.props]
+                        if(rowCell.props && rowCell.props.includes('.')) {
+                          const itemSplit = rowCell.props.split('.');
+                          return (
+                            <TableCell key={cellIndex}>
+                              {details[itemSplit[0]][itemSplit[1]]}
+                            </TableCell>
+                          )
+                        }
+                        return (
+                          value === null ? (
+                            <TableCell key={cellIndex} className={styles.largeFont}>
+                              -
+                            </TableCell>
+                          ) : (
+                            <TableCell key={cellIndex}>
+                              {value}
+                            </TableCell>
+                          )
+                        )
+                      }) 
+                    }
+                    <TableCell key={'actionButtons'}>
+                      <ActionButton
+                        onClick={() => updateAttendence(details, 'timeOut')}
+                        color="primary"
+                      >
+                        <EditOutlinedIcon fontSize="small" />
+                      </ActionButton>
+                      <ActionButton
+                        color="secondary"
+                        onClick={() => updateAttendence(details, 'absent')}
+                      >
+                        <CloseOutlinedIcon fontSize="small" />
+                      </ActionButton>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            }
+          </TableBody>
+        </MuiTable>
+      }
     </>
   )
 };
 
 export default TutorAttendence;
+
+// eslint-disable-next-line no-lone-blocks
+{/* <Table
+          records={tutorAttendenceRecord.attedenceRows}
+          headCells={tutorAttendenceRecord.attendenceTableAttributes}
+          openInPopup={editAttendence} */}
 

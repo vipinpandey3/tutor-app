@@ -1,94 +1,274 @@
-import React from 'react';
-import { useContext } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Table from '../../../Common/Table';
-import {DashboardContext} from '../../../../context/dashboard-context'
+import {Grid, InputAdornment, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles} from "@material-ui/core";
+import {DashboardContext} from '../../../../context/dashboard-context';
+import ActionButton from '../../../Common/ActionButton';
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import SearchIcon from "@material-ui/icons/Search";
+import Input from '../../../Common/Input';
+import MatButton from '../../../Common/Button';
 
-const records = [
-  {
-    id: 1234,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
+const useStyles = makeStyles((theme) => ({
+  seacrhInput: {
+    width: "60%",
   },
-  {
-    id: 12345,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
-  },
-  {
-    id: 1236,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
-  },
-  {
-    id: 1237,
-    name: "Vipin Pandey",
-    std: "8th",
-    date: "2022-01-28",
-    inTime: "11.00 AM",
-    outTime: "2.00PM"
+  largeFont: {
+    fontSize: '20px'
   }
-]
-
-const headers = [
-  {
-    "id": "id",
-    "label": "Id",
-  },
-  {
-    "id": "name",
-    "label": "Student Name",
-  },
-  {
-    "id": "std",
-    "label": "Standard",
-  },
-  {
-    "id": "date",
-    "label": "Date"
-  },
-  {
-    "id": "inTime",
-    "label": "In Time"
-  },
-  {
-    "id": "outTime",
-    "label": "Out Time"
-  }
-]
+}))
 
 const StudentAttendence = () => {
-  const {refreshPage, getAllStudentAttendence} = useContext(DashboardContext)
+  const { getAllStudentAttendence, markStudentAbsence, getStudentById, markStudentAttendenceById} = useContext(DashboardContext)
+
+  const styles = useStyles();
+  const [showTables, setShowTables] = useState({
+    searchUserInput: false,
+    searchAttendeceInput: true,
+    showStudentTable: false,
+    showattendenceTable: true
+  })
+
+  const [attendenceTableData, setAttendenceTableData] = useState({
+    attendenceRows: [],
+    attendenceAttributes: []
+  })
+
+  const [markeAttendenceTableData, setMarkAttendenceTableData] = useState({
+    rows: [],
+    attributes: []
+  })
+
+  const [inputValue, setInputValue] = useState("")
 
   useEffect(() => {
-    refreshPage("Inside Student attendence page");
+    loadAttendence()
   }, [])
 
-  const filterFunction = () => {
+  const toggleElements = (flag1, flag2, flag3, flag4) => {
+    setShowTables({
+      searchUserInput: flag1,
+      searchAttendeceInput: flag2,
+      showStudentTable: flag3,
+      showattendenceTable: flag4
+    })
+  }
+
+  const loadAttendence = () => {
+    getAllStudentAttendence()
+    .then(result => {
+      if(result.resultShort === 'success') {
+        setAttendenceTableData({
+          attendenceRows: result.attendence,
+          attendenceAttributes: result.attributes
+        })
+      } else {
+        setAttendenceTableData({
+          attendenceRows: [],
+          attendenceAttributes: []
+        })
+      }
+    })
+    .catch(error => {
+      setAttendenceTableData({
+        attendenceRows: [],
+        attendenceAttributes: []
+      })
+    })
+  }
+
+  const onInputChange = (event) => {
+    const { value } = event.target;
+    setInputValue(value);
+  }
+
+  const searchStudent = () => {
+    getStudentById(inputValue)
+    .then(result => {
+      if(result.resultShort === 'success') {
+        console.log("result", result)
+        setMarkAttendenceTableData({
+          rows: result.studentDetails,
+          attributes: result.attributes
+        });
+        toggleElements(true, false, true, false);
+      } else {
+        setMarkAttendenceTableData({
+          row: [],
+          attributes: result.attributes
+        })
+      }
+    })
+    .catch(error => {
+      console.log('Error', error)
+    })
+  }
+
+  const hideSearchInputForStudentAttendence = () => {
+    toggleElements(false, true, false, true);
+  }
+
+  const updateAttendence = (row) => {
+    console.log('row', row)
+    markStudentAbsence(row.attendenceId)
+    .then(result => {
+      if(result.resultShort === 'success') {
+        loadAttendence();
+      }
+    })
+    .catch(error => {
+      console.log('Error while calling markStudentAbsence method')
+    })
+  }
+
+  const searchStudentAttendence = () => {
 
   }
 
-  const editAttendence = () => {
+  const markStudentAttendce = (row) => {
+    markStudentAttendenceById(row.id)
+    .then(result => {
+      if(result.resultShort === 'success') {
+        toggleElements(false, true, false, true);
+        loadAttendence();
+      }
+    })
+    .catch(error => {
+      toggleElements(true, false, true, false);
+    })
 
+  }
+
+  const showInputStudentForAttendence = () => {
+    toggleElements(true, false, false, true)
   }
   
   return (
     <>
-      <Table
-        records={records}
-        headCells={headers}
-        filterFunction={filterFunction}
-        openInPopup={editAttendence}
-      />
+      {
+       showTables.searchUserInput && (
+        <Grid container>
+          <Grid item xs={3}>
+            <Input
+              onChange={onInputChange}
+              label="Search Student"
+              className={styles.seacrhInput}
+              value={inputValue}
+              name="tutor"             
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <MatButton onClick={searchStudent} variant="contained" style={{ flex: "1", width: "80%" }}>Search</MatButton>
+          </Grid>
+          <Grid item xs={2}>
+              <MatButton onClick={hideSearchInputForStudentAttendence} variant="contained" style={{ flex: "1", width: "90%" }}>Cancel</MatButton>
+          </Grid>
+        </Grid> 
+       )
+      }
+      {
+        showTables.showStudentTable &&
+        <Table
+          records={markeAttendenceTableData.rows}
+          headCells={markeAttendenceTableData.attributes}
+          edit={markStudentAttendce}
+        />
+      }
+      {
+        showTables.searchAttendeceInput && (
+          <Grid container>
+              <Grid items xs={6}>
+                <Toolbar>
+                  <Input
+                    onKeyDown={searchStudentAttendence}
+                    label="Search Student"
+                    className={styles.seacrhInput}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="end">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Toolbar>
+              </Grid>
+              <Grid item sm></Grid>
+              <Grid item>
+                <Toolbar>
+                  <MatButton
+                    variant="outlined"
+                    onClick={showInputStudentForAttendence}
+                  >
+                    Mark Attendence
+                  </MatButton>
+                </Toolbar>
+              </Grid>
+          </Grid>
+        )
+      }
+      {
+        showTables.showattendenceTable && 
+        <MuiTable>
+          <TableHead>
+            <TableRow>
+              {
+                attendenceTableData.attendenceAttributes.map((cell, index) => {
+                  return (
+                    <TableCell
+                      key={index}
+                    >
+                      {cell.label}
+                    </TableCell>
+                  )
+                })
+              }
+              <TableCell key={'Actions'}>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              attendenceTableData.attendenceRows.map((details, celIndex) => {
+                return (
+                  <TableRow key={details.id}>
+                    {
+                      attendenceTableData.attendenceAttributes.map((rowCell, cellIndex) => {
+                        const value = details[rowCell.props];
+                        if(rowCell.props && rowCell.props.includes('.')) {
+                          const itemSplit = rowCell.props.split('.');
+                          return (
+                            <TableCell>
+                              {details[itemSplit[0]][itemSplit[1]]}
+                            </TableCell>
+                          )
+                        }
+                        return (
+                          value === null ? (
+                            <TableCell key={cellIndex} className={styles.largeFont}>
+                              -
+                            </TableCell>
+                          ) : (
+                            <TableCell key={cellIndex}>
+                              {value}
+                            </TableCell>
+                          )
+                        )
+                      })
+                    }
+                    <TableCell key={'actionButtons'}>
+                      <ActionButton
+                        color="secondary"
+                        onClick={() => updateAttendence(details)}
+                      >
+                        <CloseOutlinedIcon fontSize="small" />
+                      </ActionButton>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            }
+          </TableBody>
+        </MuiTable>
+      }
     </>
   )
 };

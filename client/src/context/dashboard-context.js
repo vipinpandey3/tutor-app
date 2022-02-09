@@ -5,10 +5,6 @@ export const DashboardContext = createContext();
 
 export const DashboardContextProvider = (props) => {
 
-    const refreshPage = (comment) => {
-        console.log(comment)
-    }
-
     const getAllStudentAttendence = async() => {
         try {
             return await axios.get('/faculty/getAllStudentAttendence')
@@ -22,7 +18,7 @@ export const DashboardContextProvider = (props) => {
 
     const getAllTutorAttendence = async() => {
         try {
-            return await axios.get('/faculty/getAllTutorAttendence')
+            return await axios.get('/faculty/get_All_Tutor_Attendence')
             .then(result => {
                 return result.data
             })
@@ -55,13 +51,81 @@ export const DashboardContextProvider = (props) => {
     }
 
     const markTutorAttendceById = async(id) => {
+        const postObj = {tutorId: id}
         try {
-            return await axios.post('/faculty/markTutorAttedence', {tutorId: id})
+            return await axios.post('/faculty/markTutorAttedence', postObj)
             .then((result) => {
                 return result.data;
             })
         } catch (error) {
             console.log("Error while marking tutor attendence", error);
+        }
+    }
+
+    const updateTutorAttendence = async(id) => {
+        const postObj = {
+            attedenceId: id
+        }
+        try {
+            return await axios.post('/faculty/martkTutorTimeOut', postObj)
+            .then((result) => {
+                return result.data;
+            })
+        } catch (error) {
+            console.log("Error while marking tutor timeOut", error);
+        }
+    }
+
+    const markTutorAbsence = async(id) => {
+        const postObj = {
+            attedenceId: id
+        }
+        try {
+            return await axios.post('/faculty/martkTutorAbsence', postObj)
+            .then((result) => {
+                return result.data;
+            })
+        } catch (error) {
+            console.log("Error while marking tutor absence", error);
+        }
+    }
+
+    const markStudentAbsence = async(id) => {
+        const postObj = {
+            attedenceId: id
+        };
+        try {
+            return await axios.post('/faculty/mark_student_absence', postObj)
+            .then((result) => {
+                return result.data;
+            })
+        } catch(error) {
+            console.log("Error while marking student absence", error);
+        }
+    }
+
+    const getStudentById = async(id) => {
+        try {
+            return await axios.get(`/faculty/getStudentById/${id}`)
+            .then((result) => {
+                return result.data;
+            })
+        } catch(error) {
+            console.log('Error while getting attendence of student by Id', error)
+        }
+    }
+
+    const markStudentAttendenceById = async(id) => {
+        const postObj = {
+            StudentId: id
+        };
+        try{
+            return await axios.post('/faculty/markStudentAttendence', postObj)
+            .then((result) => {
+                return result.data;
+            })
+        } catch(error) {
+            console.log('Error while marjing student attendence')
         }
     }
 
@@ -72,7 +136,11 @@ export const DashboardContextProvider = (props) => {
             searchTutorAttendencebyId,
             getTutorById,
             markTutorAttendceById,
-            refreshPage
+            markTutorAbsence,
+            updateTutorAttendence,
+            markStudentAbsence,
+            getStudentById,
+            markStudentAttendenceById
         }}>
             {props.children}
         </DashboardContext.Provider>

@@ -1,11 +1,9 @@
-import { Grid, makeStyles, Paper, TextField, Toolbar } from '@material-ui/core'
+import { Grid, makeStyles, Paper } from '@material-ui/core'
 import React, { createRef, useContext, useEffect, useState } from 'react'
 import Text from '../../Common/Text';
 import FeesTable from './FeesTable';
-import Button from '../../Common/Button'
 import MatButton from '../../Common/Button';
 import FeesForm from './FeesForm';
-import Input from '../../Common/Input';
 import { FeesContext } from '../../../context/fees-context';
 import { saveAs } from 'file-saver'
 import FeesFileUpload from './FeesFileUpload';
@@ -46,7 +44,6 @@ const Fees = () => {
         attributes: [],
         feesData: []
     });
-    const [fileInput, setFileInput] = useState(null);
     const [showFileImport, setShowFileImport] = useState(false);
 
     const getFormFields = () => {
@@ -167,7 +164,7 @@ const Fees = () => {
                     </Grid>
                     <Grid item sm></Grid>
                     <Grid item xs={3}>
-                            <input  onKeyDown={searchPaidFees} className="searchInput" ref={searchRef} name="paidFees" placeholder="Search"  />
+                        <input  onKeyDown={searchPaidFees} className="searchInput" ref={searchRef} name="paidFees" placeholder="Search"  />
                     </Grid>
                     <Grid item xs={3}>
                     <MatButton onClick={handleUpload} variant="contained" startIcon={<AiOutlineUpload />} style={{ flex: "1", width: "80%" }}>Fees</MatButton>

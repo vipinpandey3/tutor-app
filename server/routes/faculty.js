@@ -96,5 +96,8 @@ router.get('/getAllStudentAttendence', Faculty.getAllStudentAttendence);
 
 router.post('/mark_student_absence', Faculty.markStudentAbsence)
 
+router.post('/getStudentAttendenceById', Faculty.getAllStudentAttendenceById)
+
+router.post('/getTutorAttendenceById', Faculty.getAllTutorAttendenceById)
 
 module.exports = router

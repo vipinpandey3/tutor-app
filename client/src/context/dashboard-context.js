@@ -129,6 +129,34 @@ export const DashboardContextProvider = (props) => {
         }
     }
 
+    const getAllAttendenceOfTutorById = async(emailId) => {
+        const postObj = {
+            tutorEmail: emailId
+        }
+        try {
+            return await axios.post('/faculty/getTutorAttendenceById', postObj)
+            .then((result) => {
+                return result.data;
+            })
+        } catch(error) {
+            console.log("Error while finding tutor attendence by emailId", error);
+        }
+    }
+
+    const getAllAttendenceOfStudentById = async(emailId) => {
+        const postObj = {
+            studentEmail: emailId
+        }
+        try {
+            return await axios.post('/faculty/getStudentAttendenceById', postObj)
+            .then((result) => {
+                return result.data;
+            })
+        } catch(error) {
+            console.log("Error while finding tutor attendence by emailId", error);
+        }
+    }
+
     return (
         <DashboardContext.Provider value={{
             getAllStudentAttendence,
@@ -140,7 +168,9 @@ export const DashboardContextProvider = (props) => {
             updateTutorAttendence,
             markStudentAbsence,
             getStudentById,
-            markStudentAttendenceById
+            markStudentAttendenceById,
+            getAllAttendenceOfTutorById,
+            getAllAttendenceOfStudentById
         }}>
             {props.children}
         </DashboardContext.Provider>

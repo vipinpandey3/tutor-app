@@ -1,5 +1,5 @@
 import {Table as MuiTable, Grid, InputAdornment, makeStyles, TableBody, TableCell, TableHead, TableRow, Toolbar } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import SearchIcon from "@material-ui/icons/Search";
 import { useContext } from 'react';
 import { useEffect } from 'react';
@@ -17,12 +17,29 @@ const useStyles = makeStyles((theme) => ({
   },
   largeFont: {
     fontSize: '20px'
-  }
+  },
+  searchInput: {
+    height: "50px",
+    width: "40%",
+    flex: "1",
+    paddingLeft: "10px"
+  },
+  actionButton: {
+    width: "90%",
+    marginLeft: "30px"
+  },
+  // "MuiToolbar-gutters":  {
+  //   paddingRight: "0px",
+  //   actionButton: {
+  //     width: "100%"
+  //   },
+  // }
 }))
 
 const TutorAttendence = () => {
-  const {getTutorById, updateTutorAttendence, markTutorAbsence, getAllTutorAttendence, searchTutorAttendencebyId, markTutorAttendceById} = useContext(DashboardContext)
+  const {getTutorById, updateTutorAttendence, markTutorAbsence, getAllTutorAttendence, getAllAttendenceOfTutorById, markTutorAttendceById} = useContext(DashboardContext)
   const styles = useStyles();
+  const searchRef = useRef();
   const [showTables, setShowTables] = useState({
     searchUserInput: false,
     searchAttendeceInput: true,
@@ -60,18 +77,20 @@ const TutorAttendence = () => {
 
 
   const searchTutorAttendence = (event) => {
-    console.log('Event', event)
     if(event.keyCode === 13) {
-      console.log('Value', event.target.value)
-      searchTutorAttendencebyId(event.target.value)
-        .then(result => {
-          if(result.resultShort === 'success') {
-            setTutorAttendence({
-              ...tutorAttendenceRecord,
-              attedenceRows: result
-            })
-          }
-        })
+      if(searchRef.current.value !== "") {
+        getAllAttendenceOfTutorById(searchRef.current.value)
+          .then(result => {
+            if(result.resultShort === 'success') {
+              setTutorAttendence({
+                attendenceTableAttributes: result.attributes,
+                attedenceRows: result.attendence
+              })
+            }
+          })
+      } else {
+       loadAttendence() 
+      }
     }
   }
 
@@ -192,7 +211,8 @@ const TutorAttendence = () => {
         showTables.searchAttendeceInput && (
           <Grid container>
               <Grid items xs={6}>
-                <Toolbar>
+                <input  onKeyDown={searchTutorAttendence} className={styles.searchInput} ref={searchRef} name="studentAttendence" placeholder="Search"  />
+                {/* <Toolbar>
                   <Input
                     onKeyDown={searchTutorAttendence}
                     label="Search Student"
@@ -205,18 +225,19 @@ const TutorAttendence = () => {
                       ),
                     }}
                   />
-                </Toolbar>
+                </Toolbar> */}
               </Grid>
               <Grid item sm></Grid>
               <Grid item xs={3}>
-                <Toolbar>
+                {/* <Toolbar> */}
                   <MatButton
+                    className={styles.actionButton}
                     variant="outlined"
                     onClick={searchTutorForAttendence}
                   >
                     Mark Attendence
                   </MatButton>
-                </Toolbar>
+                {/* </Toolbar> */}
               </Grid>
           </Grid>
         )

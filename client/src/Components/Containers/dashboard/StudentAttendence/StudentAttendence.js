@@ -1,10 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, createRef } from 'react';
 import Table from '../../../Common/Table';
-import {Grid, InputAdornment, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles} from "@material-ui/core";
+import {Grid, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles} from "@material-ui/core";
 import {DashboardContext} from '../../../../context/dashboard-context';
 import ActionButton from '../../../Common/ActionButton';
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
-import SearchIcon from "@material-ui/icons/Search";
 import Input from '../../../Common/Input';
 import MatButton from '../../../Common/Button';
 
@@ -14,12 +13,21 @@ const useStyles = makeStyles((theme) => ({
   },
   largeFont: {
     fontSize: '20px'
+  },
+  searchInput: {
+    height: "50px",
+    width: "40%",
+    flex: "1",
+    paddingLeft: "10px"
+  },
+  attendenceButton: {
+    width: "90%"
   }
 }))
 
 const StudentAttendence = () => {
-  const { getAllStudentAttendence, markStudentAbsence, getStudentById, markStudentAttendenceById} = useContext(DashboardContext)
-
+  const { getAllStudentAttendence, markStudentAbsence, getStudentById, markStudentAttendenceById, getAllAttendenceOfStudentById} = useContext(DashboardContext)
+  const searchRef = createRef()
   const styles = useStyles();
   const [showTables, setShowTables] = useState({
     searchUserInput: false,
@@ -120,8 +128,29 @@ const StudentAttendence = () => {
     })
   }
 
-  const searchStudentAttendence = () => {
-
+  const searchStudentAttendence = (event) => {
+    if (event.code === 'Enter') {
+      if(searchRef.current.value !== "") {
+        getAllAttendenceOfStudentById(searchRef.current.value)
+        .then(result => {
+          console.log('REsult', result)
+          if(result.resultShort === 'success') {
+            setAttendenceTableData({
+              attendenceRows: result.attendence,
+              attendenceAttributes: result.attributes
+            })
+          } else {
+            setAttendenceTableData({
+              attendenceRows: [],
+              attendenceAttributes: result.attributes
+            })
+          }
+        })
+      } else if(searchRef.current.value === "") {
+        console.log('')
+        loadAttendence();
+      }
+    }
   }
 
   const markStudentAttendce = (row) => {
@@ -177,8 +206,9 @@ const StudentAttendence = () => {
         showTables.searchAttendeceInput && (
           <Grid container>
               <Grid items xs={6}>
-                <Toolbar>
-                  <Input
+                {/* <Toolbar> */}
+                  <input  onKeyDown={searchStudentAttendence} className={styles.searchInput} ref={searchRef} name="studentAttendence" placeholder="Search"  />
+                  {/* <Input
                     onKeyDown={searchStudentAttendence}
                     label="Search Student"
                     className={styles.seacrhInput}
@@ -189,13 +219,14 @@ const StudentAttendence = () => {
                         </InputAdornment>
                       ),
                     }}
-                  />
-                </Toolbar>
+                  /> */}
+                {/* </Toolbar> */}
               </Grid>
               <Grid item sm></Grid>
               <Grid item>
                 <Toolbar>
                   <MatButton
+                  // className={styles.attendenceButton}
                     variant="outlined"
                     onClick={showInputStudentForAttendence}
                   >
@@ -237,7 +268,7 @@ const StudentAttendence = () => {
                           const itemSplit = rowCell.props.split('.');
                           return (
                             <TableCell>
-                              {details[itemSplit[0]][itemSplit[1]]}
+                              {details[itemSplit[0]][itemSplit[1]] ? details[itemSplit[0]][itemSplit[1]] : "-"}
                             </TableCell>
                           )
                         }

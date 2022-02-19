@@ -15,6 +15,11 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.TIME,
             allowNull: DataTypes.NOW()
         },
+        attendenceStatus: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 1
+        },
         remarks: {
             type: DataTypes.JSON,
             default: null,

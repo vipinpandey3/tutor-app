@@ -12,6 +12,8 @@ import useTable from "../../customsHooks/useTable";
 import ActionButton from "./ActionButton";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+// import Tooltip from '@mui/material/Tooltip';
+import MuiToolTip from "./ToolTip";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -92,19 +94,21 @@ function Table(props) {
                   >
                     <EditOutlinedIcon fontSize="small" />
                   </ActionButton>
-                  <ActionButton
-                    color="secondary"
-                    onClick={() => {
-                      // setConfirmDialog({
-                      //     isOpen: true,
-                      //     title: "Are you sure you want to delete tutor?",
-                      //     subTitle: "Operation once done can not be undone?",
-                      //     onConfirm: () => {onDeleteT(tutor.id)}
-                      // })
-                    }}
-                  >
-                    <CloseOutlinedIcon fontSize="small" />
-                  </ActionButton>
+                  <MuiToolTip title="Add" placement="top-start">
+                    <ActionButton
+                      // color="secondary"
+                      onClick={() => {
+                        // setConfirmDialog({
+                        //     isOpen: true,
+                        //     title: "Are you sure you want to delete tutor?",
+                        //     subTitle: "Operation once done can not be undone?",
+                        //     onConfirm: () => {onDeleteT(tutor.id)}
+                        // })
+                      }}
+                    >
+                      <CloseOutlinedIcon fontSize="small" />
+                    </ActionButton>
+                  </MuiToolTip>                  
                 </TableCell>
               </TableRow>
             );

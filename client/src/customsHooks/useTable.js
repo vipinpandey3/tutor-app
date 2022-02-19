@@ -57,8 +57,8 @@ export default function useTable(data) {
                     page={page}
                     rowsPerPage={rowsPerPage} 
                     rowsPerPageOptions={pages}
-                    onChangePage={handlePageChange}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    onPageChange={handlePageChange}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
                 /> 
     }
     

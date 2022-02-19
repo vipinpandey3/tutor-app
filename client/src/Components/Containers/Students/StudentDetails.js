@@ -84,7 +84,6 @@ const educationInitialValue = {
 };
 
 const StudentDetails = () => {
-  // const [studentRecord, setStudentRecord] = useState({});
   const [showForms, setShowForm] = useState({
     parentForms: false,
     educationDetailsForm: false,
@@ -257,7 +256,9 @@ const StudentDetails = () => {
     }
   }
 
-  const fetchStudentEducationDetails = (event) => {};
+  const fetchStudentEducationDetails = (event) => {
+    console.log("fetchStudentEducationDetails",event)
+  };
   return (
     <>
       <Paper className={`${styles.paperContent} `}>

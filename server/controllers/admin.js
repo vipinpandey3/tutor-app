@@ -111,7 +111,6 @@ const getTeacher = (req, res, next) => {
   const tutorDBAttributes = attributes[14].tutorDBAttributes
   return models.Tutor.findAll()
     .then((teachers) => {
-      console.log("Teachers", teachers)
       const respose = {
         resultShort: "success",
         resultLong: "Successfully retrived all Teachers",
@@ -145,7 +144,6 @@ const getTeacherById = (req, res, next) => {
   },{attributes: tutorDBAttributes} 
   )
     .then((teacher) => {
-      console.log("TEacher =========>", JSON.stringify(teacher))
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrived Teacher" + teacherId,
@@ -332,7 +330,7 @@ const addFeesDetails = (req, res, next) => {
             console.log("Fees", fees)
             const response = {
               resultShort: "success",
-              resultLong: "Addedd fees details for student with Id: " + studentId,
+              resultLong: "Addedd fees details for student with Id: " + StudentId,
               fees: fees
             };
 
@@ -654,7 +652,7 @@ const updateStudentEducationDetails = (req, res) => {
 
 }
 
-const getchTutorFormFields = () => {
+const getTutorFormFields = () => {
   return new Promise((resolve, reject) => {
     var tutorFormFields = attributes[13].formFields;
     var optionObjPromise = []
@@ -766,7 +764,7 @@ module.exports = {
   updateParentDetails,
   fetchEducationFormFields,
   updateStudentEducationDetails,
-  getchTutorFormFields,
+  getTutorFormFields,
   getTutorEducationFormFields,
   addTutorEducation,
   updateTutorEducationById

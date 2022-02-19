@@ -133,7 +133,7 @@ const Students = () => {
               </MatButton>
             </Toolbar>
           </Grid>
-        </Grid>        
+        </Grid>
         {
           students.studentRows && students.studentRows.length > 0 &&  <Table
             records={students.studentRows}

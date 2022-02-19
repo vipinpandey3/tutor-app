@@ -78,4 +78,26 @@ router.post('/disableExam', Faculty.disableExam);
 
 router.get('/get_Exam_Details/:examId', Faculty.getExamDetailsById)
 
+router.get('/getTutorById/:tutorId', Faculty.getTutorById);
+
+router.post('/markTutorAttedence', Faculty.markTutorAttedence);
+
+router.get('/get_All_Tutor_Attendence', Faculty.getAllTutorAttendence);
+
+router.post('/martkTutorTimeOut', Faculty.markTutorOutTime);
+
+router.post('/martkTutorAbsence', Faculty.markTutorAbsence);
+
+router.get('/getStudentById/:studentId', Faculty.getStudentById);
+
+router.post('/markStudentAttendence', Faculty.markStudentAttendence);
+
+router.get('/getAllStudentAttendence', Faculty.getAllStudentAttendence);
+
+router.post('/mark_student_absence', Faculty.markStudentAbsence)
+
+router.post('/getStudentAttendenceById', Faculty.getAllStudentAttendenceById)
+
+router.post('/getTutorAttendenceById', Faculty.getAllTutorAttendenceById)
+
 module.exports = router

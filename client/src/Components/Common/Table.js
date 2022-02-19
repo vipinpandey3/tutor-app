@@ -12,6 +12,8 @@ import useTable from "../../customsHooks/useTable";
 import ActionButton from "./ActionButton";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+// import Tooltip from '@mui/material/Tooltip';
+import MuiToolTip from "./ToolTip";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -36,11 +38,11 @@ function Table(props) {
   const {
     headCells,
     records,
-    filterFunction,
-    openInPopup,
     redirectToDetailsPage,
     edit
   } = props;
+  // filterFunction,
+  // openInPopup,
   // const [tableRecords, setTableRecords] = useState(records);
   // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
   const {
@@ -50,10 +52,10 @@ function Table(props) {
     <>
       <MuiTable className={classes.table}>
         <TableHead>
-          <TableRow>
+          <TableRow key="header">
             {headCells.map((cell, index) => {
               return (
-                <TableCell>
+                <TableCell key={index}>
                   {cell.disableSorting ? (
                     cell.label
                   ) : (
@@ -68,7 +70,7 @@ function Table(props) {
                 </TableCell>
               );
             })}
-            <TableCell>Actions</TableCell>
+            <TableCell key={'Actions'}>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -85,26 +87,28 @@ function Table(props) {
                     redirectToDetailsPage(row.id);
                   }}>{value}</TableCell>;
                 })}
-                <TableCell>
+                <TableCell key={'actionButtons'}>
                   <ActionButton
                     onClick={() => edit(row)}
                     color="primary"
                   >
                     <EditOutlinedIcon fontSize="small" />
                   </ActionButton>
-                  <ActionButton
-                    color="secondary"
-                    onClick={() => {
-                      // setConfirmDialog({
-                      //     isOpen: true,
-                      //     title: "Are you sure you want to delete tutor?",
-                      //     subTitle: "Operation once done can not be undone?",
-                      //     onConfirm: () => {onDeleteT(tutor.id)}
-                      // })
-                    }}
-                  >
-                    <CloseOutlinedIcon fontSize="small" />
-                  </ActionButton>
+                  <MuiToolTip title="Add" placement="top-start">
+                    <ActionButton
+                      // color="secondary"
+                      onClick={() => {
+                        // setConfirmDialog({
+                        //     isOpen: true,
+                        //     title: "Are you sure you want to delete tutor?",
+                        //     subTitle: "Operation once done can not be undone?",
+                        //     onConfirm: () => {onDeleteT(tutor.id)}
+                        // })
+                      }}
+                    >
+                      <CloseOutlinedIcon fontSize="small" />
+                    </ActionButton>
+                  </MuiToolTip>                  
                 </TableCell>
               </TableRow>
             );

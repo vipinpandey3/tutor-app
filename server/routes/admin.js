@@ -229,4 +229,25 @@ router.post('/updateTutorEducation', (req, res) => {
     })    
 })
 
+router.get('/get-tutor-formFields', (req, res) => {
+    console.log('Inside /get-tutor-formFields route');
+    return adminController.getTutorFormFields()
+    .then((data) => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'successfully retrived tutor form inputs',
+            formFields: data
+        }
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error Final', error)
+        const result = {
+            resultShort: "failure",
+            resultLong: "Failed to retriev tutor form inputs",
+        }
+        return res.status(400).json(result);
+    });
+})
+
 module.exports = router;

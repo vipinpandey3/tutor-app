@@ -6,10 +6,10 @@ const Exam = require('../models/exam');
 const StandardMaster = require('../models/standardMaster');
 const ExamStdMap = require('../models/examStdMap');
 const { QueryTypes } = require('sequelize');
-const models = require('../models');
 const OptionServices = require('../services/optionServices');
 const moment = require('moment');
 const SubjectMaster = require('../models/subjectMatser');
+const models = require('../models/index')
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function');
@@ -420,6 +420,505 @@ const getExamDetailsById = (req, res) => {
     // })
 }
 
+const getTutorById = (req, res) => {
+    console.log('Inside the /getSTutorId/:tutorId route');
+    console.log('Inside the getTutorById function');
+    const tutorId = req.params.tutorId;
+    models.Tutor.findByPk(tutorId, {attributes: ['id','fullName']})
+        .then(tutorObj => {
+            let tutorDetails = [];
+            let object = {};
+            if(tutorObj) {
+                object.fullName = tutorObj.fullName;
+                object.id = tutorObj.id;
+                models.TutorAttendence.findAll({where: {TutorId: tutorId}})
+                .then((attendenceObj) => {
+                    if(attendenceObj.length > 0) {
+                        console.log("attendenceObj", attendenceObj)
+                        object.lastAttendenceDate = attendenceObj[attendenceObj.length - 1].inTime;
+                        object.lastInTime = attendenceObj[attendenceObj.length - 1].attendenceDate;
+                        tutorDetails.push(object);
+                        const result = {
+                            resultShort: 'success',
+                            resultLong: "Tutor result fetched successfully",
+                            tutorDetails: tutorDetails,
+                            attributes: attributes[17].columnsHeader
+                        }
+                        console.log("Result", result)
+                        return res.status(200).json(result)
+                    } else {
+                        
+                        object.lastAttendenceDate = null;
+                        object.lastInTime = null
+                        tutorDetails.push(object);
+                        const result = {
+                            resultShort: 'success',
+                            resultLong: "Tutor result fetched successfully",
+                            tutorDetails: tutorDetails,
+                            attributes: attributes[17].columnsHeader
+                        }
+                        console.log('Result', result)
+                        return res.status(200).json(result);
+                    }
+                })
+                .catch(error => {
+                    console.log('Error while fetching tutor attendence details', error)
+                    const result = {
+                        resultShort: "failure",
+                        resultLong: "Error while fetching tutor attendence details"
+                    }
+                    return res.status(500).json(result);
+                })
+            } else {
+                const  result = {
+                    resultShort: "success",
+                    resultLong: "Somethinf went wrong"
+                }
+                return res.status(200).json(result)
+            }
+        })
+        .catch(error => {
+            console.log('Error while getting User', error)
+            const result = {
+                resultShort: 'failure',
+                resultLong: "Failure in getting tutor with id: " + tutorId
+            };
+            return res.status(500).status(result);
+        })
+}
+
+const markTutorAttedence = (req, res) => {
+    console.log('Inside the markTutorAttedence function');
+    const TutorId = req.body.tutorId;
+    const attendenceDate = moment().format('YYYY-MM-DD');
+    const inTime = moment().format('HH:mm:ss');
+    console.log('attendenceDate', attendenceDate);
+    console.log('inTime', inTime);
+    return models.TutorAttendence.create({attendenceDate, inTime, TutorId})
+        .then(attendenceObj => {
+            console.log('attendenceObj', attendenceObj)
+            const result = {
+                resultShort: 'success',
+                resultLong: 'attendence marked for tutor'
+            }
+
+            res.status(200).json(result)
+        })
+        .catch(error => {
+            console.log('Failure while marking attendence for tutor', error);
+            const result = {
+                resultShort: 'failure',
+                resultLong: 'Failure while marking attendence for tutor'
+            }
+            res.status(200).json(result)
+        })
+}
+
+
+const getAllTutorAttendence = (req, res) => {
+    console.log('Inside getAllTutorAttendence function');
+    const tableAttributes = attributes[18].columnsHeader;
+    let attendenceDetails = [];
+    let attendeceItems = {};
+    return models.TutorAttendence.findAll({
+        attributes: [['id', 'attendenceId'], 'attendenceDate', 'inTime', 'outTime'],
+        include: [
+            {
+                model: models.Tutor,
+                attributes: [['id', 'TutorId'], 'fullName', 'emailId']
+            }
+        ],
+    })
+    .then(resultObj => {
+        if(resultObj) {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved attendence of all the tutors',
+                attendence: resultObj,
+                attributes: tableAttributes
+            }
+
+            res.status(200).json(result);
+        } else {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved attendence of all the tutors',
+                attendence: [],
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        }
+    })
+    .catch(error => {
+        console.log('Error while retrieving attendence of all the tutors', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Error while retrieving attendence of all the tutors'
+        };
+        res.status(200).json(result);
+    })
+    // return models.TutorAttendence.findAll({
+    //     attributes: [['id', "AttendenceId"], 'attendenceDate', 'inTime', 'outTime', 'TutorId'],
+    // })
+    // .then(attendenceArray => {
+    //     console.log('attendenceObj ======>', JSON.stringify(attendenceArray))
+    //     for(let i = 0; i < attendenceArray.length; i++) {
+    //         models.Tutor.findByPk(attendenceArray[i].TutorId, {
+    //             attributes: ["id", 'fullName']
+    //         })
+    //         .then(tutor => {
+    //             // console.log("Tutor,", JSON.stringify(tutor))
+    //             const newObj = Object.assign(JSON.stringify(tutor), attendenceArray[i])
+    //             attendenceDetails.push(newObj);
+    //         })
+    //     }
+    //     console.log("attendenceDetails", attendenceDetails)
+    //     // if(attendenceObj) {
+    //     //     const result = {
+    //     //         resultShort: 'success',
+    //     //         resultLong: 'successfully retrieved attendence of all the tutors',
+    //     //         attendence: attendenceObj,
+    //     //         attributes: tableAttributes
+    //     //     };
+    //     //     res.status(200).json(result);
+    //     // } else {
+            // const result = {
+            //     resultShort: 'success',
+            //     resultLong: 'successfully retrieved attendence of all the tutors',
+            //     attendence: [],
+            //     attributes: tableAttributes
+            // };
+            // res.status(200).json(result);
+    //     // }
+    // })
+    // .catch(error => {
+        // console.log('Error while retrieving attendence of all the tutors', error)
+        // const result = {
+        //     resultShort: 'failure',
+        //     resultLong: 'Error while retrieving attendence of all the tutors'
+        // };
+        // res.status(200).json(result);
+    // })
+}
+
+const markTutorOutTime = (req, res) => {
+    console.log('inside markTutorOutTime functions');
+    const attendenceId = req.body.attedenceId;
+    const outTime = moment().format('HH:mm:ss')
+    return models.TutorAttendence.update ({
+        outTime: outTime
+    }, {
+        where: {
+            id: attendenceId
+        }
+    })
+    .then(attendenceObj => {
+        console.log('Result', attendenceObj)
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Successfully marked tutor outTime'
+        }
+
+        res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Failed to mark tutor absent', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Failed to mark tutor outTime'
+        }
+
+        res.status(200).json(result)
+    })
+
+}
+
+const markTutorAbsence = (req, res) => {
+    console.log('inside markTutorAbsence function');
+    const attendenceId = req.body.attedenceId;
+    return models.TutorAttendence.update ({
+        inTime: null
+    }, {
+        where: {
+            id: attendenceId
+        }
+    })
+    .then(attendenceObj => {
+        console.log('Result', attendenceObj)
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Successfully marked tutor absence'
+        }
+
+        res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Failed to mark tutor absent', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Failed to mark tutor absence'
+        }
+
+        res.status(200).json(result)
+    })
+}
+
+const getStudentById = (req, res) => {
+    console.log('Inside getStudentByIdFunction function');
+    const studentId = req.params.studentId;
+    console.log('Student Id', studentId)
+    models.Student.findByPk(studentId, {
+        attributes: ['id', 'firstName', 'lastName']
+    })
+    .then(studentObject => {
+        console.log('studentObject ===========>', JSON.stringify(studentObject))
+        let studentDetails = [];
+        let object = {};
+        models.StudentAttendence.findAll({where: {StudentId: studentId}})
+        .then(attendenceObj => {
+            if(attendenceObj.length > 0) {
+                object.firstName = studentObject.firstName;
+                object.id = studentObject.id;
+                object.lastAttendenceDate = attendenceObj[attendenceObj.length - 1].attendenceDate;
+                object.lastInTime = attendenceObj[attendenceObj.length - 1].inTime;
+                studentDetails.push(object)
+                const result = {
+                    resultShort: 'success',
+                    resultLong: "Student result fetched successfully",
+                    studentDetails: studentDetails,
+                    attributes: attributes[19].columnsHeader
+                }
+                console.log("Result", result)
+                return res.status(200).json(result)
+            } else {
+                object.fullName = studentObject.firstName + " " + studentObject.lastName
+                object.lastAttendenceDate = null;
+                object.lastInTime = null;
+                object.id = studentObject.id
+                studentDetails.push(object);
+                console.log('studentDetails', studentDetails)
+                const result = {
+                    resultShort: 'success',
+                    resultLong: "Student result fetched successfully",
+                    studentDetails: studentDetails,
+                    attributes: attributes[18].columnsHeader
+                }
+                console.log('Result', result)
+                return res.status(200).json(result);
+            }
+        })
+        .catch(error => {
+            console.log('Error while getting User', error)
+            const result = {
+                resultShort: 'failure',
+                resultLong: "Failure in getting student with id: " + studentId,
+                attributes: attributes[18].columnsHeader
+            };
+            return res.status(500).status(result);
+        })
+    })
+    .catch(error => {
+        console.log('Error while getting User', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: "Failure in getting student with id: " + studentId
+        };
+        return res.status(500).status(result);
+    })
+}
+
+const markStudentAttendence = (req, res) => {
+    console.log('Inside the markStudentAttendence function');
+    const StudentId = req.body.StudentId;
+    console.log('StudentId ****************', StudentId)
+    const attendenceDate = moment().format('YYYY-MM-DD');
+    const inTime = moment().format('HH:mm:ss');
+    const attendenceStatus = 1
+    return models.StudentAttendence.create({attendenceDate, inTime,attendenceStatus, StudentId})
+    .then(attendenceObj => {
+        console.log('attendenceObj', attendenceObj)
+        const result = {
+            resultShort: 'success',
+            resultLong: 'attendence marked for student with Id: ' + StudentId
+        }
+
+        res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Failure while marking attendence for student with id: ', StudentId, error);
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Failure while marking attendence for student with id: ' + StudentId
+        }
+        res.status(200).json(result)
+    })
+}
+
+const getAllStudentAttendence = (req, res) => {
+    console.log('inside getAllStudentAttendence function');
+    const tableAttributes = attributes[20].columnsHeader;
+    return models.StudentAttendence.findAll({
+        attributes: [['id', 'attendenceId'], 'attendenceDate', 'inTime'],
+        include: [
+            {
+                model: models.Student,
+                attributes: [['id', 'StudentId'], 'firstName', 'emailId']
+            }
+        ]
+    })
+    .then(resultObj => {
+        if(resultObj) {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved attendence of all the students',
+                attendence: resultObj,
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        } else {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved attendence of all the students',
+                attendence: [],
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        }
+    })
+    .catch(error => {
+        console.log('Error while retrieving attendence of all the students', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Error while retrieving attendence of all the students'
+        };
+        res.status(200).json(result);
+    })
+}
+
+const markStudentAbsence = (req, res) => {
+    console.log('Inside markStudentAbsence method');
+    const attendenceId = req.body.attedenceId;
+    return models.StudentAttendence.update ({
+        inTime: null,
+        attendenceStatus: 0,
+    }, {
+        where: {
+            id: attendenceId
+        }
+    })
+    .then(attendenceObj => {
+        console.log('Result', attendenceObj)
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Successfully marked student absence'
+        }
+
+        res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Failed to mark student absent', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Failed to mark student absence'
+        }
+
+        res.status(200).json(result)
+    })
+}
+
+const getAllStudentAttendenceById = (req, res) => {
+    console.log('Inside getAllStudentAttendenceById function')
+    const studentEmail = req.body.studentEmail
+    const tableAttributes = attributes[20].columnsHeader;
+    return models.StudentAttendence.findAll({
+        attributes: [['id', 'attendenceId'], 'attendenceDate', 'inTime'],
+        include: [
+            {
+                model: models.Student,
+                attributes: [['id', 'StudentId'], 'firstName', 'emailId'],
+                where: {
+                    emailId: studentEmail
+                },
+                required: true
+            }
+        ]
+    })
+    .then(resultObj => {
+        if(resultObj) {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved all attendence for the student with emailId: ' + studentEmail,
+                attendence: resultObj,
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        } else {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved attendence of all the students',
+                attendence: [],
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        }
+    })
+    .catch(error => {
+        console.log('Error while retrieving all attendence for the student', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Error while retrieving all attendence for the student with emailId: ' + studentEmail,
+        };
+        res.status(200).json(result);
+    })
+}
+
+const getAllTutorAttendenceById = (req, res) => {
+    console.log('inside getAllTutorAttendenceById function');
+    const tutorEmail = req.body.tutorEmail;
+    const tableAttributes = attributes[18].columnsHeader
+    return models.TutorAttendence.findAll({
+        attributes: [['id', 'attendenceId'], 'attendenceDate', 'inTime', 'outTime'],
+        include: [
+            {
+                model: models.Tutor,
+                attributes: [['id', 'TutorId'], 'fullName', 'emailId'],
+                where: {
+                    emailId: tutorEmail
+                },
+                required: true
+            }
+        ],
+    })
+    .then(resultObj => {
+        if(resultObj) {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved all attendence of the tutors with email: ' + tutorEmail,
+                attendence: resultObj,
+                attributes: tableAttributes
+            }
+
+            res.status(200).json(result);
+        } else {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'Tutors is yet mark attendence with email: ' + tutorEmail,
+                attendence: [],
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        }
+    })
+    .catch(error => {
+        console.log('Error while retrieving attendence of all the tutors', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Error while retrieving attendence of all the tutors'
+        };
+        res.status(200).json(result);
+    })
+}
+
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
@@ -428,5 +927,16 @@ module.exports = {
     getExams,
     getSubjectsByStandard,
     disableExam,
-    getExamDetailsById
+    getExamDetailsById,
+    getTutorById,
+    markTutorAttedence,
+    getAllTutorAttendence,
+    markTutorAbsence,
+    markTutorOutTime,
+    getStudentById,
+    markStudentAttendence,
+    getAllStudentAttendence,
+    markStudentAbsence,
+    getAllStudentAttendenceById,
+    getAllTutorAttendenceById
 }

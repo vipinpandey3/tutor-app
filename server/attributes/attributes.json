@@ -1017,5 +1017,106 @@
                 "label": "Univeristy/Board Name"
             }
         ]
+    },
+    {
+        "index": 17,
+        "name": "tutorAttedencemarkTable",
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "Tutor Id"
+            },
+            {
+                "id": "fullName",
+                "label": "Tutor Name"
+            },
+            {
+                "id": "lastAttendenceDate",
+                "label": "Last Attendence Date"
+            },
+            {
+                "id": "lastInTime",
+                "label": "Ins Time"
+            }
+        ]
+    },
+    {
+        "index": 18,
+        "name": "tutorAttendenceTableDetails",
+        "columnsHeader": [
+            {
+                "id": "fullName",
+                "label": "Tutor Name",
+                "props": "Tutor.fullName"
+            },
+            {
+                "id": "emailId",
+                "label": "Tutor Email",
+                "props": "Tutor.emailId"
+            },
+            {
+                "id": "attendenceDate",
+                "label": "Date",
+                "props": "attendenceDate"
+            },
+            {
+                "id": "inTime",
+                "label": "In Time",
+                "props": "inTime"
+            },
+            {
+                "id": "outTime",
+                "label": "out Time",
+                "props": "outTime"
+            }
+        ]
+    },
+    {
+        "index": 19,
+        "name": "studentAttedencemarkTable",
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "Student Id"
+            },
+            {
+                "id": "firstName",
+                "label": "Student Name"
+            },
+            {
+                "id": "lastAttendenceDate",
+                "label": "Last Attendence Date"
+            },
+            {
+                "id": "lastInTime",
+                "label": "In Time"
+            }
+        ]
+    },
+    {
+        "index": 20,
+        "name": "studentAttendenceTableDetails",
+        "columnsHeader": [
+            {
+                "id": "firstName",
+                "label": "Student Name",
+                "props": "Student.firstName"
+            },
+            {
+                "id": "emailId",
+                "label": "Student Email",
+                "props": "Student.emailId"
+            },
+            {
+                "id": "attendenceDate",
+                "label": "Date",
+                "props": "attendenceDate"
+            },
+            {
+                "id": "inTime",
+                "label": "In Time",
+                "props": "inTime"
+            }
+        ]
     }
 ]

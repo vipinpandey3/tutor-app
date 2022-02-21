@@ -6,12 +6,14 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { StudentContextPorvider } from "./context/student-context";
 import { FeesContextProvider } from "./context/fees-context";
 import { ExamContextProvider } from "./context/exam-context";
-import { TutorContextProvider } from './context/tutor-context';
 import { DashboardContextProvider } from "./context/dashboard-context";
+import {Provider} from 'react-redux'
+import store from './redux/store'
+
 
 ReactDOM.render(
-  <DashboardContextProvider>
-    <TutorContextProvider>
+  <Provider store={store}>
+    <DashboardContextProvider>
       <StudentContextPorvider>
         <FeesContextProvider>
           <ExamContextProvider>
@@ -21,8 +23,8 @@ ReactDOM.render(
           </ExamContextProvider>
         </FeesContextProvider>
       </StudentContextPorvider>
-    </TutorContextProvider>
-  </DashboardContextProvider>,
+    </DashboardContextProvider>
+  </Provider>,
   document.getElementById("root")
 );
 

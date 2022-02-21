@@ -1,69 +1,30 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import Form from '../../Common/Form'
-import { TutorContext } from '../../../context/tutor-context'
+import {addTeacherEducationDetails, updateTutorEducationDetail} from '../../../redux/actions/tutorAction';
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
 
-export const EducationForm = (props) => {
-    const {formFields, educationInitialValue, formDetails, setIntialValue, fetchTutorDetails, tutorId, toggleFormDetails, hideForm} = props
-    const {addTutorEducation, updateTutorEducationDetail} = useContext(TutorContext)
+const EducationForm = (props) => {
+    const {formFields, 
+        educationInitialValue, 
+        formDetails,
+        fetchTutorDetails, 
+        tutorId, 
+        hideForm,
+        addTeacherEducationDetails,
+        updateTutorEducationDetail
+    } = props
 
     const addEducationDetails = (values) => {
         values.TutorId = tutorId;
         console.log("Values", values)
-        addTutorEducation(values)
-            .then(result => {
-                if(result.resultShort === 'success') {
-                    toggleFormDetails(false, {
-                        title: "Add Education",
-                        buttonName: 'Submit',
-                        editFlag: false
-                    })
-                    fetchTutorDetails()
-                    setIntialValue()
-                } else {
-                    toggleFormDetails(true, {
-                        title: "Add Education",
-                        buttonName: 'Submit',
-                        editFlag: false
-                    })
-                }
-            })
-            .catch(error => {
-                toggleFormDetails(false, {
-                    title: "Add Education",
-                    buttonName: 'Submit',
-                    editFlag: false
-                })
-            })
+        addTeacherEducationDetails(values)
+        fetchTutorDetails();
     }
-
-    
     
     const updateEducationDetails = (values) => {
-        updateTutorEducationDetail(values)
-            .then(result => {
-                if(result.resultShort && result.resultShort === 'success') {
-                    toggleFormDetails(false, {
-                        title: "Add Education",
-                        buttonName: 'Submit',
-                        editFlag: false
-                    });
-                    fetchTutorDetails()
-                    setIntialValue()
-                } else {
-                    toggleFormDetails(true, {
-                        title: "Add Education",
-                        buttonName: 'Submit',
-                        editFlag: false
-                    })
-                }
-            })
-            .catch(error => {
-                toggleFormDetails(false, {
-                    title: "Add Education",
-                    buttonName: 'Submit',
-                    editFlag: false
-                })
-            })
+        updateTutorEducationDetail(values);
+        fetchTutorDetails();
     }
 
     return (
@@ -77,3 +38,10 @@ export const EducationForm = (props) => {
         />
     )
 }
+
+EducationForm.propTypes = {
+    addTeacherEducationDetails: PropTypes.func.isRequired,
+    updateTutorEducationDetail: PropTypes.func.isRequired
+}
+
+export default connect(null, {addTeacherEducationDetails, updateTutorEducationDetail})(EducationForm)

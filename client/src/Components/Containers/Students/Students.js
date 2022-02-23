@@ -15,6 +15,11 @@ import AddIcon from "@material-ui/icons/Add";
 import StudentForm from "./StudentForm";
 import { StudentContext } from "../../../context/student-context";
 import moment from 'moment'
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import {getStudents} from '../../../redux/actions/studentAction'
+import Loader from '../../Common/Loader'
+
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -37,13 +42,13 @@ const initialcFormValues = {
   dob: moment().format('YYYY-MM-DD'),
   stream: 'Common',
 };
-const Students = () => {
+const Students = ({student: {students, loading}, getStudents}) => {
   const history = useHistory();
   const classes = useStyles();
-  const [students, setStudents] = useState({
-    studentRows: [],
-    studenetTableAttributes: []
-  })
+  // const [students, setStudents] = useState({
+  //   studentRows: [],
+  //   studenetTableAttributes: []
+  // })
   const { fetchStudents, addStudent, studentFormFields} = useContext(StudentContext);
   const [showForm, setForm] = useState(false);
   const [formFields, setFormFields] = useState([])
@@ -60,13 +65,14 @@ const Students = () => {
 
   const loadUsers = () => {
     console.log('toggleForm button clicked')
-    fetchStudents()
-      .then(result => {
-        setStudents({
-          studentRows: result.students,
-          studenetTableAttributes: result.attributes
-        })
-      })
+    getStudents();
+    // fetchStudents()
+    //   .then(result => {
+    //     setStudents({
+    //       studentRows: result.students,
+    //       studenetTableAttributes: result.attributes
+    //     })
+    //   })
   }
 
   useEffect(() => {
@@ -93,6 +99,7 @@ const Students = () => {
 
   return (
     <>
+      {/* <Loader /> */}
       {showForm && (
           <StudentForm 
             initialcFormValues={initialcFormValues} 
@@ -135,9 +142,9 @@ const Students = () => {
           </Grid>
         </Grid>
         {
-          students.studentRows && students.studentRows.length > 0 &&  <Table
-            records={students.studentRows}
-            headCells={students.studenetTableAttributes}
+          students.studentTableAttributes && students.studentTableAttributes.length > 0 &&  <Table
+            records={students.studentTablerows}
+            headCells={students.studentTableAttributes}
             filterFunction={filterFunction}
             openInPopup={loadForm}
             redirectToDetailsPage={redirectToStudentDetailsPage}
@@ -148,4 +155,16 @@ const Students = () => {
   );
 };
 
-export default Students;
+Students.propTypes = {
+  getStudents: PropTypes.func.isRequired,
+  student: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => {
+  return {
+    student: state.student
+  } 
+}
+
+
+export default connect(mapStateToProps, {getStudents})(Students);

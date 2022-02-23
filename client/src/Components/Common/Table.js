@@ -95,7 +95,7 @@ function Table(props) {
                     >
                       <EditOutlinedIcon fontSize="small" />
                     </ActionButton>
-                    <MuiToolTip title="Add" placement="top-start">
+                    {/* <MuiToolTip title="Add" placement="top-start"> */}
                       <ActionButton
                         // color="secondary"
                         onClick={() => {
@@ -109,7 +109,7 @@ function Table(props) {
                       >
                       <CloseOutlinedIcon fontSize="small" />
                     </ActionButton>
-                  </MuiToolTip>                  
+                  {/* </MuiToolTip>                   */}
                 </TableCell>
               </TableRow>
             );

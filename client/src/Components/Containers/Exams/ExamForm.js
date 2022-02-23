@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable array-callback-return */
 import React, { useState } from "react";
 import { Paper, makeStyles, Grid } from "@material-ui/core";
 import Input from "../../Common/Input";
@@ -36,7 +38,6 @@ const ExamForm = (props) => {
   const [examFormValue, setExamFormValue] = useState(initialExamFormValue);
   const [examTimeValue, setExamTimeValue] = useState(null)
   const [subjectOptions, setSubjectOptions] = useState([])
-  const [subjects, setSubjects] = useState([])
 
   const valueChange = (e) => {
     if(e.target.name === "standard") {

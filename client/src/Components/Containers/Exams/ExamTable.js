@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ExamTable = (props) => {
-    const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam, loadExam, editExam} = props; 
+    const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam, loadExam} = props; 
     const [open, setOpen] = useState(false)
     const styles = useStyles()
 

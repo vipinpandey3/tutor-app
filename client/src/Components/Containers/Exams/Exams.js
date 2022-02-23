@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 // /* eslint-disable no-unused-vars */
 import {
   Grid,
@@ -95,17 +97,6 @@ const Exams = () => {
     })
   }
   
-  // const showExamFormFields = (title, buttonTitle, flag=false) => {
-  //   fetchFeesForms()
-  //   setFormTitle({
-  //     ...formTitle,
-  //     title: title,
-  //     buttonTitle: buttonTitle
-  //   })
-  //   setEditExamFormFlag(flag)
-  //   setShowExamForm(true)
-  // }
-
   const showExamFormFields = () => {
     fetchFeesForms()
     setShowExamForm(true)

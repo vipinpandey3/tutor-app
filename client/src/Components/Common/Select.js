@@ -1,7 +1,6 @@
 import {
   FormControl,
   FormHelperText,
-  FormLabel,
   InputLabel,
   MenuItem,
   Select as MuiSelect,

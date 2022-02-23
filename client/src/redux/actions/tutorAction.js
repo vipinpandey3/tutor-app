@@ -93,7 +93,6 @@ export const getTutorForm = () => {
 }
 
 export const toggleForm = (formValue) => {
-    console.log('Inside toggleForm')
     return async (dispatch) => {
         dispatch({
             type: types.TOGGLE_FORM,

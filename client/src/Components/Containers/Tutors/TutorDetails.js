@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Accordion, AccordionDetails, AccordionSummary, Chip, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';

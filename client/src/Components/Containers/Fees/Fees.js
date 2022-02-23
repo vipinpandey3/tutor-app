@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Grid, makeStyles, Paper } from '@material-ui/core'
 import React, { createRef, useContext, useEffect, useState } from 'react'
 import Text from '../../Common/Text';
@@ -5,7 +6,6 @@ import FeesTable from './FeesTable';
 import MatButton from '../../Common/Button';
 import FeesForm from './FeesForm';
 import { FeesContext } from '../../../context/fees-context';
-import { saveAs } from 'file-saver'
 import FeesFileUpload from './FeesFileUpload';
 import {AiOutlineUpload} from 'react-icons/ai'
 
@@ -90,21 +90,6 @@ const Fees = () => {
                 })
         }
     }
-
-    // useEffect(() => {
-    //     // console.log("value, ", typeof(parseInt(searchValue)));
-    //     // if(searchValue) {
-    //     //     const newData = feesData.filter(data => {
-    //     //         console.log('Log', data);
-    //     //         if(parseInt(searchValue) === parseInt(data.studentId) || data.studentName.includes(searchValue) ) {
-    //     //             return data
-    //     //         }
-    //     //     })
-    //     //     setFeesPaidData(newData)
-    //     // } else {
-    //     //     setFeesPaidData(feesData)
-    //     // }
-    // }, [searchRef]);
 
     useEffect(() => {
         fetchFees()

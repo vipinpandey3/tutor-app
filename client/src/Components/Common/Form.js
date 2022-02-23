@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable no-lone-blocks */
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
@@ -25,7 +26,7 @@ const Form = (props) => {
 
   
   const { initialFormValues, formComponent, addValues, items, selectOptions, resetForm, formDetails, updateDetails } = props;
-  const { values, errors, handleInputChange, handleDateChange, dateValue } =
+  const { values, errors, handleInputChange, dateValue } =
     useForm(initialFormValues);
 
   const formSubmitHandler = (e) => {

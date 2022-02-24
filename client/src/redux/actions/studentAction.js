@@ -155,9 +155,9 @@ export const editStudentFormFields = () => {
                     payload: {
                         studentFormFields: formFieldsData.formFields,
                         formDetails: {
-                            formName: "Add Student",
-                            buttonName: "Submit",
-                            editFlag: false
+                            formName: "Update Student",
+                            buttonName: "Update",
+                            editFlag: true
                         },
                         loading: false,
                         message: formFieldsData.resultLong,
@@ -192,6 +192,67 @@ export const editStudentFormFields = () => {
                     loading: false,
                     error: false,
                     message: "Error while getting student form"
+                }
+            })
+        }
+    }
+}
+
+export const addStudent = (studentData) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+
+        const addData = async() => {
+            const response = await axios.post('/admin/add-student', studentData)
+            if(response.statusText !== "OK") {
+                throw new Error('Could not add student in the database!');
+            }
+            return response.data;
+        }
+
+        try {
+            const addStudentData = await addData();
+            if(addStudentData.resultShort === 'success') {
+                dispatch({
+                    type: types.ADD_STUDENT,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        message: addStudentData.resultLong,
+                        showForm: false,
+                        formDetails: {
+                            formName: "",
+                            buttonName: "",
+                            editFlag: false
+                        }
+                    }
+                })
+                getStudents()
+            } else {
+                dispatch({
+                    type: types.ADD_STUDENT_ERROR,
+                    payload: {
+                        loading: false,
+                        error: true,
+                        message: addStudentData.resultLong,
+                        showForm: true
+                    }
+                })
+            }
+        } catch (error) {
+            console.log("Error adding student in database", error)
+            dispatch({
+                type: types.ADD_STUDENT_ERROR,
+                payload: {
+                    loading: false,
+                    error: true,
+                    message: "Error adding student in database",
+                    showForm: true
                 }
             })
         }

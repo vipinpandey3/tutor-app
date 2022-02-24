@@ -5,7 +5,7 @@ import {
   Paper,
   Toolbar,
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import Input from "../../Common/Input";
 import Table from "../../Common/Table";
@@ -13,11 +13,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import MatButton from "../../Common/Button";
 import AddIcon from "@material-ui/icons/Add";
 import StudentForm from "./StudentForm";
-import { StudentContext } from "../../../context/student-context";
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import {getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields} from '../../../redux/actions/studentAction'
+import {addStudent, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields} from '../../../redux/actions/studentAction'
 // import Loader from '../../Common/Loader'
 
 
@@ -42,10 +41,9 @@ const initialcFormValues = {
   dob: moment().format('YYYY-MM-DD'),
   stream: 'Common',
 };
-const Students = ({student: {students, loading, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields}) => {
+const Students = ({student: {students, loading, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent}) => {
   const history = useHistory();
   const classes = useStyles();
-  const { addStudent} = useContext(StudentContext);
   const [formValues, setFormValues] = useState(initialcFormValues)
   const [filterFunction, setFilterFunction] = useState({
     fn: (item) => {
@@ -143,7 +141,8 @@ Students.propTypes = {
   student: PropTypes.object.isRequired,
   fetchStudentFormFields: PropTypes.func.isRequired,
   toggleForm: PropTypes.func.isRequired,
-  editStudentFormFields: PropTypes.func.isRequired
+  editStudentFormFields: PropTypes.func.isRequired,
+  addStudent: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -153,4 +152,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps, {getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields})(Students);
+export default connect(mapStateToProps, {getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent})(Students);

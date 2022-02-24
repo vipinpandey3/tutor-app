@@ -80,7 +80,30 @@ const studentReducer = (state = intitialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
                 error: action.payload.error
-            }
+            };
+
+        case types.ADD_STUDENT:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                formDetails: {
+                    formName: action.payload.formDetails.formName,
+                    buttonTitle: action.payload.formDetails.buttonName,
+                    editFlag: action.payload.formDetails.editFlag
+                },
+                showForm: action.payload.showForm
+            };
+
+        case types.ADD_STUDENT_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showForm: action.payload.showForm
+            };
 
         default:
             return state

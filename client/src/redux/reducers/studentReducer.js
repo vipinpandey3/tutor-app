@@ -6,10 +6,10 @@ const intitialState = {
         studentTableAttributes: []
     },
     studentFormFields: [],
-    showForm: true,
+    showForm: false,
     formDetails: {
         formName: "",
-        buttonName: "",
+        buttonTitle: "",
         editFlag: false
     },
     parentFormFields: [],
@@ -33,10 +33,15 @@ const studentReducer = (state = intitialState, action) => {
             return {
                 ...state,
                 loading: true
+            };
+
+        case types.TOGGLE_FORM:
+            return {
+                ...state,
+                showForm: action.payload
             }
 
         case types.FETCH_STUDENTS:
-            console.log('Action.paylad', action.payload)
             return {
                 ...state,
                 students: {
@@ -53,6 +58,28 @@ const studentReducer = (state = intitialState, action) => {
                 loading: false,
                 error: action.payload.error,
                 message: action.payload.message
+            };
+
+        case types.FETCH_STUDENT_FORM:
+            return {
+                ...state,
+                formDetails: {
+                    formName: action.payload.formDetails.formName,
+                    buttonTitle: action.payload.formDetails.buttonName,
+                    editFlag: false
+                },
+                studentFormFields: action.payload.studentFormFields,
+                loading: action.payload.loading,
+                message: action.payload.message,
+                showForm: action.payload.showForm
+            };
+
+        case types.FETCH_STUDENT_FORM_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                message: action.payload.message,
+                error: action.payload.error
             }
 
         default:

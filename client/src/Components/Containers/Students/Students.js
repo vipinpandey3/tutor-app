@@ -17,8 +17,8 @@ import { StudentContext } from "../../../context/student-context";
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import {getStudents} from '../../../redux/actions/studentAction'
-import Loader from '../../Common/Loader'
+import {getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields} from '../../../redux/actions/studentAction'
+// import Loader from '../../Common/Loader'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -42,37 +42,19 @@ const initialcFormValues = {
   dob: moment().format('YYYY-MM-DD'),
   stream: 'Common',
 };
-const Students = ({student: {students, loading}, getStudents}) => {
+const Students = ({student: {students, loading, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields}) => {
   const history = useHistory();
   const classes = useStyles();
-  // const [students, setStudents] = useState({
-  //   studentRows: [],
-  //   studenetTableAttributes: []
-  // })
-  const { fetchStudents, addStudent, studentFormFields} = useContext(StudentContext);
-  const [showForm, setForm] = useState(false);
-  const [formFields, setFormFields] = useState([])
+  const { addStudent} = useContext(StudentContext);
+  const [formValues, setFormValues] = useState(initialcFormValues)
   const [filterFunction, setFilterFunction] = useState({
     fn: (item) => {
       return item;
     },
   });
 
-  const [formTitle, setFormTitle] = useState({
-    title: 'Create Student',
-    buttonTitle: 'Submit'
-  })
-
   const loadUsers = () => {
-    console.log('toggleForm button clicked')
     getStudents();
-    // fetchStudents()
-    //   .then(result => {
-    //     setStudents({
-    //       studentRows: result.students,
-    //       studenetTableAttributes: result.attributes
-    //     })
-    //   })
   }
 
   useEffect(() => {
@@ -82,31 +64,33 @@ const Students = ({student: {students, loading}, getStudents}) => {
   const searchUser = (event) => {};
 
   const loadForm = () => {
-    studentFormFields()
-      .then(result => {
-        setFormFields(result.formFields)
-        setForm(true)
-      })
+    fetchStudentFormFields()
   };
 
-  const toggleForm = (flag) => {
-    setForm(flag)
+  const showHideForm = (flag) => {
+    toggleForm(flag)
+    setFormValues(initialcFormValues)
   }
 
   const redirectToStudentDetailsPage = (studentId) => {
     history.push(`/students/${studentId}`);
   };
 
+  const editStudent= (row) => {
+    editStudentFormFields();
+    setFormValues(row)
+  }
+
   return (
     <>
       {/* <Loader /> */}
       {showForm && (
           <StudentForm 
-            initialcFormValues={initialcFormValues} 
-            formTitle={formTitle}
+            initialcFormValues={formValues} 
+            formTitle={formDetails}
             addStudent={addStudent}
-            formFields={formFields}
-            toggleForm={toggleForm}
+            formFields={studentFormFields}
+            toggleForm={showHideForm}
             loadUsers={loadUsers}
           />
       )}
@@ -145,8 +129,7 @@ const Students = ({student: {students, loading}, getStudents}) => {
           students.studentTableAttributes && students.studentTableAttributes.length > 0 &&  <Table
             records={students.studentTablerows}
             headCells={students.studentTableAttributes}
-            filterFunction={filterFunction}
-            openInPopup={loadForm}
+            edit={editStudent}
             redirectToDetailsPage={redirectToStudentDetailsPage}
           />
         }
@@ -157,7 +140,10 @@ const Students = ({student: {students, loading}, getStudents}) => {
 
 Students.propTypes = {
   getStudents: PropTypes.func.isRequired,
-  student: PropTypes.object.isRequired
+  student: PropTypes.object.isRequired,
+  fetchStudentFormFields: PropTypes.func.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+  editStudentFormFields: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -167,4 +153,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps, {getStudents})(Students);
+export default connect(mapStateToProps, {getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields})(Students);

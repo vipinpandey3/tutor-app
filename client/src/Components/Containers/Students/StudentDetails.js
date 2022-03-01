@@ -102,18 +102,6 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
   const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
 
-  // const [parentFormDetails, setParentFormDetails] = useState({
-  //   title: "Add Parents",
-  //   buttonName: 'Submit',
-  //   editFlag: false
-  // })
-
-  // const [educationFormDetails, setEducationFormDetails] = useState({
-  //   title: "Add Education Details",
-  //   buttonName: "Submit",
-  //   editFlag: false
-  // })
-
   const loadStudentDteails = () => {
     fetchStudentDetails(studentId)
   }
@@ -179,21 +167,19 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
     <>
       <Paper className={`${styles.paperContent} `}>
         <Grid container>
-          {studentDetails.studentDetailAttributes.map(atributes => {
+          {studentDetails.studentDetailAttributes.map((atributes, index) => {
             return (
-              <>
-                <Grid item xs={atributes.size} className={styles[atributes.class]}>
-                  <Text>
-                    {atributes.name}: 
-                  </Text>
-                  <Text variant="subtitle1" component="h6" className={styles.block}>
-                    {
-                      studentDetails.details[atributes.id] ? 
-                      studentDetails.details[atributes.id] : "-"
-                    }
-                  </Text>
-                </Grid>
-              </>
+              <Grid key={index} item xs={atributes.size} className={styles[atributes.class]}>
+                <Text>
+                  {atributes.name}: 
+                </Text>
+                <Text variant="subtitle1" component="h6" className={styles.block}>
+                  {
+                    studentDetails.details[atributes.id] ? 
+                    studentDetails.details[atributes.id] : "-"
+                  }
+                </Text>
+              </Grid>
             )
           })}
         </Grid>
@@ -233,29 +219,25 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
             </MatButton>
           </Grid>
           {studentDetails.parentDetails ? (
-            <>
-              <Grid container>
-                {
-                  studentDetails.parentDetailsAttributes.map((atributes) => {
-                    return (
-                      <>
-                        <Grid item xs={atributes.size} className={`${styles[atributes.class]} pt_5`}>
-                          <Text>
-                            {atributes.name}: 
-                          </Text>
-                          <Text variant="subtitle1" component="h6" className={styles.block}>
-                            {
-                              studentDetails.parentDetails[atributes.id] ? 
-                              studentDetails.parentDetails[atributes.id] : "-"
-                            }
-                          </Text>
-                        </Grid>
-                      </>
-                    )
-                  })
-                }
-              </Grid>
-            </>
+            <Grid container>
+              {
+                studentDetails.parentDetailsAttributes.map((attributes) => {
+                  return (
+                    <Grid key={attributes.id} item xs={attributes.size} className={`${styles[attributes.class]} pt_5`}>
+                      <Text>
+                        {attributes.name}: 
+                      </Text>
+                      <Text variant="subtitle1" component="h6" className={styles.block}>
+                        {
+                          studentDetails.parentDetails[attributes.id] ? 
+                          studentDetails.parentDetails[attributes.id] : "-"
+                        }
+                      </Text>
+                    </Grid>
+                  )
+                })
+              }
+            </Grid>
           ) : (
             <p>No Details found</p>
           )}
@@ -371,7 +353,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
         </Grid>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow key="Header">
               {feesDetails.feesTableHeaders.map((header, index) => {
                 return (
                   <TableCell key={index}>{header.label}</TableCell>
@@ -392,14 +374,14 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
                 </TableRow>
               )
             })}
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell style={{ textAlign: "right" }}>Total Paid</TableCell>
-              <TableCell>{totalPaid}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+            <TableRow key="lastRow">
+              <TableCell key="empty1"></TableCell>
+              <TableCell key="empty2"></TableCell>
+              <TableCell key="empty3"></TableCell>
+              <TableCell key="totalPaid" style={{ textAlign: "right" }}>Total Paid</TableCell>
+              <TableCell key="empty4">{totalPaid}</TableCell>
+              <TableCell key="empty5"></TableCell>
+              <TableCell key="empty6"></TableCell>
             </TableRow>
           </TableBody>
         </Table>

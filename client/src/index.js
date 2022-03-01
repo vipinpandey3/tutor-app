@@ -13,17 +13,17 @@ import store from './redux/store'
 
 ReactDOM.render(
   <Provider store={store}>
+    <React.StrictMode>
     <DashboardContextProvider>
-      <StudentContextPorvider>
-        <FeesContextProvider>
-          <ExamContextProvider>
-            <Router>
-              <App />
-            </Router>
-          </ExamContextProvider>
-        </FeesContextProvider>
-      </StudentContextPorvider>
+      <FeesContextProvider>
+        <ExamContextProvider>
+          <Router>
+            <App />
+          </Router>
+        </ExamContextProvider>
+      </FeesContextProvider>
     </DashboardContextProvider>
+    </React.StrictMode>
   </Provider>,
   document.getElementById("root")
 );

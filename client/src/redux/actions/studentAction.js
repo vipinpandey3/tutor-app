@@ -500,7 +500,7 @@ export const addParentDetails = (parentsValue) => {
     }
 }
 
-export const fetchStudentEducationFormfields = () => {
+export const fetchStudentEducationFormfields = (editObj) => {
     return async(dispatch) => {
         dispatch({
             type: types.SET_LOADING,
@@ -532,9 +532,9 @@ export const fetchStudentEducationFormfields = () => {
                             educationFormFields: educationFormFieldData.formFields
                         },
                         formDetails: {
-                            formName: "Add Education Details",
-                            buttonTitle: "Submit",
-                            editFlag: false
+                            formName: editObj.formName,
+                            buttonTitle: editObj.buttonTitle,
+                            editFlag: editObj.editFlag
                         }
                     }
                 })
@@ -582,7 +582,7 @@ export const addStudeEducationDetails = (values) => {
 
         try {
             const educationData = await addData();
-            if(educationData.resultShort === 'succes') {
+            if(educationData.resultShort === 'success') {
                 dispatch({
                     type: types.ADD_STUDENT_EDUCATION_DATA,
                     payload: {
@@ -616,6 +616,62 @@ export const addStudeEducationDetails = (values) => {
                     message: "Error while fetching student education details",
                     error: true,
                     showForm: false
+                }
+            })
+        }
+    }
+}
+
+export const fetchStudentFeesDetails = (studentId) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        const getData = async() => {
+            const response = await axios.get(`/admin/getFeesDetailsById/${studentId}`);
+
+            if(response.statusText !== "OK") {
+                throw new Error('Could not fetch fees details!');
+            }
+            return response.data
+        }
+        
+        try {
+            const feesData = await getData();
+            if(feesData.resultShort === 'success') {
+                dispatch({
+                    type: types.FETCH_STUDENT_FEES_DATA,
+                    payload: {
+                        error: false, 
+                        loading: false,
+                        message: feesData.resultLong,
+                        feesDetails: {
+                            feesTableHeaders: feesData.header,
+                            feesDetailsRow: feesData.fees,
+                        }
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.FETCH_STUDENT_FEES_DATA_ERROR,
+                    payload: {
+                        error: true, 
+                        loading: false,
+                        message: feesData.resultLong
+                    }
+                })
+            }
+        } catch (error) {
+            console.log("Error while fetching fees", error)
+            dispatch({
+                type: types.FETCH_STUDENT_FEES_DATA_ERROR,
+                payload: {
+                    error: true, 
+                    loading: false,
+                    message: "Error while fetching fees for student with Id: " + studentId
                 }
             })
         }

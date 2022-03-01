@@ -1,12 +1,9 @@
-import React, { useContext } from 'react';
-import { StudentContext } from '../../../context/student-context';
+import React from 'react';
 import Form from '../../Common/Form';
-// import { studentEducationForms, studentEducationInitialValue } from './StudentsRecords';
 
 
 export const ParentForms = (props) => {
-    const { setShowParentForm, error, studentId, showForm, formFields, setFormValue, parentFormInitialValue, formDetails, addParentDetails, hideForm} = props
-    const {addParent, updateParents} = useContext(StudentContext);
+    const { error, studentId, showForm, formFields, setFormValue, parentFormInitialValue, formDetails, addParentDetails, hideForm} = props
     
     const addParentData = (value, dateValue) => {
         value.studentId = studentId
@@ -60,8 +57,7 @@ export const ParentForms = (props) => {
 }
 
 export const StudentEducationForms = (props) => {
-    const {setShowEdutionForm, studentId, showForm, error, formFields, formDetails, setFormDetails, educationFormIntialValue, loadStudentDteails, hideForm, addStudeEducationDetails, setFormValue} = props;
-    const { storStudentEducationDetails, updateStudentEducationDetails } = useContext(StudentContext)
+    const { studentId, showForm, error, formFields, formDetails, educationFormIntialValue, hideForm, addStudeEducationDetails, setFormValue} = props;
     const addStudentEducationDetails = (value) => {
         value.studentId = studentId;
         addStudeEducationDetails(value)

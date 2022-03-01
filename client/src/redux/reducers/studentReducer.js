@@ -26,7 +26,12 @@ const intitialState = {
     },
     loading: false,
     error: false,
-    message: ""
+    message: "",
+    feesDetails: {
+        feesTableHeaders: [],
+        feesDetailsRow: []
+    },
+    totalPaid: 0
 };
 
 const studentReducer = (state = intitialState, action) => {
@@ -211,8 +216,8 @@ const studentReducer = (state = intitialState, action) => {
                 },
                 formDetails: {
                     formName: action.payload.formDetails.formName,
-                    buttonTitle: action.payload.formFields.buttonTitle,
-                    editFlag: action.payload.formFields.editFlag
+                    buttonTitle: action.payload.formDetails.buttonTitle,
+                    editFlag: action.payload.formDetails.editFlag
                 }
             };
         
@@ -246,10 +251,35 @@ const studentReducer = (state = intitialState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 showForm: action.payload.showForm
-            }
+            };
 
-        default:
-            return state
+    case types.FETCH_STUDENT_FEES_DATA:
+        const totalPaid = action.payload.feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
+            let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
+            return total;
+          }, 0);
+        return {
+            ...state,
+            loading: action.payload.loading,
+            error: action.payload.error,
+            message: action.payload.message,
+            feesDetails: {
+                feesTableHeaders: action.payload.feesDetails.feesTableHeaders,
+                feesDetailsRow: action.payload.feesDetails.feesDetailsRow
+            },
+            totalPaid: totalPaid
+        };
+
+    case types.FETCH_STUDENT_FEES_DATA_ERROR:
+        return {
+            ...state,
+            loading: action.payload.loading,
+            error: action.payload.error,
+            message: action.payload.message,
+        }
+
+    default:
+        return state
     }
 };
 

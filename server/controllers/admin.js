@@ -294,7 +294,7 @@ const addStudentEducationDetails = (req, res, next) => {
   })
     .then(details => {
       const response = {
-        resultShort: "succes",
+        resultShort: "success",
         resultLong: "Student Education details added"
       }
 
@@ -737,7 +737,6 @@ const updateTutorEducationById = (req) => {
   console.log("Req.body", JSON.stringify(req.body))
   return  models.TutorEducationDetails.update(req.body, {where: {id: req.body.id}})
     .then((updatedObj) => {
-      console.log("updatedObj =========>", updatedObj)
       return Promise.resolve(updatedObj)
     })
     .catch(error => {

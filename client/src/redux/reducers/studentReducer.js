@@ -276,6 +276,29 @@ const studentReducer = (state = intitialState, action) => {
             loading: action.payload.loading,
             error: action.payload.error,
             message: action.payload.message,
+        };
+
+    case types.UPDATE_STUDENT_EDUCATION_DETAILS:
+        return {
+            ...state,
+            loading: action.payload.loading,
+            error: action.payload.error,
+            message: action.payload.message,
+            showForm: action.payload.showForm,
+            formDetails: {
+                formName: action.payload.formDetails.formName,
+                buttonTitle: action.payload.formDetails.buttonTitle,
+                editFlag: action.payload.formDetails.editFlag
+            }
+        };
+
+    case types.UPDATE_STUDENT_EDUCATION_DETAILS_ERROR:
+        return {
+            ...state,
+            loading: action.payload.loading,
+            error: action.payload.error,
+            message: action.payload.message,
+            showForm: action.payload.showForm,
         }
 
     default:

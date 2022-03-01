@@ -620,6 +620,58 @@ export const addStudeEducationDetails = (values) => {
             })
         }
     }
+};
+
+export const updateEducationDetails = (values) => {
+    return async(dispatch) => {
+        const updateData = async () => {
+            const response = await axios.post('/admin/update-education-details', values)
+            if(response.statusText !== "OK") {
+                throw new Error('Could not fetch fees details!');
+            }
+            return response.data
+        }
+
+        try {
+            const updatedData = await updateData();
+            if(updatedData.resultShort === 'success') {
+                dispatch({
+                    type: types.UPDATE_STUDENT_EDUCATION_DETAILS,
+                    payload: {
+                        showForm: false,
+                        error: false,
+                        message: updatedData.resultLong,
+                        loading: false,
+                        formDetails: {
+                            formName: "",
+                            buttonTitle: "",
+                            editFlag: false
+                        }
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.UPDATE_STUDENT_EDUCATION_DETAILS_ERROR,
+                    payload: {
+                        showForm: true,
+                        error: true,
+                        message: updatedData.resultLong,
+                        loading: false
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.UPDATE_STUDENT_EDUCATION_DETAILS_ERROR,
+                payload: {
+                    showForm: true,
+                    error: true,
+                    message: error,
+                    loading: false
+                }
+            })
+        }
+    }
 }
 
 export const fetchStudentFeesDetails = (studentId) => {
@@ -632,7 +684,6 @@ export const fetchStudentFeesDetails = (studentId) => {
         })
         const getData = async() => {
             const response = await axios.get(`/admin/getFeesDetailsById/${studentId}`);
-
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch fees details!');
             }

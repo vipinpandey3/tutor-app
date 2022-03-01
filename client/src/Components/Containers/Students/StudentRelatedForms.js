@@ -57,7 +57,7 @@ export const ParentForms = (props) => {
 }
 
 export const StudentEducationForms = (props) => {
-    const { studentId, showForm, error, formFields, formDetails, educationFormIntialValue, hideForm, addStudeEducationDetails, setFormValue} = props;
+    const { studentId, showForm, error, formFields, formDetails, educationFormIntialValue, hideForm, addStudeEducationDetails, setFormValue, updateEducationDetails} = props;
     const addStudentEducationDetails = (value) => {
         value.studentId = studentId;
         addStudeEducationDetails(value)
@@ -66,7 +66,8 @@ export const StudentEducationForms = (props) => {
         }
     };
 
-    const updateEducationDetails = (values) => {
+    const updateDetails = (values) => {
+        updateEducationDetails(values)
         // updateStudentEducationDetails(values)
         //     .then(result => {
         //         if(result.resultShort && result.resultShort === 'success') {
@@ -100,7 +101,7 @@ export const StudentEducationForms = (props) => {
                 formComponent={formFields}
                 initialFormValues={educationFormIntialValue}
                 addValues={addStudentEducationDetails}
-                updateDetails={updateEducationDetails}
+                updateDetails={updateDetails}
                 formDetails={formDetails}
                 resetForm={() => {hideForm("educationDetailsForm", false)}}
             />   

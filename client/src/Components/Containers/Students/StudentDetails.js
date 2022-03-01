@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   AccordionSummary,
@@ -27,7 +27,8 @@ import {fetchParentFormFields,
   fetchEditParentFormFields, 
   fetchStudentEducationFormfields,
   addStudeEducationDetails,
-  fetchStudentFeesDetails
+  fetchStudentFeesDetails,
+  updateEducationDetails
 } from "../../../redux/actions/studentAction"
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
@@ -93,7 +94,7 @@ const educationInitialValue = {
   percentage: "",
 };
 
-const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid}, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails}) => {
+const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails}) => {
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
@@ -101,17 +102,17 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
   const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
 
-  const [parentFormDetails, setParentFormDetails] = useState({
-    title: "Add Parents",
-    buttonName: 'Submit',
-    editFlag: false
-  })
+  // const [parentFormDetails, setParentFormDetails] = useState({
+  //   title: "Add Parents",
+  //   buttonName: 'Submit',
+  //   editFlag: false
+  // })
 
-  const [educationFormDetails, setEducationFormDetails] = useState({
-    title: "Add Education Details",
-    buttonName: "Submit",
-    editFlag: false
-  })
+  // const [educationFormDetails, setEducationFormDetails] = useState({
+  //   title: "Add Education Details",
+  //   buttonName: "Submit",
+  //   editFlag: false
+  // })
 
   const loadStudentDteails = () => {
     fetchStudentDetails(studentId)
@@ -205,9 +206,8 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
             error={error}
             studentId={studentId}
             formFields={formFields.parentFormFields}
-            formDetails={parentFormDetails}
+            formDetails={formDetails}
             parentFormInitialValue={parentIntitialValue}
-            setFormDetails={setParentFormDetails}
             hideForm={hideForm}
             setFormValue={setFormValue}
           />
@@ -265,13 +265,13 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
         <Paper className={styles.paperContent}>
           <StudentEducationForms
             addStudeEducationDetails={addStudeEducationDetails}
+            updateEducationDetails={updateEducationDetails}
             error={error}
             setFormValue={setFormValue}
             showForms={showForm}
             studentId={studentId}
             formFields={formFields.educationFormFields}
-            formDetails={educationFormDetails}
-            setFormDetails={setEducationFormDetails}
+            formDetails={formDetails}
             educationFormIntialValue={studentEducationInitialValue}
             hideForm={hideForm}
           />
@@ -417,7 +417,8 @@ StudentDetails.propTypes = {
   fetchEditParentFormFields: PropTypes.func.isRequired,
   fetchStudentEducationFormfields: PropTypes.func.isRequired,
   addStudeEducationDetails: PropTypes.func.isRequired,
-  fetchStudentFeesDetails: PropTypes.func.isRequired
+  fetchStudentFeesDetails: PropTypes.func.isRequired,
+  updateEducationDetails: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -426,4 +427,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails})(StudentDetails);
+export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails})(StudentDetails);

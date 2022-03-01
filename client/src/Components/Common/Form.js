@@ -23,8 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Form = (props) => {
   const classes = useStyles();
-
-  
   const { initialFormValues, formComponent, addValues, items, selectOptions, resetForm, formDetails, updateDetails } = props;
   const { values, errors, handleInputChange, dateValue } =
     useForm(initialFormValues);
@@ -43,7 +41,7 @@ const Form = (props) => {
       <Grid container>
           <Grid item xs={3}>
             <Text variant="subtitle1">
-              {formDetails.title}
+              {formDetails.formName}
             </Text>
           </Grid>
         </Grid>
@@ -123,7 +121,7 @@ const Form = (props) => {
         <Grid item xs={12}>
           <div>
             <MatButton text="Submit" type="submit">
-              {formDetails.buttonName}
+              {formDetails.buttonTitle}
             </MatButton>
             <MatButton text="Reset" color="default" onClick={resetForm}>
               Reset
@@ -136,60 +134,3 @@ const Form = (props) => {
 };
 
 export default Form;
-
-
-
-
-
-
-
-
-
-
-
-{/* {formComponent.map((formElement) => {
-            if (formElement.type === "radio") {
-              return (
-                <RadioGroup
-                  key={formElement.id}
-                  name="gender"
-                  value={values[formElement.name]}
-                  onChange={handleInputChange}
-                  label="Gender"
-                  items={items}
-                />
-              );
-            } else if (formElement.type === "select") {
-              return (
-                <Select
-                  key={formElement.id}
-                  name="departmentId"
-                  label="Department"
-                  value={values[formElement.name]}
-                  onChange={handleInputChange}
-                  error={errors.departmentId}
-                  options={selectOptions}
-                />
-              );
-            } else if (formElement.type === "date") {
-              return (
-                <DatePicker
-                  key={formElement.id}
-                  name="hireDate"
-                  label="Hire Date"
-                  value={values.hireDate}
-                  onChange={handleInputChange}
-                />
-              );
-            } else if (formElement.type === "checkbox") {
-              return (
-                <Checkbox
-                  key={formElement.id}
-                  name="isPermanent"
-                  label="Permanent Faculty"
-                  value={values.isPermanent}
-                  onChange={handleInputChange}
-                />
-              );
-            }
-          })} */}

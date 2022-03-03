@@ -8,6 +8,12 @@ import FeesForm from './FeesForm';
 import { FeesContext } from '../../../context/fees-context';
 import FeesFileUpload from './FeesFileUpload';
 import {AiOutlineUpload} from 'react-icons/ai'
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import {
+    fetchFeesFormFields, 
+    fetchFeesDetails
+} from '../../../redux/actions/feesAction';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -32,28 +38,22 @@ const initiateFeesFormValue = {
     StudentId: ""
 }
 
-const Fees = () => {
+const Fees = ({fees: {formDetails, formFields, error, loading, message, feesDetails, showFileImport}, fetchFeesFormFields, fetchFeesDetails}) => {
     const styles = useStyles()
     const [showFeesForm, setShowFeesForm] = useState(false);
     // const [searchValue, setSearchValue] = useState('')
     const searchRef = createRef()
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
-    const {fetchFees, fetchFeesFormFields, addFeesIntoDatabase, searchFees, downloadFeesbyId} = useContext(FeesContext);
-    const [formFields, setFormFields] = useState([])
-    const [feesDetails, setFeesDetails] = useState({
-        attributes: [],
-        feesData: []
-    });
-    const [showFileImport, setShowFileImport] = useState(false);
+    const {fetchFees, addFeesIntoDatabase, searchFees, downloadFeesbyId} = useContext(FeesContext);
+    // const [showFileImport, setShowFileImport] = useState(false);
 
     const getFormFields = () => {
-        fetchFeesFormFields()
-            .then(result => {
-                setFormFields(result.formFields)
-            })
-            .catch(err => {
-                console.log('Err', err)
-            })
+        const postObj = {
+            formName: "Add Fees",
+            buttonName: "Add",
+            editFlag: false
+        }
+        fetchFeesFormFields(postObj)
     }
 
     const hadleFeesForm = () => {
@@ -78,30 +78,21 @@ const Fees = () => {
 
     const searchPaidFees = (event) => {
         if (event.code === 'Enter') {
-            searchFees(searchRef.current.value)
-                .then(result => {
-                    setFeesDetails({
-                        ...feesDetails,
-                        feesData: result.feesArray
-                    })
-                })
-                .catch(err => {
-                    console.log('err', err);
-                })
+            // searchFees(searchRef.current.value)
+            //     .then(result => {
+            //         setFeesDetails({
+            //             ...feesDetails,
+            //             feesData: result.feesArray
+            //         })
+            //     })
+            //     .catch(err => {
+            //         console.log('err', err);
+            //     })
         }
     }
 
     useEffect(() => {
-        fetchFees()
-            .then(result => {
-                setFeesDetails({
-                    attributes: result.feeAttributes,
-                    feesData: result.feesDetails
-                })
-            })
-            .catch(err => {
-                console.log('err', err)
-            })
+        fetchFeesDetails()
     }, [])
 
     const downloadReciept = (data) => {
@@ -135,13 +126,13 @@ const Fees = () => {
     }
 
     const handleUpload = () => {
-        setShowFileImport(true)
+        // setShowFileImport(true)
     }
 
     return (
         <>
             {showFeesForm && <FeesForm formTitle="Fees Details" setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
-            {showFileImport && <FeesFileUpload setShowFileImport={setShowFileImport} />}
+            {/* {showFileImport && <FeesFileUpload setShowFileImport={setShowFileImport} />} */}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={3}>
@@ -164,4 +155,16 @@ const Fees = () => {
     )
 }
 
-export default Fees
+Fees.propTypes = {
+    fetchFeesFormFields: PropTypes.func.isRequired,
+    fetchFeesDetails: PropTypes.func.isRequired,
+    fees: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => {
+    return {
+        fees: state.fees
+    }
+}
+
+export default connect(mapStateToProps, {fetchFeesFormFields, fetchFeesDetails})(Fees)

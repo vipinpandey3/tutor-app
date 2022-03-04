@@ -56,9 +56,9 @@
                 "type": "input"
             },
             {
-                "id": "studentName",
-                "name": "studentName",
-                "label": "Student Name",
+                "id": "academicYear",
+                "name": "Academic Year",
+                "label": "Academic year",
                 "type": "input"
             },
             {

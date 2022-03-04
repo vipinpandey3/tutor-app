@@ -16,15 +16,9 @@ const FeesFileUpload = (props) => {
     const [file, setFile] = useState();
     const [fileName, setFileName] = useState("");
     const styles = useStyles();
-    const {setShowFileImport} = props
-    const {uploadFile} = useContext(FeesContext);
-    // const [fileInput, setFileInput] = useState(null);
+    const {toggleUploadSection, uploadFile} = props;
 
     const fileInput = useRef(null)    
-
-    // const handleFileInput = (e) => {
-    //     setFileInput(e.target)
-    // }
 
     const saveFile = (e) => {
         setFile(e.target.files[0]);
@@ -32,7 +26,7 @@ const FeesFileUpload = (props) => {
       };
 
     const hadleFeesForm = (e) => {
-        // console.log('FileInput', fileInput.current.files[0]);
+        console.log('FileInput', file);
         const formData = new FormData();
         formData.append("file", file);
         formData.append("fileName", fileName);
@@ -43,16 +37,19 @@ const FeesFileUpload = (props) => {
     return (
         <Paper className={styles.paperContent}>
             <Grid>
-                <form onSubmit={hadleFeesForm} style={{display: "flex"}}>
-                    <Grid item xs={9} >
+                {/* <form onSubmit={hadleFeesForm} style={{display: "flex"}}> */}
+                    <Grid item xs={6} >
                         {/* <input type="file" onChange={saveFile} className="fileInput" /> */}
                     {/* <input type="file" ref={fileInput} /> */}
                     <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput"  type="file" onChange={saveFile} />
                     </Grid>
                     <Grid item xs={3}>
-                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }}>Upload File</MatButton>
+                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }} onClick={hadleFeesForm}>Upload File</MatButton>
                     </Grid>
-                </form>
+                    <Grid item xs={3}>
+                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }} onClick={() => toggleUploadSection(false)}>Cancel</MatButton>
+                    </Grid>
+                {/* </form> */}
             </Grid>
         </Paper>
     )

@@ -12,7 +12,10 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import {
     fetchFeesFormFields, 
-    fetchFeesDetails
+    fetchFeesDetails,
+    addFeesDetails,
+    toggleUploadSection,
+    uploadFile
 } from '../../../redux/actions/feesAction';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,7 +41,7 @@ const initiateFeesFormValue = {
     StudentId: ""
 }
 
-const Fees = ({fees: {formDetails, formFields, error, loading, message, feesDetails, showFileImport}, fetchFeesFormFields, fetchFeesDetails}) => {
+const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm, feesDetails, showFileImport}, uploadFile, addFeesDetails, fetchFeesFormFields, fetchFeesDetails, toggleUploadSection}) => {
     const styles = useStyles()
     const [showFeesForm, setShowFeesForm] = useState(false);
     // const [searchValue, setSearchValue] = useState('')
@@ -58,22 +61,11 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, feesDeta
 
     const hadleFeesForm = () => {
         getFormFields();
-        setShowFeesForm(true);
     }
 
     const getFeesFormValue = (value) => {
         value.balance = parseInt(value.feesAmount) - (parseInt(value.paidAmount) + parseInt(value.discount));
-        addFeesIntoDatabase(value)
-            .then(result => {
-                if(result && result.resultShort === "success") {
-                    setShowFeesForm(false);
-                } else {
-                    setShowFeesForm(true);
-                }
-            })
-            .catch((err) => {
-                console.log("Error while adding Fees", err)
-            })
+        addFeesDetails(value)
     }
 
     const searchPaidFees = (event) => {
@@ -126,13 +118,13 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, feesDeta
     }
 
     const handleUpload = () => {
-        // setShowFileImport(true)
+        toggleUploadSection(true)
     }
 
     return (
         <>
-            {showFeesForm && <FeesForm formTitle="Fees Details" setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
-            {/* {showFileImport && <FeesFileUpload setShowFileImport={setShowFileImport} />} */}
+            {showForm && <FeesForm formDetails={formDetails} setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
+            {showFileImport && <FeesFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={3}>
@@ -158,7 +150,10 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, feesDeta
 Fees.propTypes = {
     fetchFeesFormFields: PropTypes.func.isRequired,
     fetchFeesDetails: PropTypes.func.isRequired,
-    fees: PropTypes.object.isRequired
+    fees: PropTypes.object.isRequired,
+    addFeesDetails: PropTypes.func.isRequired,
+    toggleUploadSection: PropTypes.func.isRequired,
+    uploadFile: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -167,4 +162,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {fetchFeesFormFields, fetchFeesDetails})(Fees)
+export default connect(mapStateToProps, {uploadFile, fetchFeesFormFields, fetchFeesDetails, addFeesDetails, toggleUploadSection})(Fees)

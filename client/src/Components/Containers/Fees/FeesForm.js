@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FeesForm = (props) => {
   const styles = useStyles();
-  const { formTitle, initiateFeesFormValue, feesInput, getFeesFormValue, setShowFeesForm } =
+  const { formDetails, initiateFeesFormValue, feesInput, getFeesFormValue, setShowFeesForm } =
     props;
   const [feesFormValue, setFeesFormValue] = useState(initiateFeesFormValue);
 
@@ -46,7 +46,7 @@ const FeesForm = (props) => {
           <Grid container>
             <Grid item xs={3}>
               <Text variant="subtitle1" component="h6">
-                {formTitle}
+                {formDetails.formName}
               </Text>
             </Grid>
           </Grid>
@@ -114,7 +114,7 @@ const FeesForm = (props) => {
                 type="submit"
                 size="large"
               >
-                Generate Bill
+                {formDetails.formButton}
               </MatButton>
             </Grid>
           </Grid>

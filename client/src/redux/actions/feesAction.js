@@ -65,6 +65,12 @@ export const fetchFeesFormFields = (postObj) => {
 
 export const fetchFeesDetails = () => {
     return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
         const getData = async() => {
             const response = await axios.get('/admin/getAllFees');
             if(response.statusText !== "OK") {
@@ -106,6 +112,126 @@ export const fetchFeesDetails = () => {
                 payload: {
                     loading: false,
                     error: true,
+                    message: error
+                }
+            })
+        }
+    }
+};
+
+export const addFeesDetails = (postObj) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        const addData = async() => {
+            const response = await axios.post('/admin/add-feesDetails', postObj);
+            if(response.statusText !== "OK") {
+                throw new Error('Could not add fees details!');
+            };
+            return response.data
+        };
+
+        try {
+            const addedData = await addData();
+            if(addedData.resultShort === 'success') {
+                dispatch({
+                    type: types.ADD_FEES,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        messgae: addedData.resultLong,
+                        showForm: false,
+                        formDetails: {
+                            formName: "",
+                            buttonName: "",
+                            editFlag: false
+                        }
+                    }
+                })
+                fetchFeesDetails();
+            } else {
+                dispatch({
+                    type: types.ADD_FEES_ERROR,
+                    payload: {
+                        loading: false,
+                        error: true,
+                        messgae: addedData.resultLong,
+                        showForm: true
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.ADD_FEES_ERROR,
+                payload: {
+                    loading: false,
+                    error: true,
+                    messgae: error,
+                    showForm: true
+                }
+            })
+        }
+    }
+}
+
+export const toggleUploadSection = (flag) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.TOGGLE_IMPORT,
+            payload: flag
+        })
+    }
+}
+
+export const uploadFile = (postObj) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+
+        const uploadData = async() => {
+            const response = await axios.post('/faculty/uploadFile', postObj)
+            if(response.statusText !== "OK") {
+                throw new Error('Error uploading fees data!');
+            };
+            return response.data
+        }
+
+        try {
+            const uplaodedData = await uploadData();
+            if(uplaodedData) {
+                dispatch({
+                    type: types.UPLOAD_FILE,
+                    payload: {
+                        error: false,
+                        loading: false,
+                        message: uplaodedData.resultLong,
+                        showFileImport: false
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.UPLOAD_FILE_ERROR,
+                    payload: {
+                        error: true,
+                        loading: false,
+                        message: uplaodedData.resultLong
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.UPLOAD_FILE_ERROR,
+                payload: {
+                    error: true,
+                    loading: false,
                     message: error
                 }
             })

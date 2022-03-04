@@ -26,7 +26,7 @@ const feesReducer = (state = initialState, action) => {
                 message: action.payload.message,
                 formDetails: {
                     formName: action.payload.formDetails.formName,
-                    formButton: action.payload.formDetails.formButton,
+                    formButton: action.payload.formDetails.buttonName,
                     editFlag: action.payload.formDetails.editFlag
                 },
                 formFields: action.payload.formFields
@@ -55,6 +55,51 @@ const feesReducer = (state = initialState, action) => {
             };
 
         case types.FETCH_FEES_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
+            };
+        case types.ADD_FEES: 
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showForm: action.payload.showForm,
+                formDetails: {
+                    formName: action.payload.formDetails.formName,
+                    formButton: action.payload.formDetails.formButton,
+                    editFlag: action.payload.formDetails.editFlag
+                }
+            };
+
+        case types.ADD_FEES_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showForm: action.payload.showForm
+            };
+
+        case types.TOGGLE_IMPORT:
+            return {
+                ...state,
+                showFileImport: action.payload
+            };
+
+        case types.UPLOAD_FILE:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showFileImport: action.payload.showFileImport
+            };
+
+        case types.UPLOAD_FILE_ERROR:
             return {
                 ...state,
                 loading: action.payload.loading,

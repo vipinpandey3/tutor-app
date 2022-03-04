@@ -450,7 +450,6 @@ const getAllFeesData = () => {
         for (let i = 0; i < fees.length; i++) {
           models.Student.findByPk(fees[i].StudentId)
             .then(student => {
-              console.log("Students =========>", student)
               feesItem = {
                 ...fees[i],
                 studentName: student.firstName + student.lastName,

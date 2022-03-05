@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Grid, makeStyles, Paper } from '@material-ui/core'
+import { Grid, TextField, makeStyles, Paper } from '@material-ui/core'
 import React, { createRef, useContext, useEffect, useState } from 'react'
 import Text from '../../Common/Text';
 import FeesTable from './FeesTable';
@@ -15,7 +15,9 @@ import {
     fetchFeesDetails,
     addFeesDetails,
     toggleUploadSection,
-    uploadFile
+    uploadFile,
+    searchFees,
+    downloadFeesbyId
 } from '../../../redux/actions/feesAction';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,13 +43,13 @@ const initiateFeesFormValue = {
     StudentId: ""
 }
 
-const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm, feesDetails, showFileImport}, uploadFile, addFeesDetails, fetchFeesFormFields, fetchFeesDetails, toggleUploadSection}) => {
+const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm, feesDetails, showFileImport}, searchFees, uploadFile, addFeesDetails, fetchFeesFormFields, fetchFeesDetails, toggleUploadSection, downloadFeesbyId}) => {
     const styles = useStyles()
     const [showFeesForm, setShowFeesForm] = useState(false);
     // const [searchValue, setSearchValue] = useState('')
     const searchRef = createRef()
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
-    const {fetchFees, addFeesIntoDatabase, searchFees, downloadFeesbyId} = useContext(FeesContext);
+    const {fetchFees, addFeesIntoDatabase} = useContext(FeesContext);
     // const [showFileImport, setShowFileImport] = useState(false);
 
     const getFormFields = () => {
@@ -70,16 +72,11 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm
 
     const searchPaidFees = (event) => {
         if (event.code === 'Enter') {
-            // searchFees(searchRef.current.value)
-            //     .then(result => {
-            //         setFeesDetails({
-            //             ...feesDetails,
-            //             feesData: result.feesArray
-            //         })
-            //     })
-            //     .catch(err => {
-            //         console.log('err', err);
-            //     })
+            if(searchRef.current.value !== "") {
+                searchFees(searchRef.current.value)
+            } else {
+                fetchFeesDetails()
+            }
         }
     }
 
@@ -89,23 +86,6 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm
 
     const downloadReciept = (data) => {
         downloadFeesbyId(data.uuid)
-            .then(result => {
-                const url = window.URL.createObjectURL(
-                    new Blob([result]),
-                  );
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.setAttribute(
-                    'download',
-                    `FileName.pdf`,
-                  );
-                  document.body.appendChild(link);
-                  link.click();
-                  link.parentNode.removeChild(link);
-            })
-            .catch((error) => {
-                console.log('err in file', error)
-            })
     }
 
     const editFees = (data) => {
@@ -153,7 +133,9 @@ Fees.propTypes = {
     fees: PropTypes.object.isRequired,
     addFeesDetails: PropTypes.func.isRequired,
     toggleUploadSection: PropTypes.func.isRequired,
-    uploadFile: PropTypes.func.isRequired
+    uploadFile: PropTypes.func.isRequired,
+    searchFees: PropTypes.func.isRequired,
+    downloadFeesbyId: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -162,4 +144,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {uploadFile, fetchFeesFormFields, fetchFeesDetails, addFeesDetails, toggleUploadSection})(Fees)
+export default connect(mapStateToProps, {downloadFeesbyId, searchFees, uploadFile, fetchFeesFormFields, fetchFeesDetails, addFeesDetails, toggleUploadSection})(Fees)

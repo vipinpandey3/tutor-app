@@ -238,3 +238,107 @@ export const uploadFile = (postObj) => {
         }
     }
 }
+
+export const searchFees = (searchParams) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        const getData = async() => {
+            const response = await axios.get(`/faculty/searchFees/${searchParams}`);
+            if(response.statusText !== "OK") {
+                throw new Error('Error while searching fees data!');
+            };
+            return response.data;
+        }
+
+        try {
+            const searchData = await getData();
+            if(searchData.resultShort === 'success') {
+                dispatch({
+                    type: types.SEACRH_FEES,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        message: searchData.resultLong,
+                        feesData: searchData.feesArray 
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.SEACRH_FEES_ERROR,
+                    payload: {
+                        error: true,
+                        loading: false,
+                        message: searchData.resultLong
+                    }
+                })
+            }
+        } catch (error) {
+            console.log("error while fees earch", error);
+            dispatch({
+                type: types.SEACRH_FEES_ERROR,
+                payload: {
+                    error: true,
+                    loading: false,
+                    message: error
+                }
+            })
+        }
+    }
+};
+
+export const downloadFeesbyId = (uuid) => {
+    return async(dispatch) => {
+        const getPDF = async() => {
+            const response = await axios.get(`/faculty/downloadFeesReciept/${uuid}`,  {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                },
+                responseType: 'blob'
+              });
+            if(response.statusText !== "OK") {
+                throw new Error('Error while searching fees data!');
+            };
+            console.log("response.data", response.data)
+            return response.data;
+        }
+
+        try {
+            const pdfData = await getPDF();
+            if(pdfData) {
+                dispatch({
+                    type: types.DOWNLOAD_FEES,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        result: pdfData,
+                        uuid: uuid
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.DOWNLOAD_FEES_ERROR,
+                    payload: {
+                        loading: false,
+                        error: true,
+                        message: "Error downloading fees PDF"
+                    }
+                })
+            }
+        } catch (error) {
+            console.log("Error while downloading fees PDF", error)
+            dispatch({
+                type: types.DOWNLOAD_FEES_ERROR,
+                payload: {
+                    loading: false,
+                    error: true,
+                    message: error
+                }
+            })
+        }
+    }
+}

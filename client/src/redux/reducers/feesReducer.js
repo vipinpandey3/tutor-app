@@ -106,6 +106,53 @@ const feesReducer = (state = initialState, action) => {
                 error: action.payload.error,
                 message: action.payload.message
             };
+
+        case types.SEACRH_FEES:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                feesDetails: {
+                    ...state.feesDetails,
+                    feesData: action.payload.feesData
+                }
+            };
+
+        case types.SEACRH_FEES_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
+            };
+
+        case types.DOWNLOAD_FEES:
+            const url = window.URL.createObjectURL(
+                new Blob([action.payload.result]),
+            );
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute(
+                'download',
+                `${action.payload.uuid}.pdf`,
+            );
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+            };
+
+        case types.DOWNLOAD_FEES_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
+            }
     
         default:
             return state;

@@ -12,18 +12,18 @@ const SubjectMaster = require('../models/subjectMatser');
 const models = require('../models/index')
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
-    console.log('Inside the getFeesDetailsBySearchParam function');
+    console.log('Inside the getFeesDetailsBySearchParam function', seacrchParams);
     const feesDetails = [];
     return new Promise((resolve, reject) => {
         FeesService.getFeesBySeacrhParams(seacrchParams)
             .then(feesarray => {
                 for (let i = 0; i < feesarray.length; i++) {
                     const element = feesarray[i];
-                    StudentService.getStudentById(element.studentId)
+                    StudentService.getStudentById(element.StudentId)
                     .then((student) => {
                         feesDetails.push({
-                            studentName: student.firstName + " " + student.lastName,
-                            id: student.aadharNo,
+                            studentName: student[0].firstName + " " + student[0].lastName,
+                            id: student[0].aadharNo,
                             FeesId: element.id,
                             uuid: element.uuid,
                             feesAmount: element.feesAmount,
@@ -40,7 +40,7 @@ const getFeesDetailsBySearchParam = (seacrchParams) => {
                 }
             })
             .catch(err => {
-                console.log('err')
+                console.log('err', err)
                 return reject(err);
             })
     })

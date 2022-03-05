@@ -3,8 +3,6 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
-import { StudentContextPorvider } from "./context/student-context";
-import { FeesContextProvider } from "./context/fees-context";
 import { ExamContextProvider } from "./context/exam-context";
 import { DashboardContextProvider } from "./context/dashboard-context";
 import {Provider} from 'react-redux'
@@ -14,15 +12,13 @@ import store from './redux/store'
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-    <DashboardContextProvider>
-      <FeesContextProvider>
+      <DashboardContextProvider>
         <ExamContextProvider>
           <Router>
             <App />
           </Router>
         </ExamContextProvider>
-      </FeesContextProvider>
-    </DashboardContextProvider>
+      </DashboardContextProvider>
     </React.StrictMode>
   </Provider>,
   document.getElementById("root")

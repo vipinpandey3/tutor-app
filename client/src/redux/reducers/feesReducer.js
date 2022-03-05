@@ -17,6 +17,11 @@ const initialState = {
 
 const feesReducer = (state = initialState, action) => {
     switch (action.type) {
+        case types.TOGGLE_FORM:
+            return {
+                ...state,
+                showForm: action.payload
+            }
         case types.FETCH_FEES_FORM_FIELDS:
             return {
                 ...state,

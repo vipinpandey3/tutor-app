@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FeesForm = (props) => {
   const styles = useStyles();
-  const { formDetails, initiateFeesFormValue, feesInput, getFeesFormValue, setShowFeesForm } =
+  const { formDetails, initiateFeesFormValue, feesInput, getFeesFormValue, toggleForm } =
     props;
   const [feesFormValue, setFeesFormValue] = useState(initiateFeesFormValue);
 
@@ -28,8 +28,7 @@ const FeesForm = (props) => {
   };
 
   const handleCancle = () => {
-    setShowFeesForm(false);
-    setFeesFormValue(initiateFeesFormValue);
+    toggleForm(false)
   }
 
   const formSubmit = (e) => {

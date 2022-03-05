@@ -17,7 +17,8 @@ import {
     toggleUploadSection,
     uploadFile,
     searchFees,
-    downloadFeesbyId
+    downloadFeesbyId,
+    toggleForm
 } from '../../../redux/actions/feesAction';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,14 +44,10 @@ const initiateFeesFormValue = {
     StudentId: ""
 }
 
-const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm, feesDetails, showFileImport}, searchFees, uploadFile, addFeesDetails, fetchFeesFormFields, fetchFeesDetails, toggleUploadSection, downloadFeesbyId}) => {
+const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm, feesDetails, showFileImport}, searchFees, uploadFile, addFeesDetails, fetchFeesFormFields, fetchFeesDetails, toggleUploadSection, downloadFeesbyId, toggleForm}) => {
     const styles = useStyles()
-    const [showFeesForm, setShowFeesForm] = useState(false);
-    // const [searchValue, setSearchValue] = useState('')
     const searchRef = createRef()
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
-    const {fetchFees, addFeesIntoDatabase} = useContext(FeesContext);
-    // const [showFileImport, setShowFileImport] = useState(false);
 
     const getFormFields = () => {
         const postObj = {
@@ -89,8 +86,14 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm
     }
 
     const editFees = (data) => {
-        setShowFeesForm(true);
+        console.log("Data", data);
+        const postObj = {
+            formName: "Update Fees",
+            buttonName: "Update",
+            editFlag: true
+        }
         setFormValue(data);
+        fetchFeesFormFields(postObj)
     };
 
     const deleteFees = (data) => {
@@ -103,7 +106,7 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm
 
     return (
         <>
-            {showForm && <FeesForm formDetails={formDetails} setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
+            {showForm && <FeesForm formDetails={formDetails} toggleForm={toggleForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
             {showFileImport && <FeesFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
@@ -118,7 +121,7 @@ const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm
                     <MatButton onClick={handleUpload} variant="contained" startIcon={<AiOutlineUpload />} style={{ flex: "1", width: "80%" }}>Fees</MatButton>
                     </Grid>
                     <Grid item xs={2}>
-                        <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Fees</MatButton>
+                        <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Add Fees</MatButton>
                     </Grid>
                 <FeesTable downloadReciept={downloadReciept} deleteFees={deleteFees} editFees={editFees} feesTableHeader={feesDetails.attributes ? feesDetails.attributes : [] } FeesData={feesDetails.feesData ? feesDetails.feesData : []} />
                 </Grid>
@@ -135,7 +138,8 @@ Fees.propTypes = {
     toggleUploadSection: PropTypes.func.isRequired,
     uploadFile: PropTypes.func.isRequired,
     searchFees: PropTypes.func.isRequired,
-    downloadFeesbyId: PropTypes.func.isRequired
+    downloadFeesbyId: PropTypes.func.isRequired,
+    toggleForm: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -144,4 +148,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {downloadFeesbyId, searchFees, uploadFile, fetchFeesFormFields, fetchFeesDetails, addFeesDetails, toggleUploadSection})(Fees)
+export default connect(mapStateToProps, {toggleForm, downloadFeesbyId, searchFees, uploadFile, fetchFeesFormFields, fetchFeesDetails, addFeesDetails, toggleUploadSection})(Fees)

@@ -119,6 +119,15 @@ export const fetchFeesDetails = () => {
     }
 };
 
+export const toggleForm = (flag) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.TOGGLE_FORM,
+            payload: flag
+        })
+    }
+}
+
 export const addFeesDetails = (postObj) => {
     return async(dispatch) => {
         dispatch({

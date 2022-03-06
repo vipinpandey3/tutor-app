@@ -49,11 +49,6 @@ const ExamTable = (props) => {
 
     const disableExamRow = (data) => {
         disableExam(data)
-            .then(res => {
-                if(res.resultShort === "success") {
-                    loadExam()
-                }
-            })
     }
 
     return (

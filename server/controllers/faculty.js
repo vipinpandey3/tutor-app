@@ -310,7 +310,7 @@ const getSubjectsByStandard = (req, res) => {
             })
     })
     .catch(error => {
-        console.log('Error while getting student for ', stdId)
+        console.log('Error while getting student for ', error)
         const result = {
             resultShort: 'failure',
             resultLong: 'Error while getting Standard Id: '
@@ -323,7 +323,7 @@ const disableExam = (req, res) => {
     console.log("Inside disableExam Function");
     const examId = req.body.examId;
     console.log('Examid', examId);
-    ExamStdMap.update({status: 0},{where : {ExamId: examId}})
+    return models.ExamStdMap.update({status: 0},{where : {ExamId: examId}})
         .then(resultObj => {
             console.log('resultObj', resultObj)
             if(!resultObj) {

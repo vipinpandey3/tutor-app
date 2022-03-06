@@ -26,14 +26,12 @@ const useStyles = makeStyles((theme) => ({
 const ExamForm = (props) => {
   const styles = useStyles();
   const {
-    hindeForm,
+    toggleForm,
     examFormInput,
     formTitle,
-    SchduleExam,
     initialExamFormValue,
     fetchSubjectByStandard,
-    createExam,
-    loadExam
+    createExam
   } = props;
   const [examFormValue, setExamFormValue] = useState(initialExamFormValue);
   const [examTimeValue, setExamTimeValue] = useState(null)
@@ -68,30 +66,25 @@ const ExamForm = (props) => {
   }
 
   const handltTimeInputChange = (event) => {
-
     setExamTimeValue(event);
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // examFormValue.timeStart = moment().format('HH:mm')
     console.log('Final Value', examFormValue)
     createExam(examFormValue)
-      .then(res => {
-        hindeForm();
-        loadExam();
-      })
   }
-  
 
-  const onSubmit = () => {
-    console.log('Final Value in onSUbmit function', examFormValue)
-    SchduleExam(examFormValue, false);
-  };
+  const handleCancel = () => {
+    const postObj = {
+      showFlag: false,
+      editFlag: false,
+      formName: "",
+      buttonName: ""
+    }
+    toggleForm(postObj);
+  }
 
-  const handleCancle = () => {
-    hindeForm();
-  };
   return (
     <form>
       <Paper className={styles.paperConent}>
@@ -148,7 +141,7 @@ const ExamForm = (props) => {
               style={{ flex: "1", width: "85%" }}
               color="primary"
               type="button"
-              onClick={handleCancle}
+              onClick={handleCancel}
               size="large"
             >
               Cancle

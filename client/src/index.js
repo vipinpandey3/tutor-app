@@ -11,15 +11,11 @@ import store from './redux/store'
 
 ReactDOM.render(
   <Provider store={store}>
-    <React.StrictMode>
-      <DashboardContextProvider>
-        <ExamContextProvider>
-          <Router>
-            <App />
-          </Router>
-        </ExamContextProvider>
-      </DashboardContextProvider>
-    </React.StrictMode>
+    <DashboardContextProvider>
+        <Router>
+          <App />
+        </Router>
+    </DashboardContextProvider>
   </Provider>,
   document.getElementById("root")
 );

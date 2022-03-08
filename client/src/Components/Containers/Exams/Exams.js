@@ -62,7 +62,7 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
   const [searchStudent, setSearchStudent] = useState("")
   const [editFormFieldValue, setEditFormFieldValues] = useState([]);
   const [editFormFlag, setEditExamFormFlag] = useState(false)
-  const {fetchSubjectByStandard, getExamById} = useContext(ExamContext);
+  // const {fetchSubjectByStandard, getExamById} = useContext(ExamContext);
 
   useEffect(() => {
     loadExam()
@@ -89,7 +89,7 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
           initialExamFormValue={initialExamFormValue} 
           formTitle={formTitle} 
           examFormInput={examFormFields} 
-          fetchSubjectByStandard={fetchSubjectByStandard} 
+          // fetchSubjectByStandard={fetchSubjectByStandard} 
           createExam={createExam}
         />
       }      

@@ -184,7 +184,7 @@ function get_header_row(sheet) {
                 returnVar = XLSX.utils.format_cell(cell);
                 feesArray.push(returnVar);
             }
-            const uuid = feesArray[0];
+            // const uuid = feesArray[0];
             const feesAmount = feesArray[1];
             const discount = feesArray[2];
             const paidAmount = feesArray[3];
@@ -192,7 +192,7 @@ function get_header_row(sheet) {
             const academicYear = feesArray[5];
             const reamarks = feesArray[6]
             const studentId = feesArray[7];
-            const feesObj = {uuid, feesAmount, discount, paidAmount, balance, academicYear, reamarks, studentId}
+            const feesObj = {feesAmount, discount, paidAmount, balance, academicYear, reamarks, studentId}
             Fees.create(feesObj)
                 .then(feesObject => {
                     return resolve(feesObject)

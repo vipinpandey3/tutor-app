@@ -3,9 +3,9 @@ Alter Table StandardMaster MODIFY remarks longtext;
 
 INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('1', 'I-First', '1st', 1, "1", now(), now());
 INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('2', 'II-Second', '2nd', 1, 1, now(), now());
-INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('3', 'III-Third', '3rd ', 1, 1, now(), now());
-INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('4', 'IV-Fourth', '4th ', 1, 1, now(), now());
-INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('5', 'V-Fifth', '5th ', 1, 1, now(), now());
+INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('3', 'III-Third', '3rd', 1, 1, now(), now());
+INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('4', 'IV-Fourth', '4th', 1, 1, now(), now());
+INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('5', 'V-Fifth', '5th', 1, 1, now(), now());
 INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('6', 'VI-Sixth', '6th', 1, 1, now(), now());
 INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('7', 'VII- Seventh', '7th', 1, 1, now(), now());
 INSERT INTO StandardMaster(std, stdCode, remarks, createdBy, status, createdAt, updatedAt)values('8', 'VIII-Eighth', '8th', 1, 1, now(), now());

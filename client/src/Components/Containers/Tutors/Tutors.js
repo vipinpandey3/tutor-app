@@ -8,7 +8,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import MatButton from "../../Common/Button";
 import AddIcon from "@material-ui/icons/Add";
 import TutorsForm from "./TutorsForm";
-import {TutorContext} from '../../../context/tutor-context'
+import {connect} from 'react-redux';
+import {getTutors, getTutorForm, toggleForm} from '../../../redux/actions/tutorAction'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -32,110 +34,50 @@ const initialFormValues = {
   address: ""
 };
 
-const Tutors = () => {
+const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTutors, getTutorForm, toggleForm}) => {
   const history = useHistory()
   const classes = useStyles();
-  const [openPopup, setOpenPopup] = useState(false);
-  const [tutors, setTutors] = useState({
-    tutorsRows: [],
-    tutorTableAttributes: []
-  })
-  const {fetchTutorForms, fetchTutors} = useContext(TutorContext)
-  const [formDetails, setFormDetails] = useState({
-    formName: "Add Tutor",
-    buttonName: "Submit",
-    editFlag: false
-  })
-  const [formFields, setFormFields] = useState()
-  const [showForm, setShowForm] = useState(false)
   const [formValues, setFormValues] = useState(initialFormValues)
-
-  const [filterFunction, setFilterFunction] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
 
   useEffect(() => {
     loadTutors()
   }, [])
 
   const loadTutors = () => {
-    fetchTutors()
-      .then((result) => {
-        if(result && result.resultShort === 'success') {
-          console.log('result', result)
-          setTutors({
-            tutorsRows: result.data,
-            tutorTableAttributes: result.turorTableAtttibutes
-          })
-        }
-      })
+    getTutors()
   }
 
-  const handelSearch = (e) => {
-    let target = e.target;
-    setFilterFunction({
-      fn: (items) => {
-        console.log(items);
-        if (target.value === "") {
-          return items;
-        } else {
-          const item = items.filter(
-            (item) => item.fullName.toLowerCase() === target.value.toLowerCase()
-          );
-          return item;
-        }
-      },
-    });
-  };
+  const handelSearch = () => {
 
-  const openModalPupup = () => {
-      setOpenPopup(true)
-  };
+  }
 
   const redirectToTutorsDetailsPage = (tutorId) => {
     history.push(`/tutors/${tutorId}`);
   }
 
-  const toggleForm = (showFlag, editFlag, formName, buttonName, formValue=initialFormValues) => {
-    setShowForm(showFlag);
-    setFormDetails({
-      formName: formName,
-      buttonName: buttonName,
-      editFlag: editFlag
-    });
+  const toggleForms = (showFlag, editFlag, formName, buttonName, formValue=initialFormValues) => {
+    toggleForm({showFlag, editFlag, formName, buttonName});
     setFormValues(formValue);
   }
 
   const loadForm = () => {
-    fetchTutorForms()
-      .then(result => {
-        if(result && result.resultShort === 'success') {
-          setFormFields(result.formFields);
-          toggleForm(true, false, "Add Tutor", "Submit", initialFormValues)
-        }
-      })
+    getTutorForm()
   }
 
   const editTutor = (row) => {
-    fetchTutorForms()
-      .then(result => {
-        if(result && result.resultShort === 'success') {
-          setFormFields(result.formFields);
-          toggleForm(true, true, "Update Tutor", "Update", row);
-        }
-      })
+    loadForm()
+    toggleForms(true, true, "Update Tutor", "Update", row);
   }
 
   return (
     <>
       {
-        showForm && <TutorsForm 
-          formComponent={formFields} 
+        showForm &&
+        <TutorsForm 
+          formComponent={tutorFormFields} 
           formValues={formValues} 
           setFormValues={setFormValues} 
-          toggleForm={toggleForm} 
+          toggleForm={toggleForms}
           formDetails={formDetails} 
         />
       }
@@ -171,27 +113,31 @@ const Tutors = () => {
           </Grid>
         </Grid>
         {
-          tutors.tutorsRows && 
-          tutors.tutorsRows.length > 0 && 
+          tutors.tutorTableAttributes && 
+          tutors.tutorTableAttributes.length > 0 && 
           <Table
             headCells={tutors.tutorTableAttributes}
-            records={tutors.tutorsRows}
-            filterFunction={filterFunction}
-            openInPopup={openModalPupup}
+            records={tutors.tutorRows}
             redirectToDetailsPage={redirectToTutorsDetailsPage}
             edit={editTutor}
           />
         }
       </Paper>
-      {/* <Popup
-        title="Tutors Form"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-      >
-      </Popup> */}
-        {/* <TutorsForm /> */}
     </>
   );
 };
 
-export default Tutors;
+Tutors.propTypes = {
+  tutors: PropTypes.object,
+  getTutors: PropTypes.func.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+  getTutorForm: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => {
+ return {
+  tutor: state.tutor
+ } 
+};
+
+export default connect(mapStateToProps, {getTutors, getTutorForm, toggleForm})(Tutors);

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   AccordionSummary,
@@ -16,11 +16,22 @@ import {
 import { Grid } from "@material-ui/core";
 import Text from "../../Common/Text";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { StudentContext } from "../../../context/student-context";
 import { ParentForms, StudentEducationForms } from "./StudentRelatedForms";
 import MatButton from "../../Common/Button";
 import AddIcon from "@material-ui/icons/Add";
-import moment from 'moment'
+import moment from 'moment';
+import {fetchParentFormFields, 
+  fetchStudentDetails, 
+  addParentDetails, 
+  toggleForm, 
+  fetchEditParentFormFields, 
+  fetchStudentEducationFormfields,
+  addStudeEducationDetails,
+  fetchStudentFeesDetails,
+  updateEducationDetails
+} from "../../../redux/actions/studentAction"
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
@@ -83,172 +94,60 @@ const educationInitialValue = {
   percentage: "",
 };
 
-const StudentDetails = () => {
-  const [showForms, setShowForm] = useState({
-    parentForms: false,
-    educationDetailsForm: false,
-  });
-  const [totalPaid, setTotalPaid] = useState(0);
-  const { fetchStudentDetails, fetchStudentFeesDetails, fetchParentFields, fetchEducationFormFields } = useContext(StudentContext);
+const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails}) => {
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
-  const [details, setDetails] = useState({
-    studentDetail: {},
-    educationDetails: [],
-    parentDetails: {},
-    studentDetailAttributes: [],
-    parentDetailsAttributes: [],
-    educationDetailsAttributes: []
-  })
 
   const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
   const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
 
-  const [formFields, setFormFields] = useState({
-    parentFormFields: [],
-    educationFormFields: []
-  })
-  const [feesDetails, setFeesDetails] = useState({
-    feesTableHeaders: [],
-    feesDetailsRow: []
-  })
-
-  const [parentFormDetails, setParentFormDetails] = useState({
-    title: "Add Parents",
-    buttonName: 'Submit',
-    editFlag: false
-  })
-
-  const [educationFormDetails, setEducationFormDetails] = useState({
-    title: "Add Education Details",
-    buttonName: "Submit",
-    editFlag: false
-  })
-
-  const [educationArrayIndex, setEducationArrayIndex] = useState(0)
-
   const loadStudentDteails = () => {
     fetchStudentDetails(studentId)
-      .then((result) => {
-        console.log("result", result)
-        setDetails({
-          studentDetail: result.studentDetails,
-          parentDetails: result.studentDetails.Parent,
-          educationDetails: result.studentDetails.StudentEducationDetails,
-          studentDetailAttributes: result.studentDetailAttributes,
-          parentDetailsAttributes: result.parentDetailsAttributes,
-          educationDetailsAttributes: result.educationDetailsAttributes
-        })
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
   }
 
   useEffect(() => {
-    loadStudentDteails()
-    fetchStudentFeesDetails(studentId).then(result => {
-      setFeesDetails({
-        feesDetailsRow: result.fees,
-        feesTableHeaders: result.header
-      })
-      const totalPaid = feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
-        let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
-        return total;
-      }, 0);
-      console.log("totalPaid", totalPaid)
-      setTotalPaid(totalPaid);
-    }).catch(err => {
-      console.log('err', err);
-    })
-    // const totalPaid = feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
-    //   let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
-    //   return total;
-    // }, 0);
-    // console.log("totalPaid", totalPaid)
-    // setTotalPaid(totalPaid);
+    loadStudentDteails();
+    fetchStudentFeesDetails(studentId)
   }, []);
 
   const fetchFormForm = (value) => {
-    console.log("value", value)
     if (value === "parentForm") {
-      console.log("Details", details.parentDetails)
-      fetchParentFields(true)
-        .then(result => {
-          if(result.formFields && result.formFields.length > 0) {
-            setFormFields({...formFields, parentFormFields: result.formFields})
-            setParentFormDetails({
-              title: "Add Parents",
-              buttonName: 'Submit',
-              editFlag: false
-            })
-            setShowForm({educationDetailsForm: false, parentForms: true});
-          }
-        })
+      setParentInititalValue(parentFormInitialValue);
+      fetchParentFormFields(true)
     }
     if (value === "educationForm") {
-      console.log("educationForm", value)
-      fetchEducationFormFields()
-        .then(result => {
-          if(result.formFields && result.formFields.length > 0) {
-            setFormFields({...formFields, educationFormFields: result.formFields})
-            setEducationFormDetails({
-              title: "Add Education Details",
-              buttonName: "Submit",
-              editFlag: false
-            })
-            setShowForm({educationDetailsForm: true, parentForms: false,});
-
-          }
-        })
+      setFormValue("educationDetailsForm")
+      const postObj = {
+        formName: "Add Education Detail",
+        buttonTitle: 'Submit',
+        editFlag: false
+      }
+      fetchStudentEducationFormfields(postObj)
     }
   };
 
   const editParentsDetails  = () => {
-    fetchParentFields(false)
-        .then(result => {
-          if(result.formFields && result.formFields.length > 0) {
-            setFormFields({...formFields, parentFormFields: result.formFields})
-            setParentInititalValue(details.parentDetails)
-            setShowForm({educationDetailsForm: false,parentForms: true,});
-            setParentFormDetails({
-              title: "Update Parents",
-              buttonName: 'Update',
-              editFlag: true
-            })
-          }
-        })
-        .catch(err => {
-          console.log('err', err);
-        })
+    fetchEditParentFormFields(false)
+    setParentInititalValue(studentDetails.parentDetails)
   }
 
   const editEducationDetails = (id) => {
-    fetchEducationFormFields()
-        .then(result => {
-          if(result.formFields && result.formFields.length > 0) {
-            setFormFields({...formFields, educationFormFields: result.formFields})
-            setStudentEducationInitialValue(details.educationDetails[id])
-            setShowForm({educationDetailsForm: true, parentForms: false});
-            setEducationFormDetails({
-              title: "Update Education Details",
-              buttonName: "Update",
-              editFlag: true
-            })
-            setEducationArrayIndex(id)
-          }
-        })
-        .catch(error => {
-          console.log('Error while fetching education form fields', error)
-        })
+    const postObj = {
+      formName: "Edit Education Detail",
+      buttonTitle: 'Update',
+      editFlag: true
+    }
+    setStudentEducationInitialValue(studentDetails.educationDetails[id])
+    fetchStudentEducationFormfields(postObj);
+  }
+
+  const loadParentFormFields = () => {
+    return studentDetails.parentDetails && Object.keys(studentDetails.parentDetails).length > 0 ? editParentsDetails() : fetchFormForm("parentForm")
   }
 
   const hideForm = (formName, flag) => {
-    setShowForm({
-      ...showForms,
-      [formName]: flag
-    }); 
+    toggleForm(flag)
     if(formName === "educationDetailsForm") {
       setStudentEducationInitialValue(educationInitialValue)
     } else {
@@ -256,44 +155,47 @@ const StudentDetails = () => {
     }
   }
 
-  const fetchStudentEducationDetails = (event) => {
-    console.log("fetchStudentEducationDetails",event)
-  };
+  const setFormValue = (formName) => {
+    if(formName === "educationDetailsForm") {
+      setStudentEducationInitialValue(educationInitialValue)
+    } else {
+      setParentInititalValue(parentFormInitialValue);
+    }
+  }
+
   return (
     <>
       <Paper className={`${styles.paperContent} `}>
         <Grid container>
-          {details.studentDetailAttributes.map(atributes => {
+          {studentDetails.studentDetailAttributes.map((atributes, index) => {
             return (
-              <>
-                <Grid item xs={atributes.size} className={styles[atributes.class]}>
-                  <Text>
-                    {atributes.name}: 
-                  </Text>
-                  <Text variant="subtitle1" component="h6" className={styles.block}>
-                    {
-                      details.studentDetail[atributes.id] ? 
-                      details.studentDetail[atributes.id] : "-"
-                    }
-                  </Text>
-                </Grid>
-              </>
+              <Grid key={index} item xs={atributes.size} className={styles[atributes.class]}>
+                <Text>
+                  {atributes.name}: 
+                </Text>
+                <Text variant="subtitle1" component="h6" className={styles.block}>
+                  {
+                    studentDetails.details[atributes.id] ? 
+                    studentDetails.details[atributes.id] : "-"
+                  }
+                </Text>
+              </Grid>
             )
           })}
         </Grid>
       </Paper>
-      {showForms.parentForms && (
+      {showForm && formFields.parentFormFields && formFields.parentFormFields.length > 0 && (
         <Paper className={styles.paperContent}>
           <ParentForms
-            setShowParentForm={setShowForm}
-            showForms={showForms}
+            addParentDetails={addParentDetails}
+            showForm={showForm}
+            error={error}
             studentId={studentId}
             formFields={formFields.parentFormFields}
-            loadStudentDteails={loadStudentDteails}
-            formDetails={parentFormDetails}
+            formDetails={formDetails}
             parentFormInitialValue={parentIntitialValue}
-            setFormDetails={setParentFormDetails}
             hideForm={hideForm}
+            setFormValue={setFormValue}
           />
         </Paper>
       )}
@@ -309,52 +211,49 @@ const StudentDetails = () => {
               className={styles.alignRight}
               variant="outlined"
               startIcon={<AddIcon />}
-              onClick={() =>Object.keys(details.parentDetails).length < 0 ? editParentsDetails() : fetchFormForm("parentForm")}
+              onClick={loadParentFormFields}
             >
-              {details.parentDetails.hasOwnProperty('id')
+              {studentDetails.parentDetails && studentDetails.parentDetails.hasOwnProperty('id')
                 ? "Edit Parents Details"
                 : "Add Parents Details"}
             </MatButton>
           </Grid>
-          {details.parentDetails ? (
-            <>
-              <Grid container>
-                {
-                  details.parentDetailsAttributes.map((atributes) => {
-                    return (
-                      <>
-                        <Grid item xs={atributes.size} className={`${styles[atributes.class]} pt_5`}>
-                          <Text>
-                            {atributes.name}: 
-                          </Text>
-                          <Text variant="subtitle1" component="h6" className={styles.block}>
-                            {
-                              details.parentDetails[atributes.id] ? 
-                              details.parentDetails[atributes.id] : "-"
-                            }
-                          </Text>
-                        </Grid>
-                      </>
-                    )
-                  })
-                }
-              </Grid>
-            </>
+          {studentDetails.parentDetails ? (
+            <Grid container>
+              {
+                studentDetails.parentDetailsAttributes.map((attributes) => {
+                  return (
+                    <Grid key={attributes.id} item xs={attributes.size} className={`${styles[attributes.class]} pt_5`}>
+                      <Text>
+                        {attributes.name}: 
+                      </Text>
+                      <Text variant="subtitle1" component="h6" className={styles.block}>
+                        {
+                          studentDetails.parentDetails[attributes.id] ? 
+                          studentDetails.parentDetails[attributes.id] : "-"
+                        }
+                      </Text>
+                    </Grid>
+                  )
+                })
+              }
+            </Grid>
           ) : (
             <p>No Details found</p>
           )}
         </Grid>
       </Paper>
-      {showForms.educationDetailsForm && (
+      {showForm && formFields.educationFormFields && formFields.educationFormFields.length > 0 && (
         <Paper className={styles.paperContent}>
           <StudentEducationForms
-            setShowEdutionForm={setShowForm}
-            showForms={showForms}
+            addStudeEducationDetails={addStudeEducationDetails}
+            updateEducationDetails={updateEducationDetails}
+            error={error}
+            setFormValue={setFormValue}
+            showForms={showForm}
             studentId={studentId}
             formFields={formFields.educationFormFields}
-            formDetails={educationFormDetails}
-            setFormDetails={setEducationFormDetails}
-            loadStudentDteails={loadStudentDteails}
+            formDetails={formDetails}
             educationFormIntialValue={studentEducationInitialValue}
             hideForm={hideForm}
           />
@@ -362,7 +261,6 @@ const StudentDetails = () => {
       )}
       <Accordion
         className={`${styles.paperContent} ${styles.noPadding}`}
-        onChange={() => fetchStudentEducationDetails()}
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -372,13 +270,6 @@ const StudentDetails = () => {
           <Typography className={styles.heading}>
             Student Education Details
           </Typography>
-          {/* <MatButton
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={() => toggleForm("educationForm")}
-          >
-            "Add Education Details"
-          </MatButton> */}
         </AccordionSummary>
         <AccordionDetails>
           <Grid container className={styles.columnContainer}>
@@ -392,7 +283,7 @@ const StudentDetails = () => {
                   component="h6"
                   className={styles.block}
                 >
-                  {`${details.studentDetail.lastName} ${details.studentDetail.firstName}`}
+                  {`${studentDetails.details.lastName} ${studentDetails.details.firstName}`}
                 </Text>
               </Grid>
               <Grid>
@@ -408,12 +299,12 @@ const StudentDetails = () => {
             <hr></hr>
             <Grid>
               {
-                details.educationDetails.map((detail, index) => {
+                studentDetails.educationDetails.map((detail, index) => {
                   return (
                     <div key={detail.id}>
                       <Grid container className="padding_top_10">
                         {
-                          details.educationDetailsAttributes.map((attributes) => {
+                          studentDetails.educationDetailsAttributes.map((attributes) => {
                             return (
                               <Grid item xs={attributes.size} className={`${styles[attributes.class]} ${styles.paddingTop}`}>
                                 <Text>
@@ -462,7 +353,7 @@ const StudentDetails = () => {
         </Grid>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow key="Header">
               {feesDetails.feesTableHeaders.map((header, index) => {
                 return (
                   <TableCell key={index}>{header.label}</TableCell>
@@ -483,14 +374,14 @@ const StudentDetails = () => {
                 </TableRow>
               )
             })}
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell style={{ textAlign: "right" }}>Total Paid</TableCell>
-              <TableCell>{totalPaid}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+            <TableRow key="lastRow">
+              <TableCell key="empty1"></TableCell>
+              <TableCell key="empty2"></TableCell>
+              <TableCell key="empty3"></TableCell>
+              <TableCell key="totalPaid" style={{ textAlign: "right" }}>Total Paid</TableCell>
+              <TableCell key="empty4">{totalPaid}</TableCell>
+              <TableCell key="empty5"></TableCell>
+              <TableCell key="empty6"></TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -499,4 +390,23 @@ const StudentDetails = () => {
   );
 };
 
-export default StudentDetails;
+StudentDetails.propTypes = {
+  fetchParentFormFields: PropTypes.func.isRequired,
+  student: PropTypes.object.isRequired,
+  fetchStudentDetails: PropTypes.func.isRequired,
+  addParentDetails: PropTypes.func.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+  fetchEditParentFormFields: PropTypes.func.isRequired,
+  fetchStudentEducationFormfields: PropTypes.func.isRequired,
+  addStudeEducationDetails: PropTypes.func.isRequired,
+  fetchStudentFeesDetails: PropTypes.func.isRequired,
+  updateEducationDetails: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => {
+  return {
+    student: state.student,
+  }
+}
+
+export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails})(StudentDetails);

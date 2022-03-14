@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ExamTable = (props) => {
-    const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam, loadExam, editExam} = props; 
+    const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam, loadExam} = props; 
     const [open, setOpen] = useState(false)
     const styles = useStyles()
 
@@ -49,11 +49,6 @@ const ExamTable = (props) => {
 
     const disableExamRow = (data) => {
         disableExam(data)
-            .then(res => {
-                if(res.resultShort === "success") {
-                    loadExam()
-                }
-            })
     }
 
     return (

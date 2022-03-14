@@ -4,7 +4,6 @@ import { green, red, blue } from '@material-ui/core/colors';
 import DeleteIcon from '@material-ui/icons/Delete';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import EditIcon from '@material-ui/icons/Edit';
-import Text from '../../Common/Text'
 
 const useStyles = makeStyles((theme) => ({
     greenBackground: {

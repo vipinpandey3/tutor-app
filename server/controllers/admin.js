@@ -294,7 +294,7 @@ const addStudentEducationDetails = (req, res, next) => {
   })
     .then(details => {
       const response = {
-        resultShort: "succes",
+        resultShort: "success",
         resultLong: "Student Education details added"
       }
 
@@ -450,7 +450,6 @@ const getAllFeesData = () => {
         for (let i = 0; i < fees.length; i++) {
           models.Student.findByPk(fees[i].StudentId)
             .then(student => {
-              console.log("Students =========>", student)
               feesItem = {
                 ...fees[i],
                 studentName: student.firstName + student.lastName,
@@ -737,7 +736,6 @@ const updateTutorEducationById = (req) => {
   console.log("Req.body", JSON.stringify(req.body))
   return  models.TutorEducationDetails.update(req.body, {where: {id: req.body.id}})
     .then((updatedObj) => {
-      console.log("updatedObj =========>", updatedObj)
       return Promise.resolve(updatedObj)
     })
     .catch(error => {

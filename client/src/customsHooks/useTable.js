@@ -25,8 +25,8 @@ export default function useTable(data) {
             if(order !== 0) return order;
                 return a[1] - b[1];
         })
-
-        return stabilizedThis.map((e1) => e1[0]);
+        const data = stabilizedThis.map((e1) => e1[0]);
+        return data
     }
 
     const getComparator = (order, orderBy) => {

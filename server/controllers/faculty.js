@@ -12,18 +12,18 @@ const SubjectMaster = require('../models/subjectMatser');
 const models = require('../models/index')
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
-    console.log('Inside the getFeesDetailsBySearchParam function');
+    console.log('Inside the getFeesDetailsBySearchParam function', seacrchParams);
     const feesDetails = [];
     return new Promise((resolve, reject) => {
         FeesService.getFeesBySeacrhParams(seacrchParams)
             .then(feesarray => {
                 for (let i = 0; i < feesarray.length; i++) {
                     const element = feesarray[i];
-                    StudentService.getStudentById(element.studentId)
+                    StudentService.getStudentById(element.StudentId)
                     .then((student) => {
                         feesDetails.push({
-                            studentName: student.firstName + " " + student.lastName,
-                            id: student.aadharNo,
+                            studentName: student[0].firstName + " " + student[0].lastName,
+                            id: student[0].aadharNo,
                             FeesId: element.id,
                             uuid: element.uuid,
                             feesAmount: element.feesAmount,
@@ -40,7 +40,7 @@ const getFeesDetailsBySearchParam = (seacrchParams) => {
                 }
             })
             .catch(err => {
-                console.log('err')
+                console.log('err', err)
                 return reject(err);
             })
     })
@@ -310,7 +310,7 @@ const getSubjectsByStandard = (req, res) => {
             })
     })
     .catch(error => {
-        console.log('Error while getting student for ', stdId)
+        console.log('Error while getting student for ', error)
         const result = {
             resultShort: 'failure',
             resultLong: 'Error while getting Standard Id: '
@@ -323,7 +323,7 @@ const disableExam = (req, res) => {
     console.log("Inside disableExam Function");
     const examId = req.body.examId;
     console.log('Examid', examId);
-    ExamStdMap.update({status: 0},{where : {ExamId: examId}})
+    return models.ExamStdMap.update({status: 0},{where : {ExamId: examId}})
         .then(resultObj => {
             console.log('resultObj', resultObj)
             if(!resultObj) {

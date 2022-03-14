@@ -53,7 +53,7 @@ const StudentForm = (props) => {
   }
 
   const handleCancle = () => {
-
+    toggleForm(false)
   }
   return (
     <form>

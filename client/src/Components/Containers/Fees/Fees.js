@@ -1,13 +1,25 @@
-import { Grid, makeStyles, Paper } from '@material-ui/core'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Grid, TextField, makeStyles, Paper } from '@material-ui/core'
 import React, { createRef, useContext, useEffect, useState } from 'react'
 import Text from '../../Common/Text';
 import FeesTable from './FeesTable';
 import MatButton from '../../Common/Button';
 import FeesForm from './FeesForm';
 import { FeesContext } from '../../../context/fees-context';
-import { saveAs } from 'file-saver'
 import FeesFileUpload from './FeesFileUpload';
 import {AiOutlineUpload} from 'react-icons/ai'
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import {
+    fetchFeesFormFields, 
+    fetchFeesDetails,
+    addFeesDetails,
+    toggleUploadSection,
+    uploadFile,
+    searchFees,
+    downloadFeesbyId,
+    toggleForm
+} from '../../../redux/actions/feesAction';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -32,117 +44,56 @@ const initiateFeesFormValue = {
     StudentId: ""
 }
 
-const Fees = () => {
+const Fees = ({fees: {formDetails, formFields, error, loading, message, showForm, feesDetails, showFileImport}, searchFees, uploadFile, addFeesDetails, fetchFeesFormFields, fetchFeesDetails, toggleUploadSection, downloadFeesbyId, toggleForm}) => {
     const styles = useStyles()
-    const [showFeesForm, setShowFeesForm] = useState(false);
-    // const [searchValue, setSearchValue] = useState('')
     const searchRef = createRef()
     const [formValue, setFormValue] = useState(initiateFeesFormValue)
-    const {fetchFees, fetchFeesFormFields, addFeesIntoDatabase, searchFees, downloadFeesbyId} = useContext(FeesContext);
-    const [formFields, setFormFields] = useState([])
-    const [feesDetails, setFeesDetails] = useState({
-        attributes: [],
-        feesData: []
-    });
-    const [showFileImport, setShowFileImport] = useState(false);
 
     const getFormFields = () => {
-        fetchFeesFormFields()
-            .then(result => {
-                setFormFields(result.formFields)
-            })
-            .catch(err => {
-                console.log('Err', err)
-            })
+        const postObj = {
+            formName: "Add Fees",
+            buttonName: "Add",
+            editFlag: false
+        }
+        fetchFeesFormFields(postObj)
     }
 
     const hadleFeesForm = () => {
         getFormFields();
-        setShowFeesForm(true);
     }
 
     const getFeesFormValue = (value) => {
         value.balance = parseInt(value.feesAmount) - (parseInt(value.paidAmount) + parseInt(value.discount));
-        addFeesIntoDatabase(value)
-            .then(result => {
-                if(result && result.resultShort === "success") {
-                    setShowFeesForm(false);
-                } else {
-                    setShowFeesForm(true);
-                }
-            })
-            .catch((err) => {
-                console.log("Error while adding Fees", err)
-            })
+        addFeesDetails(value)
     }
 
     const searchPaidFees = (event) => {
         if (event.code === 'Enter') {
-            searchFees(searchRef.current.value)
-                .then(result => {
-                    setFeesDetails({
-                        ...feesDetails,
-                        feesData: result.feesArray
-                    })
-                })
-                .catch(err => {
-                    console.log('err', err);
-                })
+            if(searchRef.current.value !== "") {
+                searchFees(searchRef.current.value)
+            } else {
+                fetchFeesDetails()
+            }
         }
     }
 
-    // useEffect(() => {
-    //     // console.log("value, ", typeof(parseInt(searchValue)));
-    //     // if(searchValue) {
-    //     //     const newData = feesData.filter(data => {
-    //     //         console.log('Log', data);
-    //     //         if(parseInt(searchValue) === parseInt(data.studentId) || data.studentName.includes(searchValue) ) {
-    //     //             return data
-    //     //         }
-    //     //     })
-    //     //     setFeesPaidData(newData)
-    //     // } else {
-    //     //     setFeesPaidData(feesData)
-    //     // }
-    // }, [searchRef]);
-
     useEffect(() => {
-        fetchFees()
-            .then(result => {
-                setFeesDetails({
-                    attributes: result.feeAttributes,
-                    feesData: result.feesDetails
-                })
-            })
-            .catch(err => {
-                console.log('err', err)
-            })
+        fetchFeesDetails()
     }, [])
 
     const downloadReciept = (data) => {
         downloadFeesbyId(data.uuid)
-            .then(result => {
-                const url = window.URL.createObjectURL(
-                    new Blob([result]),
-                  );
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.setAttribute(
-                    'download',
-                    `FileName.pdf`,
-                  );
-                  document.body.appendChild(link);
-                  link.click();
-                  link.parentNode.removeChild(link);
-            })
-            .catch((error) => {
-                console.log('err in file', error)
-            })
     }
 
     const editFees = (data) => {
-        setShowFeesForm(true);
+        console.log("Data", data);
+        const postObj = {
+            formName: "Update Fees",
+            buttonName: "Update",
+            editFlag: true
+        }
         setFormValue(data);
+        fetchFeesFormFields(postObj)
     };
 
     const deleteFees = (data) => {
@@ -150,13 +101,13 @@ const Fees = () => {
     }
 
     const handleUpload = () => {
-        setShowFileImport(true)
+        toggleUploadSection(true)
     }
 
     return (
         <>
-            {showFeesForm && <FeesForm formTitle="Fees Details" setShowFeesForm={setShowFeesForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
-            {showFileImport && <FeesFileUpload setShowFileImport={setShowFileImport} />}
+            {showForm && <FeesForm formDetails={formDetails} toggleForm={toggleForm} getFeesFormValue={getFeesFormValue} feesInput={formFields} initiateFeesFormValue={formValue} />}
+            {showFileImport && <FeesFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={3}>
@@ -170,7 +121,7 @@ const Fees = () => {
                     <MatButton onClick={handleUpload} variant="contained" startIcon={<AiOutlineUpload />} style={{ flex: "1", width: "80%" }}>Fees</MatButton>
                     </Grid>
                     <Grid item xs={2}>
-                        <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Fees</MatButton>
+                        <MatButton onClick={hadleFeesForm} variant="contained" style={{ flex: "1", width: "90%" }}>Add Fees</MatButton>
                     </Grid>
                 <FeesTable downloadReciept={downloadReciept} deleteFees={deleteFees} editFees={editFees} feesTableHeader={feesDetails.attributes ? feesDetails.attributes : [] } FeesData={feesDetails.feesData ? feesDetails.feesData : []} />
                 </Grid>
@@ -179,4 +130,22 @@ const Fees = () => {
     )
 }
 
-export default Fees
+Fees.propTypes = {
+    fetchFeesFormFields: PropTypes.func.isRequired,
+    fetchFeesDetails: PropTypes.func.isRequired,
+    fees: PropTypes.object.isRequired,
+    addFeesDetails: PropTypes.func.isRequired,
+    toggleUploadSection: PropTypes.func.isRequired,
+    uploadFile: PropTypes.func.isRequired,
+    searchFees: PropTypes.func.isRequired,
+    downloadFeesbyId: PropTypes.func.isRequired,
+    toggleForm: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => {
+    return {
+        fees: state.fees
+    }
+}
+
+export default connect(mapStateToProps, {toggleForm, downloadFeesbyId, searchFees, uploadFile, fetchFeesFormFields, fetchFeesDetails, addFeesDetails, toggleUploadSection})(Fees)

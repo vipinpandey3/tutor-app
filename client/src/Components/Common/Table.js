@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   makeStyles,
   Table as MuiTable,
@@ -53,7 +53,7 @@ function Table(props) {
       <MuiTable className={classes.table}>
         <TableHead>
           <TableRow key="header">
-            {headCells.map((cell, index) => {
+            {headCells && headCells.length > 0 && headCells.map((cell, index) => {
               return (
                 <TableCell key={index}>
                   {cell.disableSorting ? (
@@ -74,45 +74,49 @@ function Table(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {stableSort(records, getComparator(order, orderBy))
-          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          .map((row) => {
-            return (
-              <TableRow
-                key={row.id}
-              >
-                {headCells.map((rowCell, index) => {
-                  const value = row[rowCell.id];
-                  return <TableCell key={index} onClick={() => {
-                    redirectToDetailsPage(row.id);
-                  }}>{value}</TableCell>;
-                })}
-                <TableCell key={'actionButtons'}>
-                  <ActionButton
-                    onClick={() => edit(row)}
-                    color="primary"
-                  >
-                    <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                  <MuiToolTip title="Add" placement="top-start">
+          {records && records.length > 0 ? 
+            stableSort(records, getComparator(order, orderBy))
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((row) => {
+              return (
+                <TableRow
+                  key={row.id}
+                >
+                  {headCells.map((rowCell, index) => {
+                    const value = row[rowCell.id];
+                    return <TableCell key={index} onClick={() => {
+                      redirectToDetailsPage(row.id);
+                    }}>{value}</TableCell>;
+                  })}
+                  <TableCell key={'actionButtons'}>
                     <ActionButton
-                      // color="secondary"
-                      onClick={() => {
-                        // setConfirmDialog({
-                        //     isOpen: true,
-                        //     title: "Are you sure you want to delete tutor?",
-                        //     subTitle: "Operation once done can not be undone?",
-                        //     onConfirm: () => {onDeleteT(tutor.id)}
-                        // })
-                      }}
+                      onClick={() => edit(row)}
+                      color="primary"
                     >
+                      <EditOutlinedIcon fontSize="small" />
+                    </ActionButton>
+                    {/* <MuiToolTip title="Add" placement="top-start"> */}
+                      <ActionButton
+                        // color="secondary"
+                        onClick={() => {
+                          // setConfirmDialog({
+                          //     isOpen: true,
+                          //     title: "Are you sure you want to delete tutor?",
+                          //     subTitle: "Operation once done can not be undone?",
+                          //     onConfirm: () => {onDeleteT(tutor.id)}
+                          // })
+                        }}
+                      >
                       <CloseOutlinedIcon fontSize="small" />
                     </ActionButton>
-                  </MuiToolTip>                  
+                  {/* </MuiToolTip>                   */}
                 </TableCell>
               </TableRow>
             );
-          })}
+          }) : <TableRow>
+            No Data Found
+          </TableRow>
+          }
         </TableBody>
       </MuiTable>
       <Pagination />

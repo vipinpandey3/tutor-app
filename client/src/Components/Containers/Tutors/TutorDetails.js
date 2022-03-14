@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Accordion, AccordionDetails, AccordionSummary, Chip, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -7,7 +8,10 @@ import TeacherAttendenceTable from './TeacherAttendenceTable';
 import { TutorContext } from '../../../context/tutor-context';
 import MatButton from '../../Common/Button';
 import AddIcon from "@material-ui/icons/Add";
-import { EducationForm } from './TutorRelatedForm';
+import EducationForm from './TutorRelatedForm';
+import {connect} from 'react-redux';
+import {fetchTutorDetails, fetchTutorEducationFormFields, toggleForm} from '../../../redux/actions/tutorAction';
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(theme => ({
     paperContent: {
@@ -55,93 +59,58 @@ const educationInitialValue = {
     percentage: "",
   };
 
-const TutorDetails = () => {
+const TutorDetails = (props) => {
+    const {tutor: {
+            tutorDetails,
+            educationFormFields,
+            showForm,
+            formDetails
+        }, 
+        fetchTutorDetails, 
+        fetchTutorEducationFormFields,
+        toggleForm
+    } = props
     const styles = useStyles()
     const params = useParams();
     const {tutorId} = params;
-    const {getTutorDetails, fetchTutorEducationFormFields} = useContext(TutorContext)
-    const [details, setDetails] = useState({
-        tutorDetails: {},
-        tutorDetailsAttributes: [],
-        educationDetails: [],
-        educationAttrbutes: []
-    });
+    const {getTutorDetails} = useContext(TutorContext)
     const [educationFormValues, setEducationFormValues] = useState(educationInitialValue)
-    const [formFields, setFormFields] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [formDetails, setFormDetails] = useState({
-        title: "Add Education",
-        buttonName: 'Submit',
-        editFlag: false
-    })
     
 
-    const fetchTutorDetails = () => {
-        getTutorDetails(tutorId)
-            .then(result => {
-                if(result.resultShort === "success") {
-                    setDetails({
-                        tutorDetails: result.data,
-                        tutorDetailsAttributes: result.attributes,
-                        educationDetails: result.data.TutorEducationDetails,
-                        educationAttrbutes: result.educationAttributes
-                    })
-                }
-            })
-            .catch(error => {
-                console.log("Error", error)
-            })
+    const loadTutorDetails = () => {
+        fetchTutorDetails(tutorId);
     }
+
     useEffect(() => {
-        fetchTutorDetails();
+        loadTutorDetails()
     }, []);
 
     const addTutorEducation = () => {
-        fetchTutorEducationFormFields()
-            .then(result => {
-                if(result.resultShort === 'success') {
-                    setFormFields(result.formFields)
-                    setFormDetails({
-                        title: "Add Education",
-                        buttonName: 'Submit',
-                        editFlag: false
-                    })
-                    setShowForm(true)
-                }
-            })
+        fetchTutorEducationFormFields({title: "Add Education", buttonName: 'Submit', editFlag: false})
     }
 
     const toggleFormDetails = (flag = false, detaildObj) => {
-        setShowForm(flag)
-        setFormDetails(detaildObj);
+        // setShowForm(flag)
+        // setFormDetails(detaildObj);
     }
 
     const editEducationDetails = (id) => {
-        fetchTutorEducationFormFields()
-            .then(result => {
-                if(result.resultShort === 'success') {
-                    setFormFields(result.formFields)
-                    const editArray = details.educationDetails.filter(detail => {
-                        return detail.id === id
-                    })
-                    setEducationFormValues(editArray[0]);
-                    toggleFormDetails(true, {
-                        title: "Edit Education Education",
-                        buttonName: 'Edit',
-                        editFlag: true
-                    });
-                }
-            })
+        const editArray = tutorDetails.educationDetails.filter(detail => {
+            return detail.id === id
+        })
+        setEducationFormValues(editArray[0])
+        fetchTutorEducationFormFields({title: "Edit Education", buttonName: 'Edit',editFlag: true})
     }
 
     const hideForm = () => {
-        console.log('Button CLicked')
-        toggleFormDetails(false, {
-            title: "Edit Education Education",
-            buttonName: 'Edit',
-            editFlag: true
-        });
-        setIntialValue()
+        const postObj = {
+            showFlag: false, 
+            editFlag: false, 
+            formName: "Add Tutor Education", 
+            buttonName: 'Submit'
+        }
+        toggleForm(postObj);
+        setIntialValue();
     }
 
     const setIntialValue = () => {
@@ -156,18 +125,18 @@ const TutorDetails = () => {
         <Paper className={styles.paperContent}>
             <Grid container>
                 {
-                    details.tutorDetailsAttributes && 
-                    details.tutorDetailsAttributes.length > 0 &&
-                    details.tutorDetailsAttributes.map(detail => {
+                    tutorDetails.tutorDetailsAttributes && 
+                    tutorDetails.tutorDetailsAttributes.length > 0 &&
+                    tutorDetails.tutorDetailsAttributes.map(detail => {
                         return (
                             <Grid item xs={detail.size} className={styles[detail.class]}>
-                                <Text variant="subtitle1">
+                                <Text>
                                     {detail.name}:
                                 </Text>
-                                <Text variant="subtitle1" component="subtitle1" className={styles.block}>
+                                <Text className={styles.block}>
                                     {
-                                        details.tutorDetails[detail.id] ?
-                                        details.tutorDetails[detail.id] : "-"
+                                        tutorDetails.tutorData[detail.id] ?
+                                        tutorDetails.tutorData[detail.id] : "-"
                                     }
                                 </Text>
                             </Grid>
@@ -180,14 +149,14 @@ const TutorDetails = () => {
             showForm && (
                 <Paper className={styles.paperContent}>
                     <EducationForm
-                        formFields={formFields}
+                        formFields={educationFormFields}
                         formDetails={formDetails}
                         educationInitialValue={educationFormValues}
                         tutorId={tutorId}
                         toggleFormDetails={toggleFormDetails}
                         setIntialValue={setIntialValue}
                         hideForm={hideForm}
-                        fetchTutorDetails={fetchTutorDetails}
+                        fetchTutorDetails={loadTutorDetails}
                     />
                 </Paper>
             )
@@ -195,7 +164,7 @@ const TutorDetails = () => {
         <Paper className={styles.paperContent}>
             <Grid container>
                 <Grid item xs={6}>
-                    <Text variant="subtitle1" component="subtitle1">
+                    <Text >
                         Tutor Educational Details
                     </Text>
                 </Grid>
@@ -212,21 +181,19 @@ const TutorDetails = () => {
             </Grid>
             <hr></hr>
             {
-                details.educationDetails ? 
-                details.educationDetails.map(detail => {
+                tutorDetails.educationDetails ? 
+                tutorDetails.educationDetails.map(detail => {
                     return (
                         <div key={detail.id}>
                             <Grid container>
                                 {
-                                    details.educationAttrbutes.map((attributes) => {
+                                    tutorDetails.educationAttrbutes.map((attributes) => {
                                         return (
                                             <Grid item xs={attributes.size} className={`${styles[attributes.class]} ${styles.paddingTop}`}>
                                                 <Text>
                                                 {attributes.name}: 
                                                 </Text>
                                                 <Text 
-                                                variant="subtitle1"
-                                                component="h6"
                                                 className={styles.block}
                                                 >
                                                 {
@@ -261,4 +228,15 @@ const TutorDetails = () => {
     )
 }
 
-export default TutorDetails
+TutorDetails.prototype = {
+    tutorDetails: PropTypes.object.isRequired,
+    fetchTutorDetails: PropTypes.func.isRequired,
+    fetchTutorEducationFormFields: PropTypes.func.isRequired,
+    toggleForm: PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => ({
+    tutor: state.tutor
+})
+
+export default connect(mapStateToProps, {fetchTutorDetails, fetchTutorEducationFormFields, toggleForm})(TutorDetails)

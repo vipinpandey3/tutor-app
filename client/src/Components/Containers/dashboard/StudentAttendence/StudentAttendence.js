@@ -1,11 +1,20 @@
 import React, { useState, useContext, useEffect, createRef } from 'react';
 import Table from '../../../Common/Table';
 import {Grid, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles} from "@material-ui/core";
-import {DashboardContext} from '../../../../context/dashboard-context';
 import ActionButton from '../../../Common/ActionButton';
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import Input from '../../../Common/Input';
 import MatButton from '../../../Common/Button';
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import {
+  getAllStudentAttendence,
+  toggleStudenAttendenceElements,
+  getAllAttendenceOfStudentById,
+  getStudentById,
+  markStudentAttendenceById,
+  markStudentAbsence
+} from "../../../../redux/actions/dashboardAction"
 
 const useStyles = makeStyles((theme) => ({
   seacrhInput: {
@@ -25,63 +34,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const StudentAttendence = () => {
-  const { getAllStudentAttendence, markStudentAbsence, getStudentById, markStudentAttendenceById, getAllAttendenceOfStudentById} = useContext(DashboardContext)
+const StudentAttendence = ({dashboard: {error, message, loading, showStudentTables, studentAttendenceTableData, markStudentAttendenceTableData}, toggleStudenAttendenceElements, getAllStudentAttendence, getAllAttendenceOfStudentById, getStudentById, markStudentAttendenceById, markStudentAbsence}) => {
   const searchRef = createRef()
   const styles = useStyles();
-  const [showTables, setShowTables] = useState({
-    searchUserInput: false,
-    searchAttendeceInput: true,
-    showStudentTable: false,
-    showattendenceTable: true
-  })
-
-  const [attendenceTableData, setAttendenceTableData] = useState({
-    attendenceRows: [],
-    attendenceAttributes: []
-  })
-
-  const [markeAttendenceTableData, setMarkAttendenceTableData] = useState({
-    rows: [],
-    attributes: []
-  })
-
   const [inputValue, setInputValue] = useState("")
 
   useEffect(() => {
     loadAttendence()
   }, [])
 
-  const toggleElements = (flag1, flag2, flag3, flag4) => {
-    setShowTables({
-      searchUserInput: flag1,
-      searchAttendeceInput: flag2,
-      showStudentTable: flag3,
-      showattendenceTable: flag4
-    })
-  }
-
   const loadAttendence = () => {
     getAllStudentAttendence()
-    .then(result => {
-      if(result.resultShort === 'success') {
-        setAttendenceTableData({
-          attendenceRows: result.attendence,
-          attendenceAttributes: result.attributes
-        })
-      } else {
-        setAttendenceTableData({
-          attendenceRows: [],
-          attendenceAttributes: []
-        })
-      }
-    })
-    .catch(error => {
-      setAttendenceTableData({
-        attendenceRows: [],
-        attendenceAttributes: []
-      })
-    })
   }
 
   const onInputChange = (event) => {
@@ -91,63 +54,27 @@ const StudentAttendence = () => {
 
   const searchStudent = () => {
     getStudentById(inputValue)
-    .then(result => {
-      if(result.resultShort === 'success') {
-        console.log("result", result)
-        setMarkAttendenceTableData({
-          rows: result.studentDetails,
-          attributes: result.attributes
-        });
-        toggleElements(true, false, true, false);
-      } else {
-        setMarkAttendenceTableData({
-          row: [],
-          attributes: result.attributes
-        })
-      }
-    })
-    .catch(error => {
-      console.log('Error', error)
-    })
   }
 
   const hideSearchInputForStudentAttendence = () => {
-    toggleElements(false, true, false, true);
+    const postObj = {
+      flag1: false,
+      flag2: true,
+      flag3: false,
+      flag4: true
+    }
+    toggleStudenAttendenceElements(postObj)
   }
 
   const updateAttendence = (row) => {
-    console.log('row', row)
     markStudentAbsence(row.attendenceId)
-    .then(result => {
-      if(result.resultShort === 'success') {
-        loadAttendence();
-      }
-    })
-    .catch(error => {
-      console.log('Error while calling markStudentAbsence method')
-    })
   }
 
   const searchStudentAttendence = (event) => {
     if (event.code === 'Enter') {
       if(searchRef.current.value !== "") {
         getAllAttendenceOfStudentById(searchRef.current.value)
-        .then(result => {
-          console.log('REsult', result)
-          if(result.resultShort === 'success') {
-            setAttendenceTableData({
-              attendenceRows: result.attendence,
-              attendenceAttributes: result.attributes
-            })
-          } else {
-            setAttendenceTableData({
-              attendenceRows: [],
-              attendenceAttributes: result.attributes
-            })
-          }
-        })
       } else if(searchRef.current.value === "") {
-        console.log('')
         loadAttendence();
       }
     }
@@ -155,26 +82,22 @@ const StudentAttendence = () => {
 
   const markStudentAttendce = (row) => {
     markStudentAttendenceById(row.id)
-    .then(result => {
-      if(result.resultShort === 'success') {
-        toggleElements(false, true, false, true);
-        loadAttendence();
-      }
-    })
-    .catch(error => {
-      toggleElements(true, false, true, false);
-    })
-
   }
 
   const showInputStudentForAttendence = () => {
-    toggleElements(true, false, false, true)
+    const postObj = {
+      flag1: true,
+      flag2: false,
+      flag3: false,
+      flag4: true
+    }
+    toggleStudenAttendenceElements(postObj)
   }
   
   return (
     <>
       {
-       showTables.searchUserInput && (
+       showStudentTables.searchUserInput && (
         <Grid container>
           <Grid item xs={3}>
             <Input
@@ -195,38 +118,29 @@ const StudentAttendence = () => {
        )
       }
       {
-        showTables.showStudentTable &&
+        showStudentTables.showStudentTable &&
         <Table
-          records={markeAttendenceTableData.rows}
-          headCells={markeAttendenceTableData.attributes}
+          records={markStudentAttendenceTableData.rows}
+          headCells={markStudentAttendenceTableData.attributes}
           edit={markStudentAttendce}
         />
       }
       {
-        showTables.searchAttendeceInput && (
+        showStudentTables.searchAttendeceInput && (
           <Grid container>
               <Grid items xs={6}>
-                {/* <Toolbar> */}
-                  <input  onKeyDown={searchStudentAttendence} className={styles.searchInput} ref={searchRef} name="studentAttendence" placeholder="Search"  />
-                  {/* <Input
-                    onKeyDown={searchStudentAttendence}
-                    label="Search Student"
-                    className={styles.seacrhInput}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="end">
-                          <SearchIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  /> */}
-                {/* </Toolbar> */}
+                  <input  
+                    onKeyDown={searchStudentAttendence} 
+                    className={styles.searchInput} 
+                    ref={searchRef} 
+                    name="studentAttendence" 
+                    placeholder="Search"  
+                  />
               </Grid>
               <Grid item sm></Grid>
               <Grid item>
                 <Toolbar>
                   <MatButton
-                  // className={styles.attendenceButton}
                     variant="outlined"
                     onClick={showInputStudentForAttendence}
                   >
@@ -238,12 +152,12 @@ const StudentAttendence = () => {
         )
       }
       {
-        showTables.showattendenceTable && 
+        showStudentTables.showattendenceTable && 
         <MuiTable>
           <TableHead>
             <TableRow>
               {
-                attendenceTableData.attendenceAttributes.map((cell, index) => {
+                studentAttendenceTableData.attendenceAttributes.map((cell, index) => {
                   return (
                     <TableCell
                       key={index}
@@ -258,11 +172,11 @@ const StudentAttendence = () => {
           </TableHead>
           <TableBody>
             {
-              attendenceTableData.attendenceRows.map((details, celIndex) => {
+              studentAttendenceTableData.attendenceRows.map((details, celIndex) => {
                 return (
                   <TableRow key={details.id}>
                     {
-                      attendenceTableData.attendenceAttributes.map((rowCell, cellIndex) => {
+                      studentAttendenceTableData.attendenceAttributes.map((rowCell, cellIndex) => {
                         const value = details[rowCell.props];
                         if(rowCell.props && rowCell.props.includes('.')) {
                           const itemSplit = rowCell.props.split('.');
@@ -304,4 +218,20 @@ const StudentAttendence = () => {
   )
 };
 
-export default StudentAttendence;
+StudentAttendence.propTyes = {
+  dashboard: PropTypes.object.isRequired,
+  getAllStudentAttendence: PropTypes.func.isRequired,
+  toggleStudenAttendenceElements: PropTypes.func.isRequired,
+  getAllAttendenceOfStudentById: PropTypes.func.isRequired,
+  getStudentById: PropTypes.func.isRequired,
+  markStudentAttendenceById: PropTypes.func.isRequired,
+  markStudentAbsence: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => {
+  return {
+    dashboard: state.dashboard
+  }
+}
+
+export default connect(mapStateToProps, {markStudentAbsence, markStudentAttendenceById, getAllStudentAttendence, toggleStudenAttendenceElements, getAllAttendenceOfStudentById, getStudentById})(StudentAttendence);

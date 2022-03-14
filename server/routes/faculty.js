@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const Faculty = require('../controllers/faculty');
-const FeexService = require('../services/feesServices');
+const FeesService = require('../services/feesServices');
 
 const router = express.Router();
 
@@ -31,8 +31,9 @@ router.get('/downloadFeesReciept/:feesUUID', (req, res, next) => {
     console.log('inside downloadFeesReciept');
     const feesUUId = req.params.feesUUID;
     console.log('FeesUUId', feesUUId);
-    FeexService.downloadFeesReciept(feesUUId)
+    FeesService.downloadFeesReciept(feesUUId)
         .then(result => {
+            console.log("Result *******", result)
             var file = fs.createReadStream(result);
             var stat = fs.statSync(result);
 

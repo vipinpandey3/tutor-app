@@ -1,6 +1,5 @@
-import {Table as MuiTable, Grid, InputAdornment, makeStyles, TableBody, TableCell, TableHead, TableRow, Toolbar } from '@material-ui/core';
+import {Table as MuiTable, Grid, makeStyles, TableBody, TableCell, TableHead, TableRow, Toolbar } from '@material-ui/core';
 import React, { useRef, useState } from 'react';
-import SearchIcon from "@material-ui/icons/Search";
 import { useContext } from 'react';
 import { useEffect } from 'react';
 import { DashboardContext } from '../../../../context/dashboard-context';
@@ -10,6 +9,17 @@ import MatButton from '../../../Common/Button';
 import ActionButton from '../../../Common/ActionButton';
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import {
+  getAllTutorAttendence,
+  toggleTutorAttendenceElement,
+  getTutorById,
+  markTutorAttendceById,
+  updateTutorAttendence,
+  markTutorAbsence
+} from '../../../../redux/actions/dashboardAction'
+
 
 const useStyles = makeStyles((theme) => ({
   seacrhInput: {
@@ -36,39 +46,14 @@ const useStyles = makeStyles((theme) => ({
   // }
 }))
 
-const TutorAttendence = () => {
-  const {getTutorById, updateTutorAttendence, markTutorAbsence, getAllTutorAttendence, getAllAttendenceOfTutorById, markTutorAttendceById} = useContext(DashboardContext)
+const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, tutorAttendenceRecord, markAttendenceTableData}, markTutorAttendceById, getTutorById, getAllTutorAttendence, toggleTutorAttendenceElement, updateTutorAttendence, markTutorAbsence}) => {
+  const {getAllAttendenceOfTutorById} = useContext(DashboardContext)
   const styles = useStyles();
   const searchRef = useRef();
-  const [showTables, setShowTables] = useState({
-    searchUserInput: false,
-    searchAttendeceInput: true,
-    showTutorTable: false,
-    showattendenceTable: true
-  })
-
-  const [tutorAttendenceRecord, setTutorAttendence] = useState({
-    attedenceRows: [],
-    attendenceTableAttributes: []
-  });
-
   const [inputValue, setInputValue] = useState("")
-
-  const [markeAttendenceTableData, setMarkAttendenceTableData] = useState({
-    rows: [],
-    attributes: []
-  })
 
   const loadAttendence = () => {
     getAllTutorAttendence()
-    .then(result => {
-      if(result.resultShort === 'success') {
-        setTutorAttendence({
-          attendenceTableAttributes: result.attributes,
-          attedenceRows: result.attendence,
-        })
-      }
-    })
   }
 
   useEffect(() => {
@@ -82,10 +67,11 @@ const TutorAttendence = () => {
         getAllAttendenceOfTutorById(searchRef.current.value)
           .then(result => {
             if(result.resultShort === 'success') {
-              setTutorAttendence({
-                attendenceTableAttributes: result.attributes,
-                attedenceRows: result.attendence
-              })
+              console.log("REsult ", result)
+              // setTutorAttendence({
+              //   attendenceTableAttributes: result.attributes,
+              //   attedenceRows: result.attendence
+              // })
             }
           })
       } else {
@@ -95,41 +81,28 @@ const TutorAttendence = () => {
   }
 
   const searchTutorForAttendence = () => {
-    toggleElements(true, false, false, true)
+    const postObj = {
+      flag1: true,
+      flag2: false,
+      flag3: false,
+      flag4: true
+    }
+    toggleTutorAttendenceElement(postObj)
   }
 
   const searchTutor = () => {
+    console.log('INPUT Value', inputValue)
     getTutorById(inputValue)
-    .then(result => {
-      if(result.resultShort === 'success') {
-        setMarkAttendenceTableData({
-          rows: result.tutorDetails,
-          attributes: result.attributes
-        });
-        toggleElements(true, false, true, false)
-      } else {
-        setMarkAttendenceTableData({
-          row: [],
-          attributes: []
-        })
-      }
-    })
-    .catch(error => {
-      console.log('Error', error)
-    })
-  }
-
-  const toggleElements = (flag1, flag2, flag3, flag4) => {
-    setShowTables({
-      searchUserInput: flag1,
-      searchAttendeceInput: flag2,
-      showTutorTable: flag3,
-      showattendenceTable: flag4
-    })
   }
 
   const cancelAttedence = () => {
-    toggleElements(false, true, false, true);
+    const postObj = {
+      flag1: false,
+      flag2: true,
+      flag3: false,
+      flag4: true
+    }
+    toggleTutorAttendenceElement(postObj)
     setInputValue("")
   }
 
@@ -140,46 +113,23 @@ const TutorAttendence = () => {
 
   const markeTutorAttendence = (row) => {
     markTutorAttendceById(row.id)
-    .then(result => {
-      if(result.resultShort === 'success') {
-        toggleElements(false, true, false, true);
-      }
-    })
-    .catch(error => {
-      toggleElements(true, false, true, false);
-    })
+    setInputValue("")
   }
 
   const updateAttendence = (row, type) => {
     console.log('updateAttendence', row, type)
     if(type === 'timeOut') {
       return updateTutorAttendence(row.attendenceId)
-      .then(result => {
-        if(result.resultShort === 'success') {
-          loadAttendence();
-        }
-      })
-      .catch(error => {
-        console.log('Error while calling markTutorAbsence method')
-      })
     }
     if(type === 'absent') {
       return markTutorAbsence(row.attendenceId)
-      .then(result => {
-        if(result.resultShort === 'success') {
-          loadAttendence();
-        }
-      })
-      .catch(error => {
-        console.log('Error while calling markTutorAbsence method')
-      })
     }
   }
 
   return (
     <>
       {
-       showTables.searchUserInput && (
+       showTutorTables.searchUserInput && (
         <Grid container>
           <Grid item xs={3}>
             <Input
@@ -200,36 +150,21 @@ const TutorAttendence = () => {
        )
       }
       {
-        showTables.showTutorTable && 
+        showTutorTables.showTutorTable && 
         <Table 
-          records={markeAttendenceTableData.rows}
-          headCells={markeAttendenceTableData.attributes}
+          records={markAttendenceTableData.rows}
+          headCells={markAttendenceTableData.attributes}
           edit={markeTutorAttendence}
         />
       }
       {
-        showTables.searchAttendeceInput && (
+        showTutorTables.searchAttendeceInput && (
           <Grid container>
               <Grid items xs={6}>
-                <input  onKeyDown={searchTutorAttendence} className={styles.searchInput} ref={searchRef} name="studentAttendence" placeholder="Search"  />
-                {/* <Toolbar>
-                  <Input
-                    onKeyDown={searchTutorAttendence}
-                    label="Search Student"
-                    className={styles.seacrhInput}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="end">
-                          <SearchIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Toolbar> */}
+                <input  onKeyDown={searchTutorAttendence} className={styles.searchInput} ref={searchRef} name="studentAttendence" placeholder="Search"/>
               </Grid>
               <Grid item sm></Grid>
               <Grid item xs={3}>
-                {/* <Toolbar> */}
                   <MatButton
                     className={styles.actionButton}
                     variant="outlined"
@@ -237,12 +172,11 @@ const TutorAttendence = () => {
                   >
                     Mark Attendence
                   </MatButton>
-                {/* </Toolbar> */}
               </Grid>
           </Grid>
         )
       }
-      { showTables.showattendenceTable && 
+      { showTutorTables.showattendenceTable && 
         <MuiTable>
           <TableHead>
             <TableRow key="header">
@@ -316,11 +250,21 @@ const TutorAttendence = () => {
   )
 };
 
-export default TutorAttendence;
+TutorAttendence.propTypes = {
+  dashboard: PropTypes.object.isRequired,
+  getAllTutorAttendence: PropTypes.func.isRequired,
+  toggleTutorAttendenceElement: PropTypes.func.isRequired,
+  getTutorById: PropTypes.func.isRequired,
+  markTutorAttendceById: PropTypes.func.isRequired,
+  updateTutorAttendence: PropTypes.func.isRequired,
+  markTutorAbsence: PropTypes.func.isRequired
+};
 
-// eslint-disable-next-line no-lone-blocks
-{/* <Table
-          records={tutorAttendenceRecord.attedenceRows}
-          headCells={tutorAttendenceRecord.attendenceTableAttributes}
-          openInPopup={editAttendence} */}
+const mapStateToProps = (state) => {
+  return {
+    dashboard: state.dashboard
+  }
+}
+
+export default connect(mapStateToProps, {markTutorAbsence, getAllTutorAttendence, toggleTutorAttendenceElement, getTutorById, markTutorAttendceById, updateTutorAttendence})(TutorAttendence);
 

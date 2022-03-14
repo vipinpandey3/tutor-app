@@ -25,7 +25,7 @@ const intitalState = {
         attedenceRows: [],
         attendenceTableAttributes: []
     },
-    markeAttendenceTableData: {
+    markAttendenceTableData: {
         rows: [],
         attributes: []
     },
@@ -167,7 +167,133 @@ const dashboardReducer = (state=intitalState, action) => {
                 loading: action.payload.loading,
                 error: action.payload.error,
                 message: action.payload.message
+            };
+
+        case types.FETCH_TUTOR_ATTENDENCE:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                tutorAttendenceRecord: {
+                    attedenceRows: action.payload.tutorAttendenceRecord.attedenceRows,
+                    attendenceTableAttributes: action.payload.tutorAttendenceRecord.attendenceTableAttributes,
+                },
+                showTutorTables: {
+                    searchUserInput: action.payload.showTutorTables.searchUserInput,
+                    searchAttendeceInput: action.payload.showTutorTables.searchAttendeceInput,
+                    showTutorTable: action.payload.showTutorTables.showTutorTable,
+                    showattendenceTable: action.payload.showTutorTables.showattendenceTable
+                }
+            };
+
+        case types.FETCH_TUTOR_ATTENDENCE_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+            };
+
+        case types.TOGGLE_TUTOR_ATTENDENCE_ELEMENT:
+            return {
+                ...state,
+                showTutorTables: {
+                    searchUserInput: action.payload.searchUserInput,
+                    searchAttendeceInput: action.payload.searchAttendeceInput,
+                    showTutorTable: action.payload.showTutorTable,
+                    showattendenceTable: action.payload.showattendenceTable
+                }
+            };
+
+        case types.SEARCH_TUTOR_BY_ID:
+            return {
+                ...state,
+                showTutorTables: {
+                    searchUserInput: action.payload.showTutorTables.searchUserInput,
+                    searchAttendeceInput: action.payload.showTutorTables.searchAttendeceInput,
+                    showTutorTable: action.payload.showTutorTables.showTutorTable,
+                    showattendenceTable: action.payload.showTutorTables.showattendenceTable
+                },
+                markAttendenceTableData: {
+                    rows: action.payload.markAttendenceTableData.rows,
+                    attributes: action.payload.markAttendenceTableData.attributes
+                }
+            };
+
+        case types.SEARCH_TUTOR_BY_ID_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+            };
+        
+        case types.MARK_TUTOR_ATTENDENCE:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showTutorTables: {
+                    searchUserInput: action.payload.showTutorTables.searchUserInput,
+                    searchAttendeceInput: action.payload.showTutorTables.searchAttendeceInput,
+                    showStudentTable: action.payload.showTutorTables.showStudentTable,
+                    showattendenceTable: action.payload.showTutorTables.showattendenceTable
+                }
+            };
+
+        case types.MARK_TUTOR_ATTENDENCE_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
             }
+
+        case types.UPDATE_TUTOR_ATTENDENCE:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showTutorTables: {
+                    searchUserInput: action.payload.showTutorTables.searchUserInput,
+                    searchAttendeceInput: action.payload.showTutorTables.searchAttendeceInput,
+                    showStudentTable: action.payload.showTutorTables.showStudentTable,
+                    showattendenceTable: action.payload.showTutorTables.showattendenceTable
+                }
+            };
+
+        case types.UPDATE_TUTOR_ATTENDENCE_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
+            };
+
+        case types.MARK_TUTOR_ABSENCE:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showTutorTables: {
+                    searchUserInput: action.payload.showStudentTables.searchUserInput,
+                    searchAttendeceInput: action.payload.showStudentTables.searchAttendeceInput,
+                    showStudentTable: action.payload.showStudentTables.showStudentTable,
+                    showattendenceTable: action.payload.showStudentTables.showattendenceTable
+                }
+            };
+
+        case types.MARK_TUTOR_ABSENCE_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
+            };
     
         default:
             return state;

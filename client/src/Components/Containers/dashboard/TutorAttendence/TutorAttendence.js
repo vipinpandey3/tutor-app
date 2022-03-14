@@ -17,7 +17,8 @@ import {
   getTutorById,
   markTutorAttendceById,
   updateTutorAttendence,
-  markTutorAbsence
+  markTutorAbsence,
+  getAllAttendenceOfTutorById
 } from '../../../../redux/actions/dashboardAction'
 
 
@@ -46,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
   // }
 }))
 
-const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, tutorAttendenceRecord, markAttendenceTableData}, markTutorAttendceById, getTutorById, getAllTutorAttendence, toggleTutorAttendenceElement, updateTutorAttendence, markTutorAbsence}) => {
-  const {getAllAttendenceOfTutorById} = useContext(DashboardContext)
+const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, tutorAttendenceRecord, markAttendenceTableData}, markTutorAttendceById, getTutorById, getAllTutorAttendence, toggleTutorAttendenceElement, updateTutorAttendence, markTutorAbsence, getAllAttendenceOfTutorById}) => {
+  const {} = useContext(DashboardContext)
   const styles = useStyles();
   const searchRef = useRef();
   const [inputValue, setInputValue] = useState("")
@@ -65,15 +66,6 @@ const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, 
     if(event.keyCode === 13) {
       if(searchRef.current.value !== "") {
         getAllAttendenceOfTutorById(searchRef.current.value)
-          .then(result => {
-            if(result.resultShort === 'success') {
-              console.log("REsult ", result)
-              // setTutorAttendence({
-              //   attendenceTableAttributes: result.attributes,
-              //   attedenceRows: result.attendence
-              // })
-            }
-          })
       } else {
        loadAttendence() 
       }
@@ -257,7 +249,8 @@ TutorAttendence.propTypes = {
   getTutorById: PropTypes.func.isRequired,
   markTutorAttendceById: PropTypes.func.isRequired,
   updateTutorAttendence: PropTypes.func.isRequired,
-  markTutorAbsence: PropTypes.func.isRequired
+  markTutorAbsence: PropTypes.func.isRequired,
+  getAllAttendenceOfTutorById: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -266,5 +259,5 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, {markTutorAbsence, getAllTutorAttendence, toggleTutorAttendenceElement, getTutorById, markTutorAttendceById, updateTutorAttendence})(TutorAttendence);
+export default connect(mapStateToProps, {markTutorAbsence, getAllTutorAttendence, toggleTutorAttendenceElement, getTutorById, markTutorAttendceById, updateTutorAttendence, getAllAttendenceOfTutorById})(TutorAttendence);
 

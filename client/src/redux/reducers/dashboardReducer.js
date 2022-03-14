@@ -294,6 +294,32 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message
             };
+
+        case types.SEARCH_TUTOR_ATTENDENCE_BY_ID:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                tutorAttendenceRecord: {
+                    attedenceRows: action.payload.tutorAttendenceRecord.attendenceRows,
+                    attendenceTableAttributes: action.payload.tutorAttendenceRecord.attendenceAttributes
+                },
+                showTutorTables: {
+                    searchUserInput: action.payload.showTutorTables.searchUserInput,
+                    searchAttendeceInput: action.payload.showTutorTables.searchAttendeceInput,
+                    showStudentTable: action.payload.showTutorTables.showStudentTable,
+                    showattendenceTable: action.payload.showTutorTables.showattendenceTable
+                }
+            };
+
+        case types.SEARCH_TUTOR_ATTENDENCE_BY_ID_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
+            }
     
         default:
             return state;

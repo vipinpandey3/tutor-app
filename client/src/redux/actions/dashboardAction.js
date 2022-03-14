@@ -641,3 +641,67 @@ export const markTutorAbsence = (id) => {
         }
     }
 }
+
+export const getAllAttendenceOfTutorById = (emailId) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+
+        const getData = async(postObj) => {
+            const response = await axios.post('/faculty/getTutorAttendenceById', postObj)
+            if(response.statusText !== 'OK') {
+                throw new Error("Error while fetching student attendence");
+            }
+            return response.data;
+        }
+
+        try {
+            const postObj = {
+                tutorEmail: emailId
+            }
+            const attendenceData = await getData(postObj);
+            if(attendenceData.resultShort === 'success'){
+                dispatch({
+                    type: types.SEARCH_TUTOR_ATTENDENCE_BY_ID,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        message: attendenceData.resultLong,
+                        showTutorTables: {
+                            searchUserInput: false,
+                            searchAttendeceInput: true,
+                            showStudentTable: false,
+                            showattendenceTable: true
+                        },
+                        tutorAttendenceRecord: {
+                            attendenceRows: attendenceData.attendence,
+                            attendenceAttributes: attendenceData.attributes
+                        }
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.SEARCH_TUTOR_ATTENDENCE_BY_ID_ERROR,
+                    payload: {
+                        loading: false,
+                        error: true,
+                        message: attendenceData.resultLong,
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.SEARCH_TUTOR_ATTENDENCE_BY_ID_ERROR,
+                payload: {
+                    loading: false,
+                    error: true,
+                    message: error
+                }
+            })
+        }
+    }
+}

@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 require('dotenv').config({path: __dirname + '/.env'})
-const adminRoute = require("./routes/admin");
-const facultyRoute = require('./routes/faculty');
+// const adminRoute = require("./routes/admin");
+// const facultyRoute = require('./routes/faculty');
 const authenticateRoute = require('./routes/authenticate');
 const passport = require('passport');
 require('./services/AuthServices')(passport);

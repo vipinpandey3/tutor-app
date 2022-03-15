@@ -52,7 +52,7 @@ const Navbar = () => {
   const classes = useStyles();
   const loggedInUser = "Vipin";
   const authContext = useContext(AuthContext);
-  const {logout} = authContext
+  // const {logout} = authContext
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const history = useHistory()
@@ -77,7 +77,7 @@ const Navbar = () => {
 
   const logoutHandler = () => {
     setOpen(false);
-    logout();
+    // logout();
     history.push('/login')
   }
 

@@ -16,6 +16,7 @@ import {AuthContext} from './context/auth-context'
 import setAuthToken from './utils/setAuthToken';
 import Sidebar from './Pages/Sidebar';
 import Navbar from './Pages/Navbar';
+import { useContext, useState } from 'react';
 
 const theme = createTheme({
   palette: {
@@ -83,7 +84,8 @@ if(localStorage.token) {
 
 function App() {
   const classes = useStyles();
-  const {isAuth} = useContext(AuthContext);
+  const [isAuth, setIsAuth] = useState(true)
+  // const {isAuth} = useContext(AuthContext);
 
   return (
     <ThemeProvider theme={theme} >

@@ -1,14 +1,13 @@
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import logger from "redux-logger";
+import promise from "redux-promise";
 
-const initialState = {};
-const middleware = [thunk];
-const store = createStore(
-  rootReducer,
-  initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
-);
+// import tutorReducer from "./tutorSlice";
+import reducer from './reducers/index'
 
-export default store;
+let middleware = [thunk, promise, logger];
+
+const store = createStore(reducer, applyMiddleware(...middleware))
+
+export default store

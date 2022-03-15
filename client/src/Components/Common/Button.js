@@ -1,5 +1,5 @@
 import { Button as MuiButton, makeStyles } from "@material-ui/core";
-import React, { forwardRef } from "react";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {

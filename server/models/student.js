@@ -1,55 +1,61 @@
-const Sequelize = require('sequelize');
-const sequelize = require('./database');
 
-const Student = sequelize.define('student', {
-    id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    firstName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: '-'
-    },
-    lastName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: '-'
-    },
-    emailId: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-    },
-    address: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-    },
-    dob: {
-        type: Sequelize.STRING,
-    },
-    religion: {
-        type: Sequelize.CHAR(55),
-        defaultValue: 'Hindu',
-        allowNull: false,
-    },
-    gender: {
-        type: Sequelize.CHAR(55),
-        defaultValue: 'Male',
-        allowNull: false
-    },
-    aadharNo: {
-        type: Sequelize.STRING(16),
-        allowNull: false,
-        unique: true
-    },
-    panNo: {
-        type: Sequelize.CHAR(55),
-        allowNull: true,
-        unique: true
-    }
-})
+module.exports = function(sequelize, DataTypes) {
+    let Student = sequelize.define('Student', {
+        id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true
+        },
+        firstName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: '-'
+        },
+        lastName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: '-'
+        },
+        emailId: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        address: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        dob: {
+            type: DataTypes.STRING,
+        },
+        religion: {
+            type: DataTypes.CHAR(55),
+            defaultValue: 'Hindu',
+            allowNull: false,
+        },
+        gender: {
+            type: DataTypes.CHAR(55),
+            defaultValue: 'Male',
+            allowNull: false
+        },
+        aadharNo: {
+            type: DataTypes.STRING(16),
+            allowNull: false,
+            unique: true
+        },
+        panNo: {
+            type: DataTypes.CHAR(55),
+            allowNull: true,
+            unique: true
+        }
+    })
 
-module.exports = Student
+    Student.associate = function(models) {
+        Student.hasMany(models.Fees, {foreignKey: "StudentId"})
+        Student.belongsTo(models.Parent)
+        Student.hasMany(models.StudentEducationDetails, {foreignKey: "StudentId"});
+        Student.hasMany(models.StudentAttendence, {foreignKey: "StudentId"});
+    };
+
+    return Student
+}

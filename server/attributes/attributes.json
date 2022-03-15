@@ -50,15 +50,15 @@
         "index": 1,
         "attributes": [
             {
-                "id": "studentId",
-                "name": "studentId",
+                "id": "StudentId",
+                "name": "StudentId",
                 "label": "Student Id",
                 "type": "input"
             },
             {
-                "id": "studentName",
-                "name": "studentName",
-                "label": "Student Name",
+                "id": "academicYear",
+                "name": "Academic Year",
+                "label": "Academic year",
                 "type": "input"
             },
             {
@@ -101,83 +101,219 @@
     },
     {
         "index": 2,
-        "columnsHeader": [
+        "name": "examTable",
+        "attributes": [
             {
-                "id": "id",
-                "label": "User Id"
+                "id": "Standard",
+                "label": "Standard"
             },
             {
-                "id": "name",
-                "label": "User Name"
+                "id": "timeStart",
+                "label": "ExamTimeStart"
             },
             {
-                "id": "emailId",
-                "label": "User Email"
+                "id": "timeEnd",
+                "label": "ExamTimeEnd"
             },
             {
-                "id": "role",
-                "label": "User Role"
+                "id": "ExamStartDate",
+                "label": "ExamStartDate"
             },
             {
-                "id": "phone",
-                "label": "User Phone"
+                "id": "AcademicYear",
+                "label": "AcademicYear"
             },
             {
-                "id": "panNumber",
-                "label": "PAN"
+                "id": "ExamType",
+                "label": "ExamType"
+            },
+            {
+                "id": "ExamStatus",
+                "label": "ExamStatus"
             }
         ]
     },
     {
         "index": 3,
+        "name": "nestedTableHeader",
         "attributes": [
+            {
+                "id": "date",
+                "label": "Date"
+            },
+            {
+                "id": "subject",
+                "label": "Subject"
+            },
+            {
+                "id": "hours",
+                "label": "Hours"
+            },
+            {
+                "id": "marks",
+                "label": "Marks"
+            }
+        ]
+    },
+    {
+        "index": 4,
+        "name": "examFormFields",
+        "attributes": [
+            {
+                "id": "examType",
+                "name": "examType",
+                "label": "Exam Type",
+                "type": "select",
+                "option": [],
+                "service": "examTypeData",
+                "method": "getExamTypeData"
+            },
+            {
+                "id": "timeStart",
+                "name": "timeStart",
+                "label": "Time Start",
+                "type": "time"
+            },
+            {
+                "id": "examDate",
+                "name": "examDate",
+                "label": "Exam Start Date",
+                "type": "date"
+            },
+            {
+                "id": "academicYear",
+                "name": "academicYear",
+                "label": " Academic Year",
+                "type": "input"
+            },
+            {
+                "id": "standard",
+                "name": "standard",
+                "label": "Standard",
+                "type": "select",
+                "option": [],
+                "service": "standardData",
+                "method": "getStandardData",
+                "updateChildInput": true,
+                "childId": "subject",
+                "updatedChildIdKeys": {
+                    "class": "show"
+                },
+                "resetChildIdKey": {
+                    "class": "hide"
+                }
+            },
+            {
+                "id": "subject",
+                "name": "subjects",
+                "label": "Subjects",
+                "type": "multiselect",
+                "options": []
+            },
+            {
+                "id": "hours",
+                "name": "hours",
+                "label": "Hours",
+                "type": "select",
+                "options": [],
+                "class": "show",
+                "service": "hoursData",
+                "method": "getHoursdata"
+            },
+            {
+                "id": "marks",
+                "name": "marks",
+                "label": "Marks",
+                "type": "select",
+                "options": [],
+                "service": "marksData",
+                "method": "getMarksData"
+            }
+        ]
+    },
+    {
+        "index": 5,
+        "name": "examType",
+        "type": [
+            {
+                "id": 1,
+                "type": "Daily"
+            },
+            {
+                "id": 2,
+                "type": "Weekly"
+            },
+            {
+                "id": 3,
+                "type": "Monthly"
+            },
+            {
+                "id": 4,
+                "type": "Half-Sem"
+            },
+            {
+                "id": 5,
+                "type": "Semester"
+            }
+        ]
+    },
+    {
+        "index": 6,
+        "name": "studentTableHeader",
+        "columnsHeader": [
+            {
+                "id": "firstName",
+                "label": "First Name"
+            },
+            {
+                "id": "lastName",
+                "label": "Last Name"
+            },
+            {
+                "id": "emailId",
+                "label": "EmailId"
+            },
+            {
+                "id": "gender",
+                "label": "Gender"
+            },
+            {
+                "id": "dob",
+                "label": "Date of Birth"
+            },
+            {
+                "id": "aadharNo",
+                "label": "Aadhar Number"
+            }
+        ]
+    },
+    {
+        "index": 7,
+        "name": "studentFormFields",
+        "formFields": [
             {
                 "id": "firstName",
                 "name": "firstName",
-                "label": "User FirstName",
+                "label": "FirstName",
                 "type": "input"
             },
             {
                 "id": "lastName",
                 "name": "lastName",
-                "label": "User LastName",
+                "label": "lastName",
                 "type": "input"
             },
             {
                 "id": "emailId",
                 "name": "emailId",
-                "label": "User Email",
+                "label": "Email",
                 "type": "input"
             },
             {
-                "id": "password",
-                "name": "password",
-                "label": "Password",
+                "id": "mobile",
+                "name": "mobile",
+                "label": "Mobile",
                 "type": "input"
-            },
-            {
-                "id": "phone",
-                "name": "phone",
-                "label": "User Phone",
-                "input": "input"
-            },
-            {
-                "id": "pan",
-                "name": "pan",
-                "label": "PAN",
-                "type": "input"
-            },
-            {
-                "id": "role",
-                "name": "role",
-                "label": "Role",
-                "type": "input"
-            },
-            {
-                "id": "dob",
-                "name": "dob",
-                "label": "Date of Birth",
-                "type": "date"
             },
             {
                 "id": "address",
@@ -186,51 +322,800 @@
                 "type": "input"
             },
             {
-                "id": "remarks",
-                "name": "remarks",
-                "label": "Remarks",
+                "id": "aadharNo",
+                "name": "aadharNo",
+                "label": "Aadhar Number",
+                "type": "input"
+            },
+            {
+                "id": "gender",
+                "name": "gender",
+                "label": "Gender",
+                "type": "select",
+                "option": [],
+                "service": "genderData",
+                "method": "getGenderData"
+            },
+            {
+                "id": "dob",
+                "name": "dob",
+                "label": "Date of Birth",
+                "type": "date"
+            },
+            {
+                "id": "stream",
+                "name": "stream",
+                "label": "Stream",
+                "type": "select",
+                "option": [],
+                "service": "studentStream",
+                "method": "getStudentStreamData"
+            }
+        ]
+    },
+    {
+        "index": 8,
+        "name": "studentParentFormFields",
+        "formFields": [
+            {
+                "id": "fatherName",
+                "name": "fatherName",
+                "label": "Father Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherAadhar",
+                "name": "fatherAadhar",
+                "label": "Father Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherName",
+                "name": "motherName",
+                "label": "Mother Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherAadhar",
+                "name": "motherAadhar",
+                "label": "Mother Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherEmailId",
+                "name": "fatherEmailId",
+                "label": "Father Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherEmailId",
+                "name": "motherEmailId",
+                "label": "Mother Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherHighestQualifaction",
+                "name": "fatherHighestQualifaction",
+                "label": "Father Highest Education",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherHighestQualification",
+                "name": "motherHighestQualification",
+                "label": "Mother Highest Eduation",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherDob",
+                "name": "fatherDob",
+                "label": "Father DOB",
+                "type": "date",
+                "size": 4
+              },
+              {
+                "id": "motherdob",
+                "name": "motherdob",
+                "label": "Mother DOB",
+                "type": "date",
+                "size": 4
+              }
+        ]
+    },
+    {
+        "index": 9,
+        "name": "studentParentUpdateFormFields",
+        "formFields": [
+            {
+                "id": "fatherName",
+                "name": "fatherName",
+                "label": "Father Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherAadhar",
+                "name": "fatherAadhar",
+                "label": "Father Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherName",
+                "name": "motherName",
+                "label": "Mother Name",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherAadhar",
+                "name": "motherAadhar",
+                "label": "Mother Aadhar Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherEmailId",
+                "name": "fatherEmailId",
+                "label": "Father Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherEmailId",
+                "name": "motherEmailId",
+                "label": "Mother Email",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "fatherHighestQualifaction",
+                "name": "fatherHighestQualifaction",
+                "label": "Father Highest Education",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "motherHighestQualification",
+                "name": "motherHighestQualification",
+                "label": "Mother Highest Eduation",
+                "type": "input",
+                "size": 4
+              }
+        ]
+    },
+    {
+        "index": 10,
+        "name": "StudentEducationDetails",
+        "formFields": [
+            {
+                "id": "std",
+                "name": "std",
+                "label": "Standard",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "seatNumber",
+                "name": "seatNumber",
+                "label": "Seat Number",
+                "type": "input",
+                "size": 4
+              },
+              {
+                "id": "year",
+                "name": "year",
+                "type": "input",
+                "size": 4,
+                "label": "Academic Year"
+              },
+              {
+                "id": "totalMarks",
+                "name": "totalMarks",
+                "type": "input",
+                "size": 4,
+                "label": "Total Marks(Eg: 400/600)"
+              },
+              {
+                "id": "instituteName",
+                "name": "instituteName",
+                "type": "input",
+                "size": 4,
+                "label": "Institute/College Name"
+              },
+              {
+                "id": "universityName",
+                "name": "universityName",
+                "type": "input",
+                "size": 4,
+                "label": "Univeristy/Board Name"
+              }
+        ]
+    },
+    {
+        "index": 11,
+        "name": "studenDetailsAttributes",
+        "studentDetailsAttributes": [
+            {
+                "id": "firstName",
+                "name": "FirstName",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "lastName",
+                "name": "LastName",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "emailId",
+                "name": "Email",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "religion",
+                "name": "Religion",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "gender",
+                "name": "Gender",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "dob",
+                "name": "DOB",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "aadharNo",
+                "name": "Aadhar No",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "panNo",
+                "name": "Pan No",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "address",
+                "name": "Address",
+                "size": "6",
+                "class": "flexcontainer"
+            }
+        ],
+        "parentDetailsAttributes": [
+            {
+                "id": "fatherName",
+                "name": "Father Name",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherName",
+                "name": "Mother Name",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherEmailId",
+                "name": "Father Email",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherAadhar",
+                "name": "Father Aadhar",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherAadhar",
+                "name": "Mother Aadhar",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherEmailId",
+                "name": "Mother Email",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherDob",
+                "name": "Father DOB",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherDob",
+                "name": "Father DOB",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "fatherHighestQualifaction",
+                "name": "Father Qualification",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "motherHighestQualification",
+                "name": "mother Qualification",
+                "size": "3",
+                "class": "flexcontainer"
+            }
+        ],
+        "studentEducationDetailsAttributes": [
+            {
+                "id": "std",
+                "name": "Standard",
+                "size": "12",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "seatNumber",
+                "name": "Seat Number",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "year",
+                "name": "Year",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "totalMarks",
+                "name": "totalMarks",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "instituteName",
+                "name": "Institute Name",
+                "size": "3",
+                "class": "flexcontainer"
+            },
+            {
+                "id": "universityName",
+                "name": "University Name",
+                "size": "3",
+                "class": "flexcontainer"
+            }
+        ],
+        "educationDetailsDBAttributes": [
+            "id",
+            "std",
+            "seatNumber",
+            "year",
+            "fieldJSON1",
+            "totalMarks",
+            "instituteName",
+            "universityName",
+            "studentId"
+        ],
+        "studentsDBAttributes": [
+            "id",
+            "firstName",
+            "lastName",
+            "emailId",
+            "address",
+            "dob",
+            "religion",
+            "gender",
+            "aadharNo",
+            "panNo",
+            "userId"
+        ],
+        "parentDBAttributes": [
+            "id",
+            "fatherName",
+            "motherName",
+            "fatherEmailId",
+            "motherEmailId",
+            "fatherAadhar",
+            "motherAadhar",
+            "fatherDob",
+            "motherdob",
+            "fatherHighestQualifaction",
+            "motherHighestQualification",
+            "studentId"
+        ]
+    },
+    {
+       "index": 12,
+       "name": "studentFeesDetails",
+       "columnAttributes": [
+        {
+            "id": "uuid",
+            "label": "Bill Number"
+          },
+          {
+            "id": "date",
+            "label": "Date"
+          },
+          {
+            "id": "feesAmount",
+            "label": "Fees Amount"
+          },
+          {
+            "id": "discount",
+            "label": "Discount"
+          },
+          {
+            "id": "paidAmount",
+            "label": "Paid Amount"
+          },
+          {
+            "id": "balance",
+            "label": "Balance Amount"
+          },
+          {
+            "id": "reamarks",
+            "label": "Remarks"
+          }
+       ],
+       "feesDBAttributes": ["uuid", "date", "feesAmount", "discount", "paidAmount", "balance", "reamarks"]
+    },
+    {
+        "index": 13,
+        "name": "getTutorFormFields",
+        "formFields": [
+            {
+                "id": "fullName",
+                "name": "fullName",
+                "label": "FullName",
+                "type": "input"
+            },
+            {
+                "id": "emailId",
+                "name": "emailId",
+                "label": "Email",
+                "type": "input"
+            },
+            {
+                "id": "mobileNo",
+                "name": "mobileNo",
+                "label": "Mobile Number",
+                "type": "input"
+            },
+            {
+                "id": "gender",
+                "name": "gender",
+                "label": "Gender",
+                "type": "select",
+                "option": [],
+                "service": "genderData",
+                "method": "getGenderData"
+            },
+            {
+                "id": "dob",
+                "name": "dob",
+                "label": "Date of Birth",
+                "type": "date"
+            },
+            {
+                "id": "religion",
+                "name": "religion",
+                "label": "Religion",
+                "type": "select",
+                "option": [],
+                "service": "religionData",
+                "method": "getReligiondata"
+            },
+            {
+                "id": "address",
+                "name": "address",
+                "label": "Address",
+                "type": "input"
+            },
+            {
+                "id": "aadharNo",
+                "name": "aadharNo",
+                "label": "Aadhar No",
                 "type": "input"
             }
         ]
     },
     {
-        "index": 3,
-        "attributes": [
+        "index": 14,
+        "name": "getAllTeachers",
+        "columnsHeader": [
+            {
+                "id": "fullName",
+                "label": "Full Name"
+            },
+            {
+                "id": "emailId",
+                "label": "Email Id"
+            },
+            {
+                "id": "mobileNo",
+                "label": "Mobile No"
+            },
+            {
+                "id": "aadharNo",
+                "label": "Aadhar Number"
+            },
+            {
+                "id": "dob",
+                "label": "Date of Birth"
+            },
+            {
+                "id": "gender",
+                "label": "Gender"
+            },
+            {
+                "id": "religion",
+                "label": "Religion"
+            }
+        ],
+        "tutorDBAttributes": [
+            "fullName",
+            "emailId",
+            "mobileNo",
+            "aadharNo",
+            "dob",
+            "gender",
+            "religion"
+        ]
+    },
+    {
+        "index": 15,
+        "name": "getTuorrById",
+        "tutorDetailsAttributes": [
+            {
+                "id": "fullName",
+                "name": "Full Name",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "emailId",
+                "name": "EmailId",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "mobileNo",
+                "name": "Mobile No",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "aadharNo",
+                "name": "Aadhar No",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "dob",
+                "name": "Date of Birth",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "gender",
+                "name": "Gender",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "religion",
+                "name": "Religion",
+                "size": 3,
+                "class": "flexcontainer"
+            }
+        ],
+        "tutorDBAttributes": [
+            "fullName",
+            "emailId",
+            "mobileNo",
+            "aadharNo",
+            "dob",
+            "gender",
+            "religion"
+        ],
+        "educationAttributes": [
+            {
+                "id": "std",
+                "name": "Standard",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "seatNumber",
+                "name": "Seat Number",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "year",
+                "name": "Academic Year",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "totalMarks",
+                "name": "Total Marks",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "instituteName",
+                "name": "Institute Name",
+                "size": 3,
+                "class": "flexcontainer"
+            },
+            {
+                "id": "universityName",
+                "name": "University Name",
+                "size": 3,
+                "class": "flexcontainer"
+            }
+        ]
+    },
+    {
+        "index": 16,
+        "name": "TutorEducationDetails",
+        "formFields": [
+            {
+                "id": "std",
+                "name": "std",
+                "label": "Standard",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "seatNumber",
+                "name": "seatNumber",
+                "label": "Seat Number",
+                "type": "input",
+                "size": 4
+            },
+            {
+                "id": "year",
+                "name": "year",
+                "type": "input",
+                "size": 4,
+                "label": "Academic Year"
+            },
+            {
+                "id": "totalMarks",
+                "name": "totalMarks",
+                "type": "input",
+                "size": 4,
+                "label": "Total Marks(Eg: 400/600)"
+            },
+            {
+                "id": "instituteName",
+                "name": "instituteName",
+                "type": "input",
+                "size": 4,
+                "label": "Institute/College Name"
+            },
+            {
+                "id": "universityName",
+                "name": "universityName",
+                "type": "input",
+                "size": 4,
+                "label": "Univeristy/Board Name"
+            }
+        ]
+    },
+    {
+        "index": 17,
+        "name": "tutorAttedencemarkTable",
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "Tutor Id"
+            },
+            {
+                "id": "fullName",
+                "label": "Tutor Name"
+            },
+            {
+                "id": "lastAttendenceDate",
+                "label": "Last Attendence Date"
+            },
+            {
+                "id": "lastInTime",
+                "label": "Ins Time"
+            }
+        ]
+    },
+    {
+        "index": 18,
+        "name": "tutorAttendenceTableDetails",
+        "columnsHeader": [
+            {
+                "id": "fullName",
+                "label": "Tutor Name",
+                "props": "Tutor.fullName"
+            },
+            {
+                "id": "emailId",
+                "label": "Tutor Email",
+                "props": "Tutor.emailId"
+            },
+            {
+                "id": "attendenceDate",
+                "label": "Date",
+                "props": "attendenceDate"
+            },
+            {
+                "id": "inTime",
+                "label": "In Time",
+                "props": "inTime"
+            },
+            {
+                "id": "outTime",
+                "label": "out Time",
+                "props": "outTime"
+            }
+        ]
+    },
+    {
+        "index": 19,
+        "name": "studentAttedencemarkTable",
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "Student Id"
+            },
             {
                 "id": "firstName",
-                "name": "firstName",
-                "label": "First Name",
-                "type": "input"
+                "label": "Student Name"
             },
             {
-                "id": "lastName",
-                "name": "lastName",
-                "label": "Last Name",
-                "type": "input"
+                "id": "lastAttendenceDate",
+                "label": "Last Attendence Date"
             },
             {
-                "id": "firstName",
-                "name": "firstName",
-                "label": "First Name",
-                "type": "input"
-            },
-            {
-                "id": "password",
-                "name": "password",
-                "label": "First Name",
-                "type": "input"
-            },
+                "id": "lastInTime",
+                "label": "In Time"
+            }
+        ]
+    },
+    {
+        "index": 20,
+        "name": "studentAttendenceTableDetails",
+        "columnsHeader": [
             {
                 "id": "firstName",
-                "name": "firstName",
-                "label": "First Name",
-                "type": "input"
+                "label": "Student Name",
+                "props": "Student.firstName"
             },
             {
-                "id": "firstName",
-                "name": "firstName",
-                "label": "First Name",
-                "type": "input"
+                "id": "emailId",
+                "label": "Student Email",
+                "props": "Student.emailId"
+            },
+            {
+                "id": "attendenceDate",
+                "label": "Date",
+                "props": "attendenceDate"
+            },
+            {
+                "id": "inTime",
+                "label": "In Time",
+                "props": "inTime"
             }
         ]
     }

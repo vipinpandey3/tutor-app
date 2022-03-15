@@ -1,10 +1,17 @@
+/* eslint-disable no-unused-vars */
 import { Accordion, AccordionDetails, AccordionSummary, Chip, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import Text from '../../Common/Text';
-import TutorRecords from './TutorRecords';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TeacherAttendenceTable from './TeacherAttendenceTable';
+import { TutorContext } from '../../../context/tutor-context';
+import MatButton from '../../Common/Button';
+import AddIcon from "@material-ui/icons/Add";
+import EducationForm from './TutorRelatedForm';
+import {connect} from 'react-redux';
+import {fetchTutorDetails, fetchTutorEducationFormFields, toggleForm} from '../../../redux/actions/tutorAction';
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(theme => ({
     paperContent: {
@@ -36,398 +43,200 @@ const useStyles = makeStyles(theme => ({
     },
     mrl5: {
         margin: "0 10px"
+    },
+    alignRight: {
+        marginLeft: '119px'
     }
 }))
 
-const TutorDetails = () => {
+const educationInitialValue = {
+    std: "",
+    seatNumber: "",
+    year: "",
+    totalMarks: "",
+    instituteName: "",
+    universityName: "",
+    percentage: "",
+  };
+
+const TutorDetails = (props) => {
+    const {tutor: {
+            tutorDetails,
+            educationFormFields,
+            showForm,
+            formDetails
+        }, 
+        fetchTutorDetails, 
+        fetchTutorEducationFormFields,
+        toggleForm
+    } = props
     const styles = useStyles()
     const params = useParams();
     const {tutorId} = params;
-    const [tutorsRecords, setTutorRecords] = useState({})
+    const {getTutorDetails} = useContext(TutorContext)
+    const [educationFormValues, setEducationFormValues] = useState(educationInitialValue)
+    
 
-    const getTutorDetails = (id) => {
-        const newArray = TutorRecords.filter(records => {
-            if(records.id === parseInt(id) ) {
-                return records
-            }
-        })
-        console.log("newArray", newArray[0])
-        setTutorRecords(newArray[0]);
+    const loadTutorDetails = () => {
+        fetchTutorDetails(tutorId);
     }
+
     useEffect(() => {
-        getTutorDetails(tutorId);
-    }, [tutorId]);
+        loadTutorDetails()
+    }, []);
+
+    const addTutorEducation = () => {
+        fetchTutorEducationFormFields({title: "Add Education", buttonName: 'Submit', editFlag: false})
+    }
+
+    const toggleFormDetails = (flag = false, detaildObj) => {
+        // setShowForm(flag)
+        // setFormDetails(detaildObj);
+    }
+
+    const editEducationDetails = (id) => {
+        const editArray = tutorDetails.educationDetails.filter(detail => {
+            return detail.id === id
+        })
+        setEducationFormValues(editArray[0])
+        fetchTutorEducationFormFields({title: "Edit Education", buttonName: 'Edit',editFlag: true})
+    }
+
+    const hideForm = () => {
+        const postObj = {
+            showFlag: false, 
+            editFlag: false, 
+            formName: "Add Tutor Education", 
+            buttonName: 'Submit'
+        }
+        toggleForm(postObj);
+        setIntialValue();
+    }
+
+    const setIntialValue = () => {
+        setEducationFormValues(educationInitialValue)
+    }
 
     const handleDelete = () => {
-        console.log('TEsting');
+        console.log('Testing');
     }
     return (
-        <>
-            <Paper className={styles.paperContent}>
-                <Grid container>
-                    <Grid item xs={3}>
-                        <Text variant="subtitle1" component="subtitle1">
-                            Tutor Name:
-                        </Text>
-                        <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                            {tutorsRecords.fullName}
-                        </Text>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Text variant="subtitle1" component="subtitle1">
-                            Tutor Id:
-                        </Text>
-                        <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                            10215A
-                        </Text>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Text variant="subtitle1" component="subtitle1">
-                            Tutor Email:
-                        </Text>
-                        <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                            {tutorsRecords.email}
-                        </Text>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Text variant="subtitle1" component="subtitle1">
-                            Tutor Mobile:
-                        </Text>
-                        <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                            {tutorsRecords.mobile}
-                        </Text>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Text variant="subtitle1" component="subtitle1">
-                            Tutor Department:
-                        </Text>
-                        <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                            {tutorsRecords.department}
-                        </Text>
-                    </Grid>
-                </Grid>
-            </Paper>
-            <Paper className={styles.paperContent}>
-                <Grid container className={styles.columnContainer}>
-                    <Grid item xs={12}>
-                        <Text variant="subtitle1" component="subtitle1">
-                            Tutor Educational Details
-                        </Text>
-                    </Grid>
-                    <hr></hr>
-                    {/* className="padding_top_10" */}
-                    <Grid container className={`${styles.flexcontainer} 'padding_top_10'`}>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Graduation Type: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Post Graduation
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Degree 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Master of Science
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Institute/University: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                University of Mumbai
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Passing Year:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                2023/2024
-                            </Text>
-                        </Grid>
-                        <Grid item xs={5} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Specialization:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Computer Science
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Digital Signal Processing and Image processing:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                            Embedded Systems:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Data Mining and Data Warehousing
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid><Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Artificial Intelligence, Neural Networks and Intelligent Systems:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A+
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Bioinformatics
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid>
-                    </Grid>
-                    <hr></hr>
-                    <Grid container className={`${styles.flexcontainer} 'padding_top_10'`}>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Graduation Type: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Graduation
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Degree 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Bachelor of Science
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Institute/University: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                University of Mumbai
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Passing Year:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                2018/2019
-                            </Text>
-                        </Grid>
-                        <Grid item xs={5} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Specialization:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Computer Science
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Data Communication, Networking & Security
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Advance Java:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Operating Systems & Linux:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid><Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                DBMS II and Software Engineering:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A+
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Principle of Web Design and Web Technologies:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Do Net Technologies:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                A
-                            </Text>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Paper>
-            <Paper className={styles.paperContent}>
-                <Grid container className={styles.columnContainer}>
-                    <Grid container className={`${styles.flexcontainer} 'padding_top_10'`}>
-                        <Grid item xs={9}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Tutor Experience
-                            </Text>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Total Experience
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                2 Year, 11 Months
-                            </Text>
-                        </Grid>
-                    </Grid>
-                    <hr></hr>
-                    <Grid container className={`${styles.flexcontainer} 'padding_top_10'`}>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Coaching/Institute Name: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Kalra Shukla Classes
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                City/Branch: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Mumbai, Charni Road
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                From - To: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Feb-2017 - June-2018
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Experince in Months: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                17 Months
-                            </Text>
-                        </Grid>
-                        <Grid item xs={12} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Summary: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                At Kalra Shukla I was teaching as the Faculty Teacher. My subject were Database Management System and Advance Algorithm
-                            </Text>
-                        </Grid>
-                    </Grid>
-                    <hr></hr>
-                    <Grid container className={`${styles.flexcontainer} 'padding_top_10'`}>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Coaching/Institute Name: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Pratik Dhaval' Learning curve
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                City/ Branch: 
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                Mumbai, Charni Road, C. P Tank
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                From - To:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                June-2016 - Nov-2017
-                            </Text>
-                        </Grid>
-                        <Grid item xs={6} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Experince in Months:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                18 Months
-                            </Text>
-                        </Grid>
-                        <Grid item xs={12} className={`${styles.flexcontainer} ${styles.paddingTop}`}>
-                            <Text variant="subtitle1" component="subtitle1">
-                                Summary:
-                            </Text>
-                            <Text variant="subtitle1" component="subtitle1" className={styles.block}>
-                                At PDLC I was teaching as the non-Faculty Teacher. My subject were Basic Maths and Advance Maths 
-                            </Text>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Paper>
-            <Accordion className={`${styles.accordionContent}`}>
-                    <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                    >
-                    <Text className={styles.heading}> Education Details</Text>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Grid container className={styles.flexContainer}>
-                            <Grid item xs={12}>
-                                Filtered By:
+       <>
+        <Paper className={styles.paperContent}>
+            <Grid container>
+                {
+                    tutorDetails.tutorDetailsAttributes && 
+                    tutorDetails.tutorDetailsAttributes.length > 0 &&
+                    tutorDetails.tutorDetailsAttributes.map(detail => {
+                        return (
+                            <Grid item xs={detail.size} className={styles[detail.class]}>
+                                <Text>
+                                    {detail.name}:
+                                </Text>
+                                <Text className={styles.block}>
+                                    {
+                                        tutorDetails.tutorData[detail.id] ?
+                                        tutorDetails.tutorData[detail.id] : "-"
+                                    }
+                                </Text>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Chip
-                                    className={styles.mrl5}
-                                    label="Start Date: 01 Aug 2021"
-                                    // onClick={handleClick}
-                                    // onDelete={handleDelete}
-                                />
-                                <Chip
-                                    label="Start Date: 03 Aug 2021"
-                                    // onClick={handleClick}
-                                    // onDelete={handleDelete}
-                                />
+                        )
+                    }) 
+                }
+            </Grid>
+        </Paper>
+        {
+            showForm && (
+                <Paper className={styles.paperContent}>
+                    <EducationForm
+                        formFields={educationFormFields}
+                        formDetails={formDetails}
+                        educationInitialValue={educationFormValues}
+                        tutorId={tutorId}
+                        toggleFormDetails={toggleFormDetails}
+                        setIntialValue={setIntialValue}
+                        hideForm={hideForm}
+                        fetchTutorDetails={loadTutorDetails}
+                    />
+                </Paper>
+            )
+        }
+        <Paper className={styles.paperContent}>
+            <Grid container>
+                <Grid item xs={6}>
+                    <Text >
+                        Tutor Educational Details
+                    </Text>
+                </Grid>
+                <Grid item xs={6}>
+                    <MatButton
+                        className={styles.alignRight}
+                        variant="outlined"
+                        startIcon={<AddIcon />}
+                        onClick={addTutorEducation}
+                        >
+                            Add Tutor Education Details
+                    </MatButton>
+                </Grid>
+            </Grid>
+            <hr></hr>
+            {
+                tutorDetails.educationDetails ? 
+                tutorDetails.educationDetails.map(detail => {
+                    return (
+                        <div key={detail.id}>
+                            <Grid container>
+                                {
+                                    tutorDetails.educationAttrbutes.map((attributes) => {
+                                        return (
+                                            <Grid item xs={attributes.size} className={`${styles[attributes.class]} ${styles.paddingTop}`}>
+                                                <Text>
+                                                {attributes.name}: 
+                                                </Text>
+                                                <Text 
+                                                className={styles.block}
+                                                >
+                                                {
+                                                    detail[attributes.id] ?
+                                                    detail[attributes.id] : "-"
+                                                }
+                                                </Text>
+                                        </Grid>
+                                        )
+                                    })
+                                }
+                                <Grid item xs={3} className={`${styles.flexcontainer}`}>
+                                    <MatButton
+                                        variant="outlined"
+                                        startIcon={<AddIcon />}
+                                        onClick={() => editEducationDetails(detail.id)}
+                                    >
+                                        Edit Details
+                                    </MatButton>
+                                    </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <TeacherAttendenceTable />
-                            </Grid>
-                        </Grid>
-                    </AccordionDetails>
-                </Accordion>
-        </>
+                            <hr></hr>
+                        </div>
+                    )
+                })
+                : (
+                    <p>No details found</p>
+                )
+            }
+        </Paper>
+       </>
     )
 }
 
-export default TutorDetails
+TutorDetails.prototype = {
+    tutorDetails: PropTypes.object.isRequired,
+    fetchTutorDetails: PropTypes.func.isRequired,
+    fetchTutorEducationFormFields: PropTypes.func.isRequired,
+    toggleForm: PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => ({
+    tutor: state.tutor
+})
+
+export default connect(mapStateToProps, {fetchTutorDetails, fetchTutorEducationFormFields, toggleForm})(TutorDetails)

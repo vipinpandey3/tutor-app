@@ -1,19 +1,9 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Avatar,
-  makeStyles,
-} from "@material-ui/core";
-import React from "react";
-import { green, red, blue } from "@material-ui/core/colors";
-import DeleteIcon from "@material-ui/icons/Delete";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import EditIcon from "@material-ui/icons/Edit";
-import Text from "../../Common/Text";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, makeStyles } from '@material-ui/core'
+import React from 'react';
+import { green, red, blue } from '@material-ui/core/colors';
+import DeleteIcon from '@material-ui/icons/Delete';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles((theme) => ({
   greenBackground: {

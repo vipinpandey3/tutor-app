@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { InputAdornment, makeStyles, Paper, Toolbar } from "@material-ui/core";
 import Table from "../../Common/Table";
@@ -7,8 +7,10 @@ import Input from "../../Common/Input";
 import SearchIcon from "@material-ui/icons/Search";
 import MatButton from "../../Common/Button";
 import AddIcon from "@material-ui/icons/Add";
-import Popup from "../../Common/Popup";
 import TutorsForm from "./TutorsForm";
+import {connect} from 'react-redux';
+import {getTutors, getTutorForm, toggleForm} from '../../../redux/actions/tutorAction'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -20,124 +22,65 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const headCells = [
-  { id: "fullName", label: "Tutors Name" },
-  { id: "email", label: "Email" },
-  { id: "mobile", label: "Mobile" },
-  { id: "department", label: "Department" },
-  {id: 'actions', label: 'Actions', disableSorting: true}
-];
+const initialFormValues = {
+  fullName: "",
+  emailId: "",
+  mobileNo: "",
+  branch: "Mumbai",
+  gender: "Male",
+  religion: "Hindu",
+  dob: new Date(),
+  aadharNo: "",
+  address: ""
+};
 
-const TutorRecords = [
-  {
-    id: 1,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 2,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 3,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 4,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 5,
-    fullName: "Pandey Vipin",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 6,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 7,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 8,
-    fullName: "Pandey Vipin",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 9,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  },
-  {
-    id: 10,
-    fullName: "Vipin Pandey",
-    email: "Vipinpandey@gmail.com",
-    mobile: "9321475789",
-    department: "Science",
-  }
-];
-
-const Tutors = () => {
+const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTutors, getTutorForm, toggleForm}) => {
   const history = useHistory()
   const classes = useStyles();
-  const [openPopup, setOpenPopup] = useState(false);
-  const [filterFunction, setFilterFunction] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
+  const [formValues, setFormValues] = useState(initialFormValues)
 
-  const handelSearch = (e) => {
-    let target = e.target;
-    setFilterFunction({
-      fn: (items) => {
-        console.log(items);
-        if (target.value === "") {
-          return items;
-        } else {
-          const item = items.filter(
-            (item) => item.fullName.toLowerCase() === target.value.toLowerCase()
-          );
-          return item;
-        }
-      },
-    });
-  };
+  useEffect(() => {
+    loadTutors()
+  }, [])
 
-  const openModalPupup = () => {
-      setOpenPopup(true)
-  };
+  const loadTutors = () => {
+    getTutors()
+  }
+
+  const handelSearch = () => {
+
+  }
 
   const redirectToTutorsDetailsPage = (tutorId) => {
     history.push(`/tutors/${tutorId}`);
   }
 
+  const toggleForms = (showFlag, editFlag, formName, buttonName, formValue=initialFormValues) => {
+    toggleForm({showFlag, editFlag, formName, buttonName});
+    setFormValues(formValue);
+  }
+
+  const loadForm = () => {
+    getTutorForm()
+  }
+
+  const editTutor = (row) => {
+    loadForm()
+    toggleForms(true, true, "Update Tutor", "Update", row);
+  }
+
   return (
     <>
+      {
+        showForm &&
+        <TutorsForm 
+          formComponent={tutorFormFields} 
+          formValues={formValues} 
+          setFormValues={setFormValues} 
+          toggleForm={toggleForms}
+          formDetails={formDetails} 
+        />
+      }
       <Paper className={classes.paperCotent}>
         <Grid container >
           <Grid item xs={6}>
@@ -162,30 +105,39 @@ const Tutors = () => {
               <MatButton
                 variant="outlined"
                 startIcon={<AddIcon />}
-                onClick={openModalPupup}
+                onClick={loadForm}
               >
                 Add New
               </MatButton>
             </Toolbar>
           </Grid>
         </Grid>
-        <Table
-          headCells={headCells}
-          records={TutorRecords}
-          filterFunction={filterFunction}
-          openInPopup={openModalPupup}
-          redirectToDetailsPage={redirectToTutorsDetailsPage}
-        />
+        {
+          tutors.tutorTableAttributes && 
+          tutors.tutorTableAttributes.length > 0 && 
+          <Table
+            headCells={tutors.tutorTableAttributes}
+            records={tutors.tutorRows}
+            redirectToDetailsPage={redirectToTutorsDetailsPage}
+            edit={editTutor}
+          />
+        }
       </Paper>
-      <Popup
-        title="Tutors Form"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-      >
-        <TutorsForm />
-      </Popup>
     </>
   );
 };
 
-export default Tutors;
+Tutors.propTypes = {
+  tutors: PropTypes.object,
+  getTutors: PropTypes.func.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+  getTutorForm: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => {
+ return {
+  tutor: state.tutor
+ } 
+};
+
+export default connect(mapStateToProps, {getTutors, getTutorForm, toggleForm})(Tutors);

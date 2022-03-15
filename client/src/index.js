@@ -3,23 +3,20 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
-import { StudentContextPorvider } from "./context/student-context";
-import { FeesContextProvider } from "./context/fees-context";
-import { UserContextProvide } from "./context/User-context";
-import { AuthContextProvider } from "./context/auth-context";
+import { ExamContextProvider } from "./context/exam-context";
+import { DashboardContextProvider } from "./context/dashboard-context";
+import {Provider} from 'react-redux'
+import store from './redux/store'
+
 
 ReactDOM.render(
-  <AuthContextProvider>
-    <UserContextProvide>
-      <StudentContextPorvider>
-        <FeesContextProvider>
-          <Router>
-            <App />
-          </Router>
-        </FeesContextProvider>
-      </StudentContextPorvider>
-    </UserContextProvide>
-  </AuthContextProvider>,
+  <Provider store={store}>
+    <DashboardContextProvider>
+        <Router>
+          <App />
+        </Router>
+    </DashboardContextProvider>
+  </Provider>,
   document.getElementById("root")
 );
 

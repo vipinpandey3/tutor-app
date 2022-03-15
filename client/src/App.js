@@ -1,9 +1,8 @@
 // import styles from './App.module.css';
-import React, {useContext} from 'react'
-import { ThemeProvider } from '@material-ui/core/styles';
-import { createTheme, makeStyles } from '@material-ui/core'
-import { Route, Switch} from 'react-router-dom'
-import Dashboard from './Pages/Dashboard';
+import {  makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core'
+import { Route, Switch } from 'react-router-dom'
+import Dashboard from './Components/Containers/dashboard/Dashboard';
 import Tutors from './Components/Containers/Tutors/Tutors';
 import Students from './Components/Containers/Students/Students';
 import StudentDetails from './Components/Containers/Students/StudentDetails';

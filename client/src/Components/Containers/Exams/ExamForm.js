@@ -1,9 +1,14 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable array-callback-return */
 import React, { useState } from "react";
 import { Paper, makeStyles, Grid } from "@material-ui/core";
 import Input from "../../Common/Input";
 import MatButton from "../../Common/Button";
 import Text from "../../Common/Text";
 import DatePicker from "../../Common/DatePicker";
+import Select from '../../Common/Select'
+import MultiSelect from "../../Common/MultiSelect";
+import TimePicker from "../../Common/TimePicker";
 
 const useStyles = makeStyles((theme) => ({
   paperConent: {
@@ -12,21 +17,35 @@ const useStyles = makeStyles((theme) => ({
   },
   contentMargin: {
     margin: "10px 0",
+    '& .MuiFormControl-root': {
+      width: '90% !important'
+    }
   },
 }));
 
 const ExamForm = (props) => {
   const styles = useStyles();
   const {
-    hindeForm,
+    toggleForm,
     examFormInput,
     formTitle,
-    SchduleExam,
     initialExamFormValue,
+    fetchSubjectByStandard,
+    createExam
   } = props;
   const [examFormValue, setExamFormValue] = useState(initialExamFormValue);
-  
+  const [examTimeValue, setExamTimeValue] = useState(null)
+  const [subjectOptions, setSubjectOptions] = useState([])
+
   const valueChange = (e) => {
+    if(e.target.name === "standard") {
+      console.log('e.target.value', e.target.value);
+      fetchSubjectByStandard(e.target.value)
+          .then(res => {
+            setSubjectOptions(res.subjects);
+          })
+    }
+    console.log('Event Input Change', e)
     const { name, value } = e.target;
     setExamFormValue({
       ...examFormValue,
@@ -34,60 +53,83 @@ const ExamForm = (props) => {
     });
   };
 
-  const onSubmit = () => {
-    SchduleExam(examFormValue, false);
-  };
+  const onSelectionInputChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setExamFormValue({
+      ...examFormValue,
+      // On autofill we get a the stringified value.
+      subjects: typeof value === 'string' ? value.split(',') : value,
+    }
+    );
+  }
 
-  const handleCancle = () => {
-    hindeForm();
-  };
+  const handltTimeInputChange = (event) => {
+    setExamTimeValue(event);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Final Value', examFormValue)
+    createExam(examFormValue)
+  }
+
+  const handleCancel = () => {
+    const postObj = {
+      showFlag: false,
+      editFlag: false,
+      formName: "",
+      buttonName: ""
+    }
+    toggleForm(postObj);
+  }
+
   return (
-    <form onSubmit={onSubmit}>
+    <form>
       <Paper className={styles.paperConent}>
         <Grid container>
           <Grid item xs={3}>
             <Text variant="subtitle1" component="h6">
-              {formTitle}
+              {formTitle.title}
             </Text>
           </Grid>
         </Grid>
         <Grid container>
           {examFormInput.map((input) => {
-            if (input.type === "date") {
+            if(input.type === 'input') {
               return (
-                <Grid
-                  key={input.id}
-                  item
-                  xs={3}
-                  className={styles.contentMargin}
-                >
-                  <DatePicker
-                    style={{ width: "90%" }}
-                    name={input.name}
-                    value={examFormValue[input.name]}
-                    onChange={valueChange}
-                    label={input.label}
-                  />
-                </Grid>
-              );
-            } else if (input.type === "input") {
+                <Grid key={input.id} item xs={3} className={styles.contentMargin}>
+                <Input style={{ width: "90%" }} size="medium" name={input.name} value={examFormValue[input.name]} label={input.label} onChange={valueChange}/>
+              </Grid>
+              )
+            } else if(input.type === 'date') {
               return (
-                <Grid
-                  key={input.id}
-                  item
-                  xs={3}
-                  className={styles.contentMargin}
-                >
-                  <Input
-                    style={{ width: "90%" }}
-                    size="medium"
-                    name={input.name}
-                    valur={examFormValue[input.name]}
-                    label={input.label}
-                    onChange={valueChange}
-                  />
+                <Grid key={input.id} item xs={3} className={styles.contentMargin}>
+                  <DatePicker style={{ width: "90%" }} name={input.name} value={examFormValue[input.name]} onChange={valueChange} label={input.label}/>
                 </Grid>
-              );
+              )
+            } else if(input.type === 'select') {
+              return (
+                <Grid key={input.id} item xs={3} className={styles.contentMargin}>
+                    {/* <DatePicker style={{ width: "90%" }} name={input.name} value={examFormValue[input.name]} onChange={valueChange} label={input.label}/> */}
+                  <Select style={{width: "90%"}} value={examFormValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.option} />
+                </Grid>
+              )
+            }
+            else if(input.type === 'multiselect') {
+              return (
+                <Grid key={input.id} item xs={3} className={styles.contentMargin}>
+                  <MultiSelect style={{width: "90%"}} value={examFormValue[input.name]} onChange={onSelectionInputChange} name={input.name} label={input.label} options={subjectOptions} />
+                </Grid>
+              )
+            } 
+            else if(input.type === 'time') {
+              return (
+                <Grid key={input.id} item xs={3} className={styles.contentMargin}>
+                  <TimePicker style={{width: '90%'}} value={examTimeValue} name={input.name}  label={input.label} onChange={handltTimeInputChange} />
+                </Grid>
+              )
             }
           })}
         </Grid>
@@ -99,7 +141,7 @@ const ExamForm = (props) => {
               style={{ flex: "1", width: "85%" }}
               color="primary"
               type="button"
-              onClick={handleCancle}
+              onClick={handleCancel}
               size="large"
             >
               Cancle
@@ -111,9 +153,10 @@ const ExamForm = (props) => {
               style={{ flex: "1", width: "85%" }}
               color="primary"
               type="submit"
+              onClick={handleSubmit}
               size="large"
             >
-              Schedule Exam
+              {formTitle.buttonTitle}
             </MatButton>
           </Grid>
         </Grid>
@@ -123,3 +166,59 @@ const ExamForm = (props) => {
 };
 
 export default ExamForm;
+
+
+
+
+
+
+
+
+
+
+
+
+
+// if (input.type === "date") {
+//   return (
+    // <Grid
+    //   key={input.id}
+    //   item
+    //   xs={3}
+    //   className={styles.contentMargin}
+    // >
+    //   <DatePicker
+    //     style={{ width: "90%" }}
+    //     name={input.name}
+    //     value={examFormValue[input.name]}
+    //     onChange={valueChange}
+    //     label={input.label}
+    //   />
+    // </Grid>
+//   );
+// } else if (input.type === "input") {
+//   console.log('Input', examFormValue[input.name]);
+//   return (
+//     <Grid
+//       key={input.id}
+//       item
+//       xs={3}
+//       className={styles.contentMargin}
+//     >
+//       <Input
+//         style={{ width: "90%" }}
+//         size="medium"
+//         name={input.name}
+//         value={examFormValue[input.name]}
+//         label={input.label}
+//         onChange={valueChange}
+//       />
+//     </Grid>
+//   );
+// } else if(input.type === 'select') {
+//   return (
+    // <Grid key="input.id" item xs={3} className={styles.contentMargin}>
+    //   <Select  value={examFormValue[input.name]} name={input.name} label="Exam Type" onChange={valueChange} options={input.options} />
+    // </Grid>
+//   )
+// }

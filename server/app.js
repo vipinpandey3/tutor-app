@@ -4,18 +4,13 @@ require('dotenv').config({path: __dirname + '/.env'})
 const adminRoute = require("./routes/admin");
 const facultyRoute = require('./routes/faculty');
 const authenticateRoute = require('./routes/authenticate');
-const sequelize = require("./models/database");
-const Student = require("./models/student");
-const Teacher = require("./models/teacher");
-const StudentTeacherMap = require("./models/student-teacher-map");
-const StudentParentMap = require("./models/student-parent-map");
-const Parent = require("./models/Parents");
-const User = require('./models/user');
-const StudentEducationDetails = require('./models/student-education-details');
-const Fees = require('./models/fees');
 const passport = require('passport');
 require('./services/AuthServices')(passport);
 const jwt = require('jsonwebtoken');
+var fileUpload = require('express-fileupload');
+const adminRoute = require("./routes/admin");
+const facultyRoute = require('./routes/faculty');
+const models = require("./models");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -23,6 +18,7 @@ app.use(bodyParser.json());
 
 // app.use(passport.initialize());
 // // app.use(passport.session());
+app.use(fileUpload())
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -34,7 +30,7 @@ app.use(function(req, res, next) {
 });
 
 app.use((req, res, next) => {
-  User.findByPk(1)
+  models.user.findByPk(1)
     .then((user) => {
       req.user = user;
       next();
@@ -55,29 +51,18 @@ function authenticateToken(req, res, next) {
   })
 }
 
-app.use("/admin", authenticateToken, adminRoute);
-app.use('/faculty', authenticateToken, facultyRoute);
-app.use('/',authenticateRoute)
-Student.hasOne(Parent);
-// Student.hasMany(Teacher);
-// Teacher.hasMany(Student);
-Parent.belongsTo(Student);
-Student.belongsTo(User)
-// User.hasMany(Student);
-// User.hasMany(Teacher);
-// Teacher.belongsTo(Student, {through: StudentTeacherMap});
-Teacher.belongsTo(User);
-// Student.hasMany(StudentEducationDetails);
-StudentEducationDetails.belongsTo(Student)
-Fees.belongsTo(Student);
+// app.use("/admin", authenticateToken, adminRoute);
+// app.use('/faculty', authenticateToken, facultyRoute);
+// app.use('/',authenticateRoute)
+app.use("/admin", adminRoute);
+app.use('/faculty', facultyRoute);
 
 
 
-sequelize
+models.sequelize
   .sync({force: false})
   .then(() => {
-    return User.findByPk(1);
-    app.listen(5000);
+    return models.user.findByPk(1);
   })
   .then((user) => {
     if(!user) {
@@ -88,6 +73,7 @@ sequelize
       const emailId = 'vipinpandey@gmail.com';
       const role = "teacher";
       return User.create({firstName, lastName, name, password, emailId, role});
+      // return  models.user.create({name: "Vipin Pandey", emailId: "Vipin@gmail.com" , status: "active"})
     }
     return user
   })
@@ -96,4 +82,3 @@ sequelize
     app.listen(5000)
   })
   .catch((e) => console.log(e));
-// app.listen(5000);

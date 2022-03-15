@@ -1,13 +1,14 @@
-import {GrHomeRounded} from 'react-icons/gr'
+
+// import {GrHomeRounded} from 'react-icons/gr'
 import {GiTeacher, GiPapers, GiReceiveMoney} from 'react-icons/gi';
-import {HiOutlineUsers} from 'react-icons/hi'
+import {HiHome, HiOutlineUsers} from 'react-icons/hi'
 
 const NavLinks = [
     {
         id: 1,
         name: "Dashboard",
         path: "/dashboard",
-        icons: <GrHomeRounded />
+        icons: <HiHome />
     },
     {
         id: 2,

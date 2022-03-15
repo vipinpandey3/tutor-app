@@ -65,74 +65,192 @@ router.get('/getFeesFormFields', (req, res, next) => {
         })
 });
 
-router.get('/get-userFormFields', (req, res, next) => {
-    UserService.getUserFormsFields()
-        .then(attributes => {
+router.get('/get-student-formFields', (req, res) => {
+    return adminController.getStudentFormFields(req, res)
+        .then(studentFormFields => {
             const response = {
                 resultShort: "success",
-                resultLong: "Successfully retrieved User formFields",
-                formAttributes: attributes,
-            }
-            return res.status(200).json(response);
-        })
-        .catch((error) => {
-            const response = {
-                resultShort: "Failure",
-                resultLong: "Failed to retrieve FormFields"
-            }
-            return res.status(400).json(response);
-        })
-})
+                resultLong: "Retrieved all forms fields for students",
+                formFields: studentFormFields
+            };
 
-router.post('/add-user', UserService.addUser);
-
-router.post('/update-user', (req, res, next) => {
-    UserService.updateUser(req.body)
-        .then(user => {
-            if(user.password) {
-                delete user['password'];
-            }
-            const response = {
-                resultShort: 'success',
-                resultLong: 'Updated user with emaild: ' + req.body.emailId,
-                user: user
-            }
-
-            return res.status(200).json(response);
-        })
-        .catch(err => {
-            console.log('err', err)
-            const response = {
-                resultShort: "failure",
-                resultLong: 'Failed to update User'
-            }
-            return res.status(400).json(response);
-        })
-})
-
-router.get('/get-users', UserService.getAllUser)
-
-router.get('/searchUser/:userParams', (req, res, next) => {
-    console.log('Inside the /searchUser/:userParams');
-    const searchparams = req.params.userParams;
-    console.log('User Params', searchparams)
-    return UserService.getUserBySearchParams(searchparams)
-        .then(userArry => {
-            console.log('Userarray', userArry)
-            const response = {
-                resultShort: "success",
-                resultLong: 'Successfully retrieved User data for: ' + searchparams,
-                users: userArry
-            }
             return res.status(200).json(response)
         })
         .catch(err => {
             const response = {
                 resultShort: 'failure',
-                resultLong: 'Failed to retrived any data'
+                resultLong: "Failed to retrieve formfields"
             }
             return res.json(response);
         })
+})
+
+router.post('/get-parent-formFields', (req, res) => {
+    console.log('In /get-parent-formFields route')
+    return adminController.getParentFormFields(req, res)
+        .then(formFields => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'Retrieved all forms fields for',
+                formFields: formFields
+            }
+
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: "Failed to retrieve formfields"
+            }
+            return res.status(500).json(response);
+        })
+})
+
+router.post('/update-parents-details', (req, res) => {
+    console.log('In /update-parents-details')
+    return adminController.updateParentDetails(req, res)
+        .then(updatedObj => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'Parents details updated.',
+            }
+
+            return res.status(200).json(result);
+        })
+        .catch(error => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: "Failed to rparents details"
+            }
+            return res.status(500).json(response);
+        })
+})
+
+router.get('/get-education-formFields', (req, res) => {
+    console.log('In /get-education-formFields route')
+    return adminController.fetchEducationFormFields(req, res)
+        .then(formFields => {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'Retrieved all forms fields for educationdetails',
+                formFields: formFields
+            }
+
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            const response = {
+                resultShort: 'failure',
+                resultLong: "Failed to retrieve formfields"
+            }
+            return res.status(500).json(response);
+        })
+})
+
+router.post("/update-education-details", (req, res) => {
+    console.log('Inside /update-education-details route')
+    return adminController.updateStudentEducationDetails(req, res)
+    .then(updatedObj => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Student education details updated.',
+        }
+
+        return res.status(200).json(result);
+    })
+    .catch(error => {
+        const response = {
+            resultShort: 'failure',
+            resultLong: "Failed to update education details"
+        }
+        return res.status(500).json(response);
+    })
+});
+
+router.get('/getTutorFormFields', (req, res) => {
+    console.log('Inside the /get-tutor-formFields route')
+    adminController.getTutorEducationFormFields()
+    .then((data) => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'successfully retrived form inputs',
+            formFields: data
+        }
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error Final', error)
+        const result = {
+            resultShort: "failure",
+            resultLong: "Failed to retriev form inputs",
+        }
+        return res.status(400).json(result);
+    });
+})
+
+router.post('/addTutorEducation', (req, res) => {
+    console.log('in /addTutorEducation route');
+    return adminController.addTutorEducation(req)
+        .then(data => {
+            const result = {
+                resultShort: "success",
+                resultLong: "Successfullt added tutors education"
+            }
+
+            return res.status(200).json(result)
+        })
+        .catch(error => {
+            console.log("Error while adding tutor education", error);
+            const result = {
+                resultShort: "success",
+                resultLong: "Error while adding tutor education"
+            }
+
+            return res.status(500).json(result)
+        })
+})
+
+router.post('/updateTutorEducation', (req, res) => {
+    console.log("Inside /updateTutorEducation route")
+    return adminController.updateTutorEducationById(req)
+    .then(data => {
+        const result = {
+            resultShort: "success",
+            resultLong: "Successfullt added tutors education"
+        }
+
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log("Error while adding tutor education", error);
+        const result = {
+            resultShort: "success",
+            resultLong: "Error while adding tutor education"
+        }
+
+        return res.status(500).json(result)
+    })    
+})
+
+router.get('/get-tutor-formFields', (req, res) => {
+    console.log('Inside /get-tutor-formFields route');
+    return adminController.getTutorFormFields()
+    .then((data) => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'successfully retrived tutor form inputs',
+            formFields: data
+        }
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error Final', error)
+        const result = {
+            resultShort: "failure",
+            resultLong: "Failed to retriev tutor form inputs",
+        }
+        return res.status(400).json(result);
+    });
 })
 
 module.exports = router;

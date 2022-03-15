@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     // position: "absolute",
     // top: "40px",
     // left: "0px",
-    marginTop: '10px'
+    // marginTop: '10px'
   },
   menuList: {
     listStyleType: "none",
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.primary.dark,
       width: "250px",
+      color: "white"
     },
   },
   linkStyle: {

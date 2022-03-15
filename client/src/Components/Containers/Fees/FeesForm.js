@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { Grid, Paper, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import MatButton from "../../Common/Button";
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FeesForm = (props) => {
   const styles = useStyles();
-  const { formTitle, initiateFeesFormValue, feesInput, getFeesFormValue, setShowFeesForm } =
+  const { formDetails, initiateFeesFormValue, feesInput, getFeesFormValue, toggleForm } =
     props;
   const [feesFormValue, setFeesFormValue] = useState(initiateFeesFormValue);
 
@@ -27,13 +28,12 @@ const FeesForm = (props) => {
   };
 
   const handleCancle = () => {
-    setShowFeesForm(false);
-    setFeesFormValue(initiateFeesFormValue);
+    toggleForm(false)
   }
 
   const formSubmit = (e) => {
-    getFeesFormValue(feesFormValue);
     e.preventDefault();
+    getFeesFormValue(feesFormValue);
   };
 
   
@@ -45,7 +45,7 @@ const FeesForm = (props) => {
           <Grid container>
             <Grid item xs={3}>
               <Text variant="subtitle1" component="h6">
-                {formTitle}
+                {formDetails.formName}
               </Text>
             </Grid>
           </Grid>
@@ -113,7 +113,7 @@ const FeesForm = (props) => {
                 type="submit"
                 size="large"
               >
-                Generate Bill
+                {formDetails.formButton}
               </MatButton>
             </Grid>
           </Grid>

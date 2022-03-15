@@ -1,9 +1,12 @@
 const Student = require('../models/student');
+const models = require('../models')
 
 const getStudentById = (id) => {
+    console.log("inside getStudentById function", id)
     return new Promise((resolve, reject) => {
-        Student.findByPk(id)
+        models.Student.findAll({where: {id: id}})
             .then(student => {
+                console.log("Result", student)
                 return resolve(student)
             })
             .catch(err => {

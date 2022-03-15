@@ -1,28 +1,17 @@
 import { createContext } from "react";
-import axios from 'axios';
+import axios from "axios"
 
 export const FeesContext = createContext();
 
 
-export const FeesContextProvider = (props) => {
-  const reqHeader = {
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbElkIjoiJDJhJDA4JFlRbm1ka3JQcFVoRnJTVDg1TzVyOS5XMlE3NUIxVXRqaEZicElaS2tXZGxqamJDVU8ycnNTIiwiaWF0IjoxNjM2NDc5Nzk3LCJleHAiOjE2MzY1MDg1OTd9.J0ngmN2Y_5ZaSYF8pLgUl-NIk0kcFvaryPCGB-xDWc8",
-      Accept: "appplication/json",
-    },
-  };
-  const fetchFees = async () => {
-    try {
-      return await axios.get("/admin/getAllFees")
-        .then(res => {
-          // console.log("res", res.data);
-          return res.data
-        })
-    } catch(err) {
-      console.log('Error', err)
+    const fetchFees = async() => {
+        const response = await fetch('http://localhost:5000/admin/getAllFees');
+        if(!response.ok) {
+            throw new Error('Something went wrong');   
+        }
+        const data = await response.json();
+        return data;
     }
-  };
 
   const fetchFeesFormFields = async () => {
     try {
@@ -39,28 +28,31 @@ export const FeesContextProvider = (props) => {
     }
   };
 
-  const addFeesIntoDatabase = async (feesValue) => {
-    try {
-
-      return await axios.post('/admin/add-feesDetails', feesValue, reqHeader)
-          .then(response => {
-            return response.data
-          })
-    } catch (error) {
-      console.log('Error', error)
+    const addFeesIntoDatabase = async (feesValue) => {
+        try {
+            return await axios.post('http://localhost:5000/admin/add-feesDetails', feesValue)
+                .then(res => {
+                    if(res.data.resultShort && res.data.resultShort === 'success') {
+                        return res.data
+                    }
+                })
+        } catch(error) {
+            console.log('Error while adding fees', error);
+        }
     }
-  };
 
-  const searchFees = async (searchParams) => {
-    try {
-      return await axios.get(`http://localhost:5000/faculty/searchFees/${searchParams}`, reqHeader)
-                      .then((response) => {
-                        return response.data;
-                      });
-    } catch(error) {
-      console.log('Error', error)
+    const searchFees = async(searchParams) => {
+        try {
+            return await axios.get(`http://localhost:5000/faculty/searchFees/${searchParams}`)
+            .then(res => {
+                if(res.data.resultShort && res.data.resultShort === 'success') {
+                    return res.data
+                }
+            })
+        } catch(error) {
+            console.log('Error while fetching fees', error)
+        }
     }
-  };
 
   const downloadFeesbyId = async (uuid) => {
     try{
@@ -95,17 +87,29 @@ export const FeesContextProvider = (props) => {
     }
   };
 
-  return (
-    <FeesContext.Provider
-      value={{
-        fetchFees,
-        fetchFeesFormFields,
-        addFeesIntoDatabase,
-        searchFees,
-        downloadFeesbyId,
-      }}
-    >
-      {props.children}
-    </FeesContext.Provider>
-  );
-};
+    const uploadFile = async(data) => {
+        try {
+            return await axios.post('http://localhost:5000/faculty/uploadFile', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(result => {
+                console.log('Result')
+            } )
+        } catch(error) {
+            console.log('Error', error)
+        }
+    }
+
+    return (
+        <FeesContext.Provider value={{
+            fetchFees,
+            fetchFeesFormFields,
+            addFeesIntoDatabase,
+            searchFees,
+            downloadFeesbyId,
+            uploadFile
+        }}>
+            {props.children}
+        </FeesContext.Provider>
+    )

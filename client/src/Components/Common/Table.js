@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   makeStyles,
   Table as MuiTable,
@@ -12,6 +12,8 @@ import useTable from "../../customsHooks/useTable";
 import ActionButton from "./ActionButton";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+// import Tooltip from '@mui/material/Tooltip';
+import MuiToolTip from "./ToolTip";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -36,27 +38,24 @@ function Table(props) {
   const {
     headCells,
     records,
-    filterFunction,
-    openInPopup,
     redirectToDetailsPage,
+    edit
   } = props;
-  const [tableRecords, setTableRecords] = useState(records);
+  // filterFunction,
+  // openInPopup,
+  // const [tableRecords, setTableRecords] = useState(records);
   // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
   const {
-    TblePagination,
-    recordsAfterPagingAndSorting,
-    handleTableSorting,
-    orderBy,
-    order,
-  } = useTable(tableRecords, filterFunction);
+    stableSort, handleTableSorting, Pagination, getComparator, orderBy, order, page, rowsPerPage
+  } = useTable(records);
   return (
     <>
       <MuiTable className={classes.table}>
         <TableHead>
-          <TableRow>
-            {headCells.map((cell, index) => {
+          <TableRow key="header">
+            {headCells && headCells.length > 0 && headCells.map((cell, index) => {
               return (
-                <TableCell>
+                <TableCell key={index}>
                   {cell.disableSorting ? (
                     cell.label
                   ) : (
@@ -71,75 +70,56 @@ function Table(props) {
                 </TableCell>
               );
             })}
-            <TableCell>Actions</TableCell>
+            <TableCell key={'Actions'}>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {recordsAfterPagingAndSorting().map((row) => {
-            return (
-              <TableRow
-                key={row.id}
-                onClick={() => {
-                  redirectToDetailsPage(row.id);
-                }}
-              >
-                {headCells.map((rowCell) => {
-                  const value = row[rowCell.id];
-                  return <TableCell>{value}</TableCell>;
-                })}
-                <TableCell>
-                  <ActionButton
-                    onClick={() => openInPopup(row)}
-                    color="primary"
-                  >
-                    <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                  <ActionButton
-                    color="secondary"
-                    onClick={() => {
-                      // setConfirmDialog({
-                      //     isOpen: true,
-                      //     title: "Are you sure you want to delete tutor?",
-                      //     subTitle: "Operation once done can not be undone?",
-                      //     onConfirm: () => {onDeleteT(tutor.id)}
-                      // })
-                    }}
-                  >
-                    <CloseOutlinedIcon fontSize="small" />
-                  </ActionButton>
+          {records && records.length > 0 ? 
+            stableSort(records, getComparator(order, orderBy))
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((row) => {
+              return (
+                <TableRow
+                  key={row.id}
+                >
+                  {headCells.map((rowCell, index) => {
+                    const value = row[rowCell.id];
+                    return <TableCell key={index} onClick={() => {
+                      redirectToDetailsPage(row.id);
+                    }}>{value}</TableCell>;
+                  })}
+                  <TableCell key={'actionButtons'}>
+                    <ActionButton
+                      onClick={() => edit(row)}
+                      color="primary"
+                    >
+                      <EditOutlinedIcon fontSize="small" />
+                    </ActionButton>
+                    {/* <MuiToolTip title="Add" placement="top-start"> */}
+                      <ActionButton
+                        // color="secondary"
+                        onClick={() => {
+                          // setConfirmDialog({
+                          //     isOpen: true,
+                          //     title: "Are you sure you want to delete tutor?",
+                          //     subTitle: "Operation once done can not be undone?",
+                          //     onConfirm: () => {onDeleteT(tutor.id)}
+                          // })
+                        }}
+                      >
+                      <CloseOutlinedIcon fontSize="small" />
+                    </ActionButton>
+                  {/* </MuiToolTip>                   */}
                 </TableCell>
-                {/* <TableCell>{row.firstName}</TableCell>
-                <TableCell>{row.lastName}</TableCell>
-                <TableCell>{row.emailId}</TableCell>
-                <TableCell>{row.aadharNo}</TableCell>
-                <TableCell>{row.gender}</TableCell>
-                <TableCell>
-                  <ActionButton
-                    onClick={() => openInPopup(row)}
-                    color="primary"
-                  >
-                    <EditOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                  <ActionButton
-                    color="secondary"
-                    onClick={() => {
-                      // setConfirmDialog({
-                      //     isOpen: true,
-                      //     title: "Are you sure you want to delete tutor?",
-                      //     subTitle: "Operation once done can not be undone?",
-                      //     onConfirm: () => {onDeleteT(tutor.id)}
-                      // })
-                    }}
-                  >
-                    <CloseOutlinedIcon fontSize="small" />
-                  </ActionButton>
-                </TableCell> */}
               </TableRow>
             );
-          })}
+          }) : <TableRow>
+            No Data Found
+          </TableRow>
+          }
         </TableBody>
       </MuiTable>
-      <TblePagination />
+      <Pagination />
     </>
   );
 }

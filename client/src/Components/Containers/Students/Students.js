@@ -5,17 +5,20 @@ import {
   Paper,
   Toolbar,
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import Input from "../../Common/Input";
 import Table from "../../Common/Table";
 import SearchIcon from "@material-ui/icons/Search";
 import MatButton from "../../Common/Button";
-import Popup from "../../Common/Popup";
 import AddIcon from "@material-ui/icons/Add";
 import StudentForm from "./StudentForm";
-import StudentsRecords from "./StudentsRecords";
-import { StudentContext } from "../../../context/student-context";
+import moment from 'moment'
+import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import {addStudent, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields} from '../../../redux/actions/studentAction'
+// import Loader from '../../Common/Loader'
+
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -27,53 +30,67 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const headCells = [
-  { id: "firstName", label: "First Name" },
-  { id: "lastName", label: "Last Name" },
-  { id: "emailId", label: "EmailId" },
-  { id: "gender", label: "Gender" },
-  { id: "dob", label: "Date of Birth" },
-  { id: "aadharNo", label: "Aadhar Number" },
-];
-
-const Students = () => {
+const initialcFormValues = {
+  firstName: "",
+  lastName: "",
+  emailId: "",
+  mobile: "",
+  address: "",
+  aadharNo: "",
+  gender: "Male",
+  dob: moment().format('YYYY-MM-DD'),
+  stream: 'Common',
+};
+const Students = ({student: {students, loading, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent}) => {
   const history = useHistory();
   const classes = useStyles();
-  const [students, setStudents] = useState([])
-  const { fetchStudents } = useContext(StudentContext);
-  const [showForm, setForm] = useState(false);
+  const [formValues, setFormValues] = useState(initialcFormValues)
   const [filterFunction, setFilterFunction] = useState({
     fn: (item) => {
       return item;
     },
   });
 
+  const loadUsers = () => {
+    getStudents();
+  }
+
   useEffect(() => {
-    fetchStudents()
-      .then(result => {
-        setStudents(result.students);
-      })
-      .catch(err => {
-      console.log(err);
-    })
+    loadUsers();
   }, [])
 
   const searchUser = (event) => {};
 
-  const toggleForm = () => {
-    setForm(true);
+  const loadForm = () => {
+    fetchStudentFormFields()
   };
+
+  const showHideForm = (flag) => {
+    toggleForm(flag)
+    setFormValues(initialcFormValues)
+  }
 
   const redirectToStudentDetailsPage = (studentId) => {
     history.push(`/students/${studentId}`);
   };
 
+  const editStudent= (row) => {
+    editStudentFormFields();
+    setFormValues(row)
+  }
+
   return (
     <>
+      {/* <Loader /> */}
       {showForm && (
-        <Paper className={classes.paperCotent}>
-          <StudentForm />
-        </Paper>
+          <StudentForm 
+            initialcFormValues={formValues} 
+            formTitle={formDetails}
+            addStudent={addStudent}
+            formFields={studentFormFields}
+            toggleForm={showHideForm}
+            loadUsers={loadUsers}
+          />
       )}
       <Paper className={classes.paperCotent}>
         <Grid container>
@@ -99,31 +116,40 @@ const Students = () => {
               <MatButton
                 variant="outlined"
                 startIcon={<AddIcon />}
-                onClick={toggleForm}
+                onClick={loadForm}
               >
                 Add New
               </MatButton>
             </Toolbar>
           </Grid>
         </Grid>
-        
-        <Table
-          records={students}
-          headCells={headCells}
-          filterFunction={filterFunction}
-          openInPopup={toggleForm}
-          redirectToDetailsPage={redirectToStudentDetailsPage}
-        />
+        {
+          students.studentTableAttributes && students.studentTableAttributes.length > 0 &&  <Table
+            records={students.studentTablerows}
+            headCells={students.studentTableAttributes}
+            edit={editStudent}
+            redirectToDetailsPage={redirectToStudentDetailsPage}
+          />
+        }
       </Paper>
-      {/* <Popup 
-        title="Students Form"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-      >
-          <StudentForm />
-      </Popup> */}
     </>
   );
 };
 
-export default Students;
+Students.propTypes = {
+  getStudents: PropTypes.func.isRequired,
+  student: PropTypes.object.isRequired,
+  fetchStudentFormFields: PropTypes.func.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+  editStudentFormFields: PropTypes.func.isRequired,
+  addStudent: PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => {
+  return {
+    student: state.student
+  } 
+}
+
+
+export default connect(mapStateToProps, {getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent})(Students);

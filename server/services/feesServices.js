@@ -1,5 +1,6 @@
 const moment = require('moment');
 const Fees = require('../models/fees');
+const models = require('../models');
 const StudentService = require('./studentServices');
 const GenericAction = require('./GenericActions');
 const path = require('path');
@@ -9,7 +10,7 @@ const Student = require('../models/student');
 
 const getFeesBySeacrhParams = (seacrhParams) => {
     return new Promise((resolve, reject) => {
-        Fees.findAll({where: {uuid: seacrhParams}})
+        models.Fees.findAll({where: {uuid: seacrhParams}})
         .then((fees) => {
             return resolve(fees);
         })
@@ -21,7 +22,7 @@ const getFeesBySeacrhParams = (seacrhParams) => {
 }
 
 const getFeesForReciept = (feesUUID) => {
-    return Fees.findAll({where : { uuid: feesUUID}})
+    return models.Fees.findAll({where : { uuid: feesUUID}})
         .then(fees => {
             return fees[0]
         })
@@ -32,8 +33,9 @@ const getFeesForReciept = (feesUUID) => {
 }
 
 const getUserDetails = (studentId) => {
-    return Student.findByPk(studentId)
+    return models.Student.findByPk(studentId)
         .then(student => {
+            console.log("Student ********!!!!!!!", student)
             return student
         })
         .catch(err => {
@@ -43,12 +45,11 @@ const getUserDetails = (studentId) => {
 
 
 const downloadFeesReciept = (uuid) => {
-
     const templatePath = path.join(__dirname, '../templates/feesRecieptTemplate.html');
     const fileName = 'Fees reciept.pdf'
     return getFeesForReciept(uuid)
         .then(fees => {
-            return getUserDetails(fees.studentId)
+            return getUserDetails(fees.StudentId)
                 .then(student => {
                     return GenericAction.getHTMLFromFile(templatePath)
                     .then(feesHTML => {

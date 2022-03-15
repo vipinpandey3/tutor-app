@@ -1,55 +1,109 @@
-import React, { useContext } from 'react';
-import { StudentContext } from '../../../context/student-context';
+import React from 'react';
 import Form from '../../Common/Form';
-import { parentFormInitialValue, parentFormInput, studentEducationForms, studentEducationInitialValue } from './StudentsRecords';
 
 
 export const ParentForms = (props) => {
-    const { setShowParentForm, studentId, showForms } = props
-    const {addParent} = useContext(StudentContext);
-    const addParentData = (value) => {
+    const { error, studentId, showForm, formFields, setFormValue, parentFormInitialValue, formDetails, addParentDetails, hideForm} = props
+    
+    const addParentData = (value, dateValue) => {
         value.studentId = studentId
-        addParent(value)
-        setShowParentForm({
-            ...showForms,
-            parentForms: false
-        })
+        addParentDetails(value)
+        if(!showForm && error) {
+            setFormValue("parentForm");
+        }
     }
+
+    const updateParentDetails = (values) => {
+        // updateParents(values)
+        //     .then(result => {
+        //         if(result.resultShort === 'success') {
+        //             loadStudentDteails()
+        //             setShowParentForm({
+        //                 ...showForm,
+        //                 parentForms: false
+        //             })
+        //             setFormDetails({
+        //                 title: "Add Parents",
+        //                 buttonName: 'Submit',
+        //                 editFlag: false
+        //             })
+        //         } else {
+        //             setShowParentForm({
+        //                 ...showForm,
+        //                 parentForms: false
+        //             })
+        //         }
+        //     })
+        //     .catch(error => {
+        //         setShowParentForm({
+        //             ...showForms,
+        //             parentForms: false
+        //         })
+        //     })
+    }
+
     return (
         <>
             <Form
-                formComponent={parentFormInput}
+                formComponent={formFields}
                 addValues={addParentData}
                 initialFormValues={parentFormInitialValue}
+                formDetails={formDetails}
+                updateDetails={updateParentDetails}
+                resetForm={() => {hideForm("parentFormDetails", false)}}
             />
         </>
     )
 }
 
 export const StudentEducationForms = (props) => {
-    const {setShowEdutionForm, studentId, showForms} = props;
-    const { storStudentEducationDetails } = useContext(StudentContext)
-
+    const { studentId, showForm, error, formFields, formDetails, educationFormIntialValue, hideForm, addStudeEducationDetails, setFormValue, updateEducationDetails} = props;
     const addStudentEducationDetails = (value) => {
         value.studentId = studentId;
-        storStudentEducationDetails(value)
-            // .then(value => {
-            //     console.log('values', value);
-            // })
-            .cacth(err => {
-                console.log('err', err);
-            });
-        setShowEdutionForm({
-            ...showForms,
-            educationDetailsForm: false
-        });
+        addStudeEducationDetails(value)
+        if(!showForm && error) {
+            setFormValue("educationDetailsForm");
+        }
     };
+
+    const updateDetails = (values) => {
+        updateEducationDetails(values)
+        // updateStudentEducationDetails(values)
+        //     .then(result => {
+        //         if(result.resultShort && result.resultShort === 'success') {
+        //             console.log("result.resultShort", result.resultShort)
+        //             hideForm("educationDetailsForm", false)
+        //             loadStudentDteails();
+        //             setFormDetails({
+        //                 title: "Add Education Details",
+        //                 buttonName: "Submit",
+        //                 editFlag: false
+        //             })
+        //         } else {
+        //             setShowEdutionForm({
+        //                 ...showForms,
+        //                 educationDetailsForm: false
+        //             })
+        //         }
+        //     })
+        //     .catch(err => {
+        //         console.log('err', err);
+        //         setShowEdutionForm({
+        //             ...showForms,
+        //             educationDetailsForm: true
+        //         })
+        //     });
+    }
+    
     return (
         <>
             <Form 
-                formComponent={studentEducationForms}
-                initialFormValues={studentEducationInitialValue}
-                addValue={addStudentEducationDetails}
+                formComponent={formFields}
+                initialFormValues={educationFormIntialValue}
+                addValues={addStudentEducationDetails}
+                updateDetails={updateDetails}
+                formDetails={formDetails}
+                resetForm={() => {hideForm("educationDetailsForm", false)}}
             />   
         </>
     )

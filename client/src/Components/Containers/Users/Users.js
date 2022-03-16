@@ -10,7 +10,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {
     getUsers,
-    getUserForm
+    getUserForm,
+    createUser
 } from '../../../redux/actions/userAction';
 
 
@@ -41,7 +42,7 @@ const initialUserValues = {
 }
 
 
-const Users = ({user:{loading, error, message, userTableData, userFormFields, showForm, formDetails}, getUsers, getUserForm}) => {
+const Users = ({user:{loading, error, message, userTableData, userFormFields, showForm, formDetails}, getUsers, getUserForm, createUser}) => {
     const styles = useStyles();
     // const {searchUser, getUserFormFields, createUser} = useContext(UserContext);
     // const loading = useSelector(state => state.loading);
@@ -124,7 +125,7 @@ const Users = ({user:{loading, error, message, userTableData, userFormFields, sh
     }, [])
     return (
         <React.Fragment>
-            { showForm && <UserForm fetchUser={fetchUser} userInputs={userFormFields} initialUserValues={initialUserValues} />}
+            { showForm && <UserForm fetchUser={fetchUser} createUser={createUser} userInputs={userFormFields} initialUserValues={initialUserValues} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={6}>
@@ -175,7 +176,8 @@ const Users = ({user:{loading, error, message, userTableData, userFormFields, sh
 Users.propTypes = {
     user: PropTypes.object.isRequired,
     getUsers: PropTypes.func.isRequired,
-    getUserForm: PropTypes.func.isRequired
+    getUserForm: PropTypes.func.isRequired,
+    createUser: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -184,4 +186,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {getUsers, getUserForm})(Users)
+export default connect(mapStateToProps, {getUsers, getUserForm, createUser})(Users)

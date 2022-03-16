@@ -137,3 +137,62 @@ export const getUserForm = () => {
         }
     }
 }
+
+export const createUser = (userValues) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        });
+
+        const addData = async(postObj) => {
+            const response = await axios.post('/admin/add-User', postObj);
+            if(response.statusText !== 'OK') {
+                throw new Error('Error while adding user');
+            };
+            return response.data
+        }
+
+        try {
+            const addedData = await addData(userValues);
+            if(addedData.resultShort === 'success') {
+                dispatch({
+                    type: types.ADD_USER,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        message: addedData.resultLong,
+                        showForm: false,
+                        formDetails: {
+                            formName: "",
+                            buttonName: "",
+                            editFlag: false
+                        },
+                        formFields: []
+                    }
+                });
+                return getUsers()
+            } else {
+                dispatch({
+                    type: types.ADD_USER_ERROR,
+                    payload: {
+                        loading: false,
+                        error: true,
+                        message: addedData.resultLong
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.ADD_USER_ERROR,
+                payload: {
+                    loading: false,
+                    error: true,
+                    message: error
+                }
+            })
+        }
+    }
+}

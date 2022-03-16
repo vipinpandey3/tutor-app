@@ -88,7 +88,6 @@ const addUser = (req) => {
         defaults: {
             firstName: firstName,
             lastName: lastName,
-            name: fullName,
             emailId: emailId,
             password: hashedPassword,
             role: role,

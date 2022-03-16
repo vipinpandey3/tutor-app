@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/admin");
+const UserService = require("../services/userServices")
+
 
 router.get("/get-students", adminController.getStudent);
 
@@ -25,6 +27,7 @@ router.post('/add-feesDetails', adminController.addFeesDetails);
 router.get('/getFeesDetailsById/:studentId', adminController.getFeesDetailsByStudentId);
 
 router.get('/getAllFees', (req, res, next) => {
+    console.log('req', req)
     adminController.getAllFeesData()
         .then(result => {
             const response = {
@@ -249,5 +252,49 @@ router.get('/get-tutor-formFields', (req, res) => {
         return res.status(400).json(result);
     });
 })
+
+router.post('/add-User', (req, res) => {
+    console.log('Inside the add-User route');
+    return UserService.addUser(req).then(userObj => {
+        console.log("userObj", userObj)
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Successfully added the user'
+        }
+        res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Failed to added the user'
+        }
+        res.status(200).json(result)
+    })
+
+});
+
+router.get('/get-user-formFields', (req, res) => {
+    console.log('Inside /get-tutor-formFields route');
+    return UserService.getUserFormFields()
+    .then((data) => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'successfully retrived user form inputs',
+            formFields: data
+        }
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error Final', error)
+        const result = {
+            resultShort: "failure",
+            resultLong: "Failed to retriev user form inputs",
+        }
+        return res.status(400).json(result);
+    });
+});
+
+router.get('/get-users', UserService.getAllUser)
 
 module.exports = router;

@@ -15,10 +15,11 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { Popper } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-// import Button from '../Components/Common/Button'
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AuthContext } from "../context/auth-context";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,10 +51,11 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
   const loggedInUser = "Vipin";
-
+  const authContext = useContext(AuthContext);
+  // const {logout} = authContext
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-
+  const history = useHistory()
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -71,6 +73,12 @@ const Navbar = () => {
       event.preventDefault();
       setOpen(false);
     }
+  }
+
+  const logoutHandler = () => {
+    setOpen(false);
+    // logout();
+    history.push('/login')
   }
 
   // return focus to the button when we transitioned from !open -> open
@@ -123,6 +131,9 @@ const Navbar = () => {
                   role={undefined}
                   transition
                   disablePortal
+                  style={{
+                    zIndex: 10000
+                  }}
                 >
                   {({ TransitionProps, placement }) => (
                     <Grow
@@ -145,7 +156,7 @@ const Navbar = () => {
                             <MenuItem onClick={handleClose}>
                               My account
                             </MenuItem>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                            <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                           </MenuList>
                         </ClickAwayListener>
                       </Paper>

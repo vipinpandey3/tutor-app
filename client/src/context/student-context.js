@@ -4,6 +4,15 @@ import axios from 'axios'
 export const StudentContext = createContext();
 
 export const StudentContextPorvider = (props) => {
+
+    const reqHeader = {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbElkIjoiJDJhJDA4JFlRbm1ka3JQcFVoRnJTVDg1TzVyOS5XMlE3NUIxVXRqaEZicElaS2tXZGxqamJDVU8ycnNTIiwiaWF0IjoxNjMzODUyODg5LCJleHAiOjE2MzM4ODE2ODl9.53OAPwSOBwltE8jLLxVMaoiJJxCioFrjJvqFDghfOyo",
+          Accept: "appplication/json",
+        },
+    };
+
     const [students, setStudents] = useState([])
     const [studentDetails, setStudeDetails] = useState({
         studentDetail: {},

@@ -8,9 +8,15 @@ import Students from './Components/Containers/Students/Students';
 import StudentDetails from './Components/Containers/Students/StudentDetails';
 import Exams from './Components/Containers/Exams/Exams'
 import TutorDetails from './Components/Containers/Tutors/TutorDetails'
+import Fees from './Components/Containers/Fees/Fees'
+import Users from './Components/Containers/Users/Users';
+import Login from './Pages/Login'
+import ProtectedRoute from './Components/Containers/ProtectedRoute';
+import {AuthContext} from './context/auth-context'
+import setAuthToken from './utils/setAuthToken';
 import Sidebar from './Pages/Sidebar';
 import Navbar from './Pages/Navbar';
-import Fees from './Components/Containers/Fees/Fees'
+import { useContext, useState } from 'react';
 
 const theme = createTheme({
   palette: {
@@ -72,38 +78,35 @@ const useStyles = makeStyles({
   }
 })
 
+if(localStorage.token) {
+  setAuthToken(localStorage.token);
+}
+
 function App() {
   const classes = useStyles();
+  const [isAuth, setIsAuth] = useState(true)
+  // const {isAuth} = useContext(AuthContext);
+
   return (
     <ThemeProvider theme={theme} >
-      <Sidebar />
+      {isAuth && <Sidebar />}
       <div className={classes.appMain}>
-        <Navbar />
+        {isAuth && <Navbar />}
         <Switch>
-          <Route path="/dashboard" exact>
-            <Dashboard />
+          <Route exact path="/login">
+            <Login />
           </Route>
-          <Route path="/tutors" exact>
-            <Tutors />
-          </Route>
-          <Route path="/tutors/:tutorId" exact>
-            <TutorDetails />
-          </Route>
-          <Route path="/students" exact>
-            <Students />
-          </Route>
-          <Route path="/students/:studentId" exact>
-            <StudentDetails />
-          </Route>
-          <Route path="/exams" exact>
-            <Exams />
-          </Route>
-          <Route path="/fees" exact>
-            <Fees />
-          </Route>
-          <Route path="*" >
-            <Dashboard />
-          </Route>
+          {isAuth ? <Route exact path="/" component={Dashboard} /> : <Route exact path="/" component={Login} /> }
+          <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={isAuth} />
+          <ProtectedRoute exact path="/tutors" component={Tutors} isAuth={isAuth} />
+          <ProtectedRoute exact path="/tutors/:tutorId" component={TutorDetails} isAuth={isAuth} />
+          <ProtectedRoute exact path="/students" component={Students} isAuth={isAuth} />
+          <ProtectedRoute exact path="/students/:studentId" component={StudentDetails} isAuth={isAuth} />
+          <ProtectedRoute exact path="/exams" component={Exams} isAuth={isAuth} />
+          <ProtectedRoute exact path="/fees" component={Fees} isAuth={isAuth} />
+          <ProtectedRoute exact path="/users" component={Users} isAuth={isAuth} />
+
+          {/* <Route path="/" render={() => {!isAuthenticated ? <Login setIsAuthenticated={setIsAuthenticated} loginHandler={loginHandler} /> : <ProtectedRoute />}} /> */}
         </Switch>
       </div>
     </ThemeProvider>

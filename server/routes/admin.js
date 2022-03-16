@@ -253,4 +253,48 @@ router.get('/get-tutor-formFields', (req, res) => {
     });
 })
 
+router.post('/add-User', (req, res) => {
+    console.log('Inside the add-User route');
+    return UserService.AddUser(req).then(userObj => {
+        console.log("userObj", userObj)
+        const result = {
+            resultShort: 'success',
+            resultLong: 'Successfully added the user'
+        }
+        res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Failed to added the user'
+        }
+        res.status(200).json(result)
+    })
+
+});
+
+router.get('/get-user-formFields', (req, res) => {
+    console.log('Inside /get-tutor-formFields route');
+    return UserService.getUserFormFields()
+    .then((data) => {
+        const result = {
+            resultShort: 'success',
+            resultLong: 'successfully retrived user form inputs',
+            formFields: data
+        }
+        return res.status(200).json(result)
+    })
+    .catch(error => {
+        console.log('Error Final', error)
+        const result = {
+            resultShort: "failure",
+            resultLong: "Failed to retriev user form inputs",
+        }
+        return res.status(400).json(result);
+    });
+});
+
+router.get('/get-users', UserService.getAllUser)
+
 module.exports = router;

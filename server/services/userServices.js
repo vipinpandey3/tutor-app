@@ -2,9 +2,10 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const attributes = require('../attributes/attributes.json');
 const { use } = require('passport');
+const models = require('../models')
 
 const getUser = (useEmailId) => {
-    return User.findAll({where: {emailId: useEmailId}})
+    return models.User.findAll({where: {emailId: useEmailId}})
         .then(user => {
             if(!user.length) {
                 return 'User Not Found'
@@ -17,11 +18,39 @@ const getUser = (useEmailId) => {
         })
 }
 
-const getAllUser = (req, res, next) => {
+const getUserFormFields = () => {
+    return new Promise((resolve, reject) => {
+        var userFormFields = attributes[21].formFields;
+        var optionObjPromise = []
+        for (let i = 0; i < userFormFields.length; i++) {
+            if(userFormFields[i]['method']) {
+                const methodPromise = getInputOptions(userFormFields[i]);
+                methodPromise                
+                    .then(data => {
+                        userFormFields[i].option = data
+                    })
+                    .catch((error) => {
+                        console.log("Error from MadePromise function", error)
+                        userFormFields[i].option = [];
+                    })
+                optionObjPromise.push(methodPromise)
+            }
+        }
+        Promise.all(optionObjPromise)
+            .then(data => {
+                return resolve(userFormFields);
+            })
+            .catch((error) => {
+                return reject(error);
+            })
+      })
+}
+
+const getAllUser = (req, res) => {
     const userArray = []
-    return User.findAll()
+    return models.User.findAll()
         .then((users) => {
-            const userTableHeader = attributes[2].columnsHeader;
+            const userTableHeader = attributes[22].columnsHeader;
             const response = {
                 resultShort: "success",
                 resultLong: "Successfully retried all the user",
@@ -42,17 +71,17 @@ const getAllUser = (req, res, next) => {
         })
 }
 
-const addUser = (req, res, next) => {
+const addUser = (req) => {
     console.log("Inside Add User Function")
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
-    const fullName = firstName + " " + lastName;
     const emailId = req.body.emailId;
     const role = req.body.role;
     const password = req.body.password
     const hashedPassword = bcrypt.hashSync(password, 8);
+    const status = "active"
     console.log("Req.body", req.body);
-    return User.findOrCreate({
+    return models.User.findOrCreate({
         where: {
             emailId: emailId
         },
@@ -62,18 +91,21 @@ const addUser = (req, res, next) => {
             name: fullName,
             emailId: emailId,
             password: hashedPassword,
-            role: role
+            role: role,
+            status: status
         }
     })
     .then(user => {
         console.log('User Created', JSON.stringify(user))
-        const response = {
-            resultShort: "success",
-            resultLong: "User created with id " + user[0].emailId,
-        }
-        return res.status(200).json(response)
+        return Promise.resolve(user)
+        // const response = {
+        //     resultShort: "success",
+        //     resultLong: "User created with id " + user[0].emailId,
+        // }
+        // return res.status(200).json(response)
     })
     .catch(err => {
+        return Promise.reject(err)
         return err
     })
 }
@@ -144,5 +176,5 @@ module.exports = {
     updateUser,
     getAllUser,
     getUserBySearchParams,
-    getUserFormsFields
+    getUserFormFields
 }

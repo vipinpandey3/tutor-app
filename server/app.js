@@ -30,7 +30,7 @@ app.use(function(req, res, next) {
 });
 
 app.use((req, res, next) => {
-  models.user.findByPk(1)
+  models.User.findByPk(1)
     .then((user) => {
       req.user = user;
       next();
@@ -62,7 +62,7 @@ app.use('/faculty', facultyRoute);
 models.sequelize
   .sync({force: false})
   .then(() => {
-    return models.user.findByPk(1);
+    return models.User.findByPk(1);
   })
   .then((user) => {
     if(!user) {
@@ -72,9 +72,9 @@ models.sequelize
       const password = '12345678';
       const emailId = 'vipinpandey@gmail.com';
       const role = "teacher";
-      return User.create({firstName, lastName, name, password, emailId, role});
-      // return  models.user.create({name: "Vipin Pandey", emailId: "Vipin@gmail.com" , status: "active"})
-    }
+      const status = "active"
+      return models.User.create({firstName, lastName, name, password, emailId, role, status});
+      }
     return user
   })
   .then((user) => {

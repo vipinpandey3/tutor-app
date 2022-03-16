@@ -1118,5 +1118,74 @@
                 "props": "inTime"
             }
         ]
+    },
+    {
+        "index": 21,
+        "name": "getTutorFormFields",
+        "formFields": [
+            {
+                "id": "firstName",
+                "name": "firstName",
+                "label": "FirstName",
+                "type": "input"
+            },
+            {
+                "id": "lastName",
+                "name": "lastName",
+                "label": "LastName",
+                "type": "input"
+            },
+            {
+                "id": "emailId",
+                "name": "emailId",
+                "label": "Email",
+                "type": "input"
+            },
+            {
+                "id": "password",
+                "name": "password",
+                "label": "Password",
+                "type": "input"
+            },
+            {
+                "id": "role",
+                "name": "role",
+                "label": "Role",
+                "type": "input"
+            }
+        ]
+    },
+    {
+        "index": 22,
+        "columnsHeader": [
+            {
+                "id": "id",
+                "label": "id",
+                "avatar": false
+            },
+            {
+                "id": "firstName",
+                "label": "FirstName"
+            },
+            {
+                "id": "lastName",
+                "label": "lastNameName"
+            },
+            {
+                "id": "emailId",
+                "label": "Email Id",
+                "avatar": false
+            },
+            {
+                "id": "Role",
+                "label": "Role",
+                "avatar": false
+            },
+            {
+                "id": "status",
+                "label": "Statue",
+                "avatar": false
+            }
+        ]
     }
 ]

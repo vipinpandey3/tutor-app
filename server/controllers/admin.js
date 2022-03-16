@@ -676,7 +676,7 @@ const getTutorFormFields = () => {
         .catch((error) => {
             return reject(error);
         })
-})
+  })
 }
 
 const getTutorEducationFormFields = () => {
@@ -743,6 +743,17 @@ const updateTutorEducationById = (req) => {
       return Promise.reject(error)
     })
 }
+
+// const AddUser = (req) => {
+//   console.log("Inside the Add User FUnction");
+//   const firstName = req.body.firstName
+//   const lastName = req.body.lastName
+//   // const password = req.body.firstName
+//   const emailId = req.body.emailId
+//   const role = req.body.role
+//   const status = "active";
+
+// }
 
 module.exports = {
   getStudent,

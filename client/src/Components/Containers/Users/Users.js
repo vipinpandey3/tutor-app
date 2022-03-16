@@ -4,11 +4,14 @@ import MatButton from '../../Common/Button'
 import Text from '../../Common/Text'
 import {MdGroupAdd} from 'react-icons/md'
 import UserTable from './UserTable'
-import { UserContext } from '../../../context/User-context'
 import {AiFillCloseCircle} from 'react-icons/ai'
 import UserForm from './UserForm';
-import {useSelector} from 'react-redux';
-import {fetchUser} from '../../../redux/actions/users'
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {
+    getUsers,
+    getUserForm
+} from '../../../redux/actions/userAction';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -38,9 +41,9 @@ const initialUserValues = {
 }
 
 
-const Users = () => {
+const Users = ({user:{loading, error, message, userTableData, userFormFields, showForm, formDetails}, getUsers, getUserForm}) => {
     const styles = useStyles();
-    const {getUsers, searchUser, getUserFormFields, createUser} = useContext(UserContext);
+    // const {searchUser, getUserFormFields, createUser} = useContext(UserContext);
     // const loading = useSelector(state => state.loading);
     // const userData = useSelector(state => state.users)
     // const showUserForm = useSelector(state => state.userForm);
@@ -56,16 +59,16 @@ const Users = () => {
 
     const handleSearch = (event) => {
         setSearchInputValue(event.target.value)
-        searchUser(searchInputValue)
-                .then(result => {
-                    setUserObject({
-                        ...userObj,
-                        userData: result.users
-                    })
-                })
-                .catch((err) => {
-                    console.log('err')
-                })
+        // searchUser(searchInputValue)
+        //         .then(result => {
+        //             setUserObject({
+        //                 ...userObj,
+        //                 userData: result.users
+        //             })
+        //         })
+        //         .catch((err) => {
+        //             console.log('err')
+        //         })
     }
 
     const ClearSearchUser = () => {
@@ -84,26 +87,26 @@ const Users = () => {
 
     const showUserFormFields = () => {
         setShowUserForm(true);
-        getUserFormFields()
-            .then(result => {
-                setFormsFields(result.formAttributes);
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        getUserForm()
+        //     .then(result => {
+        //         setFormsFields(result.formAttributes);
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //     })
     }
 
     const fetchUser = () => {
         getUsers()
-            .then(usersObj => {
-                // setUserObject({
-                //     attributes: usersObj.attributes,
-                //     userData: usersObj.userData
-                // })
-            })
-            .catch(error => {
-                console.log('Error', error)
-            })
+            // .then(usersObj => {
+            //     // setUserObject({
+            //     //     attributes: usersObj.attributes,
+            //     //     userData: usersObj.userData
+            //     // })
+            // })
+            // .catch(error => {
+            //     console.log('Error', error)
+            // })
     }
 
     useEffect(() => {
@@ -121,7 +124,7 @@ const Users = () => {
     }, [])
     return (
         <React.Fragment>
-            { showUserForm && <UserForm fetchUser={fetchUser} createUser={createUser} userInputs={formFields} initialUserValues={initialUserValues} />}
+            { showForm && <UserForm fetchUser={fetchUser} userInputs={userFormFields} initialUserValues={initialUserValues} />}
             <Paper className={styles.paperContent}>
                 <Grid container>
                     <Grid item xs={6}>
@@ -163,10 +166,22 @@ const Users = () => {
                         <MatButton  variant="contained" style={{ flex: "1", width: "90%" }} onClick={showUserFormFields}> <span className={styles.iconContainer}><MdGroupAdd /></span> User</MatButton>
                     </Grid>
                 </Grid>
-                <UserTable attributes={userObj.attributes} userData={userObj.userData} />
+                <UserTable attributes={userTableData.userAttributes} userData={userTableData.userRows} />
             </Paper>
         </React.Fragment>
     )
 }
 
-export default Users
+Users.propTypes = {
+    user: PropTypes.object.isRequired,
+    getUsers: PropTypes.func.isRequired,
+    getUserForm: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+}
+
+export default connect(mapStateToProps, {getUsers, getUserForm})(Users)

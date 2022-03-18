@@ -12,11 +12,12 @@ import Fees from './Components/Containers/Fees/Fees'
 import Users from './Components/Containers/Users/Users';
 import Login from './Pages/Login'
 import ProtectedRoute from './Components/Containers/ProtectedRoute';
-import {AuthContext} from './context/auth-context'
-import setAuthToken from './utils/setAuthToken';
 import Sidebar from './Pages/Sidebar';
 import Navbar from './Pages/Navbar';
-import { useContext, useState } from 'react';
+import {useHistory, Redirect} from 'react-router-dom'
+import { useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
 const theme = createTheme({
   palette: {
@@ -78,14 +79,8 @@ const useStyles = makeStyles({
   }
 })
 
-if(localStorage.token) {
-  setAuthToken(localStorage.token);
-}
-
-function App() {
+function App({auth: {isAuth}}) {
   const classes = useStyles();
-  const [isAuth, setIsAuth] = useState(true)
-  // const {isAuth} = useContext(AuthContext);
 
   return (
     <ThemeProvider theme={theme} >
@@ -93,10 +88,8 @@ function App() {
       <div className={classes.appMain}>
         {isAuth && <Navbar />}
         <Switch>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          {isAuth ? <Route exact path="/" component={Dashboard} /> : <Route exact path="/" component={Login} /> }
+          {!isAuth && <Route exact path="/" component={Login} /> }
+          {isAuth && <Route exact path="/" component={Dashboard} /> }
           <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={isAuth} />
           <ProtectedRoute exact path="/tutors" component={Tutors} isAuth={isAuth} />
           <ProtectedRoute exact path="/tutors/:tutorId" component={TutorDetails} isAuth={isAuth} />
@@ -113,4 +106,14 @@ function App() {
   );
 }
 
-export default App;
+App.propTypes = {
+  auth: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  }
+}
+
+export default connect(mapStateToProps, {})(App);

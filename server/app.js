@@ -53,7 +53,7 @@ function authenticateToken(req, res, next) {
 
 // app.use("/admin", authenticateToken, adminRoute);
 // app.use('/faculty', authenticateToken, facultyRoute);
-// app.use('/',authenticateRoute)
+app.use('/',authenticateRoute)
 app.use("/admin", adminRoute);
 app.use('/faculty', facultyRoute);
 

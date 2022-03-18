@@ -78,6 +78,29 @@ const tutorReducer = (state = initialState, action) => {
                 }
             };
 
+        case types.ADD_TUTOR:
+            return {
+                ...state,
+                showForm: action.payload.showForm,
+                formDetails: {
+                    formName: action.payload.formDetailsformName,
+                    buttonName: action.payload.formDetails.buttonName,
+                    editFlag: action.payload.formDetails.editFlag
+                },
+                tutorFormFields: action.payload.formFields
+            };
+
+        case types.ADD_TUTOR_ERROR:
+            return {
+                ...state,
+                showForm: action.payload.showForm,
+                formDetails: {
+                    formName: action.payload.formDetailsformName,
+                    buttonName: action.payload.formDetails.buttonName,
+                    editFlag: action.payload.formDetails.editFlag
+                }
+            }
+
         case types.FETCH_TUTOR_DETAIL: 
             return {
                 ...state,

@@ -9,7 +9,7 @@ import MatButton from "../../Common/Button";
 import AddIcon from "@material-ui/icons/Add";
 import TutorsForm from "./TutorsForm";
 import {connect} from 'react-redux';
-import {getTutors, getTutorForm, toggleForm} from '../../../redux/actions/tutorAction'
+import {getTutors, getTutorForm, toggleForm, addTutors} from '../../../redux/actions/tutorAction'
 import PropTypes from 'prop-types'
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +34,7 @@ const initialFormValues = {
   address: ""
 };
 
-const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTutors, getTutorForm, toggleForm}) => {
+const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTutors, getTutorForm, toggleForm, addTutors}) => {
   const history = useHistory()
   const classes = useStyles();
   const [formValues, setFormValues] = useState(initialFormValues)
@@ -79,6 +79,7 @@ const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTut
           setFormValues={setFormValues} 
           toggleForm={toggleForms}
           formDetails={formDetails} 
+          addTutors={addTutors}
         />
       }
       <Paper className={classes.paperCotent}>
@@ -131,7 +132,8 @@ Tutors.propTypes = {
   tutors: PropTypes.object,
   getTutors: PropTypes.func.isRequired,
   toggleForm: PropTypes.func.isRequired,
-  getTutorForm: PropTypes.func.isRequired
+  getTutorForm: PropTypes.func.isRequired,
+  addTutors: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -140,4 +142,4 @@ const mapStateToProps = (state) => {
  } 
 };
 
-export default connect(mapStateToProps, {getTutors, getTutorForm, toggleForm})(Tutors);
+export default connect(mapStateToProps, {getTutors, getTutorForm, toggleForm, addTutors})(Tutors);

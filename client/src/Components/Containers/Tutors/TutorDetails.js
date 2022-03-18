@@ -73,7 +73,6 @@ const TutorDetails = (props) => {
     const styles = useStyles()
     const params = useParams();
     const {tutorId} = params;
-    const {getTutorDetails} = useContext(TutorContext)
     const [educationFormValues, setEducationFormValues] = useState(educationInitialValue)
     
 

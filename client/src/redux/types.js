@@ -6,6 +6,8 @@ export const FETCH_TUTORS = "FETCH_TUTORS";
 export const FETCH_TUTORS_ERROR = "FETCH_TUTORS_ERROR"
 export const FETCH_TUTOR_FORM = "FETCH_TUTOR_FORM";
 export const FETCH_TUTOR_FORM_ERROR = "FETCH_TUTOR_FORM_ERROR"
+export const ADD_TUTOR = "ADD_TUTOR";
+export const ADD_TUTOR_ERROR = "ADD_TUTOR_ERROR";
 export const FETCH_TUTOR_DETAIL = "FETCH_TUTOR_DETAIL";
 export const FETCH_TUTOR_DETAIL_ERROR = "FETCH_TUTOR_DETAIL_ERROR";
 export const FETCH_TUTOR_EDUCATION_FORMFIELD = "FETCH_TUTOR_EDUCATION_FORMFIELD";
@@ -106,4 +108,22 @@ export const FETCH_USER_FORM_FIELDS = "FETCH_USER_FORM_FIELDS";
 export const FETCH_USER_FORM_FIELDS_ERROR = "FETCH_USER_FORM_FIELDS_ERROR";
 export const ADD_USER = "ADD_USER";
 export const ADD_USER_ERROR = "ADD_USER_ERROR";
+
+
+
+// Login Contance type
+export const LOGIN_USER = "LOGIN_USER";
+export const LOGIN_USER_ERROR = "LOGIN_USER_ERROR";
+
+
+
+
+
+// APP Constant types;
+export const AUTH_TOKEN = "cookie_auth_hash";
+export const REMOVE_COOKIE = "REMOVE_COOKIE"
+
+
+
+
 

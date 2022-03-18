@@ -29,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TutorsForm = (props) => {
   const styles = useStyles();
-  const {formValues, formDetails, formComponent, setFormValues, toggleForm } =  props;
-  const {addTutors} = useContext(TutorContext)
+  const {formValues, formDetails, formComponent, setFormValues, toggleForm , addTutors} =  props;
 
   const valueChange = (e) => {
     const {name, value} = e.target;
@@ -47,13 +46,13 @@ const TutorsForm = (props) => {
 
     } else {
       addTutors(formValues)
-        .then(result => {
-          if(result && result.resultShort === 'success') {
-            toggleForm(false, false, "Add Tutor", "Submit");
-          } else {
-            toggleForm(true, false, "Add Tutor", "Submit");
-          }
-        })
+        // .then(result => {
+        //   if(result && result.resultShort === 'success') {
+        //     toggleForm(false, false, "Add Tutor", "Submit");
+        //   } else {
+        //     toggleForm(true, false, "Add Tutor", "Submit");
+        //   }
+        // })
     }
   }
 

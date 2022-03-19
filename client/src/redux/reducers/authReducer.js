@@ -12,6 +12,7 @@ const inntialState = {
 const authReducer = (state = inntialState, action) => {
     switch (action.type) {
         case types.LOGIN_USER:
+            console.log('Payload', action.payload)
             collection.setCookies(types.AUTH_TOKEN, action.payload.token);
             return {
                 ...state,

@@ -22,11 +22,12 @@ export const login = (postObj) => {
         try {
             const authdata = await loginData();
             if(authdata.resultShort === 'success') {
+                console.log('AUthData', authdata);
                 dispatch({
                     type: types.LOGIN_USER,
                     payload: {
                         isAuth: true,
-                        token: authdata.authKey,
+                        token: authdata.user.token,
                         loading: false,
                         message: authdata.resultLong,
                         error: false

@@ -1,15 +1,17 @@
 import * as types from '../types';
 import axios from 'axios';
+import * as collection from '../../utils/collections'
 
 export const fetchAllExams = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
 
         const getData = async() => {
-            const response = await axios.get('/faculty/get-exams');
+            const response = await axios.get('/faculty/get-exams', {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch tutor data!');
             }
@@ -56,13 +58,14 @@ export const fetchAllExams = () => {
 };
 
 export const fetchExamFormFields = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
         const getData = async() => {
-            const response = await axios.get('/faculty/getExamFormFields');
+            const response = await axios.get('/faculty/getExamFormFields', {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error("Could not fetch exam formfields");
             }
@@ -112,13 +115,14 @@ export const fetchExamFormFields = () => {
 }
 
 export const createExam = (examObj) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
         const addData = async() => {
-            const response = await axios.post('/faculty/create-exam', examObj)
+            const response = await axios.post('/faculty/create-exam', examObj, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error("Could not fetch exam formfields");
             }
@@ -183,7 +187,8 @@ export const toggleForm = (formValue) => {
 };
 
 export const deleteExam = (data) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         const postObj = {
             examId: data.ExamId
         };
@@ -193,7 +198,7 @@ export const deleteExam = (data) => {
         });
 
         const updateData = async() => {
-            const response = await axios.post('/faculty/disableExam', postObj);
+            const response = await axios.post('/faculty/disableExam', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error("Could not delete exam");
             }

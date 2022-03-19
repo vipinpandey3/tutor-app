@@ -1,8 +1,10 @@
 import * as types from "../types";
 import axios from 'axios';
+import * as collection from '../../utils/collections'
 
 export const fetchFeesFormFields = (postObj) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -10,7 +12,7 @@ export const fetchFeesFormFields = (postObj) => {
             }
         })
         const getData = async() => {
-            const response = await axios.get('/admin/getFeesFormFields');
+            const response = await axios.get('/admin/getFeesFormFields', {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch fees formfields!');
             }
@@ -64,7 +66,8 @@ export const fetchFeesFormFields = (postObj) => {
 }
 
 export const fetchFeesDetails = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -72,7 +75,7 @@ export const fetchFeesDetails = () => {
             }
         })
         const getData = async() => {
-            const response = await axios.get('/admin/getAllFees');
+            const response = await axios.get('/admin/getAllFees', {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch fees details!');
             };
@@ -120,7 +123,8 @@ export const fetchFeesDetails = () => {
 };
 
 export const toggleForm = (flag) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        
         dispatch({
             type: types.TOGGLE_FORM,
             payload: flag
@@ -129,7 +133,8 @@ export const toggleForm = (flag) => {
 }
 
 export const addFeesDetails = (postObj) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -137,7 +142,7 @@ export const addFeesDetails = (postObj) => {
             }
         })
         const addData = async() => {
-            const response = await axios.post('/admin/add-feesDetails', postObj);
+            const response = await axios.post('/admin/add-feesDetails', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not add fees details!');
             };
@@ -197,7 +202,8 @@ export const toggleUploadSection = (flag) => {
 }
 
 export const uploadFile = (postObj) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -206,7 +212,7 @@ export const uploadFile = (postObj) => {
         })
 
         const uploadData = async() => {
-            const response = await axios.post('/faculty/uploadFile', postObj)
+            const response = await axios.post('/faculty/uploadFile', postObj, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Error uploading fees data!');
             };
@@ -249,7 +255,8 @@ export const uploadFile = (postObj) => {
 }
 
 export const searchFees = (searchParams) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -257,7 +264,7 @@ export const searchFees = (searchParams) => {
             }
         })
         const getData = async() => {
-            const response = await axios.get(`/faculty/searchFees/${searchParams}`);
+            const response = await axios.get(`/faculty/searchFees/${searchParams}`, {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Error while searching fees data!');
             };
@@ -301,11 +308,13 @@ export const searchFees = (searchParams) => {
 };
 
 export const downloadFeesbyId = (uuid) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         const getPDF = async() => {
             const response = await axios.get(`/faculty/downloadFeesReciept/${uuid}`,  {
                 headers: {
-                  'Content-Type': 'multipart/form-data'
+                  'Content-Type': 'multipart/form-data',
+                  'Authorization': token
                 },
                 responseType: 'blob'
               });

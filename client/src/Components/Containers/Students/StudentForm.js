@@ -1,5 +1,5 @@
 import { Grid, makeStyles, Paper } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StudentContext } from "../../../context/student-context";
 import MatButton from "../../Common/Button";
 import DatePicker from "../../Common/DatePicker";
@@ -29,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StudentForm = (props) => {
-  const { formTitle, initialcFormValues, formFields, toggleForm, loadUsers } = props;
-  const { addStudent } = useContext(StudentContext);
+  const { formTitle, initialcFormValues, formFields, toggleForm, loadUsers , addStudent} = props;
   const [formValue, setFormValues] = useState(initialcFormValues)
   const styles = useStyles();
 
@@ -45,11 +44,10 @@ const StudentForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addStudent(formValue)
-      .then(result => {
-        toggleForm(false)
-        loadUsers()
-      })
-      
+      // .then(result => {
+      //   toggleForm(false)
+      //   loadUsers()
+      // })
   }
 
   const handleCancle = () => {

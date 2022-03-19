@@ -114,7 +114,7 @@ export const addTutors = (values) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState();
         const addData = async() => {
-            const response = await axios.post('/admin/add-teacher', {headers: collection.setHeader(token)}, values);
+            const response = await axios.post('/admin/add-teacher', values, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error('Could not fetch tutor details!');
             }
@@ -269,7 +269,7 @@ export const addTeacherEducationDetails = (values) => {
     return async (dispatch, getState) => {
         const {auth: {token}} = getState();
         const addData = async () => {
-            const response = await axios.post('/admin/addTutorEducation', {headers: collection.setHeader(token)}, values)
+            const response = await axios.post('/admin/addTutorEducation', values, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not add tutor education data!');
             } 
@@ -318,7 +318,7 @@ export const updateTutorEducationDetail = (values) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState();
         const updateData = async() => {
-            const response = await axios.post('/admin/updateTutorEducation', {headers: collection.setHeader(token)}, values)
+            const response = await axios.post('/admin/updateTutorEducation', values, {headers: collection.setHeader(token)})
             if(response.statusText !== 'OK') {
                 throw new Error('Could not update tutor education!');
             }

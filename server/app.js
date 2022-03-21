@@ -1,23 +1,27 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 require('dotenv').config({path: __dirname + '/.env'})
-// const adminRoute = require("./routes/admin");
-// const facultyRoute = require('./routes/faculty');
 const authenticateRoute = require('./routes/authenticate');
-const passport = require('passport');
+var passport = require('passport');
 require('./services/AuthServices')(passport);
 const jwt = require('jsonwebtoken');
 var fileUpload = require('express-fileupload');
 const adminRoute = require("./routes/admin");
 const facultyRoute = require('./routes/faculty');
 const models = require("./models");
+var Redis = require('ioredis');
 
 const app = express();
+if(process.env.TO_CACHE_DATA) {
+  global.CACHE_OBJ = new Redis({
+    port: process.env.CACHE_STORE_PORT, // Redis port
+    host: process.env.CACHE_STORE_URL, // Redis host
+    family: 4, // 4 (IPv4) or 6 (IPv6)
+    db: 0
+  })
+}
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-// app.use(passport.initialize());
-// // app.use(passport.session());
+app.use(bodyParser.json());;
 app.use(fileUpload())
 
 app.use(function(req, res, next) {
@@ -39,46 +43,57 @@ app.use((req, res, next) => {
 });
 
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  console.log("authHEader",authHeader)
-  const token = authHeader.split(' ')[1];
+  const token = req.headers['authorization'];
   if(token  == null) return res.status(401);
   jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-    if(err) return res.sendStatus(403);
-    console.log('User body', req.body);
-    req.user = user;
-    next()
+    if(err) return res.status(403).json({
+      resultShort: "failure",
+      resultLong: 'Authorization failed'
+    });
+    models.User.findOne({
+      where: {
+        emailId: user.emailId
+      }
+    })
+    .then(result => {
+      // const userObj = JSON.stringify(result)
+      if(!result) {
+        res.status(400).json({
+          resultShort: "failure",
+          resultLong: "User not find"
+        })
+      }
+      req.user = {
+        firstName: result.firstName,
+        lastName: result.lastName,
+        emailId: result.emailId,
+        role: result.role
+      };
+      global.CACHE_OBJ.set("LOGGED_IN_USERS", JSON.stringify(req.user));
+      next()
+    })
+    .catch(error => {
+      console.log("Error while user find", error);
+      res.status(400).json({
+        resultShort: "failure",
+        resultLong: "User not find for authorization"
+      })
+    })
   })
 }
 
-// app.use("/admin", authenticateToken, adminRoute);
-// app.use('/faculty', authenticateToken, facultyRoute);
-// app.use('/',authenticateRoute)
-app.use("/admin", adminRoute);
-app.use('/faculty', facultyRoute);
+app.use(passport.initialize());
+// app.use(passport.session())
+app.use('/',authenticateRoute)
+app.use("/admin", authenticateToken, adminRoute);
+app.use('/faculty', authenticateToken, facultyRoute);
 
 
 
 models.sequelize
   .sync({force: false})
-  .then(() => {
-    return models.User.findByPk(1);
-  })
   .then((user) => {
-    if(!user) {
-      const firstName = 'Vipin';
-      const lastName = 'Pandey';
-      const name = firstName + " " + lastName;
-      const password = '12345678';
-      const emailId = 'vipinpandey@gmail.com';
-      const role = "teacher";
-      const status = "active"
-      return models.User.create({firstName, lastName, name, password, emailId, role, status});
-      }
-    return user
-  })
-  .then((user) => {
-    console.log('User created with id: ==>', user.id),
-    app.listen(5000)
+    app.listen(process.env.SERVER_PORT);
+    console.log("Listning to port",process.env.SERVER_PORT)
   })
   .catch((e) => console.log(e));

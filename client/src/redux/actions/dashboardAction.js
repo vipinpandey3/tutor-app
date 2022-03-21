@@ -1,15 +1,17 @@
 import axios from 'axios';
 import * as types from '../types';
+import * as collection from '../../utils/collections'
 
 export const getAllStudentAttendence = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
 
         const getData = async() => {
-            const response = await axios.get('/faculty/getAllStudentAttendence');
+            const response = await axios.get('/faculty/getAllStudentAttendence', {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while fetching student attendence");
             }
@@ -77,7 +79,8 @@ export const toggleStudenAttendenceElements = (postObj) => {
 }
 
 export const getAllAttendenceOfStudentById = (emailId) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -86,7 +89,7 @@ export const getAllAttendenceOfStudentById = (emailId) => {
         })
 
         const getData = async(postObj) => {
-            const response = await axios.post('/faculty/getStudentAttendenceById', postObj)
+            const response = await axios.post('/faculty/getStudentAttendenceById', postObj, {headers: collection.setHeader(token)})
             if(response.statusText !== 'OK') {
                 throw new Error("Error while fetching student attendence");
             }
@@ -141,7 +144,8 @@ export const getAllAttendenceOfStudentById = (emailId) => {
 }
 
 export const getStudentById = (id) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -150,7 +154,7 @@ export const getStudentById = (id) => {
         })
 
         const getStudent = async() => {
-            const response = await axios.get(`/faculty/getStudentById/${id}`);
+            const response = await axios.get(`/faculty/getStudentById/${id}`, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while fetching student attendence");
             }
@@ -202,7 +206,8 @@ export const getStudentById = (id) => {
 };
 
 export const markStudentAttendenceById = (id) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -211,7 +216,7 @@ export const markStudentAttendenceById = (id) => {
         });
 
         const addAttendence = async(postObj) => {
-            const response = await axios.post('/faculty/markStudentAttendence', postObj);
+            const response = await axios.post('/faculty/markStudentAttendence', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while marking student attendence");
             }
@@ -263,7 +268,8 @@ export const markStudentAttendenceById = (id) => {
 };
 
 export const markStudentAbsence = (id) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -272,7 +278,7 @@ export const markStudentAbsence = (id) => {
         });
 
         const absenceData = async(postObj) => {
-            const response = await axios.post('/faculty/mark_student_absence', postObj);
+            const response = await axios.post('/faculty/mark_student_absence', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while marking student attendence");
             }
@@ -324,7 +330,8 @@ export const markStudentAbsence = (id) => {
 }
 
 export const getAllTutorAttendence = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -333,7 +340,7 @@ export const getAllTutorAttendence = () => {
         });
 
         const getData = async() => {
-            const response = await axios.get('/faculty/get_All_Tutor_Attendence');
+            const response = await axios.get('/faculty/get_All_Tutor_Attendence', {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while marking tutor attendence");
             }
@@ -399,7 +406,8 @@ export const toggleTutorAttendenceElement = (postObj) => {
 }
 
 export const getTutorById = (id) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -408,7 +416,7 @@ export const getTutorById = (id) => {
         });
 
         const getData = async() => {
-            const response = await axios.get(`/faculty/getTutorById/${id}`);
+            const response = await axios.get(`/faculty/getTutorById/${id}`, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while getting tutor for attendence!");
             }
@@ -460,7 +468,8 @@ export const getTutorById = (id) => {
 }
 
 export const markTutorAttendceById = (id) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -469,7 +478,7 @@ export const markTutorAttendceById = (id) => {
         });
 
         const addAttendence = async(postObj) => {
-            const response = await axios.post('/faculty/markTutorAttedence', postObj);
+            const response = await axios.post('/faculty/markTutorAttedence', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while marking tutor attendence");
             }
@@ -521,7 +530,8 @@ export const markTutorAttendceById = (id) => {
 };
 
 export const updateTutorAttendence = (id) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -530,7 +540,7 @@ export const updateTutorAttendence = (id) => {
         });
 
         const addAttendence = async(postObj) => {
-            const response = await axios.post('/faculty/martkTutorTimeOut', postObj);
+            const response = await axios.post('/faculty/martkTutorTimeOut', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while updating tutor attendence");
             }
@@ -582,7 +592,8 @@ export const updateTutorAttendence = (id) => {
 };
 
 export const markTutorAbsence = (id) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -591,7 +602,7 @@ export const markTutorAbsence = (id) => {
         });
 
         const absenceData = async(postObj) => {
-            const response = await axios.post('/faculty/martkTutorAbsence', postObj);
+            const response = await axios.post('/faculty/martkTutorAbsence', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while marking student absence");
             }
@@ -643,7 +654,8 @@ export const markTutorAbsence = (id) => {
 }
 
 export const getAllAttendenceOfTutorById = (emailId) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -652,7 +664,7 @@ export const getAllAttendenceOfTutorById = (emailId) => {
         })
 
         const getData = async(postObj) => {
-            const response = await axios.post('/faculty/getTutorAttendenceById', postObj)
+            const response = await axios.post('/faculty/getTutorAttendenceById', postObj, {headers: collection.setHeader(token)})
             if(response.statusText !== 'OK') {
                 throw new Error("Error while fetching student attendence");
             }

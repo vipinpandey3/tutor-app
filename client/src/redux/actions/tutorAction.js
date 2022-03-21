@@ -1,10 +1,13 @@
 import * as types from '../types';
-import axios from 'axios'
+import axios from 'axios';
+import * as collection from '../../utils/collections'
 
 export const getTutors = () => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const {auth: {token}} = getState()
         const getData = async() => {
-            const response = await axios.get('/admin/get-teachers')
+            
+            const response = await axios.get('/admin/get-teachers', {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch tutor data!');
             }
@@ -43,9 +46,10 @@ export const getTutors = () => {
 }
 
 export const getTutorForm = () => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const {auth: {token}} = getState()
         const getData = async() => {
-            const response = await axios.get('/admin/get-tutor-formFields');
+            const response = await axios.get('/admin/get-tutor-formFields', {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch tutor data!');
             }
@@ -106,10 +110,66 @@ export const toggleForm = (formValue) => {
     }
 }
 
+export const addTutors = (values) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        const addData = async() => {
+            const response = await axios.post('/admin/add-teacher', values, {headers: collection.setHeader(token)});
+            if(response.statusText !== 'OK') {
+                throw new Error('Could not fetch tutor details!');
+            }
+            return response.data
+        }
+
+        try {
+            const addedData = await addData();
+            if(addedData.resultShort === 'success') {
+                dispatch({
+                    type: types.ADD_TUTOR,
+                    payload: {
+                        showForm: false,
+                        formDetails: {
+                            formName: "",
+                            editFlag: false,
+                            buttonName: 'Submit',
+                        },
+                        formFields: []
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.ADD_TUTOR_ERROR,
+                    payload: {
+                        showForm: true,
+                        formDetails: {
+                            formName: "",
+                            editFlag: false,
+                            buttonName: 'Submit',
+                        }
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                    type: types.ADD_TUTOR_ERROR,
+                    payload: {
+                        showForm: false,
+                        formDetails: {
+                            formName: "",
+                            editFlag: false,
+                            buttonName: 'Submit',
+                        }
+                    }
+                })
+        }
+    }
+}
+
 export const fetchTutorDetails = (teacherId) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         const getData = async() => {
-            const response = await axios.get(`/admin/teachersDetails/${teacherId}`);
+            const response = await axios.get(`/admin/teachersDetails/${teacherId}`, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error('Could not fetch tutor details!');
             }
@@ -154,9 +214,10 @@ export const fetchTutorDetails = (teacherId) => {
 }
 
 export const fetchTutorEducationFormFields = (postObj) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         const getData = async() => {
-            const response = await axios.get('/admin/getTutorFormFields');
+            const response = await axios.get('/admin/getTutorFormFields', {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error('Could not fetch tutor Education form fields!');
             }
@@ -205,9 +266,10 @@ export const fetchTutorEducationFormFields = (postObj) => {
 }
 
 export const addTeacherEducationDetails = (values) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const {auth: {token}} = getState();
         const addData = async () => {
-            const response = await axios.post('/admin/addTutorEducation', values)
+            const response = await axios.post('/admin/addTutorEducation', values, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not add tutor education data!');
             } 
@@ -253,9 +315,10 @@ export const addTeacherEducationDetails = (values) => {
 }
 
 export const updateTutorEducationDetail = (values) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         const updateData = async() => {
-            const response = await axios.post('/admin/updateTutorEducation', values)
+            const response = await axios.post('/admin/updateTutorEducation', values, {headers: collection.setHeader(token)})
             if(response.statusText !== 'OK') {
                 throw new Error('Could not update tutor education!');
             }

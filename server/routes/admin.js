@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/admin");
 const UserService = require("../services/userServices")
+const cacheMiddleware = require('../services/cache/cache')
 
 
-router.get("/get-students", adminController.getStudent);
+router.get("/get-students", cacheMiddleware, adminController.getStudent);
 
 router.post("/add-student", adminController.addStudentInDatabase);
 
@@ -26,7 +27,7 @@ router.post('/add-feesDetails', adminController.addFeesDetails);
 
 router.get('/getFeesDetailsById/:studentId', adminController.getFeesDetailsByStudentId);
 
-router.get('/getAllFees', (req, res, next) => {
+router.get('/getAllFees', cacheMiddleware, (req, res, next) => {
     console.log('req', req)
     adminController.getAllFeesData()
         .then(result => {

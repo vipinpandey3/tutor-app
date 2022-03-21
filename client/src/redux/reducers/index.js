@@ -6,6 +6,7 @@ import feesReducer from "./feesReducer";
 import examReducer from "./examReducer";
 import dashboardReducer from './dashboardReducer';
 import userReducer from "./userReducer";
+import authReducer from "./authReducer";
 
 export default combineReducers({
 	tutor: tutorReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
 	fees: feesReducer,
 	exam: examReducer,
 	dashboard: dashboardReducer,
-	user: userReducer
+	user: userReducer,
+	auth: authReducer
 });

@@ -1,35 +1,10 @@
-// import {GET_USERS_SUCCESS, GET_USER_FAILURE} from "../types"
-// import {header} from '../header'
-
-// export const fetchUser = () => async (dispatch) => {
-    //     try {
-        //         return await axios.get("/admin/get-users", header)
-        //                         .then((response) => {
-            //                             if(response.data.resultShort === "success") {
-                //                                 dispatch({
-                    //                                     type: GET_USERS_SUCCESS,
-                    //                                     payload: response.data 
-                    //                                 })
-                    //                             } else {
-                        //                                 dispatch({
-                            //                                     type: GET_USER_FAILURE,
-//                                     payload: {message: "Error while fetching Users"}
-//                                 })
-//                             }
-//                         })
-//     } catch(error) {
-    //         dispatch({
-//             type: GET_USER_FAILURE,
-//             payload: {message: "Error while fetching Users"}
-//         })
-//     }
-// }
-
 import axios from 'axios';
-import * as types from '../types'
+import * as types from '../types';
+import * as collection from '../../utils/collections'
 
 export const getUsers = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -38,7 +13,7 @@ export const getUsers = () => {
         });
 
         const getData = async() => {
-            const response = await axios.get("/admin/get-users");
+            const response = await axios.get("/admin/get-users", {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while fetching User");
             }
@@ -84,9 +59,10 @@ export const getUsers = () => {
 }
 
 export const getUserForm = () => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const {auth: {token}} = getState();
         const getData = async() => {
-            const response = await axios.get('/admin/get-user-formFields');
+            const response = await axios.get('/admin/get-user-formFields', {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch user data!');
             }
@@ -139,7 +115,8 @@ export const getUserForm = () => {
 }
 
 export const createUser = (userValues) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -148,7 +125,7 @@ export const createUser = (userValues) => {
         });
 
         const addData = async(postObj) => {
-            const response = await axios.post('/admin/add-User', postObj);
+            const response = await axios.post('/admin/add-User', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error('Error while adding user');
             };

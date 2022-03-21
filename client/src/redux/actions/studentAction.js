@@ -1,8 +1,10 @@
 import * as types from "../types";
 import axios from 'axios';
+import * as collection from '../../utils/collections'
 
 export const getStudents = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -10,7 +12,7 @@ export const getStudents = () => {
             }
         })
         const getData = async() => {
-            const response = await axios.get('admin/get-students')
+            const response = await axios.get('admin/get-students', {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch students!');
             }
@@ -54,7 +56,8 @@ export const getStudents = () => {
 }
 
 export const fetchStudentFormFields = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -63,7 +66,7 @@ export const fetchStudentFormFields = () => {
         })
 
         const getData = async() => {
-            const response = await axios.get('/admin/get-student-formFields')
+            const response = await axios.get('/admin/get-student-formFields', {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch student form!');
             }
@@ -131,7 +134,8 @@ export const toggleForm = (flag) => {
 }
 
 export const editStudentFormFields = () => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -140,7 +144,7 @@ export const editStudentFormFields = () => {
         })
 
         const getData = async() => {
-            const response = await axios.get('/admin/get-student-formFields')
+            const response = await axios.get('/admin/get-student-formFields', {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch student form!');
             }
@@ -199,7 +203,8 @@ export const editStudentFormFields = () => {
 }
 
 export const addStudent = (studentData) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -208,7 +213,7 @@ export const addStudent = (studentData) => {
         })
 
         const addData = async() => {
-            const response = await axios.post('/admin/add-student', studentData)
+            const response = await axios.post('/admin/add-student', {headers: collection.setHeader(token)}, studentData)
             if(response.statusText !== "OK") {
                 throw new Error('Could not add student in the database!');
             }
@@ -268,7 +273,8 @@ export const addStudent = (studentData) => {
 // }
 
 export const fetchParentFormFields = (flag) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -279,7 +285,7 @@ export const fetchParentFormFields = (flag) => {
             flag: flag
         }
         const getData = async() => {
-            const response = await axios.post('/admin/get-parent-formFields', postObj);
+            const response = await axios.post('/admin/get-parent-formFields', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch parent form!');
             }
@@ -326,7 +332,8 @@ export const fetchParentFormFields = (flag) => {
 }
 
 export const fetchEditParentFormFields = (flag) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -337,7 +344,8 @@ export const fetchEditParentFormFields = (flag) => {
             flag: flag
         }
         const getData = async() => {
-            const response = await axios.post('/admin/get-parent-formFields', postObj);
+            console.log("collection.setHeader(token)", collection.setHeader(token))
+            const response = await axios.post('/admin/get-parent-formFields', postObj, {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch parent form!');
             }
@@ -389,7 +397,8 @@ export const fetchEditParentFormFields = (flag) => {
 }
 
 export const fetchStudentDetails = (studentId) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -397,7 +406,7 @@ export const fetchStudentDetails = (studentId) => {
             }
         });
         const getData = async() => {
-            const response = await axios.get(`/admin/studentDetails/${studentId}`)
+            const response = await axios.get(`/admin/studentDetails/${studentId}`, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch student details!');
             }
@@ -447,7 +456,8 @@ export const fetchStudentDetails = (studentId) => {
 }
 
 export const addParentDetails = (parentsValue) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -455,7 +465,7 @@ export const addParentDetails = (parentsValue) => {
             }
         });
         const addData = async() => {
-            const response = await axios.post("/admin/add-parent", parentsValue);
+            const response = await axios.post("/admin/add-parent", parentsValue, {headers: collection.setHeader(token)});
             if(response.statusText !== 'OK') {
                 throw new Error("Error while adding parent Details")
             }
@@ -501,7 +511,9 @@ export const addParentDetails = (parentsValue) => {
 }
 
 export const fetchStudentEducationFormfields = (editObj) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        console.log(token);
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -510,7 +522,7 @@ export const fetchStudentEducationFormfields = (editObj) => {
         })
 
         const getData = async() => {
-            const response = await axios.get('/admin/get-education-formFields');
+            const response = await axios.get('/admin/get-education-formFields',{headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch education form!');
             }
@@ -564,7 +576,8 @@ export const fetchStudentEducationFormfields = (editObj) => {
 }
 
 export const addStudeEducationDetails = (values) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -573,7 +586,7 @@ export const addStudeEducationDetails = (values) => {
         })
 
         const addData = async() => {
-            const response = await axios.post('/admin/add-studentEducation-details', values);
+            const response = await axios.post('/admin/add-studentEducation-details', values, {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not add student education details!');
             }
@@ -623,9 +636,10 @@ export const addStudeEducationDetails = (values) => {
 };
 
 export const updateEducationDetails = (values) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: [token]} = getState
         const updateData = async () => {
-            const response = await axios.post('/admin/update-education-details', values)
+            const response = await axios.post('/admin/update-education-details', values, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch fees details!');
             }
@@ -675,7 +689,8 @@ export const updateEducationDetails = (values) => {
 }
 
 export const fetchStudentFeesDetails = (studentId) => {
-    return async(dispatch) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -683,7 +698,7 @@ export const fetchStudentFeesDetails = (studentId) => {
             }
         })
         const getData = async() => {
-            const response = await axios.get(`/admin/getFeesDetailsById/${studentId}`);
+            const response = await axios.get(`/admin/getFeesDetailsById/${studentId}`, {headers: collection.setHeader(token)});
             if(response.statusText !== "OK") {
                 throw new Error('Could not fetch fees details!');
             }

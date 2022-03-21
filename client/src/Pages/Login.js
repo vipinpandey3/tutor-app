@@ -1,9 +1,14 @@
 import { Grid, makeStyles, Paper } from '@material-ui/core'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import MatButton from '../Components/Common/Button'
 import Input from '../Components/Common/Input'
-import {useHistory, Redirect} from 'react-router-dom'
-import { AuthContext } from '../context/auth-context'
+import {useHistory} from 'react-router-dom'
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {
+    login,
+    removeAuthToken
+} from '../redux/actions/authAction'
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -13,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const Login = (props) => {
+const Login = ({auth: {isAuth, token}, login, removeAuthToken}) => {
     const styles = useStyles();
-    let history = useHistory()
     const [emailId, setEmaildId] = useState('');
     const [password, setPassword] = useState()
-    // const {loginHandler, setIsAuthenticated} = props
-    const {login} = useContext(AuthContext)
+    // useEffect(() => {
+    //     removeAuthToken()
+    // }, [])
     const handleEmailId = (e) => {
         setEmaildId(e.target.value);
     }
@@ -35,11 +40,10 @@ const Login = (props) => {
             password: password
         }
         login(loginObj)
-            .then(result => {
-                return history.push('/dashboard')
-            })
+        // if(isAuth) {
+        //     return history.push('/dashboard')
+        // }
     }
-
     return (
         <Paper className={styles.paperContent}>
             <form onSubmit={submitHandler}>
@@ -61,4 +65,16 @@ const Login = (props) => {
     )
 }
 
-export default Login
+Login.propTypes= {
+    auth: PropTypes.object.isRequired,
+    login: PropTypes.func.isRequired,
+    removeAuthToken: PropTypes.func.isRequired
+}
+
+const mapStateToProps =state => {
+    return {
+        auth: state.auth
+    }
+}
+
+export default connect(mapStateToProps, {login, removeAuthToken})(Login)

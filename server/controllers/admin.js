@@ -1,5 +1,4 @@
 const StudentEducationDetails = require("../models/student-education-details");
-const Fees = require('../models/fees'); 
 const attributes = require('../attributes/attributes.json');
 const OptionServices = require('../services/optionServices')
 const moment = require('moment');

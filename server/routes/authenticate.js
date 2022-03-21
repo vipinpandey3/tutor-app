@@ -50,6 +50,7 @@ router.post('/login',
     }),
     (req, res) => {
         if(req.user.success) {
+            global.CACHE_OBJ.set('USER_TOKEN', JSON.stringify(req.user.token));
             const result = {
                 resultShort: 'success',
                 resultLong: 'Login Successful',

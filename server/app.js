@@ -9,8 +9,17 @@ var fileUpload = require('express-fileupload');
 const adminRoute = require("./routes/admin");
 const facultyRoute = require('./routes/faculty');
 const models = require("./models");
+var Redis = require('ioredis');
 
 const app = express();
+if(process.env.TO_CACHE_DATA) {
+  global.CACHE_OBJ = new Redis({
+    port: process.env.CACHE_STORE_PORT, // Redis port
+    host: process.env.CACHE_STORE_URL, // Redis host
+    family: 4, // 4 (IPv4) or 6 (IPv6)
+    db: 0
+  })
+}
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());;
 app.use(fileUpload())
@@ -47,23 +56,24 @@ function authenticateToken(req, res, next) {
       }
     })
     .then(result => {
-      const userObj = JSON.stringify(result)
-      if(!userObj) {
+      // const userObj = JSON.stringify(result)
+      if(!result) {
         res.status(400).json({
           resultShort: "failure",
           resultLong: "User not find"
         })
       }
       req.user = {
-        firstName: userObj.firstName,
-        lastName: userObj.lastName,
-        emailId: userObj.emailId,
-        role: userObj.role
+        firstName: result.firstName,
+        lastName: result.lastName,
+        emailId: result.emailId,
+        role: result.role
       };
+      global.CACHE_OBJ.set("LOGGED_IN_USERS", JSON.stringify(req.user));
       next()
     })
     .catch(error => {
-      console.log("Error while user find");
+      console.log("Error while user find", error);
       res.status(400).json({
         resultShort: "failure",
         resultLong: "User not find for authorization"
@@ -83,6 +93,7 @@ app.use('/faculty', authenticateToken, facultyRoute);
 models.sequelize
   .sync({force: false})
   .then((user) => {
-    app.listen(5000)
+    app.listen(process.env.SERVER_PORT);
+    console.log("Listning to port",process.env.SERVER_PORT)
   })
   .catch((e) => console.log(e));

@@ -55,6 +55,15 @@ module.exports = function(sequelize, DataTypes) {
         Student.belongsTo(models.Parent)
         Student.hasMany(models.StudentEducationDetails, {foreignKey: "StudentId"});
         Student.hasMany(models.StudentAttendence, {foreignKey: "StudentId"});
+
+
+        Student.STUDENT_STATUS_ACTIVE_VALUE = 'Active';
+
+        Student.getStudenByCondition = function(whereQuery) {
+            return models.Student.findOne({
+                where: whereQuery
+            })
+        }
     };
 
     return Student

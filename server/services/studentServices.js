@@ -1,5 +1,6 @@
 const Student = require('../models/student');
-const models = require('../models')
+const models = require('../models');
+const student = require('../models/student');
 
 const getStudentById = (id) => {
     console.log("inside getStudentById function", id)
@@ -16,6 +17,20 @@ const getStudentById = (id) => {
     })
 }
 
+const getStudenByCondition = (condition) => {
+    return models.Student.getStudenByCondition(condition)
+    .then(student => {
+        if(student) {
+            return student
+        } else {
+            return {
+                message: "No student found with given id"
+            }
+        }
+    }).catch(error => error)
+}
+
 module.exports = {
     getStudentById,
+    getStudenByCondition
 }

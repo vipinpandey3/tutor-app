@@ -1,0 +1,46 @@
+{
+  "mapping": [
+    {
+      "DBTableName": "Fees",
+      "DBColumnName": "feesAmount",
+      "excelColumnName": "Fees amount",
+      "functionName": ""
+    },
+    {
+      "DBTableName": "Fees",
+      "DBColumnName": "discount",
+      "excelColumnName": "Discount amount",
+      "functionName": ""
+    },
+    {
+      "DBTableName": "Fees",
+      "DBColumnName": "paidAmount",
+      "excelColumnName": "Paid amount",
+      "functionName": ""
+    },
+    {
+      "DBTableName": "Fees",
+      "DBColumnName": "balance",
+      "excelColumnName": "Balance",
+      "functionName": "setBalance"
+    },
+    {
+      "DBTableName": "Fees",
+      "DBColumnName": "reamarks",
+      "excelColumnName": "Remarks",
+      "functionName": ""
+    },
+    {
+      "DBTableName": "Fees",
+      "DBColumnName": "Academic Year",
+      "excelColumnName": "Academic Year",
+      "functionName": ""
+    },
+    {
+      "DBTableName": "Student",
+      "DBColumnName": "aadharNo",
+      "excelColumnName": "Student Id",
+      "functionName": ""
+    }
+  ]
+}

@@ -10,6 +10,7 @@ const OptionServices = require('../services/optionServices');
 const moment = require('moment');
 const SubjectMaster = require('../models/subjectMatser');
 const models = require('../models/index')
+const { fork } = require('child_process');
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function', seacrchParams);
@@ -56,23 +57,48 @@ const fileUpload = (req, res, next) => {
     }
     return ImportService.SaveFileDetailsInDB(inputFileObject)
         .then(dbFile => {
-            ImportService.importExceldata(dbFile)
-                .then(resultObj => {
-                    const result ={
-                        resultShort: "Success",
-                        resultLong: "Data is saved in the DB"
-                    }
-                    return res.status(200).json(result)
-                })
-                .catch(error => {
-                    const result = {
-                        resultShort: "Failure",
-                        resultLong: "Failed to upload file"
-                    }
-                    return res.status(400).json(result)
-                })
+            const forked = fork('../server/services/childProcessService')
+            forked.on('message', (response) => {
+                console.log(("Upload completed", response));
+            })
+            const result ={
+                resultShort: "Success",
+                resultLong: "Data is saved in the DB"
+            }
+            res.status(200).json(result);
+            const obj = {
+                file: dbFile
+            }
+            forked.send({type: "upload", obj: obj});
+            // models.ExcelImport.findByPk(dbFile.id).Examthen(databaseFile => {
+            //     let fileObj = fs.readFileSync(databaseFile.filePath);
+                
+            //     saveExcelDataInDB({data: fileObj})
+            //         .then(result => {
+            //             return resolve(result)
+            //         })
+            //         .catch(error => {
+            //             return reject(error)
+            //         })
+            // })
+            // ImportService.importExceldata(dbFile)
+            //     .then(resultObj => {
+            //         const result ={
+            //             resultShort: "Success",
+            //             resultLong: "Data is saved in the DB"
+            //         }
+            //         return res.status(200).json(result)
+            //     })
+            //     .catch(error => {
+            //         const result = {
+            //             resultShort: "Failure",
+            //             resultLong: "Failed to upload file"
+            //         }
+            //         return res.status(400).json(result)
+            //     })
         })
         .catch((error) => {
+            console.error("Error while uploading excel", error);
             const result = {
                 resultShort: "Failure",
                 resultLong: "Failed to upload file"

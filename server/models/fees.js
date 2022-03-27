@@ -43,7 +43,15 @@ module.exports = function(sequelize, DataTypes) {
     );
 
     Fees.associate = function(models) {
-        Fees.belongsTo(models.Student)
+        Fees.belongsTo(models.Student);
+
+        Fees.findFees = function(id) {
+            return models.Fees.findAll({
+                where: {
+                    StudentId: id
+                }
+            })
+        }
     };
 
     return Fees

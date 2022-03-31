@@ -6,6 +6,7 @@ const initialState = {
         buttonName: "",
         editFlag: false
     },
+    subjects: [],
     showForm: false,
     examFormFields: [],
     examData: {
@@ -63,8 +64,26 @@ const examReducer = (state = initialState, action) => {
                 message: action.payload.message,
                 error: action.payload.error,
             };
+            
 
-        case types.ADD_FEES:
+        case types.FETCH_EXAM_SUBJECTS:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                message: action.payload.message,
+                error: action.payload.error,
+                subjects: action.payload.subjects
+            }
+
+        case types.FETCH_EXAM_SUBJECTS_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                message: action.payload.message,
+                error: action.payload.error,
+            }
+            
+        case types.ADD_EXAM:
             return {
                 ...state,
                 loading: action.payload.loading,
@@ -77,6 +96,7 @@ const examReducer = (state = initialState, action) => {
                 },
                 showForm: action.payload.showForm
             };
+
 
         case types.TOGGLE_FORM:
             return {

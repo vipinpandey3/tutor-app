@@ -2,15 +2,15 @@ const FeesService = require('../services/feesServices');
 const StudentService = require('../services/studentServices');
 const ImportService = require('../services/importService');
 const attributes = require('../attributes/attributes.json');
-const Exam = require('../models/exam');
 const StandardMaster = require('../models/standardMaster');
-const ExamStdMap = require('../models/examStdMap');
 const { QueryTypes } = require('sequelize');
 const OptionServices = require('../services/optionServices');
 const moment = require('moment');
 const SubjectMaster = require('../models/subjectMatser');
 const models = require('../models/index')
 const { fork } = require('child_process');
+var Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function', seacrchParams);
@@ -151,9 +151,10 @@ const getInputOptions = (optionObject) => {
 }
 
 const createExam = (req, res, next) => {
-    console.log('Inside Create Exam Function')
+    console.log('Inside Create Exam Function', JSON.stringify(req.user))
     const reqBody = req.body;
-    const createdBy = req.user.id;
+    // const createdBy = req.user.id;
+    const createdBy = 1;
     const hours = req.body.hours
     const timeStart = moment(reqBody.timeStart, 'HH:mm:ss').format('HH:mm:ss');
     // const timeStart = reqBody.timeStart;
@@ -254,9 +255,21 @@ const getExams = (req, res, next) => {
     .then(examsObj => {
         const ExamTableHeader = attributes[2].attributes;
         const ExamNestedTableHeader = attributes[3].attributes
-        examsObj.forEach(exam => {
-            exam.exapanded = false
-        })
+        const exams = []
+        // for (let i = 0; i <= examsObj.length; i++) {
+        //     i['exapanded'] = false;
+        //     i['std'] = i.ExamMap[0].remarks;
+        //     i['status'] = i.ExamMap[0].ExamStdMap.status
+        //     return exams.push(i)
+        // }
+        // examsObj.map(exam => {
+        //     exam['exapanded'] = false;
+        //     exam['std'] = exam.ExamMap[0].remarks;
+        //     exam['status'] = exam.ExamMap[0].ExamStdMap.status
+        //     return exams.push(exam)
+        // })
+        // console.log("ExamObj **************", JSON.stringify(examsObj));
+        // console.log("examArray ***********", JSON.stringify(examArray));
         const result = {
             resultShort: 'success',
             resultLong: 'Successfully retrieved all the exam',
@@ -278,21 +291,19 @@ const getExams = (req, res, next) => {
 const getAllExam = (currentDate) => {
     console.log('Inside getAllExam Function');
     return new Promise((resolve, reject) => {
-        // return models.ExamStdMap.findAll({where: {status: 1}})
-        // models.Exam.findAll({
-        //     include: [
-        //         {
-        //             model: models.ExamStdMap,
-        //             through: 'ExamId',
-        //             include: [
-        //                 {
-        //                     model: models.StandardMaster,
-        //                     through: 'ExamId',
-        //                 }
-        //             ]
-        //         },
-        //     ]
+        const whereQuery = {
+            examDate: {
+                [Op.gte]: currentDate
+            }
+        }
+        // models.Exam.getActiveExamByCondition(whereQuery)
+        // .then(result => {
+        //     resolve(result)
         // })
+        // .catch(error => {
+        //     console.error("Exam error", error);
+        //     reject(error)
+        // });
         // sequelize.query("select * from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join StandardMaster sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
         return models.sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1 and e.examDate >= ?", 
             { 
@@ -301,7 +312,6 @@ const getAllExam = (currentDate) => {
             }
         )
         .then(exams => {
-            console.log("Exams", exams)
             return resolve(exams)
         })
         .catch(error => {
@@ -316,7 +326,8 @@ const getSubjectsByStandard = (req, res) => {
     const std = req.params.stdId;
     models.StandardMaster.findAll({where: {remarks: std}})
     .then(standard => {
-        const stdId = standard[0].id
+        const stdId = standard[0].id;
+        console.log("stdId", std);
         OptionServices.getSubjectOptionForStandard(stdId)
             .then(data => {
                 const result = {

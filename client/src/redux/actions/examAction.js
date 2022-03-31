@@ -114,6 +114,57 @@ export const fetchExamFormFields = () => {
     }
 }
 
+export const fetchSubjectByStandard = (stdId) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
+        dispatch({
+            type: types.SET_LOADING,
+            payload: true
+        });
+
+        const getSubjects = async() => {
+            const response = await axios.get(`/faculty/getSubjects/${stdId}`, {headers: collection.setHeader(token)});
+            if(response.statusText !== "OK") {
+                throw new Error("Errrow while fetching Subjects");
+            }
+            return response.data
+        };
+
+        try {
+            const subjects = await getSubjects();
+            if(subjects.resultShort === 'success') {
+                dispatch({
+                    type: types.FETCH_EXAM_SUBJECTS,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        message: subjects.resultLong,
+                        subjects: subjects.subjects
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.FETCH_EXAM_SUBJECTS_ERROR,
+                    payload: {
+                        error: true,
+                        loading: false,
+                        mesaage: subjects.resultLong
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.FETCH_EXAM_SUBJECTS_ERROR,
+                payload: {
+                    error: true,
+                    loading: false,
+                    mesaage: error
+                }
+            })
+        }
+    }
+}
+
 export const createExam = (examObj) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
@@ -133,7 +184,7 @@ export const createExam = (examObj) => {
             const addedData = await addData();
             if(addedData.resultShort === 'success') {
                 dispatch({
-                    type: types.ADD_FEES,
+                    type: types.ADD_EXAM,
                     payload: {
                         loading: false,
                         error: false,
@@ -149,7 +200,7 @@ export const createExam = (examObj) => {
                 return fetchAllExams();
             } else {
                 dispatch({
-                    type: types.ADD_FEES_ERROR,
+                    type: types.ADD_EXAM_ERROR,
                     payload: {
                         loading: false,
                         error: true,

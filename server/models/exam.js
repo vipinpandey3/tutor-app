@@ -55,7 +55,25 @@ module.exports = function(sequelize, DataTypes) {
                 model: models.ExamStdMap,
                 unique: false
             }
-        })
+        });
+
+        Exam.getActiveExamByCondition = function(whereQuery) {
+            return models.Exam.findAll({
+                where: whereQuery,
+                include: [
+                    {
+                        model: models.StandardMaster,
+                        as: 'ExamMap',
+                        through: {
+                            where: {
+                                status: models.ExamStdMap.ACTIVE_STATUS
+                            }
+                        },
+                        require: true
+                    }
+                ]
+            })
+        };
     };
 
     return Exam

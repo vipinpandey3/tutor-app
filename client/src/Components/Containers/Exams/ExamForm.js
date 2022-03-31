@@ -31,19 +31,16 @@ const ExamForm = (props) => {
     formTitle,
     initialExamFormValue,
     fetchSubjectByStandard,
-    createExam
+    createExam,
+    subjects
   } = props;
   const [examFormValue, setExamFormValue] = useState(initialExamFormValue);
   const [examTimeValue, setExamTimeValue] = useState(null)
-  const [subjectOptions, setSubjectOptions] = useState([])
-
+  
   const valueChange = (e) => {
     if(e.target.name === "standard") {
       console.log('e.target.value', e.target.value);
       fetchSubjectByStandard(e.target.value)
-          .then(res => {
-            setSubjectOptions(res.subjects);
-          })
     }
     console.log('Event Input Change', e)
     const { name, value } = e.target;
@@ -120,7 +117,7 @@ const ExamForm = (props) => {
             else if(input.type === 'multiselect') {
               return (
                 <Grid key={input.id} item xs={3} className={styles.contentMargin}>
-                  <MultiSelect style={{width: "90%"}} value={examFormValue[input.name]} onChange={onSelectionInputChange} name={input.name} label={input.label} options={subjectOptions} />
+                  <MultiSelect style={{width: "90%"}} value={examFormValue[input.name]} onChange={onSelectionInputChange} name={input.name} label={input.label} options={subjects} />
                 </Grid>
               )
             } 

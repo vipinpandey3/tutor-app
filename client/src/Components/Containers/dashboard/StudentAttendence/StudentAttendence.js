@@ -172,7 +172,7 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
           </TableHead>
           <TableBody>
             {
-              studentAttendenceTableData.attendenceRows.map((details, celIndex) => {
+              studentAttendenceTableData.attendenceRows.map((details, cellIndex) => {
                 return (
                   <TableRow key={details.id}>
                     {

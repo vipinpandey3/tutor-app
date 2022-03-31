@@ -105,31 +105,38 @@
         "attributes": [
             {
                 "id": "Standard",
-                "label": "Standard"
+                "label": "Standard",
+                "props": "ExamMap.0.std"
             },
             {
                 "id": "timeStart",
-                "label": "ExamTimeStart"
+                "label": "ExamTimeStart",
+                "props": "timeStart"
             },
             {
                 "id": "timeEnd",
-                "label": "ExamTimeEnd"
+                "label": "ExamTimeEnd",
+                "props": "timeEnd"
             },
             {
                 "id": "ExamStartDate",
-                "label": "ExamStartDate"
+                "label": "ExamStartDate",
+                "props": "examDate"
             },
             {
                 "id": "AcademicYear",
-                "label": "AcademicYear"
+                "label": "AcademicYear",
+                "props": "academicYear"
             },
             {
                 "id": "ExamType",
-                "label": "ExamType"
+                "label": "ExamType",
+                "props": "examType"
             },
             {
                 "id": "ExamStatus",
-                "label": "ExamStatus"
+                "label": "ExamStatus",
+                "props": "ExamMap.0.ExamStdMap.status"
             }
         ]
     },
@@ -139,19 +146,23 @@
         "attributes": [
             {
                 "id": "date",
-                "label": "Date"
+                "label": "Date",
+                "props": "date"
             },
             {
                 "id": "subject",
-                "label": "Subject"
+                "label": "Subject",
+                "props": "subject"
             },
             {
                 "id": "hours",
-                "label": "Hours"
+                "label": "Hours",
+                "props": "hours"
             },
             {
                 "id": "marks",
-                "label": "Marks"
+                "label": "Marks",
+                "props": "marks"
             }
         ]
     },

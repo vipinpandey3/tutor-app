@@ -19,7 +19,8 @@ import {
   fetchExamFormFields,
   createExam,
   toggleForm,
-  deleteExam
+  deleteExam,
+  fetchSubjectByStandard
 } from '../../../redux/actions/examAction'
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +53,7 @@ const initialExamFormValue = {
   hours: 1
 }
 
-const Exams = ({exam: {loading, error, message, examData, examFormFields, formDetails, showForm}, toggleForm, createExam, fetchExamFormFields, fetchAllExams, deleteExam}) => {
+const Exams = ({exam: {loading, error, message, examData, examFormFields, formDetails, showForm, subjects}, toggleForm, createExam, fetchExamFormFields, fetchAllExams, deleteExam, fetchSubjectByStandard}) => {
   const styles = useStyles();
   
   const [formTitle, setFormTitle] = useState({
@@ -72,14 +73,6 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
     fetchAllExams()
   }
 
-  // const editExam = (data) => {
-  //   getExamById(data.ExamId)
-  //     .then(result => {
-  //       showExamFormFields('Edit Exam', "Update Exam", true)
-  //       setEditFormFieldValues(result.examData)
-  //     })    
-  // }
-
   return (
     <>
       { showForm &&  
@@ -89,7 +82,8 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
           initialExamFormValue={initialExamFormValue} 
           formTitle={formTitle} 
           examFormInput={examFormFields} 
-          // fetchSubjectByStandard={fetchSubjectByStandard} 
+          fetchSubjectByStandard={fetchSubjectByStandard} 
+          subjects={subjects}
           createExam={createExam}
         />
       }      
@@ -124,7 +118,8 @@ Exams.propTypes = {
   exam: PropTypes.object.isRequired,
   createExam: PropTypes.func.isRequired,
   toggleForm: PropTypes.func.isRequired,
-  deleteExam: PropTypes.func.isRequired
+  deleteExam: PropTypes.func.isRequired,
+  fetchSubjectByStandard: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -133,4 +128,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {deleteExam, createExam, fetchAllExams, fetchExamFormFields, toggleForm})(Exams);
+export default connect(mapStateToProps, {deleteExam, createExam, fetchAllExams, fetchExamFormFields, toggleForm, fetchSubjectByStandard})(Exams);

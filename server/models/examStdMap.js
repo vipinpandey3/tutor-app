@@ -39,6 +39,19 @@ module.exports = function(sequelize, DataTypes) {
                 as: "StdMap"
             }
         );
+
+        // ExamStdMap.getActiveExams = function(whereQuery) {
+        //     return models.ExamStdMap.findAll({
+        //         where: whereQuery,
+        //         include: [
+        //             {
+        //                 mod
+        //             }
+        //         ]
+        //     })
+        // }
+
+        ExamStdMap.ACTIVE_STATUS = 1;
     }
 
     return ExamStdMap

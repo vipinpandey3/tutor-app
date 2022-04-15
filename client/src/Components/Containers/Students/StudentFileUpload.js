@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-const FeesFileUpload = (props) => {
+const StudentFileUpload = (props) => {
     const [file, setFile] = useState();
     const [fileName, setFileName] = useState("");
     const styles = useStyles();
@@ -25,12 +25,17 @@ const FeesFileUpload = (props) => {
         setFileName(e.target.files[0].name);
       };
 
-    const hadleFeesForm = (e) => {
+    const hadleStudentForm = (e) => {
         console.log('FileInput', file);
         const formData = new FormData();
         formData.append("file", file);
+        // const fileObj = {
+        //     fileName: fileName,
+        //     fileType
+        // }
         formData.append("fileName", fileName);
-        formData.append('fileType', 2)
+        formData.append('fileType', 1)
+
         uploadFile(formData)
         e.preventDefault()
     }
@@ -45,7 +50,7 @@ const FeesFileUpload = (props) => {
                     <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput"  type="file" onChange={saveFile} />
                     </Grid>
                     <Grid item xs={3}>
-                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }} onClick={hadleFeesForm}>Upload File</MatButton>
+                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }} onClick={hadleStudentForm}>Upload File</MatButton>
                     </Grid>
                     <Grid item xs={3}>
                         <MatButton variant="contained" style={{ flex: "1", width: "90%" }} onClick={() => toggleUploadSection(false)}>Cancel</MatButton>
@@ -56,4 +61,4 @@ const FeesFileUpload = (props) => {
     )
 }
 
-export default FeesFileUpload;
+export default StudentFileUpload;

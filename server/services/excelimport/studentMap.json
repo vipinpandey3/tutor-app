@@ -1,0 +1,154 @@
+{
+    "mapping": [
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "aadharNo",
+            "excelColumnName": "Student Aadhar",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "firstName",
+            "excelColumnName": "Student FirstName",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "lastName",
+            "excelColumnName": "Student LastName",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "panNo",
+            "excelColumnName": "Student PAN",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "emailId",
+            "excelColumnName": "Email Id",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "gender",
+            "excelColumnName": "Student Gender",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "religion",
+            "excelColumnName": "Religion",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "address",
+            "excelColumnName": "Student Address",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Student",
+            "DBColumnName": "dob",
+            "excelColumnName": "Fees amount",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "fatherName",
+            "excelColumnName": "Father Name",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "motherName",
+            "excelColumnName": "Mother Name",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "fatherEmailId",
+            "excelColumnName": "Father Email",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "motherEmailId",
+            "excelColumnName": "Mother Email",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "fatherAadhar",
+            "excelColumnName": "Father Aadhar",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "motherAadhar",
+            "excelColumnName": "Mother Aadhar",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "fatherDob",
+            "excelColumnName": "Father DOB",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "motherdob",
+            "excelColumnName": "Mother Name",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "fatherHighestQualifaction",
+            "excelColumnName": "Father Education",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "Parents",
+            "DBColumnName": "motherHighestQualification",
+            "excelColumnName": "Mother Education",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "StudentEducationDetails",
+            "DBColumnName": "std",
+            "excelColumnName": "Exam Std",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "StudentEducationDetails",
+            "DBColumnName": "seatNumber",
+            "excelColumnName": "seatNumber",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "StudentEducationDetails",
+            "DBColumnName": "year",
+            "excelColumnName": "Exam Year",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "StudentEducationDetails",
+            "DBColumnName": "totalMarks",
+            "excelColumnName": "Total Marks",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "StudentEducationDetails",
+            "DBColumnName": "instituteName",
+            "excelColumnName": "Institute name",
+            "functionName": ""
+        },
+        {
+            "DBTableName": "StudentEducationDetails",
+            "DBColumnName": "universityName",
+            "excelColumnName": "University Name",
+            "functionName": ""
+        }
+    ]
+}

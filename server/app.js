@@ -97,3 +97,13 @@ models.sequelize
     console.log("Listning to port",process.env.SERVER_PORT)
   })
   .catch((e) => console.log(e));
+
+
+  // process.on('unhandledRejection', (reason, promise) => {
+  //   console.log("Server Error ************", reason);
+  // });
+
+  process.on("unhandledex", (err, da) =>{
+    console.log("Server Error ************", err);
+    process.exit();
+  })

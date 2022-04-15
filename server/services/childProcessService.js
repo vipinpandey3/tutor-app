@@ -13,9 +13,9 @@ const uploadExcel = (reqBody) => {
     console.log("Inside the Childprocess");
     models.ExcelImport.findByPk(reqBody.file.id)
     .then(databaseFile => {
-        console.log("databaseFile.filePath", databaseFile.filePath);
         let fileObj = fs.readFileSync(databaseFile.filePath);
-        importService.saveExcelDataInDB({data: fileObj})
+        const objData = {data: fileObj, fileType: reqBody.filetype}
+        importService.saveExcelDataInDB(objData)
             .then(result => {
                 console.log("Result in side the childprocess service", result);
                 if(result.status === 'success') {
@@ -28,8 +28,8 @@ const uploadExcel = (reqBody) => {
                 // return resolve(result)
             })
             .catch(error => {
-                console.log('Error occurred in childProcessService.importData', err);
-                process.send({msg: 'failure', result: (err && err.reason) ? err.reason : 'Error while uploading file'});
+                console.log('Error occurred in childProcessService.importData', error);
+                process.send({msg: 'failure', result: (error && error.reason) ? error.reason : 'Error while uploading file'});
                 process.exit(0);
                 // return reject(error)
             })

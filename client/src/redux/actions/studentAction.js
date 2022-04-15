@@ -264,6 +264,69 @@ export const addStudent = (studentData) => {
     }
 }
 
+export const toggleUploadSection = (flag) => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.TOGGLE_IMPORT,
+            payload: flag
+        })
+    }
+}
+
+export const uploadFile = (postObj) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+
+        const uploadData = async(postObj) => {
+            const response = await axios.post('/faculty/uploadFile', postObj, {headers: collection.setHeader(token)})
+            if(response.statusText !== "OK") {
+                throw new Error('Error uploading fees data!');
+            };
+            return response.data
+        }
+
+        try {
+            postObj.type = 1;
+            const uplaodedData = await uploadData(postObj);
+            if(uplaodedData) {
+                dispatch({
+                    type: types.UPLOAD_FILE,
+                    payload: {
+                        error: false,
+                        loading: false,
+                        message: uplaodedData.resultLong,
+                        showFileImport: false
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.UPLOAD_FILE_ERROR,
+                    payload: {
+                        error: true,
+                        loading: false,
+                        message: uplaodedData.resultLong
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.UPLOAD_FILE_ERROR,
+                payload: {
+                    error: true,
+                    loading: false,
+                    message: error
+                }
+            })
+        }
+    }
+}
+
 // export const updateStudent = () => {
 //     return async(dispatch) => {
 //         const updateData = async() => {

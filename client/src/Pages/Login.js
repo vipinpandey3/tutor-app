@@ -1,8 +1,7 @@
 import { Grid, makeStyles, Paper } from '@material-ui/core'
 import React, { useState } from 'react'
 import MatButton from '../Components/Common/Button'
-import Input from '../Components/Common/Input'
-import {useHistory} from 'react-router-dom'
+import Input from '../Components/Common/Input';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {
@@ -13,8 +12,8 @@ import {
 const useStyles = makeStyles((theme) => ({
     paperContent: {
         width: '400px',
-        margin: "10% auto",
-        padding: theme.spacing(4)
+        margin: "15% 25%",
+        padding: theme.spacing(4),
     },
 }))
 
@@ -22,9 +21,6 @@ const Login = ({auth: {isAuth, token}, login, removeAuthToken}) => {
     const styles = useStyles();
     const [emailId, setEmaildId] = useState('');
     const [password, setPassword] = useState()
-    // useEffect(() => {
-    //     removeAuthToken()
-    // }, [])
     const handleEmailId = (e) => {
         setEmaildId(e.target.value);
     }
@@ -40,9 +36,6 @@ const Login = ({auth: {isAuth, token}, login, removeAuthToken}) => {
             password: password
         }
         login(loginObj)
-        // if(isAuth) {
-        //     return history.push('/dashboard')
-        // }
     }
     return (
         <Paper className={styles.paperContent}>

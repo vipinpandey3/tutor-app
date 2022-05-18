@@ -12,7 +12,6 @@ const inntialState = {
 const authReducer = (state = inntialState, action) => {
     switch (action.type) {
         case types.LOGIN_USER:
-            console.log('Payload', action.payload)
             collection.setCookies(types.AUTH_TOKEN, action.payload.token);
             return {
                 ...state,
@@ -39,7 +38,16 @@ const authReducer = (state = inntialState, action) => {
                 ...state,
                 isAuth: false,
                 token: ""
-            }
+            };
+
+        case types.USER_LOGOUT: 
+            collection.deleteCookie(types.AUTH_TOKEN)
+            console.log("USER_LOGOUT ***********");
+            return {
+                ...state,
+                isAuth: false,
+                token: ""
+            };
     
         default:
             return state;

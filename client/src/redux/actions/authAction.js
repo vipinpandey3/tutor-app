@@ -56,6 +56,14 @@ export const login = (postObj) => {
     }
 }
 
+export const logout = () => {
+    return async (dispatch) => {
+        dispatch({
+            type: types.USER_LOGOUT
+        })
+    }
+}
+
 export const removeAuthToken = () => {
     return async(dispatch) => {
         console.log('Inside the removeAUthTOKEN');

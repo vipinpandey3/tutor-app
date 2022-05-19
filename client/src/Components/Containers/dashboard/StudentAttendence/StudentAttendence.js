@@ -17,17 +17,21 @@ import {
 } from "../../../../redux/actions/dashboardAction"
 
 const useStyles = makeStyles((theme) => ({
-  seacrhInput: {
+  searchUserInput: {
     width: "60%",
+    "&.makeStyles-searchInput-29": {
+      marginTop: '7px'
+    }
   },
   largeFont: {
     fontSize: '20px'
   },
   searchInput: {
-    height: "50px",
+    height: "46px",
     width: "40%",
     flex: "1",
-    paddingLeft: "10px"
+    paddingLeft: "10px",
+    marginTop: "9px"
   },
   attendenceButton: {
     width: "90%"
@@ -103,9 +107,9 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
             <Input
               onChange={onInputChange}
               label="Search Student"
-              className={styles.seacrhInput}
+              className={styles.searchUserInput}
               value={inputValue}
-              name="tutor"             
+              name="tutor"
             />
           </Grid>
           <Grid item xs={3}>

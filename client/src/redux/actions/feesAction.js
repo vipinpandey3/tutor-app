@@ -211,7 +211,7 @@ export const uploadFile = (postObj) => {
             }
         })
 
-        const uploadData = async() => {
+        const uploadData = async(postObj) => {
             const response = await axios.post('/faculty/uploadFile', postObj, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Error uploading fees data!');
@@ -220,7 +220,8 @@ export const uploadFile = (postObj) => {
         }
 
         try {
-            const uplaodedData = await uploadData();
+            postObj.type = 2;
+            const uplaodedData = await uploadData(postObj);
             if(uplaodedData) {
                 dispatch({
                     type: types.UPLOAD_FILE,

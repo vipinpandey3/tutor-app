@@ -44,6 +44,18 @@ module.exports = function(sequelize, DataTypes) {
 
     Parent.associate = function(models) {
         Parent.hasMany(models.Student)
+
+        Parent.createParents = function(parents, where) {
+            return models.Parent.findOrCreate({where: where, defaults: parents})
+            // .then(result => {
+            //     console.log("CreatePanrets result in models", result);
+            //     return result;
+            // })
+            // .catch(error => {
+            //     console.log("Error inside model Parents while creaing", error);
+            //     return error;
+            // })
+        }
     };
 
     return Parent

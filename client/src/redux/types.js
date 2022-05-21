@@ -116,6 +116,7 @@ export const ADD_USER_ERROR = "ADD_USER_ERROR";
 // Login Contance type
 export const LOGIN_USER = "LOGIN_USER";
 export const LOGIN_USER_ERROR = "LOGIN_USER_ERROR";
+export const USER_LOGOUT = "USER_LOGOUT";
 
 
 

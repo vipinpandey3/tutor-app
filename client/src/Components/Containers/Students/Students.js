@@ -16,7 +16,9 @@ import StudentForm from "./StudentForm";
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import {addStudent, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields} from '../../../redux/actions/studentAction'
+import {addStudent, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, toggleUploadSection, uploadFile} from '../../../redux/actions/studentAction'
+import StudentFileUpload from "./StudentFileUpload";
+
 // import Loader from '../../Common/Loader'
 
 
@@ -41,7 +43,7 @@ const initialcFormValues = {
   dob: moment().format('YYYY-MM-DD'),
   stream: 'Common',
 };
-const Students = ({student: {students, loading, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent}) => {
+const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile}) => {
   const history = useHistory();
   const classes = useStyles();
   const [formValues, setFormValues] = useState(initialcFormValues)
@@ -82,6 +84,7 @@ const Students = ({student: {students, loading, formDetails, showForm, studentFo
   return (
     <>
       {/* <Loader /> */}
+      {showFileImport && <StudentFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />}
       {showForm && (
           <StudentForm 
             initialcFormValues={formValues} 
@@ -116,6 +119,17 @@ const Students = ({student: {students, loading, formDetails, showForm, studentFo
               <MatButton
                 variant="outlined"
                 startIcon={<AddIcon />}
+                onClick={toggleUploadSection}
+              >
+                Upload Excel
+              </MatButton>
+            </Toolbar>
+          </Grid>
+          <Grid item>
+            <Toolbar>
+              <MatButton
+                variant="outlined"
+                startIcon={<AddIcon />}
                 onClick={loadForm}
               >
                 Add New
@@ -142,7 +156,9 @@ Students.propTypes = {
   fetchStudentFormFields: PropTypes.func.isRequired,
   toggleForm: PropTypes.func.isRequired,
   editStudentFormFields: PropTypes.func.isRequired,
-  addStudent: PropTypes.func.isRequired
+  addStudent: PropTypes.func.isRequired,
+  toggleUploadSection: PropTypes.func.isRequired,
+  uploadFile: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -152,4 +168,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps, {getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent})(Students);
+export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent})(Students);

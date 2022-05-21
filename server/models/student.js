@@ -63,6 +63,13 @@ module.exports = function(sequelize, DataTypes) {
             return models.Student.findOne({
                 where: whereQuery
             })
+        };
+
+        Student.createStudents = function(whereQuery, student) {
+            return models.Student.findOrCreate({
+                where: whereQuery,
+                defaults: student
+            })
         }
     };
 

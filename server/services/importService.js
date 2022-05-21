@@ -67,7 +67,6 @@ const importExceldata = (file) => {
         models.ExcelImport.findByPk(file.id)
             .then(databaseFile => {
                 let fileObj = fs.readFileSync(databaseFile.filePath);
-                
                 saveExcelDataInDB({data: fileObj})
                     .then(result => {
                         return resolve(result)
@@ -90,8 +89,8 @@ const saveExcelDataInDB = (data) => {
     var actSheets = 0;
     var errorData = [];
     var errorReason = [];
-    var importJSON;
-    importJSON = require('./excelimport/feesImport.json');
+    var importJSONFileName = getClientMapJSON(data.fileType);
+    let importJSON = require(`./excelimport/${importJSONFileName}.json`);
     return new Promise((resolve, reject) => {
         const workbook = XLSX.read(data.data, {
             type: 'buffer'
@@ -106,14 +105,15 @@ const saveExcelDataInDB = (data) => {
             }
             var curHeaders = get_header_row(curWorksheet);
             if(curHeaders.length !== importJSON.mapping.length) {
-                console.error('Error uploading file in the database');
+                console.error(`Error uploading file in the database: curHeaders [${curHeaders.length}] and import JSON headers [${importJSON.mapping.length}]`);
                 reject("Excel header is not matching");
             }
             populatePromises.push(
             mapPopulateData(
                 curHeaders,
                 curWorksheet,
-                importJSON
+                importJSON,
+                data.fileType
             ).catch((e) => {
                 console.error('Error in populating sheets: ', e);
                 return Promise.reject(e);
@@ -141,6 +141,20 @@ const saveExcelDataInDB = (data) => {
     })
 }
 
+function getClientMapJSON(fileTypeId) {
+    console.log("fileTypeId **********", fileTypeId);
+    let fileType = getFileType(fileTypeId);
+    return fileType;
+}
+  
+function getFileType(fileTypeId) {
+    const mapType = {
+        "1": "studentMap",
+        "2": 'feesImport'
+    }
+    return mapType[fileTypeId]
+}
+
 function get_header_row(sheet) {
     var headers = [];
     var range = XLSX.utils.decode_range(sheet['!ref']);
@@ -164,7 +178,7 @@ function get_header_row(sheet) {
     return headers;
 }
 
-  const mapPopulateData = (sheetHeader, sheet, clientJSON) => {
+  const mapPopulateData = (sheetHeader, sheet, clientJSON, fileType) => {
     return new Promise((resolve, reject) => {
         var range = XLSX.utils.decode_range(sheet['!ref']);
         var R;
@@ -180,29 +194,54 @@ function get_header_row(sheet) {
                 returnVar = XLSX.utils.format_cell(cell);
                 feesArray.push(returnVar);
             }
-            // const uuid = feesArray[0];
             let student = {}
             student.rowNum = R;
             student.status = models.Student.STUDENT_STATUS_ACTIVE_VALUE;
             clientJSON.mapping.forEach((mapElement, index) => {
                 let valueToStore = get_cell_value(sheet, sheetHeader[index]['colNum'], R)
-                    student[mapElement.DBColumnName] = valueToStore;
+                if(mapElement.functionName !== "") {
+                    fillerFunction[mapElement.functionName](student, valueToStore)
+                } else {
+                    if(mapElement.DBTableName === 'Student') {
+                        student[mapElement.DBColumnName] = valueToStore
+                    } else {
+                        var otherValue = student[mapElement.DBTableName]
+                        if(otherValue === undefined) otherValue = {};
+                        otherValue[mapElement.DBColumnName] = valueToStore;
+                        student[mapElement.DBTableName] = otherValue;
+                    }
+                }
+
+                if(mapElement.DBColumnName === "aadharNo" && !student.aadharNo) {
+                    const result = {};
+                    result.message = "Student Aadhar not Found";
+                    result.student = student;
+                    result.reason = "Student Aadhar not Found";
+                    return reject(result)
+                };
             })
-
-            let fees = student.Fees;
-            if(!fees)  fees = {};
-            fees.createdBy = 1;
-
-            const fileType = 1;
-            if(fileType === 1) {
-                createFees(student).then(resultObj => {
-                    console.log("SUccesfully createFees in database",resultObj);
-                    resolve(resultObj);
+            defCreatePromises.push(student)
+        }
+        if(fileType === "2") {
+            createFees(defCreatePromises).then(resultObj => {
+                resolve(resultObj);
+            })
+            .catch(errorObj => {
+                console.error("Error while creating fees", errorObj);
+                reject(errorObj);
+            })
+        } else if(fileType === "1") {
+            try {
+                return addStudentInSerializedManner(defCreatePromises)
+                .then(data => {
+                    resolve(data)
+                }).catch(error => {
+                    console.log("Error error in addStudentInSerializedManner", error);
+                    reject(error)
                 })
-                .catch(errorObj => {
-                    console.error("Error while creating fees", errorObj);
-                    reject(errorObj);
-                })
+            } catch (error) {
+                console.log("addStudentInSerializedManner error", error);
+                reject(error)
             }
         }
     })
@@ -318,6 +357,73 @@ function get_header_row(sheet) {
             })
         })
     })
+  }
+
+  const addStudentInSerializedManner = async(studentArray) => {
+    let result
+    for (let index = 0; index < studentArray.length; index++) {
+        result = await  createStudentWithAllEntities(studentArray[index]);
+    }
+    return result
+  }
+
+  const createStudentWithAllEntities = async (student) => {
+    console.log("Inside the createStudentWithAllEntities function");
+    const createdParents = await createParents(student);
+    const createdStudents = await createStudentWithParentId(createdParents);
+    const createdOrUpdatedEducation = await createStudentEudcationDetails(createdStudents.StudentEducationDetails)
+    return createdOrUpdatedEducation;
+  }
+
+  const createParents = (student) => {
+    let result = {}
+    return new Promise((resolve, reject) => {
+        if(student.aadharNo === undefined || student.aadharNo === null || student.aadharNo === '' ) {
+            result.status = 'Failure';
+            result.message = 'Student Aadhar not found';
+            result.student = student;
+            reject(result)
+        }
+        if(student.Parents == {}) {
+            result.status = 'Failure';
+            result.message = 'Parents data not found';
+            result.student = student;
+            reject(result)
+        }
+        const whereCondition = {
+            fatherAadhar: student.Parents.fatherAadhar,
+            motherAadhar: student.Parents.motherAadhar,
+        }
+        models.Parent.createParents(student.Parents, whereCondition)
+        .then(parents => {
+            student['ParentId']= parents[0].id
+            result.student = student;
+            resolve(student);
+        })
+        .catch(error => {
+            console.log("Error inside the createparents function", error);
+            reject(error)
+        })
+    })
+  }
+
+  const createStudentWithParentId = async(student) => {
+    const where = {
+        aadharNo: student.aadharNo
+    }
+    const studentObj = await models.Student.createStudents(where, student);
+    let studentEudcation = student.StudentEducationDetails;
+    studentEudcation['StudentId'] = studentObj[0].id
+    student.StudentEducationDetails = studentEudcation;
+    return student;
+  }
+
+  const createStudentEudcationDetails = async(educationDetails) => {
+    if(educationDetails.StudentId !== undefined && educationDetails.StudentId === "") {
+        return "Student Id form education details not found";
+    };
+    const createdData = models.StudentEducationDetails.createDetails(educationDetails)
+    return createdData;
   }
 
 module.exports = {

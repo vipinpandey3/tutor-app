@@ -48,8 +48,9 @@ const getFeesDetailsBySearchParam = (seacrchParams) => {
 }
 
 const fileUpload = (req, res, next) => {
-    console.log("Inside FileUpload function");
+    console.log("Inside FileUpload function", JSON.stringify(req.body));
     const inputfile = req.files.file;
+    const filetype = req.body.fileType
     const userId = 1;
     const inputFileObject = {
         inputfile: inputfile,
@@ -67,7 +68,8 @@ const fileUpload = (req, res, next) => {
             }
             res.status(200).json(result);
             const obj = {
-                file: dbFile
+                file: dbFile,
+                filetype: filetype
             }
             forked.send({type: "upload", obj: obj});
             // models.ExcelImport.findByPk(dbFile.id).Examthen(databaseFile => {

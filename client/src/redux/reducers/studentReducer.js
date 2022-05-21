@@ -31,7 +31,8 @@ const intitialState = {
         feesTableHeaders: [],
         feesDetailsRow: []
     },
-    totalPaid: 0
+    totalPaid: 0,
+    showFileImport: false
 };
 
 const studentReducer = (state = intitialState, action) => {
@@ -40,6 +41,12 @@ const studentReducer = (state = intitialState, action) => {
             return {
                 ...state,
                 loading: true
+            };
+
+        case types.TOGGLE_IMPORT:
+            return {
+                ...state,
+                showFileImport: action.payload
             };
 
         case types.TOGGLE_FORM:
@@ -123,6 +130,23 @@ const studentReducer = (state = intitialState, action) => {
                     parentFormFields: action.payload.parentFormFields,
                     educationFormFields: [],
                 }
+            };
+
+        case types.UPLOAD_FILE:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message,
+                showFileImport: action.payload.showFileImport
+            };
+
+        case types.UPLOAD_FILE_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                error: action.payload.error,
+                message: action.payload.message
             };
 
         case types.FETCH_PARENT_FORM_ERROR:

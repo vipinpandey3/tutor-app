@@ -17,9 +17,11 @@ import { Popper } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
-import { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext } from "../context/auth-context";
+import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import { logout } from '../redux/actions/authAction'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,11 +50,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = () => {
+const Navbar = ({auth: {isAuth, token}, logout}) => {
   const classes = useStyles();
-  const loggedInUser = "Vipin";
-  const authContext = useContext(AuthContext);
-  // const {logout} = authContext
+  const [loggedInUser, setLoggedInUser] = useState('')
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const history = useHistory()
@@ -77,13 +77,14 @@ const Navbar = () => {
 
   const logoutHandler = () => {
     setOpen(false);
-    // logout();
-    history.push('/login')
+    logout();
+    history.push('/')
   }
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
   useEffect(() => {
+    setLoggedInUser(localStorage.getItem('firstName'))
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
@@ -172,4 +173,14 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+Navbar.propTypes= {
+  auth: PropTypes.object.isRequired,
+}
+
+const mapStateToProps =state => {
+  return {
+      auth: state.auth
+  }
+}
+
+export default connect(mapStateToProps, {logout})(Navbar);

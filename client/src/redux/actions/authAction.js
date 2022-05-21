@@ -23,6 +23,11 @@ export const login = (postObj) => {
             const authdata = await loginData();
             if(authdata.resultShort === 'success') {
                 console.log('AUthData', authdata);
+                localStorage.setItem('firstName', authdata.user.firstName);
+                localStorage.setItem('lastName', authdata.user.lastName);
+                localStorage.setItem('role', authdata.user.role);
+                localStorage.setItem('emailId', authdata.user.emailId);
+                localStorage.setItem('userId', authdata.user.id)
                 dispatch({
                     type: types.LOGIN_USER,
                     payload: {
@@ -58,6 +63,7 @@ export const login = (postObj) => {
 
 export const logout = () => {
     return async (dispatch) => {
+        localStorage.clear()
         dispatch({
             type: types.USER_LOGOUT
         })

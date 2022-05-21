@@ -23,8 +23,11 @@ import {
 
 
 const useStyles = makeStyles((theme) => ({
-  seacrhInput: {
+  searchUserInput: {
     width: "60%",
+    "&.makeStyles-searchInput-29": {
+      marginTop: '7px'
+    }
   },
   largeFont: {
     fontSize: '20px'
@@ -127,7 +130,7 @@ const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, 
             <Input
               onChange={onInputChange}
               label="Search Student"
-              className={styles.seacrhInput}
+              className={styles.searchUserInput}
               value={inputValue}
               name="tutor"             
             />

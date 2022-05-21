@@ -42,20 +42,16 @@ const StudentFileUpload = (props) => {
 
     return (
         <Paper className={styles.paperContent}>
-            <Grid>
-                {/* <form onSubmit={hadleFeesForm} style={{display: "flex"}}> */}
-                    <Grid item xs={6} >
-                        {/* <input type="file" onChange={saveFile} className="fileInput" /> */}
-                    {/* <input type="file" ref={fileInput} /> */}
-                    <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput"  type="file" onChange={saveFile} />
-                    </Grid>
-                    <Grid item xs={3}>
-                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }} onClick={hadleStudentForm}>Upload File</MatButton>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <MatButton variant="contained" style={{ flex: "1", width: "90%" }} onClick={() => toggleUploadSection(false)}>Cancel</MatButton>
-                    </Grid>
-                {/* </form> */}
+            <Grid container>
+                <Grid item xs={6} >
+                <TextField style={{ width: "90%" }} variant="outlined"  name="fileInput"  type="file" onChange={saveFile} />
+                </Grid>
+                <Grid item xs={3}>
+                    <MatButton variant="contained" style={{ flex: "1", width: "90%", height: '55px' }} onClick={hadleStudentForm}>Upload File</MatButton>
+                </Grid>
+                <Grid item xs={3}>
+                    <MatButton variant="outlined" style={{ flex: "1", width: "90%", height: '55px' }} onClick={() => toggleUploadSection(false)}>Cancel</MatButton>
+                </Grid>
             </Grid>
         </Paper>
     )

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = ({auth: {isAuth, token}, logout}) => {
   const classes = useStyles();
-  const loggedInUser = "Vipin";
+  const [loggedInUser, setLoggedInUser] = useState('')
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const history = useHistory()
@@ -84,6 +84,7 @@ const Navbar = ({auth: {isAuth, token}, logout}) => {
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
   useEffect(() => {
+    setLoggedInUser(localStorage.getItem('firstName'))
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
@@ -174,8 +175,6 @@ const Navbar = ({auth: {isAuth, token}, logout}) => {
 
 Navbar.propTypes= {
   auth: PropTypes.object.isRequired,
-  login: PropTypes.func.isRequired,
-  removeAuthToken: PropTypes.func.isRequired
 }
 
 const mapStateToProps =state => {

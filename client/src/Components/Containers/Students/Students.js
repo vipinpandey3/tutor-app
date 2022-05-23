@@ -97,7 +97,7 @@ const Students = ({student: {students, loading, showFileImport, formDetails, sho
       )}
       <Paper className={classes.paperCotent}>
         <Grid container>
-          <Grid items xs={6}>
+          <Grid item xs={6}>
             <Toolbar>
               <Input
                 onChange={searchUser}

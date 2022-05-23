@@ -411,14 +411,12 @@ const getFeesDetailsByStudentId = (req, res, next) => {
   const studentId = req.params.studentId;
   const tableHeader = attributes[12].columnAttributes;
   const feesDBAttributes = attributes[12].feesDBAttributes;
-  console.log('studentId ============>', studentId)
   models.Fees.findAll({where: {studentId: studentId}}, {attributes: feesDBAttributes})
     .then((fees) => {
       fees.map(feeDetails => {
         feeDetails.reamarks = feeDetails.reamarks ? feeDetails.reamarks : "-";
         feeDetails.date = new Date(feeDetails.createdAt).toLocaleDateString()
       })
-      console.log('Fees', fees)
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrieved fees details for student with id: " + studentId,

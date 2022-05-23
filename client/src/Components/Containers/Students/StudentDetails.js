@@ -7,7 +7,7 @@ import {
   Typography,
   Accordion,
   AccordionDetails,
-  Table,
+  Table as MuiTable,
   TableCell,
   TableHead,
   TableRow,
@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import Text from "../../Common/Text";
+import Table from '../../Common/Table'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ParentForms, StudentEducationForms } from "./StudentRelatedForms";
 import MatButton from "../../Common/Button";
@@ -28,7 +29,8 @@ import {fetchParentFormFields,
   fetchStudentEducationFormfields,
   addStudeEducationDetails,
   fetchStudentFeesDetails,
-  updateEducationDetails
+  updateEducationDetails,
+  fetchStudentAttendence
 } from "../../../redux/actions/studentAction"
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
@@ -68,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
   },
   alignRight: {
     marginLeft: '119px'
+  },
+  halfWidth: {
+    width: "50%"
   }
 }));
 
@@ -94,7 +99,7 @@ const educationInitialValue = {
   percentage: "",
 };
 
-const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails}) => {
+const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence}) => {
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
@@ -108,7 +113,8 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
 
   useEffect(() => {
     loadStudentDteails();
-    fetchStudentFeesDetails(studentId)
+    fetchStudentFeesDetails(studentId);
+    fetchStudentAttendence(studentId)
   }, []);
 
   const fetchFormForm = (value) => {
@@ -343,49 +349,61 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
           </Grid>
         </AccordionDetails>
       </Accordion>
-      <Paper className={`${styles.paperContent} `}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Text variant="subtitle1">
-              Fee details
-            </Text>
+      <div className={`${styles.flexcontainer}`}>
+        <Paper className={`${styles.paperContent} ${styles.halfWidth}`}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Text variant="subtitle1">
+                Fee details
+              </Text>
+            </Grid>
           </Grid>
-        </Grid>
-        <Table>
-          <TableHead>
-            <TableRow key="Header">
-              {feesDetails.feesTableHeaders.map((header, index) => {
+          <MuiTable>
+            <TableHead>
+              <TableRow key="Header">
+                {feesDetails.feesTableHeaders.map((header, index) => {
+                  return (
+                    <TableCell key={index}>{header.label}</TableCell>
+                  )
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {feesDetails.feesDetailsRow.map(row => {
                 return (
-                  <TableCell key={index}>{header.label}</TableCell>
+                  <TableRow key={row.id}>
+                    {
+                      feesDetails.feesTableHeaders.map((rowCell,index) => {
+                        const value = row[rowCell.id];
+                        return <TableCell key={index}>{value}</TableCell>
+                      })
+                    }
+                  </TableRow>
                 )
               })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {feesDetails.feesDetailsRow.map(row => {
-              return (
-                <TableRow key={row.id}>
-                  {
-                    feesDetails.feesTableHeaders.map((rowCell,index) => {
-                      const value = row[rowCell.id];
-                      return <TableCell key={index}>{value}</TableCell>
-                    })
-                  }
-                </TableRow>
-              )
-            })}
-            <TableRow key="lastRow">
-              <TableCell key="empty1"></TableCell>
-              <TableCell key="empty2"></TableCell>
-              <TableCell key="empty3"></TableCell>
-              <TableCell key="totalPaid" style={{ textAlign: "right" }}>Total Paid</TableCell>
-              <TableCell key="empty4">{totalPaid}</TableCell>
-              <TableCell key="empty5"></TableCell>
-              <TableCell key="empty6"></TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </Paper>
+              <TableRow key="lastRow">
+                <TableCell key="empty1"></TableCell>
+                <TableCell key="empty2"></TableCell>
+                <TableCell key="empty3"></TableCell>
+                <TableCell key="totalPaid" style={{ textAlign: "right" }}>Total Paid</TableCell>
+                <TableCell key="empty4">{totalPaid}</TableCell>
+                <TableCell key="empty5"></TableCell>
+                <TableCell key="empty6"></TableCell>
+              </TableRow>
+            </TableBody>
+          </MuiTable>
+        </Paper>
+        <Paper className={`${styles.paperContent} ${styles.halfWidth}`}>
+          {
+            studentAttendenceTable.attendenceTableColumns && 
+            studentAttendenceTable.attendenceTableColumns.length > 0 &&
+            <Table
+              records={studentAttendenceTable.attendenceTableRows}
+              headCells={studentAttendenceTable.attendenceTableColumns}
+            />
+          }
+        </Paper>
+      </div>
     </>
   );
 };
@@ -400,7 +418,8 @@ StudentDetails.propTypes = {
   fetchStudentEducationFormfields: PropTypes.func.isRequired,
   addStudeEducationDetails: PropTypes.func.isRequired,
   fetchStudentFeesDetails: PropTypes.func.isRequired,
-  updateEducationDetails: PropTypes.func.isRequired
+  updateEducationDetails: PropTypes.func.isRequired,
+  fetchStudentAttendence: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -409,4 +428,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails})(StudentDetails);
+export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails, fetchStudentAttendence})(StudentDetails);

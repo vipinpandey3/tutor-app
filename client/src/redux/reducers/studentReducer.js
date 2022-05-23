@@ -32,7 +32,11 @@ const intitialState = {
         feesDetailsRow: []
     },
     totalPaid: 0,
-    showFileImport: false
+    showFileImport: false,
+    studentAttendenceTable: {
+        attendenceTableRows: [],
+        attendenceTableColumns: []
+    }
 };
 
 const studentReducer = (state = intitialState, action) => {
@@ -324,6 +328,27 @@ const studentReducer = (state = intitialState, action) => {
             message: action.payload.message,
             showForm: action.payload.showForm,
         }
+
+    case types.GET_STUDENT_ATTENDENCE:
+        console.log("action.payload.studentAttendenceTable", action.payload.studentAttendenceTable);
+        return {
+            ...state,
+            studentAttendenceTable: {
+                attendenceTableRows: action.payload.studentAttendenceTable.attendenceTableRows,
+                attendenceTableColumns: action.payload.studentAttendenceTable.attendenceTableColumns
+            },
+            loading: action.payload.loading,
+            message: action.payload.message
+        };
+
+    case types.GET_STUDENT_ATTENDENCE_ERROR:
+        return {
+            ...state,
+            loading: action.payload.loading,
+            message: action.payload.message,
+            error: action.payload.error
+        }
+
 
     default:
         return state

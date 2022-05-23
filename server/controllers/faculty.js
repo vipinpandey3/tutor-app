@@ -958,6 +958,44 @@ const getAllTutorAttendenceById = (req, res) => {
     })
 }
 
+const getAllStudentAttendenceByStudentId = (req, res) => {
+    console.log('Inside getAllStudentAttendenceByStudentId function');
+    console.log("req.params", req.params);
+    const studentId = req.params.studentId
+    const tableAttributes = attributes[23].columnsHeader;
+    const whereCondition = {
+        StudentId: studentId
+    }
+    return models.StudentAttendence.findAllAttendence(whereCondition)
+    .then(resultObj => {
+        if(resultObj) {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved all attendence for the student with id: ' + studentId,
+                attendence: resultObj,
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        } else {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved attendence of all the students',
+                attendence: [],
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        }
+    })
+    .catch(error => {
+        console.log('Error while retrieving all attendence for the student', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Error while retrieving all attendence for the student with emailId: ' + studentEmail,
+        };
+        res.status(200).json(result);
+    })
+
+}
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
@@ -977,5 +1015,6 @@ module.exports = {
     getAllStudentAttendence,
     markStudentAbsence,
     getAllStudentAttendenceById,
-    getAllTutorAttendenceById
+    getAllTutorAttendenceById,
+    getAllStudentAttendenceByStudentId
 }

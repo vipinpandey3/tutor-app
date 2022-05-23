@@ -807,6 +807,57 @@ export const fetchStudentFeesDetails = (studentId) => {
     }
 }
 
+export const fetchStudentAttendence = (studentId) => {
+    return async (dispatch, getState) => {
+        const {auth: {token}} = getState();
+
+        const getData = async() => {
+            const response = await axios.get(`/faculty/get-student-attendenceById/${studentId}`, {headers: collection.setHeader(token)})
+            if(response.statusText !== "OK") {
+                throw new Error('Could not fetch fees details!');
+            }
+            return response.data
+        }
+
+        try{
+            const attendenceData = await getData();
+            if(attendenceData.resultShort === 'success') {
+                dispatch({
+                    type: types.GET_STUDENT_ATTENDENCE,
+                    payload: {
+                        error: false, 
+                        loading: false,
+                        message: attendenceData.resultLong,
+                        studentAttendenceTable: {
+                            attendenceTableColumns: attendenceData.attributes,
+                            attendenceTableRows: attendenceData.attendence,
+                        }
+                    }
+                })
+            } else {
+                dispatch({
+                    type: types.GET_STUDENT_ATTENDENCE_ERROR,
+                    payload: {
+                        error: true, 
+                        loading: false,
+                        message: attendenceData.resultLong
+                    }
+                })
+            }
+        } catch(error) {
+            console.log("Error while fetching student attendence", error)
+            dispatch({
+                type: types.GET_STUDENT_ATTENDENCE_ERROR,
+                payload: {
+                    error: true, 
+                    loading: false,
+                    message: "Error while fetching attendence for student with Id: " + studentId
+                }
+            })
+        }
+    }
+}
+
 // const setLoading = () => {
 //     return dispatch => {
 //         dispatch({

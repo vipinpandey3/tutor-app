@@ -557,55 +557,55 @@
             {
                 "id": "firstName",
                 "name": "FirstName",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "lastName",
                 "name": "LastName",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "emailId",
                 "name": "Email",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "religion",
                 "name": "Religion",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "gender",
                 "name": "Gender",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "dob",
                 "name": "DOB",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "aadharNo",
                 "name": "Aadhar No",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "panNo",
                 "name": "Pan No",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "address",
                 "name": "Address",
-                "size": "6",
+                "size": 6,
                 "class": "flexcontainer"
             }
         ],
@@ -613,61 +613,61 @@
             {
                 "id": "fatherName",
                 "name": "Father Name",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "motherName",
                 "name": "Mother Name",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "fatherEmailId",
                 "name": "Father Email",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "fatherAadhar",
                 "name": "Father Aadhar",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "motherAadhar",
                 "name": "Mother Aadhar",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "motherEmailId",
                 "name": "Mother Email",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "fatherDob",
                 "name": "Father DOB",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "motherDob",
                 "name": "Father DOB",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "fatherHighestQualifaction",
                 "name": "Father Qualification",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "motherHighestQualification",
                 "name": "mother Qualification",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             }
         ],
@@ -675,37 +675,37 @@
             {
                 "id": "std",
                 "name": "Standard",
-                "size": "12",
+                "size": 12,
                 "class": "flexcontainer"
             },
             {
                 "id": "seatNumber",
                 "name": "Seat Number",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "year",
                 "name": "Year",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "totalMarks",
                 "name": "totalMarks",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "instituteName",
                 "name": "Institute Name",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             },
             {
                 "id": "universityName",
                 "name": "University Name",
-                "size": "3",
+                "size": 3,
                 "class": "flexcontainer"
             }
         ],
@@ -1196,6 +1196,22 @@
                 "id": "status",
                 "label": "Statue",
                 "avatar": false
+            }
+        ]
+    },
+    {
+        "index": 23,
+        "name": "studentAttendenceTableDetails",
+        "columnsHeader": [
+            {
+                "id": "attendenceDate",
+                "label": "Date",
+                "props": "attendenceDate"
+            },
+            {
+                "id": "inTime",
+                "label": "In Time",
+                "props": "inTime"
             }
         ]
     }

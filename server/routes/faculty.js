@@ -101,4 +101,6 @@ router.post('/getStudentAttendenceById', Faculty.getAllStudentAttendenceById)
 
 router.post('/getTutorAttendenceById', Faculty.getAllTutorAttendenceById)
 
+router.get('/get-student-attendenceById/:studentId', Faculty.getAllStudentAttendenceByStudentId )
+
 module.exports = router

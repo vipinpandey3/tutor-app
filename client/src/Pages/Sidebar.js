@@ -12,7 +12,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     position: "fixed",
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.main,
     fontSize: "20px",
   },
   menuContainer: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   linkStyle: {
     textDecoration: "none",
-    color: "#000000",
+    color: theme.palette.text.main,
     paddingLeft: "10px",
     padding: "10px",
   },

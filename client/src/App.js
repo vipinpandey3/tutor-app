@@ -37,7 +37,14 @@ const theme = createTheme({
     success: {
       main: '#81c784',
       light: '#81c784',
-    }
+    },
+    text: {
+      main: "#ffffff"
+    },
+    white: {
+      white: "#ffffff"
+    },
+    black: "#000000"
   },
   overrides: {
     MuiAppBar: {

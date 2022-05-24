@@ -76,7 +76,22 @@ const useStyles = makeStyles((theme) => ({
   },
   halfWidth: {
     width: "50%"
-  }
+  },
+  table: {
+    marginTop: theme.spacing(3),
+    "& thead th": {
+      fontWeight: "600",
+      color: theme.palette.text.main,
+      backgroundColor: theme.palette.primary.main,
+    },
+    "& tbody td": {
+      fontWeight: "300",
+    },
+    "& tbody tr:hover": {
+      backgroundColor: "#fffbf2",
+      cursor: "pointer",
+    },
+  },
 }));
 
 const parentFormInitialValue = {
@@ -365,7 +380,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
               </Text>
             </Grid>
           </Grid>
-          <MuiTable>
+          <MuiTable className={`${styles.table}`}>
             <TableHead>
               <TableRow key="Header">
                 {feesDetails.feesTableHeaders.map((header, index) => {

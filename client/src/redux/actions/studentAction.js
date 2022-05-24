@@ -858,6 +858,68 @@ export const fetchStudentAttendence = (studentId) => {
     }
 }
 
+export const markStudentAbsence = (id) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState()
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        });
+
+        const absenceData = async(postObj) => {
+            const response = await axios.post('/faculty/mark_student_absence', postObj, {headers: collection.setHeader(token)});
+            if(response.statusText !== 'OK') {
+                throw new Error("Error while marking student attendence");
+            }
+            return response.data;
+        };
+
+        try {
+            const postObj = {
+                attedenceId: id
+            };
+            const attendenceData = await absenceData(postObj);
+            if(attendenceData.resultShort === 'success') {
+                dispatch({
+                    type: types.MARK_STUDENT_ABSENCE,
+                    payload: {
+                        loading: false,
+                        error: false,
+                        message: attendenceData.resultLong,
+                        showStudentTables: {
+                            searchUserInput: false,
+                            searchAttendeceInput: true,
+                            showStudentTable: false,
+                            showattendenceTable: true
+                        }
+                    }
+                })
+                // return getAllStudentAttendence()
+            } else {
+                dispatch({
+                    type: types.MARK_STUDENT_ABSENCE_ERROR,
+                    payload: {
+                        loading: false,
+                        error: true,
+                        message: attendenceData.resultLong
+                    }
+                })
+            }
+        } catch (error) {
+            dispatch({
+                type: types.MARK_STUDENT_ABSENCE_ERROR,
+                payload: {
+                    loading: false,
+                    error: true,
+                    message: error
+                }
+            })
+        }
+    }
+}
+
 // const setLoading = () => {
 //     return dispatch => {
 //         dispatch({

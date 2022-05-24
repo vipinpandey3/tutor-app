@@ -1,5 +1,4 @@
 import * as types from '../types';
-import * as collection from '../../utils/collections'
 import axios from 'axios';
 
 export const login = (postObj) => {

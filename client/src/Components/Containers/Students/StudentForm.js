@@ -1,12 +1,10 @@
+/* eslint-disable array-callback-return */
 import { Grid, makeStyles, Paper } from "@material-ui/core";
 import React, { useState } from "react";
-import { StudentContext } from "../../../context/student-context";
 import MatButton from "../../Common/Button";
 import DatePicker from "../../Common/DatePicker";
-import MultiSelect from "../../Common/MultiSelect";
 import Select from "../../Common/Select";
 import Text from "../../Common/Text";
-import TimePicker from "../../Common/TimePicker";
 import Input from '../../Common/Input';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StudentForm = (props) => {
-  const { formTitle, initialcFormValues, formFields, toggleForm, loadUsers , addStudent} = props;
+  const { formTitle, initialcFormValues, formFields, toggleForm, addStudent} = props;
   const [formValue, setFormValues] = useState(initialcFormValues)
   const styles = useStyles();
 
@@ -44,10 +42,6 @@ const StudentForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addStudent(formValue)
-      // .then(result => {
-      //   toggleForm(false)
-      //   loadUsers()
-      // })
   }
 
   const handleCancle = () => {

@@ -1,4 +1,5 @@
-import { createContext, useEffect, useState } from "react";
+/* eslint-disable no-unused-vars */
+import { createContext, useState } from "react";
 import axios from 'axios'
 
 export const StudentContext = createContext();

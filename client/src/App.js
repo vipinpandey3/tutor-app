@@ -14,8 +14,6 @@ import Login from './Pages/Login'
 import ProtectedRoute from './Components/Containers/ProtectedRoute';
 import Sidebar from './Pages/Sidebar';
 import Navbar from './Pages/Navbar';
-import {useHistory, Redirect} from 'react-router-dom'
-import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 

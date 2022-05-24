@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -30,8 +31,10 @@ import {fetchParentFormFields,
   addStudeEducationDetails,
   fetchStudentFeesDetails,
   updateEducationDetails,
-  fetchStudentAttendence
+  fetchStudentAttendence,
+  markStudentAbsence
 } from "../../../redux/actions/studentAction"
+
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 
@@ -99,7 +102,7 @@ const educationInitialValue = {
   percentage: "",
 };
 
-const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence}) => {
+const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence, markStudentAbsence}) => {
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
@@ -167,6 +170,10 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
     } else {
       setParentInititalValue(parentFormInitialValue);
     }
+  }
+
+  const markAbsence = (row) => {
+    markStudentAbsence(row.id)
   }
 
   return (
@@ -400,6 +407,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
             <Table
               records={studentAttendenceTable.attendenceTableRows}
               headCells={studentAttendenceTable.attendenceTableColumns}
+              edit={markAbsence}
             />
           }
         </Paper>
@@ -419,7 +427,8 @@ StudentDetails.propTypes = {
   addStudeEducationDetails: PropTypes.func.isRequired,
   fetchStudentFeesDetails: PropTypes.func.isRequired,
   updateEducationDetails: PropTypes.func.isRequired,
-  fetchStudentAttendence: PropTypes.func.isRequired
+  fetchStudentAttendence: PropTypes.func.isRequired,
+  markStudentAbsence: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -428,4 +437,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails, fetchStudentAttendence})(StudentDetails);
+export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails, fetchStudentAttendence, markStudentAbsence})(StudentDetails);

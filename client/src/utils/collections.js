@@ -1,6 +1,5 @@
 import * as cookies from "sfcookies";
 import axios from 'axios'
-import * as types from '../redux/types'
 
 export const setCookies = (key, value) => cookies.bake_cookie(key, value);
 export const getCookie = (key) => cookies.read_cookie(key).length < 1 ? "" : cookies.read_cookie(key);

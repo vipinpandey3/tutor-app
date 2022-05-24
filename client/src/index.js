@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
-import { ExamContextProvider } from "./context/exam-context";
 import { DashboardContextProvider } from "./context/dashboard-context";
 import {Provider} from 'react-redux'
 import store from './redux/store'

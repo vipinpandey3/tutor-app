@@ -968,12 +968,30 @@ const getAllStudentAttendenceByStudentId = (req, res) => {
     }
     return models.StudentAttendence.findAllAttendence(whereCondition)
     .then(resultObj => {
+        const currentStudentAttendence = resultObj.reduce((allAtendence, currentAttendence) => {
+            let i = 0
+            if(currentAttendence.attendenceStatus) {
+                allAtendence = allAtendence + 1
+            }
+            return allAtendence;
+        }, 0)
+        const totalAbsence = resultObj.reduce((allAtendence, currentAttendence) => {
+            let i = 0
+            if(!currentAttendence.attendenceStatus) {
+                allAtendence = allAtendence + 1
+            }
+            return allAtendence;
+        }, 0)
         if(resultObj) {
             const result = {
                 resultShort: 'success',
                 resultLong: 'successfully retrieved all attendence for the student with id: ' + studentId,
                 attendence: resultObj,
-                attributes: tableAttributes
+                attributes: tableAttributes,
+                studentAttendence: {
+                    absence: totalAbsence,
+                    attendence: currentStudentAttendence
+                }
             };
             res.status(200).json(result);
         } else {

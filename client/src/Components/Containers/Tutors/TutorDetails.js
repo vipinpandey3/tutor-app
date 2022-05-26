@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1),
         margin: theme.spacing(2),
         '&.MuiAccordion-root.Mui-expanded': {
-            // margin: theme.spacing(2),
             padding: theme.spacing(1.1),
         }
     },

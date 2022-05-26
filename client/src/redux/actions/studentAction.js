@@ -828,6 +828,10 @@ export const fetchStudentAttendence = (studentId) => {
                         error: false, 
                         loading: false,
                         message: attendenceData.resultLong,
+                        studentAttendence: {
+                            attendence: attendenceData.studentAttendence.attendence,
+                            absence: attendenceData.studentAttendence.absence
+                        },
                         studentAttendenceTable: {
                             attendenceTableColumns: attendenceData.attributes,
                             attendenceTableRows: attendenceData.attendence,

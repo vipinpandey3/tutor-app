@@ -1,8 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import { styles } from "@material-ui/pickers/views/Calendar/Calendar";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import MainNavigation from "./MainNavigation";
 import NavLinks from "./NavLinks";
 
 const useStyles = makeStyles((theme) => ({

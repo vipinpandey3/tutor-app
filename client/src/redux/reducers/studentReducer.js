@@ -36,6 +36,10 @@ const intitialState = {
     studentAttendenceTable: {
         attendenceTableRows: [],
         attendenceTableColumns: []
+    },
+    studentAttendenceData: {
+        attendence: 0,
+        absence: 0
     }
 };
 
@@ -330,12 +334,15 @@ const studentReducer = (state = intitialState, action) => {
         }
 
     case types.GET_STUDENT_ATTENDENCE:
-        console.log("action.payload.studentAttendenceTable", action.payload.studentAttendenceTable);
         return {
             ...state,
             studentAttendenceTable: {
                 attendenceTableRows: action.payload.studentAttendenceTable.attendenceTableRows,
                 attendenceTableColumns: action.payload.studentAttendenceTable.attendenceTableColumns
+            },
+            studentAttendenceData: {
+                attendence: action.payload.studentAttendence.attendence,
+                absence: action.payload.studentAttendence.absence
             },
             loading: action.payload.loading,
             message: action.payload.message

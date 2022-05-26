@@ -1,20 +1,13 @@
+/* eslint-disable array-callback-return */
 import { Grid, makeStyles, Paper } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import MatButton from "../../Common/Button";
-import Form from "../../Common/Form";
 import Text from "../../Common/Text";
 import Input from '../../Common/Input';
 import DatePicker from "../../Common/DatePicker";
 import Select from "../../Common/Select";
-import {TutorContext} from '../../../context/tutor-context'
 
 const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   "& .MuiFormControl-root": {
-  //     width: "80%",
-  //     margin: theme.spacing(1),
-  //   },
-  // },
   paperConent: {
     padding: theme.spacing(3),
     margin: theme.spacing(5),
@@ -46,13 +39,6 @@ const TutorsForm = (props) => {
 
     } else {
       addTutors(formValues)
-        // .then(result => {
-        //   if(result && result.resultShort === 'success') {
-        //     toggleForm(false, false, "Add Tutor", "Submit");
-        //   } else {
-        //     toggleForm(true, false, "Add Tutor", "Submit");
-        //   }
-        // })
     }
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, {createContext, useEffect, useReducer, useState} from 'react';
 import axios from 'axios'
 import {GET_LOGIN_SUCCESS, GET_LOGIN_FAILURE, GET_LOGOUT_HANDLER} from './types'
@@ -76,11 +77,6 @@ export const AuthContextProvider = (props) => {
                                 type: GET_LOGIN_SUCCESS,
                                 payload: result.data
                             })
-                            // if(result.data.resultShort === "success") {
-                            //     setLocalStorage(result.data.authKey);
-                            //     setIsAuth(true)
-                            //     return result.data
-                            // }
                         })
         } catch(error) {
             dispatch({

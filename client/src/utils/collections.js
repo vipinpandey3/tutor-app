@@ -14,7 +14,6 @@ export const setHeader = (token) => {
     if(token) {
         headers['Authorization'] = token;
     };
-    console.log("Headers", headers)
     return headers
 }
 

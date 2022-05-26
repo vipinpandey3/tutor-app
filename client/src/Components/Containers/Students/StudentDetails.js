@@ -117,7 +117,7 @@ const educationInitialValue = {
   percentage: "",
 };
 
-const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence, markStudentAbsence}) => {
+const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable, studentAttendenceData}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence, markStudentAbsence}) => {
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
@@ -416,6 +416,18 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
           </MuiTable>
         </Paper>
         <Paper className={`${styles.paperContent} ${styles.halfWidth}`}>
+        <Grid container>
+            <Grid item xs={3}>
+            </Grid>
+            <Grid item sm></Grid>
+            <Grid item xs={3.5}>
+              <Text variant="subtitle1">
+                {
+                  `Attendence - ${studentAttendenceData.attendence}, Absence: ${studentAttendenceData.absence}`
+                }
+              </Text>
+            </Grid>
+          </Grid>
           {
             studentAttendenceTable.attendenceTableColumns && 
             studentAttendenceTable.attendenceTableColumns.length > 0 &&

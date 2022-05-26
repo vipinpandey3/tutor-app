@@ -1,8 +1,6 @@
-import {Table as MuiTable, Grid, makeStyles, TableBody, TableCell, TableHead, TableRow, Toolbar } from '@material-ui/core';
-import React, { useRef, useState } from 'react';
-import { useContext } from 'react';
-import { useEffect } from 'react';
-import { DashboardContext } from '../../../../context/dashboard-context';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Table as MuiTable, Grid, makeStyles, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import React, { useRef, useState, useEffect } from 'react';
 import Input from '../../../Common/Input';
 import Table from '../../../Common/Table';
 import MatButton from '../../../Common/Button';
@@ -41,17 +39,10 @@ const useStyles = makeStyles((theme) => ({
   actionButton: {
     width: "90%",
     marginLeft: "30px"
-  },
-  // "MuiToolbar-gutters":  {
-  //   paddingRight: "0px",
-  //   actionButton: {
-  //     width: "100%"
-  //   },
-  // }
+  }
 }))
 
 const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, tutorAttendenceRecord, markAttendenceTableData}, markTutorAttendceById, getTutorById, getAllTutorAttendence, toggleTutorAttendenceElement, updateTutorAttendence, markTutorAbsence, getAllAttendenceOfTutorById}) => {
-  const {} = useContext(DashboardContext)
   const styles = useStyles();
   const searchRef = useRef();
   const [inputValue, setInputValue] = useState("")

@@ -2,7 +2,6 @@ import {
   AppBar,
   Toolbar,
   Grid,
-  InputBase,
   IconButton,
   Badge,
   makeStyles,
@@ -12,7 +11,6 @@ import {
 } from "@material-ui/core";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import SearchIcon from "@material-ui/icons/Search";
 import { Popper } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";

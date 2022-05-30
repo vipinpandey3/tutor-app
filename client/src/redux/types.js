@@ -128,6 +128,9 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const AUTH_TOKEN = "cookie_auth_hash";
 export const REMOVE_COOKIE = "REMOVE_COOKIE"
 
+// Hide Notification
+export const HIDE_NOTIFICATION = "HIDE_NOTIFICATION";
+
 
 
 

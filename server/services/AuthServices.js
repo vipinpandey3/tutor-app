@@ -11,9 +11,15 @@ const moment = require('moment');
 module.exports = function(passport) {
     passport.use('login-custom', new CustomStrategy(
         function(req, done) {
-            console.log('request body', req.body);
             const password = req.body.password;
             let dbUser;
+            if(req.body.emailId === '' || req.body.password === '') {
+                console.log("Input empty");
+                return Promise.reject({
+                    resultShort:"failure",
+                    resultLong:"Error loging User"
+                })
+            }
             return models.User.findOne({ where: {emailId: req.body.emailId}})
             .then(user => {
                 if(!user) {
@@ -27,30 +33,33 @@ module.exports = function(passport) {
             })
             .then(userObj => {
                 dbUser = userObj
-                return bcrypt.compare(password, userObj.password, function(error, result) {
-                    if(error) {
+                return bcrypt.compare(password, userObj.password)
+                .then(result => {
+                    console.log("bcrypt compare result", result);
+                    if(!result) {
                         return done(null, {
                             success: false,
-                            error: err
+                            message: "User emailId or password does not match"
+                        })
+                    } else {
+                        return done(null, {
+                            token: jwt.sign({emailId: dbUser.emailId, password: dbUser.password}, process.env.SECRET_KEY,  { expiresIn: '8h' }),
+                            firstName: dbUser.firstName,
+                            lastName: dbUser.lastName,
+                            status: dbUser.status,
+                            emailId: dbUser.emailId,
+                            role: dbUser.role,
+                            id: userObj.id,
+                            success: true
                         })
                     }
-                    return done(null, {
-                        token: jwt.sign({emailId: dbUser.emailId, password: dbUser.password}, process.env.SECRET_KEY,  { expiresIn: '8h' }),
-                        firstName: dbUser.firstName,
-                        lastName: dbUser.lastName,
-                        status: dbUser.status,
-                        emailId: dbUser.emailId,
-                        role: dbUser.role,
-                        id: userObj.id,
-                        success: true
-                    })
                 })
             })
             .catch(error => {
-                console.error("Error ocure while login", error);
                 return done(null, {
                     success: false,
-                    error: err
+                    error: error,
+                    message: "Error Loging User"
                 })
             })
         }

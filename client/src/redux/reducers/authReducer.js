@@ -29,7 +29,7 @@ const authReducer = (state = inntialState, action) => {
                 error: action.payload.error,
                 isAuth: false,
                 token: "",
-                mesaage: action.payload.message
+                message: action.payload.message
             };
 
         case types.REMOVE_COOKIE:
@@ -42,13 +42,18 @@ const authReducer = (state = inntialState, action) => {
 
         case types.USER_LOGOUT: 
             collection.deleteCookie(types.AUTH_TOKEN)
-            console.log("USER_LOGOUT ***********");
             return {
                 ...state,
                 isAuth: false,
                 token: ""
             };
     
+        case types.HIDE_NOTIFICATION:
+            return {
+                ...state,
+                error: false,
+                message: ""
+            }
         default:
             return state;
     }

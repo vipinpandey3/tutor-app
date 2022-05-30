@@ -21,7 +21,6 @@ export const login = (postObj) => {
         try {
             const authdata = await loginData();
             if(authdata.resultShort === 'success') {
-                console.log('AUthData', authdata);
                 localStorage.setItem('firstName', authdata.user.firstName);
                 localStorage.setItem('lastName', authdata.user.lastName);
                 localStorage.setItem('role', authdata.user.role);
@@ -65,6 +64,14 @@ export const logout = () => {
         localStorage.clear()
         dispatch({
             type: types.USER_LOGOUT
+        })
+    }
+}
+
+export const hideNotification = () => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.HIDE_NOTIFICATION
         })
     }
 }

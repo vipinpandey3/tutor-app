@@ -40,7 +40,8 @@ const intitialState = {
     studentAttendenceData: {
         attendence: 0,
         absence: 0
-    }
+    },
+    severity: ""
 };
 
 const studentReducer = (state = intitialState, action) => {
@@ -71,7 +72,8 @@ const studentReducer = (state = intitialState, action) => {
                     studentTableAttributes: action.payload.attributes
                 },
                 loading: action.payload.loading,
-                message: action.payload.message
+                message: action.payload.message,
+                severity: action.payload.severity
             }
     
         case types.FETCH_STUDENTS_ERROR:
@@ -79,7 +81,8 @@ const studentReducer = (state = intitialState, action) => {
                 ...state,
                 loading: false,
                 error: action.payload.error,
-                message: action.payload.message
+                message: action.payload.message,
+                severity: action.payload.severity
             };
 
         case types.FETCH_STUDENT_FORM:
@@ -93,7 +96,9 @@ const studentReducer = (state = intitialState, action) => {
                 studentFormFields: action.payload.studentFormFields,
                 loading: action.payload.loading,
                 message: action.payload.message,
-                showForm: action.payload.showForm
+                showForm: action.payload.showForm,
+                severity: action.payload.severity,
+                error: action.payload.error
             };
 
         case types.FETCH_STUDENT_FORM_ERROR:
@@ -101,7 +106,8 @@ const studentReducer = (state = intitialState, action) => {
                 ...state,
                 loading: action.payload.loading,
                 message: action.payload.message,
-                error: action.payload.error
+                error: action.payload.error,
+                severity: action.payload.severity
             };
 
         case types.ADD_STUDENT:
@@ -115,7 +121,8 @@ const studentReducer = (state = intitialState, action) => {
                     buttonTitle: action.payload.formDetails.buttonName,
                     editFlag: action.payload.formDetails.editFlag
                 },
-                showForm: action.payload.showForm
+                showForm: action.payload.showForm,
+                severity: action.payload.severity
             };
 
         case types.ADD_STUDENT_ERROR:
@@ -124,7 +131,8 @@ const studentReducer = (state = intitialState, action) => {
                 loading: action.payload.loading,
                 error: action.payload.error,
                 message: action.payload.message,
-                showForm: action.payload.showForm
+                showForm: action.payload.showForm,
+                severity: action.payload.severity
             };
 
         case types.FETCH_PARENT_FORM:
@@ -137,7 +145,8 @@ const studentReducer = (state = intitialState, action) => {
                 formFields: {
                     parentFormFields: action.payload.parentFormFields,
                     educationFormFields: [],
-                }
+                },
+                severity: action.payload.severity
             };
 
         case types.UPLOAD_FILE:
@@ -146,7 +155,8 @@ const studentReducer = (state = intitialState, action) => {
                 loading: action.payload.loading,
                 error: action.payload.error,
                 message: action.payload.message,
-                showFileImport: action.payload.showFileImport
+                showFileImport: action.payload.showFileImport,
+                severity: action.payload.severity
             };
 
         case types.UPLOAD_FILE_ERROR:
@@ -154,7 +164,8 @@ const studentReducer = (state = intitialState, action) => {
                 ...state,
                 loading: action.payload.loading,
                 error: action.payload.error,
-                message: action.payload.message
+                message: action.payload.message,
+                severity: action.payload.severity
             };
 
         case types.FETCH_PARENT_FORM_ERROR:
@@ -164,6 +175,7 @@ const studentReducer = (state = intitialState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 showForm: action.payload.showForm,
+                severity: action.payload.severity
             };
 
         case types.FETCH_STUDENTS_DETAILS:
@@ -180,6 +192,7 @@ const studentReducer = (state = intitialState, action) => {
                     parentDetailsAttributes: action.payload.parentDetailsAttributes,
                     educationDetailsAttributes: action.payload.educationDetailsAttributes
                 },
+                severity: action.payload.severity
             };
 
         case types.FETCH_STUDENTS_DETAILS_ERROR:
@@ -188,6 +201,7 @@ const studentReducer = (state = intitialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
                 error: action.payload.error,
+                severity: action.payload.severity
             };
 
         case types.ADD_PARENT_DATA:
@@ -196,7 +210,8 @@ const studentReducer = (state = intitialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
                 error: action.payload.error,
-                showForm: action.payload.showForm
+                showForm: action.payload.showForm,
+                severity: action.payload.severity
             };
         
         case types.ADD_PARENT_DATA_ERROR:
@@ -205,7 +220,8 @@ const studentReducer = (state = intitialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
                 error: action.payload.error,
-                showForm: action.payload.showForm
+                showForm: action.payload.showForm,
+                severity: action.payload.severity
             };
 
         case types.FETCH_EDIT_PARENT_FORM:
@@ -223,7 +239,8 @@ const studentReducer = (state = intitialState, action) => {
                     formName: action.payload.formDetails.formName,
                     buttonTitle: action.payload.formDetails.formName,
                     editFlag: action.payload.formDetails.editFlag
-                }
+                },
+                severity: action.payload.severity
             };
 
         case types.FETCH_EDIT_PARENT_FORM_ERROR:
@@ -233,6 +250,7 @@ const studentReducer = (state = intitialState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 showForm: action.payload.showForm,
+                severity: action.payload.severity
             };
         
         case types.FETCH_EDUCATION_FORM:
@@ -250,7 +268,7 @@ const studentReducer = (state = intitialState, action) => {
                     formName: action.payload.formDetails.formName,
                     buttonTitle: action.payload.formDetails.buttonTitle,
                     editFlag: action.payload.formDetails.editFlag
-                }
+                },
             };
         
         case types.FETCH_EDUCATION_FORM_ERROR:
@@ -259,7 +277,7 @@ const studentReducer = (state = intitialState, action) => {
                 loading: action.payload.loading,
                 error: action.payload.error,
                 message: action.payload.message,
-                showForm: action.payload.showForm
+                showForm: action.payload.showForm,
             };
 
         case types.ADD_STUDENT_EDUCATION_DATA:
@@ -355,7 +373,13 @@ const studentReducer = (state = intitialState, action) => {
             message: action.payload.message,
             error: action.payload.error
         }
-
+        
+    case types.HIDE_NOTIFICATION:
+        return {
+            ...state,
+            error: false,
+            message: ""
+        }
 
     default:
         return state

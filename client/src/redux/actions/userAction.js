@@ -173,3 +173,11 @@ export const createUser = (userValues) => {
         }
     }
 }
+
+export const hideNotification = () => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.HIDE_NOTIFICATION
+        })
+    }
+}

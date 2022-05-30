@@ -320,6 +320,13 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message
             }
+
+        case types.HIDE_NOTIFICATION:
+            return {
+                ...state,
+                error: false,
+                message: ""
+            }
     
         default:
             return state;

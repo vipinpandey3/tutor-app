@@ -37,7 +37,8 @@ export const getStudents = () => {
                     payload: {
                         loading: false,
                         meesage: studentData.resultLong,
-                        error: true
+                        error: true,
+                        severity: "error"
                     }
                 })
             }
@@ -48,7 +49,8 @@ export const getStudents = () => {
                 payload: {
                     loading: false,
                     meesage: "Error fetching students list",
-                    error: true
+                    error: true,
+                    severity: "error"
                 }
             })
         }
@@ -87,7 +89,9 @@ export const fetchStudentFormFields = () => {
                         },
                         loading: false,
                         message: formFieldsData.resultLong,
-                        showForm: true
+                        showForm: true,
+                        error: true,
+                        severity: "success"
                     }
                 })
             } else {
@@ -100,8 +104,9 @@ export const fetchStudentFormFields = () => {
                             editFlag: false
                         },
                         loading: false,
-                        error: false,
-                        message: formFieldsData.resultLong
+                        error: true,
+                        message: formFieldsData.resultLong,
+                        severity: "error"
                     }
                 })
             }
@@ -117,7 +122,8 @@ export const fetchStudentFormFields = () => {
                     },
                     loading: false,
                     error: false,
-                    message: "Error while getting student form"
+                    message: error,
+                    severity: "error"
                 }
             })
         }
@@ -165,7 +171,8 @@ export const editStudentFormFields = () => {
                         },
                         loading: false,
                         message: formFieldsData.resultLong,
-                        showForm: true
+                        showForm: true,
+                        severity: "success"
                     }
                 })
             } else {
@@ -179,7 +186,8 @@ export const editStudentFormFields = () => {
                         },
                         loading: false,
                         error: false,
-                        message: formFieldsData.resultLong
+                        message: formFieldsData.resultLong,
+                        severity: "error"
                     }
                 })
             }
@@ -195,7 +203,8 @@ export const editStudentFormFields = () => {
                     },
                     loading: false,
                     error: false,
-                    message: "Error while getting student form"
+                    message: error,
+                    severity: "error"
                 }
             })
         }
@@ -234,7 +243,8 @@ export const addStudent = (studentData) => {
                             formName: "",
                             buttonName: "",
                             editFlag: false
-                        }
+                        },
+                        severity: "success"
                     }
                 })
                 getStudents()
@@ -245,7 +255,8 @@ export const addStudent = (studentData) => {
                         loading: false,
                         error: true,
                         message: addStudentData.resultLong,
-                        showForm: true
+                        showForm: true,
+                        severity: "error"
                     }
                 })
             }
@@ -257,7 +268,8 @@ export const addStudent = (studentData) => {
                     loading: false,
                     error: true,
                     message: "Error adding student in database",
-                    showForm: true
+                    showForm: true,
+                    severity: "error"
                 }
             })
         }
@@ -301,7 +313,8 @@ export const uploadFile = (postObj) => {
                         error: false,
                         loading: false,
                         message: uplaodedData.resultLong,
-                        showFileImport: false
+                        showFileImport: false,
+                        severity: "success"
                     }
                 })
             } else {
@@ -310,7 +323,8 @@ export const uploadFile = (postObj) => {
                     payload: {
                         error: true,
                         loading: false,
-                        message: uplaodedData.resultLong
+                        message: uplaodedData.resultLong,
+                        severity: "error"
                     }
                 })
             }
@@ -320,7 +334,8 @@ export const uploadFile = (postObj) => {
                 payload: {
                     error: true,
                     loading: false,
-                    message: error
+                    message: error,
+                    severity: "error"
                 }
             })
         }
@@ -364,8 +379,9 @@ export const fetchParentFormFields = (flag) => {
                         parentFormFields: parentForm.formFields,
                         loading: false,
                         message: parentForm.resultLong,
-                        error: false,
+                        error: true,
                         showForm: true,
+                        severity: "error"
                     }
                 })
             } else {
@@ -375,7 +391,8 @@ export const fetchParentFormFields = (flag) => {
                         loading: false,
                         message: parentForm.resultLong,
                         error: true,
-                        showForm: false
+                        showForm: false,
+                        severity: "error"
                     }
                 })
             }
@@ -387,7 +404,8 @@ export const fetchParentFormFields = (flag) => {
                     loading: false,
                     message: "Error while fetching parent form",
                     error: true,
-                    showForm: false
+                    showForm: false,
+                    severity: "error"
                 }
             })
         }
@@ -430,7 +448,8 @@ export const fetchEditParentFormFields = (flag) => {
                             formName: "Update Details",
                             buttonTitle: "Update",
                             editFlag: true
-                        }
+                        },
+                        severity: "success"
                     }
                 })
             } else {
@@ -441,6 +460,7 @@ export const fetchEditParentFormFields = (flag) => {
                         message: parentForm.resultLong,
                         error: true,
                         showForm: false,
+                        severity: "error"
                     }
                 })
             }
@@ -452,7 +472,8 @@ export const fetchEditParentFormFields = (flag) => {
                     loading: false,
                     message: "Error while fetching parent form",
                     error: true,
-                    showForm: false
+                    showForm: false,
+                    severity: "error"
                 }
             })
         }
@@ -544,7 +565,8 @@ export const addParentDetails = (parentsValue) => {
                         showForm: false,
                         error: false,
                         message: parentData.resultLong,
-                        loading: false
+                        loading: false,
+                        severity: "success"
                     }
                 });
                 fetchStudentDetails()
@@ -555,7 +577,8 @@ export const addParentDetails = (parentsValue) => {
                         showForm: true,
                         error: true,
                         message: parentData.resultLong,
-                        loading: false
+                        loading: false,
+                        severity: "error",
                     }
                 }) 
             }
@@ -566,7 +589,8 @@ export const addParentDetails = (parentsValue) => {
                     showForm: false,
                     error: true,
                     loading: false,
-                    message: "Error while adding student Parent"
+                    message: "Error while adding student Parent",
+                    severity: "error"
                 }
             })
         }
@@ -601,7 +625,8 @@ export const fetchStudentEducationFormfields = (editObj) => {
                     payload: {
                         loading: false,
                         message: educationFormFieldData.resultLong,
-                        error: false,
+                        error: true,
+                        severity: "success",
                         showForm: true,
                         formFields: {
                             educationFormFields: educationFormFieldData.formFields
@@ -610,7 +635,8 @@ export const fetchStudentEducationFormfields = (editObj) => {
                             formName: editObj.formName,
                             buttonTitle: editObj.buttonTitle,
                             editFlag: editObj.editFlag
-                        }
+                        },
+
                     }
                 })
             } else {
@@ -619,7 +645,7 @@ export const fetchStudentEducationFormfields = (editObj) => {
                     payload: {
                         error: true,
                         loading: false,
-                        message: "Error while fetching Education formfields",
+                        message: educationFormFieldData.resultLong,
                         showForm: false
                     }
                 })
@@ -669,7 +695,8 @@ export const addStudeEducationDetails = (values) => {
                             formName: "",
                             buttonTitle: "",
                             editFlag: false
-                        }
+                        },
+                        severity: "success",
                     }
                 })
                 fetchStudentDetails();
@@ -680,7 +707,8 @@ export const addStudeEducationDetails = (values) => {
                         loading: false,
                         message: educationData.resultLong,
                         error: true,
-                        showForm: true
+                        showForm: true,
+                        severity: "error"
                     }
                 })
             }
@@ -691,7 +719,8 @@ export const addStudeEducationDetails = (values) => {
                     loading: false,
                     message: "Error while fetching student education details",
                     error: true,
-                    showForm: false
+                    showForm: false,
+                    severity: "error"
                 }
             })
         }
@@ -723,7 +752,8 @@ export const updateEducationDetails = (values) => {
                             formName: "",
                             buttonTitle: "",
                             editFlag: false
-                        }
+                        },
+                        severity: "succes"
                     }
                 })
             } else {
@@ -733,7 +763,8 @@ export const updateEducationDetails = (values) => {
                         showForm: true,
                         error: true,
                         message: updatedData.resultLong,
-                        loading: false
+                        loading: false,
+                        severity: "error"
                     }
                 })
             }
@@ -744,7 +775,8 @@ export const updateEducationDetails = (values) => {
                     showForm: true,
                     error: true,
                     message: error,
-                    loading: false
+                    loading: false,
+                    severity: "error"
                 }
             })
         }
@@ -921,6 +953,15 @@ export const markStudentAbsence = (id) => {
                 }
             })
         }
+    }
+}
+
+export const hideNotification = () => {
+    return async(dispatch) => {
+        console.log("Hide notification button clicked");
+        dispatch({
+            type: types.HIDE_NOTIFICATION
+        })
     }
 }
 

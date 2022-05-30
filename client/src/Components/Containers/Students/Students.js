@@ -16,8 +16,18 @@ import StudentForm from "./StudentForm";
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import {addStudent, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, toggleUploadSection, uploadFile} from '../../../redux/actions/studentAction'
+import {
+  addStudent,
+  getStudents,
+  fetchStudentFormFields, 
+  toggleForm, 
+  editStudentFormFields, 
+  toggleUploadSection, 
+  uploadFile, 
+  hideNotification
+} from '../../../redux/actions/studentAction'
 import StudentFileUpload from "./StudentFileUpload";
+import Notification from "../../Common/Alert";
 
 // import Loader from '../../Common/Loader'
 
@@ -43,7 +53,7 @@ const initialcFormValues = {
   dob: moment().format('YYYY-MM-DD'),
   stream: 'Common',
 };
-const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile}) => {
+const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields, error, severity, message}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile, hideNotification}) => {
   const history = useHistory();
   const classes = useStyles();
   const [formValues, setFormValues] = useState(initialcFormValues)
@@ -83,6 +93,13 @@ const Students = ({student: {students, loading, showFileImport, formDetails, sho
 
   return (
     <>
+      <Notification
+        open={error} 
+        handleClose={hideNotification} 
+        severity={severity} 
+        duration={3000} 
+        message={message} 
+      />
       {/* <Loader /> */}
       {showFileImport && <StudentFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />}
       {showForm && (
@@ -158,7 +175,8 @@ Students.propTypes = {
   editStudentFormFields: PropTypes.func.isRequired,
   addStudent: PropTypes.func.isRequired,
   toggleUploadSection: PropTypes.func.isRequired,
-  uploadFile: PropTypes.func.isRequired
+  uploadFile: PropTypes.func.isRequired,
+  hideNotification: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -168,4 +186,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent})(Students);
+export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, hideNotification})(Students);

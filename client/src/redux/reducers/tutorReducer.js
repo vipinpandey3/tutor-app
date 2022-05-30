@@ -181,6 +181,13 @@ const tutorReducer = (state = initialState, action) => {
                 showForm: action.payload.showForm
             };
 
+        case types.HIDE_NOTIFICATION:
+            return {
+                ...state,
+                error: false,
+                message: ""
+            }
+
         default: return state;
     }
 }

@@ -5,6 +5,7 @@ const moment = require('moment');
 const models = require('../models')
 
 const getStudent = (req, res, next) => {
+  console.log("Inside the get all students funcion");
   const columnsAttributes = attributes[6].columnsHeader
   models.Student.findAll()
     .then((students) => {
@@ -67,6 +68,7 @@ const getStudentById = (req, res, next) => {
 };
 
 const addStudentInDatabase = (req, res, next) => {
+  console.log("Inside the addStudentInDatabase functions");
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const emailId = req.body.emailId;
@@ -76,7 +78,7 @@ const addStudentInDatabase = (req, res, next) => {
   const gender = req.body.gender;
   const aadharNo = req.body.aadharNo;
   const userId = req.user.id;
-  models.Student.create({
+  return models.Student.create({
     firstName,
     lastName,
     emailId,
@@ -88,6 +90,7 @@ const addStudentInDatabase = (req, res, next) => {
     userId,
   })
     .then((student) => {
+      console.log("Students **************", student);
       const response = {
         resultShort: "success",
         resultLong: "Student created with id: " + student.id,

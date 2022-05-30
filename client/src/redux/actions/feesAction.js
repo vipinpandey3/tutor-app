@@ -361,3 +361,11 @@ export const downloadFeesbyId = (uuid) => {
         }
     }
 }
+
+export const hideNotification = () => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.HIDE_NOTIFICATION
+        })
+    }
+}

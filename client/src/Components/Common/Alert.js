@@ -9,7 +9,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 const Notification = ({open, handleClose, severity, duration, message}) => {
-    console.log("open", message);
     const [position, setPosition] = React.useState({
         vertical: 'top',
         horizontal: 'center',

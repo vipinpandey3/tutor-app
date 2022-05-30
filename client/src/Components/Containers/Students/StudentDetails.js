@@ -32,11 +32,13 @@ import {fetchParentFormFields,
   fetchStudentFeesDetails,
   updateEducationDetails,
   fetchStudentAttendence,
-  markStudentAbsence
+  markStudentAbsence,
+  hideNotification
 } from "../../../redux/actions/studentAction"
 
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
+import Notification from "../../Common/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
@@ -117,7 +119,7 @@ const educationInitialValue = {
   percentage: "",
 };
 
-const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable, studentAttendenceData}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence, markStudentAbsence}) => {
+const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable, studentAttendenceData, severity}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence, markStudentAbsence, hideNotification}) => {
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
@@ -193,6 +195,13 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
 
   return (
     <>
+      <Notification
+        open={error} 
+        handleClose={hideNotification} 
+        severity={severity} 
+        duration={3000} 
+        message={message} 
+      />
       <Paper className={`${styles.paperContent} `}>
         <Grid container>
           {studentDetails.studentDetailAttributes.map((atributes, index) => {
@@ -455,7 +464,8 @@ StudentDetails.propTypes = {
   fetchStudentFeesDetails: PropTypes.func.isRequired,
   updateEducationDetails: PropTypes.func.isRequired,
   fetchStudentAttendence: PropTypes.func.isRequired,
-  markStudentAbsence: PropTypes.func.isRequired
+  markStudentAbsence: PropTypes.func.isRequired,
+  hideNotification: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -464,4 +474,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails, fetchStudentAttendence, markStudentAbsence})(StudentDetails);
+export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails, fetchStudentAttendence, markStudentAbsence, hideNotification})(StudentDetails);

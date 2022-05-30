@@ -108,6 +108,14 @@ const examReducer = (state = initialState, action) => {
                     editFlag: action.payload.editFlag
                 }
             }
+
+        case types.HIDE_NOTIFICATION:
+            return {
+                ...state,
+                error: false,
+                message: ""
+            }
+
         default:
             return state;
     }

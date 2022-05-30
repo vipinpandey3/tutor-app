@@ -291,3 +291,11 @@ export const deleteExam = (data) => {
         }
     }
 }
+
+export const hideNotification = () => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.HIDE_NOTIFICATION
+        })
+    }
+}

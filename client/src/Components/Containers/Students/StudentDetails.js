@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   flexcontainer: {
     display: "flex",
     flexDirection: "row",
+    alignItems: 'center'
   },
   block: {
     fontWeight: "900",
@@ -238,14 +239,14 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
       )}
       <Paper className={styles.paperContent}>
         <Grid container className={styles.columnContainer}>
-          <Grid item xs={9}>
-            <Text className={`${styles.block} ${styles.noPadding}`}>
+          <Grid item xs={3}>
+            <Text component="h6" className={`${styles.block} ${styles.noPadding}`}>
               Parents Details
             </Text>
           </Grid>
+          <Grid item sm></Grid>
           <Grid item xs={3}>
             <MatButton
-              className={styles.alignRight}
               variant="outlined"
               startIcon={<AddIcon />}
               onClick={loadParentFormFields}
@@ -323,6 +324,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
                   {`${studentDetails.details.lastName} ${studentDetails.details.firstName}`}
                 </Text>
               </Grid>
+              <Grid item sm></Grid>
               <Grid>
                 <MatButton
                     variant="outlined"

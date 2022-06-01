@@ -1,6 +1,7 @@
 import * as types from "../types";
 import axios from 'axios';
 import * as collection from '../../utils/collections'
+// import axiosHelper from "../../utils/AxiosHelper";
 
 export const getStudents = () => {
     return async(dispatch, getState) => {
@@ -18,7 +19,6 @@ export const getStudents = () => {
             }
             return response.data
         }
-
         try {
             const studentData = await getData();
             if(studentData.resultShort === "success") {

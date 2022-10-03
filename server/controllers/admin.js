@@ -6,7 +6,7 @@ const models = require('../models')
 const getStudent = (req, res, next) => {
   console.log("Inside the get all students funcion");
   const columnsAttributes = attributes[6].columnsHeader
-  models.Student.findAll()
+  return models.Student.findAll()
     .then((students) => {
       const respose = {
         resultShort: "success",

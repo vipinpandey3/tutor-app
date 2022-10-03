@@ -221,8 +221,8 @@ export const addStudent = (studentData) => {
             }
         })
 
-        const addData = async() => {
-            const response = await axios.post('/admin/add-student', {headers: collection.setHeader(token)}, studentData)
+        const addData = async(data) => {
+            const response = await axios.post('/admin/add-student', data, {headers: collection.setHeader(token)})
             if(response.statusText !== "OK") {
                 throw new Error('Could not add student in the database!');
             }
@@ -230,7 +230,7 @@ export const addStudent = (studentData) => {
         }
 
         try {
-            const addStudentData = await addData();
+            const addStudentData = await addData(studentData);
             if(addStudentData.resultShort === 'success') {
                 dispatch({
                     type: types.ADD_STUDENT,

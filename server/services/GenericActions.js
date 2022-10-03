@@ -2,7 +2,7 @@ const FileService = require('./fileServices');
 
 class GenericAction {
 
-    static generatePDF(outputPDF, htmlVar) {
+    static generatePDF(outputPDF, htmlVar, header={}, height) {
         return new Promise((resolve, reject) => {
             try {
               var pdf = require('html-pdf');
@@ -10,9 +10,10 @@ class GenericAction {
                 orientation: 'portrait',
                 zoomFactor: '0.3',
                 type: 'pdf',
-                height: '14in',
+                height: height,
                 width: '10.5in',
-                timeout: 60 * 1000
+                timeout: 60 * 1000,
+                header: header
               };
               pdf.create(htmlVar, options).toFile(outputPDF, function(err, res) {
                 if (err) {

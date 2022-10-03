@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StudentForm = (props) => {
-  const { formTitle, initialcFormValues, formFields, toggleForm, addStudent} = props;
+  const { formTitle, initialcFormValues, formFields, toggleForm, addStudent, loadStudents} = props;
   const [formValue, setFormValues] = useState(initialcFormValues)
   const styles = useStyles();
 
@@ -42,6 +42,7 @@ const StudentForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addStudent(formValue)
+    loadStudents()
   }
 
   const handleCancle = () => {

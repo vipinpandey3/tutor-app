@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TutorsForm = (props) => {
   const styles = useStyles();
-  const {formValues, formDetails, formComponent, setFormValues, toggleForm , addTutors} =  props;
+  const {formValues, formDetails, formComponent, setFormValues, toggleForm , addTutors, loadTutors} =  props;
 
   const valueChange = (e) => {
     const {name, value} = e.target;
@@ -36,9 +36,9 @@ const TutorsForm = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     if(formDetails.editFlag === "true") {
-
     } else {
       addTutors(formValues)
+      loadTutors()
     }
   }
 

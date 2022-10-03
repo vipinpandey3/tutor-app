@@ -81,6 +81,7 @@ const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTut
           toggleForm={toggleForms}
           formDetails={formDetails} 
           addTutors={addTutors}
+          loadTutors={loadTutors}
         />
       }
       <Paper className={classes.paperCotent}>

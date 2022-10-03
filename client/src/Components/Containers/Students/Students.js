@@ -63,12 +63,12 @@ const Students = ({student: {students, loading, showFileImport, formDetails, sho
     },
   });
 
-  const loadUsers = () => {
+  const loadStudents = () => {
     getStudents();
   }
 
   useEffect(() => {
-    loadUsers();
+    loadStudents();
   }, [])
 
   const searchUser = (event) => {};
@@ -109,7 +109,7 @@ const Students = ({student: {students, loading, showFileImport, formDetails, sho
             addStudent={addStudent}
             formFields={studentFormFields}
             toggleForm={showHideForm}
-            loadUsers={loadUsers}
+            loadStudents={loadStudents}
           />
       )}
       <Paper className={classes.paperCotent}>

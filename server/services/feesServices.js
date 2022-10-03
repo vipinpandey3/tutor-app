@@ -66,7 +66,27 @@ const downloadFeesReciept = (uuid) => {
                             feesHTML = feesHTML.replace(/FEES_DESCRIPTION/g, fees.reamarks ? fees.reamarks : '-');
                             feesHTML = feesHTML.replace(/PAID_AMOUNT/g, fees.paidAmount);
 
-                            return GenericAction.generatePDF(fileName, feesHTML)
+                            let header = {
+                                "height": "60mm",
+                                "contents": `
+                                  <div style="width:100%; margin: auto; margin-bottom: 0px">
+                                    <table style="font-size: 16.2px; width: 100%; border-bottom: 2px black solid;">
+                                      <tr style="width: 100%; text-align: center;font-size: 20px;">
+                                        <td style="font-weight: bolder;padding: 10px;">Tutor App</td>
+                                      </tr>
+                                      <tr style="width: 100%; text-align: center;font-size: 18px">
+                                        <td style="font-weight: bolder;padding-bottom: 10px;">Email: tutor@gmail.com | Phone: 8090997125</td>
+                                      </tr>
+                                      <tr>
+                                        <td style="padding-bottom: 15px;text-align: center; font-size: 12px;">
+                                          <span style="font-weight: bolder;">Address:</span> Mumbai | <br><span style="font-weight: bolder;padding-top: 10px;">Mob:</span> USER_PHONE | <span style="font-weight: bolder;">Email: </span> USER_EMAIL
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                `
+                              };
+                            return GenericAction.generatePDF(fileName, feesHTML, header, '16in')
                                 .then(path => {
                                     return Promise.resolve(path)
                                 })

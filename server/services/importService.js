@@ -249,7 +249,6 @@ function get_header_row(sheet) {
 
   function get_cell_value(sheet, colNum, rowNum) {
     var cell = sheet[XLSX.utils.encode_cell({ c: colNum, r: rowNum })];
-    console.log("")
     var returnVar = '';
     if (cell && cell.t) {
       return returnVar = XLSX.utils.format_cell(cell);
@@ -260,7 +259,6 @@ function get_header_row(sheet) {
 
   const createFees = (fees) => {
     return new Promise((resolve, reject) => {
-        console.log("Fees", fees);
         const whereQuery = {
             aadharNo: fees.aadharNo
         }

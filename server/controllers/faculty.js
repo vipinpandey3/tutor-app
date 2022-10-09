@@ -11,6 +11,7 @@ const models = require('../models/index')
 const { fork } = require('child_process');
 var Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const {doProcess} = require('../services/queue/queue')
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function', seacrchParams);
@@ -58,20 +59,41 @@ const fileUpload = (req, res, next) => {
     }
     return ImportService.SaveFileDetailsInDB(inputFileObject)
         .then(dbFile => {
-            const forked = fork('../server/services/childProcessService')
-            forked.on('message', (response) => {
-                console.log(("Upload completed", response));
-            })
-            const result ={
-                resultShort: "Success",
-                resultLong: "Data is saved in the DB"
-            }
-            res.status(200).json(result);
             const obj = {
                 file: dbFile,
                 filetype: filetype
             }
-            forked.send({type: "upload", obj: obj});
+            return doProcess(obj, 'import')
+            .then(result => {
+                const resultObj ={
+                    resultShort: "Success",
+                    resultLong: "Data is saved in the DB"
+                }
+                res.status(200).json(resultObj);
+            })
+            .catch((error) => {
+                console.error("Error while uploading excel", error);
+                const result = {
+                    resultShort: "Failure",
+                    resultLong: "Failed to upload file"
+                }
+                return res.status(400).json(result)
+            })
+            
+            // const forked = fork('../server/services/childProcessService')
+            // forked.on('message', (response) => {
+            //     console.log(("Upload completed", response));
+            // })
+            // const result ={
+            //     resultShort: "Success",
+            //     resultLong: "Data is saved in the DB"
+            // }
+            // res.status(200).json(result);
+            // const obj = {
+            //     file: dbFile,
+            //     filetype: filetype
+            // }
+            // forked.send({type: "upload", obj: obj});
             // models.ExcelImport.findByPk(dbFile.id).Examthen(databaseFile => {
             //     let fileObj = fs.readFileSync(databaseFile.filePath);
                 

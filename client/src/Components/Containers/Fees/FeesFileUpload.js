@@ -26,7 +26,6 @@ const FeesFileUpload = (props) => {
       };
 
     const hadleFeesForm = (e) => {
-        console.log('FileInput', file);
         const formData = new FormData();
         formData.append("file", file);
         formData.append("fileName", fileName);

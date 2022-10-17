@@ -16,6 +16,7 @@ import Sidebar from './Pages/Sidebar';
 import Navbar from './Pages/Navbar';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+// import io from 'socket.io-client';
 
 const theme = createTheme({
   palette: {
@@ -85,6 +86,22 @@ const useStyles = makeStyles({
 })
 
 function App({auth: {isAuth}}) {
+  // const socket = io.connect('http://localhost:4000');
+  // socket.on('connect', (int) => {
+  //   console.log('Socket is connected =========', socket.id);
+  //   socket.emit('on_pign', {text: 'ping'})
+  //   socket.on('on_pong', (data) => {
+  //     console.log('On Pong', data);
+  //   }
+  //   )
+    
+  // })
+  //   socket.on('get_student', socket => {
+  //     console.log('socket result => socket', socket)
+  //   });
+  // socket.on('upload_excel',(socket)=> {
+  //   console.log('socket ==========>', socket)
+  // })
   const classes = useStyles();
 
   return (

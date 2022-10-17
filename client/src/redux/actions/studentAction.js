@@ -1,7 +1,6 @@
 import * as types from "../types";
 import axios from 'axios';
-import * as collection from '../../utils/collections'
-// import axiosHelper from "../../utils/AxiosHelper";
+import * as collection from '../../utils/collections';
 
 export const getStudents = () => {
     return async(dispatch, getState) => {
@@ -964,6 +963,13 @@ export const hideNotification = () => {
         })
     }
 }
+
+// export const socketConnect = () => {
+//     const socket = io.connect('http://localhost:4000')
+//     socket.on('upload_excel',(socket)=> {
+//         console.log('socket ==========>', socket)
+//     })
+// }
 
 // const setLoading = () => {
 //     return dispatch => {

@@ -5,7 +5,7 @@ import {
   Paper,
   Toolbar,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router";
 import Input from "../../Common/Input";
 import Table from "../../Common/Table";
@@ -16,6 +16,7 @@ import StudentForm from "./StudentForm";
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
+import { socket } from "../../../socket";
 import {
   addStudent,
   getStudents,
@@ -55,22 +56,35 @@ const initialcFormValues = {
 };
 const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields, error, severity, message}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile, hideNotification}) => {
   const history = useHistory();
+  const currentRef = useRef(true)
   const classes = useStyles();
-  const [formValues, setFormValues] = useState(initialcFormValues)
-  const [filterFunction, setFilterFunction] = useState({
-    fn: (item) => {
-      return item;
-    },
-  });
-
+  const [formValues, setFormValues] = useState(initialcFormValues);
+  // const [filterFunction, setFilterFunction] = useState({
+  //   fn: (item) => {
+  //     return item;
+  //   },
+  // });
+  
   const loadStudents = () => {
     getStudents();
   }
 
+  socket.on('upload_excel', (data) => {
+    console.log('Data =========', data)
+  })
+  // useEffect(() => {
+  // }, [socket])
+  
   useEffect(() => {
-    loadStudents();
-  }, [])
-
+    if(currentRef.current) {
+      currentRef.current = false
+      getStudents()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getStudents])
+  // socket.on('upload_excel', (data) => {
+  //   console.log('socket connected', data)
+  // })
   const searchUser = (event) => {};
 
   const loadForm = () => {
@@ -176,7 +190,8 @@ Students.propTypes = {
   addStudent: PropTypes.func.isRequired,
   toggleUploadSection: PropTypes.func.isRequired,
   uploadFile: PropTypes.func.isRequired,
-  hideNotification: PropTypes.func.isRequired
+  hideNotification: PropTypes.func.isRequired,
+  // socketConnect: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {

@@ -81,6 +81,7 @@ const TutorDetails = (props) => {
 
     useEffect(() => {
         loadTutorDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const addTutorEducation = () => {

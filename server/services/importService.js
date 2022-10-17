@@ -5,7 +5,6 @@ const XLSX = require('xlsx');
 const models = require('../models');
 const fillerFunction = require('./excelimport/fillerFunction');
 const studentService = require('./studentServices');
-const student = require('../models/student');
 
 const SaveFileDetailsInDB = (inputFileObj) => {
     const fileName = inputFileObj.inputfile.name;

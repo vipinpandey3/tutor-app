@@ -1,7 +1,8 @@
 const attributes = require('../attributes/attributes.json');
 const OptionServices = require('../services/optionServices')
 const moment = require('moment');
-const models = require('../models')
+const models = require('../models');
+const {io} = require('../services/socket');
 
 const getStudent = (req, res, next) => {
   console.log("Inside the get all students funcion");
@@ -14,7 +15,8 @@ const getStudent = (req, res, next) => {
         students: students,
         attributes: columnsAttributes
       };
-
+      // console.log('io ============>', io.io);
+      io.emit('get_student', {data: respose})
       res.status(200).json(respose);
     })
     .catch((err) => {

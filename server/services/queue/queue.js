@@ -1,4 +1,5 @@
 const Bull = require('bull');
+const { io, listener } = require('../socket');
 const {Process} = require('./process')
 
 const queue = new Bull('queue', {
@@ -13,7 +14,10 @@ queue.process(async(job)=> {
 })
 
 queue.on('completed', job => {
-    console.log(`Job with id ${job.id} has been completed`);
+    // client.emit("queue_notification", {result: 'Task completed'})
+    console.log('Job with id: ', job.id);
+    console.log('Emit ===============', io);
+    listener.emit('upload_excel', {data: resultObj});
   })
 
 const doProcess = (data, type) => {

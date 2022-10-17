@@ -11,7 +11,7 @@ const models = require('../models/index')
 const { fork } = require('child_process');
 var Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const {doProcess} = require('../services/queue/queue')
+const {doProcess} = require('../services/queue/queue');
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function', seacrchParams);
@@ -828,6 +828,7 @@ const getAllStudentAttendence = (req, res) => {
         ]
     })
     .then(resultObj => {
+        console.log('resultObj =======>', resultObj);
         if(resultObj) {
             const result = {
                 resultShort: 'success',

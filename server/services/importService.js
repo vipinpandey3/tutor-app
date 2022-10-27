@@ -33,7 +33,7 @@ const SaveFileDetailsInDB = (inputFileObj) => {
             },
             function(uploadedFile, callback) {
                 var file = JSON.parse(JSON.stringify(uploadedFile));
-                var path1 = "/home/vipin/Documents";
+                var path1 = "/Users/vipinpandey/Documents/Personal";
                 var finalPath = path.join(path1, file.fileName);
                 inputFileObj.inputfile.mv(finalPath, function(err) {
                     if (err) {

@@ -1,5 +1,16 @@
 import * as types from '../types';
+
 import axios from 'axios';
+import axiosHelper from '../../utils/AxiosHelper';
+
+export const loginThree = (postObj) => {
+    return async(dispatch, getState) => {
+        // const {auth: {token}} = getState();
+        const axiosData = await axiosHelper.sendRequest(types.LOGIN_URL, "POST", null, postObj)
+        console.log('Axios data =========', axiosData)
+        return dispatchEngine(axiosData, types.LOGIN_USER, dispatch, types.LOGIN_USER_ERROR)
+    }
+}
 
 export const login = (postObj) => {
     return async(dispatch) => {
@@ -87,4 +98,19 @@ export const removeAuthToken = () => {
             }
         });
     }
+}
+
+export const dispatchAction = (type, payload = null) => (payload != null ? { type, payload } : { type });
+
+const dispatchEngine = (axiosData, type, dispatch, errorType) => {
+    return new Promise(() => {
+        if(axiosData && axiosData.data) {
+            const dispatchPayload = axiosData.result;
+            console.log('dispatchPayload dispatchPayload', dispatchPayload)
+            return dispatch(dispatchAction(type, dispatchPayload))
+        } else {
+            const dispatchPayload = axiosData.result;
+            return dispatch(dispatchAction(type, dispatchPayload))
+        }
+    })
 }

@@ -127,10 +127,20 @@ export const USER_LOGOUT = "USER_LOGOUT";
 // APP Constant types;
 export const AUTH_TOKEN = "cookie_auth_hash";
 export const REMOVE_COOKIE = "REMOVE_COOKIE"
+export const RESULT_SUCCESS = "success";
+export const RESULT_FAILURE = 'failure'
 
 // Hide Notification
 export const HIDE_NOTIFICATION = "HIDE_NOTIFICATION";
 
+
+
+// URL
+export const LOGIN_URL = '/login';
+export const GET_STUDENT_URL = 'admin/get-students'
+export const GET_STUDENT_FORMFIELDS_URL = 'admin/get-student-formFields';
+export const ADD_STUDENT_URL = 'admin/add-student';
+// export const Base_URL = "http://localhost:5000"
 
 
 

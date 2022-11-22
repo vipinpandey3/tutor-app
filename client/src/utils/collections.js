@@ -1,4 +1,5 @@
 import * as cookies from "sfcookies";
+
 import axios from 'axios'
 
 export const setCookies = (key, value) => cookies.bake_cookie(key, value);
@@ -25,4 +26,6 @@ export const setAuthToken = token => {
     }
 }
 
-export const baseUrl = "http://localhost:5000"
+
+
+export const baseUrl = "http://localhost:6000"

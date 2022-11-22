@@ -68,7 +68,7 @@ const studentReducer = (state = intitialState, action) => {
             return {
                 ...state,
                 students: {
-                    studentTablerows: action.payload.data,
+                    studentTablerows: action.payload.students,
                     studentTableAttributes: action.payload.attributes
                 },
                 loading: action.payload.loading,
@@ -93,7 +93,7 @@ const studentReducer = (state = intitialState, action) => {
                     buttonTitle: action.payload.formDetails.buttonName,
                     editFlag: false
                 },
-                studentFormFields: action.payload.studentFormFields,
+                studentFormFields: action.payload.formFields,
                 loading: action.payload.loading,
                 message: action.payload.message,
                 showForm: action.payload.showForm,

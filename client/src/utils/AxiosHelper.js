@@ -1,26 +1,28 @@
 import axios from 'axios'
 
 class AxiosHelper  {
-    sendRequest(url, baseUrl, method, token, payload) {
+    sendRequest(url, method, token, payload) {
         return new Promise((resolve) => {
-            const mainURL = (baseUrl || "") + url;
             const headers = {
                 "Accept": "application/json",
 				"Content-Type": "application/json",
             }
+            // console.log('Method', method, "token ", token)
             if (token) headers["Authorization"] = token;
 
             const requestOptions = {
-                url: mainURL,
+                url: url,
                 method: method,
                 headers: headers,
                 data: payload
             }
             return axios(requestOptions).then(response => {
-                console.log("Response", response);
                 return this.resolveResponse(null, response, resolve)
             })
-            .catch(error => this.resolveResponse(error,null, resolve))
+            .catch(error => {
+                console.log('Error ============>', error)
+                return this.resolveResponse(error,null, resolve)
+            })
         });
     }
 
@@ -28,9 +30,8 @@ class AxiosHelper  {
     resolveResponse(error, response, callback) {
         try {
             if(response && response.data) {
-                return callback({
-                    result: (response.data && response.data.result) || null
-                });
+                let result = response.data && response.data.resultShort === "success" ? response.data : null;
+                return callback(result);
             } else if (error && error.response) return callback({ error: error.response, result: null });
             else {
                 return callback({ error: "Something went wrong. Unable to capture error values" });

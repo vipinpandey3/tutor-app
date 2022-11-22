@@ -1,6 +1,7 @@
-import axios from 'axios';
-import * as types from '../types';
 import * as collection from '../../utils/collections'
+import * as types from '../types';
+
+import axios from 'axios';
 
 export const getAllStudentAttendence = () => {
     return async(dispatch, getState) => {

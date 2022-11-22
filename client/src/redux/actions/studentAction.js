@@ -1,8 +1,13 @@
-import * as types from "../types";
-import axios from 'axios';
+// import * as ActionHelper from './actionHelper'
 import * as collection from '../../utils/collections';
+import * as types from "../types";
 
-export const getStudents = () => {
+import dispatchEngine, { addPayload }  from './actionHelper';
+
+import axios from 'axios';
+import axiosHelper from "../../utils/AxiosHelper";
+
+export const OnegetStudents = () => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
@@ -56,7 +61,49 @@ export const getStudents = () => {
     }
 }
 
+export const getStudents = () => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        // const loaderDispatcher = dispatch()
+        const axiosData = await axiosHelper.sendRequest(types.GET_STUDENT_URL, 'GET', token, null);
+        return dispatchEngine(axiosData, types.FETCH_STUDENTS, dispatch, types.FETCH_STUDENTS_ERROR)
+    }
+}
+
 export const fetchStudentFormFields = () => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        });
+        const axiosData = await axiosHelper.sendRequest(types.GET_STUDENT_FORMFIELDS_URL, 'GET', token, null);
+        const payload = {
+            formDetails: {
+                formName: "Add Student",
+                buttonName: "Submit",
+                editFlag: false
+            },
+            loading: false,
+            message: axiosData.resultLong,
+            showForm: true,
+            error: true,
+            severity: "success"
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload)
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENT_FORM, dispatch, types.FETCH_STUDENT_FORM_ERROR);
+    }
+}
+
+export const OnefetchStudentFormFields = () => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
@@ -139,6 +186,33 @@ export const toggleForm = (flag) => {
 }
 
 export const editStudentFormFields = () => {
+    console.log('In new editStudentFormFields function')
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        const axiosData = await axiosHelper.sendRequest(types.GET_STUDENT_FORMFIELDS_URL, 'GET', token, null);
+        const payload = {
+            formDetails: {
+                formName: "Update Student",
+                buttonName: "Update",
+                editFlag: true
+            },
+            loading: false,
+            message: axiosData.resultLong,
+            showForm: true,
+            severity: "success"
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload)
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENT_FORM, dispatch, types.FETCH_STUDENT_FORM_ERROR);
+    }
+}
+
+export const OneeditStudentFormFields = () => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
@@ -211,6 +285,40 @@ export const editStudentFormFields = () => {
 }
 
 export const addStudent = (studentData) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        const axiosData = await axiosHelper.sendRequest(types.ADD_STUDENT_URL, 'POST', token, studentData);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showForm: false,
+            formDetails: {
+                formName: "",
+                buttonName: "",
+                editFlag: false
+            },
+            severity: "success"
+        }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: "Error adding student in database",
+            showForm: true,
+            severity: "error"
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload)
+        return dispatchEngine(axiosAndPayloadData, types.ADD_STUDENT, dispatch, types.ADD_STUDENT_ERROR)
+    }
+}
+
+export const OneaddStudent = (studentData) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({

@@ -589,6 +589,27 @@ export const fetchEditParentFormFields = (flag) => {
 
 export const fetchStudentDetails = (studentId) => {
     return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        });
+        let FETCH_STUDENT_DETAILS_URL = `/${types.FETCH_STUDENT_DETAILS_URL}${studentId}`;
+        const axiosData = await axiosHelper.sendRequest(FETCH_STUDENT_DETAILS_URL, 'GET', token, null)
+        let payload = {
+            loading: false,
+            message: axiosData.resultLong,
+            error: false,
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload)
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENTS_DETAILS, dispatch, types.FETCH_STUDENTS_DETAILS_ERROR)
+    }
+}
+
+export const OnefetchStudentDetails = (studentId) => {
+    return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
@@ -891,6 +912,26 @@ export const updateEducationDetails = (values) => {
 }
 
 export const fetchStudentFeesDetails = (studentId) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        let STUDENT_FEES_DATA_URL = `/${types.FETCH_STUDENT_FEES_URL}${studentId}`;
+        const axiosData = await axiosHelper.sendRequest(STUDENT_FEES_DATA_URL, 'GET', token, null);
+        const payload = {
+            error: false, 
+            loading: false,
+            message: axiosData.resultLong,
+        }
+        const errorPayload = {
+            error: true, 
+            loading: false,
+            message: "Error while fetching fees for student with Id: " + studentId
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENT_FEES_DATA, dispatch, types.FETCH_STUDENT_FEES_DATA_ERROR)
+    }
+}
+
+export const OnefetchStudentFeesDetails = (studentId) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({

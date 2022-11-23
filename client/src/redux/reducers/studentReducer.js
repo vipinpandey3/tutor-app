@@ -183,11 +183,11 @@ const studentReducer = (state = intitialState, action) => {
                 ...state,
                 loading: action.payload.loading,
                 message: action.payload.message,
-                error: false,
+                error: action.payload.error,
                 studentDetails: {
-                    details: action.payload.studentDetail,
-                    educationDetails: action.payload.educationDetails,
-                    parentDetails: action.payload.parentDetails,
+                    details: action.payload.studentDetails,
+                    educationDetails: action.payload.studentDetails.StudentEducationDetails,
+                    parentDetails: action.payload.studentDetails.Parent,
                     studentDetailAttributes: action.payload.studentDetailAttributes,
                     parentDetailsAttributes: action.payload.parentDetailsAttributes,
                     educationDetailsAttributes: action.payload.educationDetailsAttributes
@@ -304,18 +304,18 @@ const studentReducer = (state = intitialState, action) => {
             };
 
     case types.FETCH_STUDENT_FEES_DATA:
-        const totalPaid = action.payload.feesDetails.feesDetailsRow.reduce((accumulatedPaid, currentPaid) => {
+        const totalPaid = action.payload.fees.reduce((accumulatedPaid, currentPaid) => {
             let total = accumulatedPaid + parseInt(currentPaid.paidAmount);
             return total;
-          }, 0);
+        }, 0);
         return {
             ...state,
             loading: action.payload.loading,
             error: action.payload.error,
             message: action.payload.message,
             feesDetails: {
-                feesTableHeaders: action.payload.feesDetails.feesTableHeaders,
-                feesDetailsRow: action.payload.feesDetails.feesDetailsRow
+                feesTableHeaders: action.payload.header,
+                feesDetailsRow: action.payload.fees
             },
             totalPaid: totalPaid
         };

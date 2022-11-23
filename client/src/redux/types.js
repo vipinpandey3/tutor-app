@@ -140,6 +140,8 @@ export const LOGIN_URL = '/login';
 export const GET_STUDENT_URL = 'admin/get-students'
 export const GET_STUDENT_FORMFIELDS_URL = 'admin/get-student-formFields';
 export const ADD_STUDENT_URL = 'admin/add-student';
+export const FETCH_STUDENT_DETAILS_URL = 'admin/studentDetails/'
+export const FETCH_STUDENT_FEES_URL = 'admin/getFeesDetailsById/'
 // export const Base_URL = "http://localhost:5000"
 
 

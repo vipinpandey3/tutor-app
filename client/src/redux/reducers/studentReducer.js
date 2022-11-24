@@ -143,7 +143,7 @@ const studentReducer = (state = intitialState, action) => {
                 message: action.payload.message,
                 showForm: action.payload.showForm,
                 formFields: {
-                    parentFormFields: action.payload.parentFormFields,
+                    parentFormFields: action.payload.formFields,
                     educationFormFields: [],
                 },
                 severity: action.payload.severity
@@ -232,12 +232,12 @@ const studentReducer = (state = intitialState, action) => {
                 message: action.payload.message,
                 showForm: action.payload.showForm,
                 formFields: {
-                    parentFormFields: action.payload.parentFormFields,
+                    parentFormFields: action.payload.formFields,
                     educationFormFields: [],
                 },
                 formDetails: {
                     formName: action.payload.formDetails.formName,
-                    buttonTitle: action.payload.formDetails.formName,
+                    buttonTitle: action.payload.formDetails.buttonTitle,
                     editFlag: action.payload.formDetails.editFlag
                 },
                 severity: action.payload.severity
@@ -355,8 +355,8 @@ const studentReducer = (state = intitialState, action) => {
         return {
             ...state,
             studentAttendenceTable: {
-                attendenceTableRows: action.payload.studentAttendenceTable.attendenceTableRows,
-                attendenceTableColumns: action.payload.studentAttendenceTable.attendenceTableColumns
+                attendenceTableRows: action.payload.attendence,
+                attendenceTableColumns: action.payload.attributes
             },
             studentAttendenceData: {
                 attendence: action.payload.studentAttendence.attendence,

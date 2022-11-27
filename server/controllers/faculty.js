@@ -828,7 +828,6 @@ const getAllStudentAttendence = (req, res) => {
         ]
     })
     .then(resultObj => {
-        console.log('resultObj =======>', resultObj);
         if(resultObj) {
             const result = {
                 resultShort: 'success',

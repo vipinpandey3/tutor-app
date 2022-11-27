@@ -137,6 +137,9 @@ export const HIDE_NOTIFICATION = "HIDE_NOTIFICATION";
 
 // URL
 export const LOGIN_URL = '/login';
+
+
+// STUDENT URLS
 export const GET_STUDENT_URL = 'admin/get-students'
 export const GET_STUDENT_FORMFIELDS_URL = 'admin/get-student-formFields';
 export const ADD_STUDENT_URL = 'admin/add-student';
@@ -145,8 +148,14 @@ export const FETCH_STUDENT_FEES_URL = 'admin/getFeesDetailsById/';
 export const FETCH_STUDENT_ATTENDENCE_URL = 'faculty/get-student-attendenceById/';
 export const MARK_STUDENT_ABSENCE_URL = "faculty/mark_student_absence";
 export const FETCH_PARENT_FORM_FIELDS_URL = '/admin/get-parent-formFields';
-// export const Base_URL = "http://localhost:5000"
 
 
-
-
+// Tutor URLS
+export const GET_TUTOR_URLS = "/admin/get-teachers";
+export const FETCH_TUTOR_DETAILS_URL = "/admin/teachersDetails"
+export const ADD_TUTOR_EDUCATION_URL = '/admin/addTutorEducation';
+export const ADD_TUTOR_URL = '/admin/add-teacher';
+export const TUTOR_EDUCATION_FORM_FIELDS_URL = "/admin/getTutorFormFields";
+export const TUTOR_FORM_FIELD_URL = "/admin/get-tutor-formFields";
+// export const GET_TUTOR_URL = "/admin/get-teacher";
+export const UPDATE_TUTOR_EDUCATION_URL = "/admin/updateTutorEducation";

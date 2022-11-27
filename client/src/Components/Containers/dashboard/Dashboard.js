@@ -1,17 +1,18 @@
-import { Grid, makeStyles, Paper } from "@material-ui/core";
-import { AccordionDetails, AccordionSummary, Typography, Accordion } from "@mui/material";
-import React, { useState } from "react";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import {
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
-  XAxis,
-  YAxis,
-  Tooltip,
-  PieChart,
   Pie,
-  Cell
+  PieChart,
+  Tooltip,
+  XAxis,
+  YAxis
 } from "recharts";
+import { Grid, Paper, makeStyles } from "@material-ui/core";
+import React, { useState } from "react";
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StudentAttendence from "./StudentAttendence/StudentAttendence";
 import TutorAttendence from "./TutorAttendence/TutorAttendence";
@@ -179,7 +180,6 @@ const Dashboard = () => {
             <Typography sx={{ width: '33%', flexShrink: 0 }}>
               Tutor Attendence
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <TutorAttendence />

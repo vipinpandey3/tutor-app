@@ -131,7 +131,7 @@ const getTeacher = (req, res, next) => {
     });
 };
 
-const getTeacherById = (req, res, next) => {
+const getTeacherById = (req, res) => {
   console.log("in /teachersDetails/:teacherId route")
   console.log("in getTeacherById function");
   const teacherId = req.params.teacherId;

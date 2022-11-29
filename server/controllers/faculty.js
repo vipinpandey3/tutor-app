@@ -11,6 +11,7 @@ const models = require('../models/index')
 const { fork } = require('child_process');
 var Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const {doProcess} = require('../services/queue/queue');
 
 const getFeesDetailsBySearchParam = (seacrchParams) => {
     console.log('Inside the getFeesDetailsBySearchParam function', seacrchParams);
@@ -58,20 +59,41 @@ const fileUpload = (req, res, next) => {
     }
     return ImportService.SaveFileDetailsInDB(inputFileObject)
         .then(dbFile => {
-            const forked = fork('../server/services/childProcessService')
-            forked.on('message', (response) => {
-                console.log(("Upload completed", response));
-            })
-            const result ={
-                resultShort: "Success",
-                resultLong: "Data is saved in the DB"
-            }
-            res.status(200).json(result);
             const obj = {
                 file: dbFile,
                 filetype: filetype
             }
-            forked.send({type: "upload", obj: obj});
+            return doProcess(obj, 'import')
+            .then(result => {
+                const resultObj ={
+                    resultShort: "Success",
+                    resultLong: "Data is saved in the DB"
+                }
+                res.status(200).json(resultObj);
+            })
+            .catch((error) => {
+                console.error("Error while uploading excel", error);
+                const result = {
+                    resultShort: "Failure",
+                    resultLong: "Failed to upload file"
+                }
+                return res.status(400).json(result)
+            })
+            
+            // const forked = fork('../server/services/childProcessService')
+            // forked.on('message', (response) => {
+            //     console.log(("Upload completed", response));
+            // })
+            // const result ={
+            //     resultShort: "Success",
+            //     resultLong: "Data is saved in the DB"
+            // }
+            // res.status(200).json(result);
+            // const obj = {
+            //     file: dbFile,
+            //     filetype: filetype
+            // }
+            // forked.send({type: "upload", obj: obj});
             // models.ExcelImport.findByPk(dbFile.id).Examthen(databaseFile => {
             //     let fileObj = fs.readFileSync(databaseFile.filePath);
                 
@@ -958,6 +980,62 @@ const getAllTutorAttendenceById = (req, res) => {
     })
 }
 
+const getAllStudentAttendenceByStudentId = (req, res) => {
+    console.log('Inside getAllStudentAttendenceByStudentId function');
+    console.log("req.params", req.params);
+    const studentId = req.params.studentId
+    const tableAttributes = attributes[23].columnsHeader;
+    const whereCondition = {
+        StudentId: studentId
+    }
+    return models.StudentAttendence.findAllAttendence(whereCondition)
+    .then(resultObj => {
+        const currentStudentAttendence = resultObj.reduce((allAtendence, currentAttendence) => {
+            let i = 0
+            if(currentAttendence.attendenceStatus) {
+                allAtendence = allAtendence + 1
+            }
+            return allAtendence;
+        }, 0)
+        const totalAbsence = resultObj.reduce((allAtendence, currentAttendence) => {
+            let i = 0
+            if(!currentAttendence.attendenceStatus) {
+                allAtendence = allAtendence + 1
+            }
+            return allAtendence;
+        }, 0)
+        if(resultObj) {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved all attendence for the student with id: ' + studentId,
+                attendence: resultObj,
+                attributes: tableAttributes,
+                studentAttendence: {
+                    absence: totalAbsence,
+                    attendence: currentStudentAttendence
+                }
+            };
+            res.status(200).json(result);
+        } else {
+            const result = {
+                resultShort: 'success',
+                resultLong: 'successfully retrieved attendence of all the students',
+                attendence: [],
+                attributes: tableAttributes
+            };
+            res.status(200).json(result);
+        }
+    })
+    .catch(error => {
+        console.log('Error while retrieving all attendence for the student', error)
+        const result = {
+            resultShort: 'failure',
+            resultLong: 'Error while retrieving all attendence for the student with emailId: ' + studentEmail,
+        };
+        res.status(200).json(result);
+    })
+
+}
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
@@ -977,5 +1055,6 @@ module.exports = {
     getAllStudentAttendence,
     markStudentAbsence,
     getAllStudentAttendenceById,
-    getAllTutorAttendenceById
+    getAllTutorAttendenceById,
+    getAllStudentAttendenceByStudentId
 }

@@ -2,7 +2,6 @@ import {
   AppBar,
   Toolbar,
   Grid,
-  InputBase,
   IconButton,
   Badge,
   makeStyles,
@@ -12,7 +11,6 @@ import {
 } from "@material-ui/core";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import SearchIcon from "@material-ui/icons/Search";
 import { Popper } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -25,7 +23,7 @@ import { logout } from '../redux/actions/authAction'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.white.white,
     color: "#000",
   },
   searchInput: {
@@ -33,10 +31,11 @@ const useStyles = makeStyles((theme) => ({
     padding: `0px ${theme.spacing(1)}px`,
     fontSize: "0.8rem",
     "&:hover": {
-      backgroundColor: "#e9dcce",
+      // backgroundColor: theme.palette.black,
     },
     "& MuiSvgIcon-root": {
-      marginRight: theme.spacing(1),
+      border: "1px solid black",
+      // marginRight: theme.spacing(1),
     },
   },
   menuList: {
@@ -46,7 +45,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   button: {
-    color: 'grey'
+    color: 'grey',
+    fontWeight: "900",
+    fontSize: "18px",
   },
 }));
 
@@ -96,11 +97,11 @@ const Navbar = ({auth: {isAuth, token}, logout}) => {
       <Toolbar>
         <Grid container alignItems="center">
           <Grid item>
-            <InputBase
+            {/* <InputBase
               className={classes.searchInput}
               placeholder="Search Here..."
               startAdornment={<SearchIcon fontSize="small" />}
-            />
+            /> */}
           </Grid>
           <Grid item sm></Grid>
           <Grid item>

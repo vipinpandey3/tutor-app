@@ -58,7 +58,13 @@ router.post('/login',
             }
             return res.status(200).json(result);
         } else {
-            res.status(400).json(req.user.error);
+            console.log("req.user", req.user);
+            const result = {
+                resultShort: 'failure',
+                resultLong: req.user.message,
+            }
+            return res.status(200).json(result);
+            res.status(200).json(req.user);
         }
 });
 

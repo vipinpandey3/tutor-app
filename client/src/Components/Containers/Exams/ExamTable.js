@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ExamTable = (props) => {
+    // eslint-disable-next-line no-unused-vars
     const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam, loadExam} = props; 
     const [open, setOpen] = useState(false)
     const styles = useStyles()

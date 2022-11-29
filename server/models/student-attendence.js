@@ -28,7 +28,11 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     StudentAttendence.associate = function(models) {
-        StudentAttendence.belongsTo(models.Student)
+        StudentAttendence.belongsTo(models.Student);
+
+        StudentAttendence.findAllAttendence = (where) => {
+            return models.StudentAttendence.findAll({where: where})
+        }
     }
 
     return StudentAttendence;

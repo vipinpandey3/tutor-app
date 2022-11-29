@@ -1,8 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import { styles } from "@material-ui/pickers/views/Calendar/Calendar";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import MainNavigation from "./MainNavigation";
 import NavLinks from "./NavLinks";
 
 const useStyles = makeStyles((theme) => ({
@@ -12,7 +10,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     position: "fixed",
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.main,
     fontSize: "20px",
   },
   menuContainer: {
@@ -34,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   linkStyle: {
     textDecoration: "none",
-    color: "#000000",
+    color: theme.palette.text.main,
     paddingLeft: "10px",
     padding: "10px",
   },

@@ -13,15 +13,14 @@ import ActionButton from "./ActionButton";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 // import Tooltip from '@mui/material/Tooltip';
-import MuiToolTip from "./ToolTip";
 
 const useStyles = makeStyles((theme) => ({
   table: {
     marginTop: theme.spacing(3),
     "& thead th": {
       fontWeight: "600",
-      color: theme.palette.primary.main,
-      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.text.main,
+      backgroundColor: theme.palette.primary.main,
     },
     "& tbody td": {
       fontWeight: "300",
@@ -39,7 +38,8 @@ function Table(props) {
     headCells,
     records,
     redirectToDetailsPage,
-    edit
+    edit,
+    showCloseButton= false
   } = props;
   // filterFunction,
   // openInPopup,
@@ -96,6 +96,8 @@ function Table(props) {
                       <EditOutlinedIcon fontSize="small" />
                     </ActionButton>
                     {/* <MuiToolTip title="Add" placement="top-start"> */}
+                    {
+                      showCloseButton && 
                       <ActionButton
                         // color="secondary"
                         onClick={() => {
@@ -109,6 +111,7 @@ function Table(props) {
                       >
                       <CloseOutlinedIcon fontSize="small" />
                     </ActionButton>
+                    }
                   {/* </MuiToolTip>                   */}
                 </TableCell>
               </TableRow>

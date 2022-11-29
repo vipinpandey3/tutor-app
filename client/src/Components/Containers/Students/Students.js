@@ -5,7 +5,7 @@ import {
   Paper,
   Toolbar,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router";
 import Input from "../../Common/Input";
 import Table from "../../Common/Table";
@@ -16,8 +16,19 @@ import StudentForm from "./StudentForm";
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import {addStudent, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, toggleUploadSection, uploadFile} from '../../../redux/actions/studentAction'
+import { socket } from "../../../socket";
+import {
+  addStudent,
+  getStudents,
+  fetchStudentFormFields, 
+  toggleForm, 
+  editStudentFormFields, 
+  toggleUploadSection, 
+  uploadFile, 
+  hideNotification
+} from '../../../redux/actions/studentAction'
 import StudentFileUpload from "./StudentFileUpload";
+import Notification from "../../Common/Alert";
 
 // import Loader from '../../Common/Loader'
 
@@ -43,24 +54,37 @@ const initialcFormValues = {
   dob: moment().format('YYYY-MM-DD'),
   stream: 'Common',
 };
-const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile}) => {
+const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields, error, severity, message}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile, hideNotification}) => {
   const history = useHistory();
+  const currentRef = useRef(true)
   const classes = useStyles();
-  const [formValues, setFormValues] = useState(initialcFormValues)
-  const [filterFunction, setFilterFunction] = useState({
-    fn: (item) => {
-      return item;
-    },
-  });
-
-  const loadUsers = () => {
+  const [formValues, setFormValues] = useState(initialcFormValues);
+  // const [filterFunction, setFilterFunction] = useState({
+  //   fn: (item) => {
+  //     return item;
+  //   },
+  // });
+  
+  const loadStudents = () => {
     getStudents();
   }
 
+  socket.on('upload_excel', (data) => {
+    console.log('Data =========', data)
+  })
+  // useEffect(() => {
+  // }, [socket])
+  
   useEffect(() => {
-    loadUsers();
-  }, [])
-
+    if(currentRef.current) {
+      currentRef.current = false
+      getStudents()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getStudents])
+  // socket.on('upload_excel', (data) => {
+  //   console.log('socket connected', data)
+  // })
   const searchUser = (event) => {};
 
   const loadForm = () => {
@@ -83,6 +107,13 @@ const Students = ({student: {students, loading, showFileImport, formDetails, sho
 
   return (
     <>
+      <Notification
+        open={error} 
+        handleClose={hideNotification} 
+        severity={severity} 
+        duration={3000} 
+        message={message} 
+      />
       {/* <Loader /> */}
       {showFileImport && <StudentFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />}
       {showForm && (
@@ -92,12 +123,12 @@ const Students = ({student: {students, loading, showFileImport, formDetails, sho
             addStudent={addStudent}
             formFields={studentFormFields}
             toggleForm={showHideForm}
-            loadUsers={loadUsers}
+            loadStudents={loadStudents}
           />
       )}
       <Paper className={classes.paperCotent}>
         <Grid container>
-          <Grid items xs={6}>
+          <Grid item xs={6}>
             <Toolbar>
               <Input
                 onChange={searchUser}
@@ -158,7 +189,9 @@ Students.propTypes = {
   editStudentFormFields: PropTypes.func.isRequired,
   addStudent: PropTypes.func.isRequired,
   toggleUploadSection: PropTypes.func.isRequired,
-  uploadFile: PropTypes.func.isRequired
+  uploadFile: PropTypes.func.isRequired,
+  hideNotification: PropTypes.func.isRequired,
+  // socketConnect: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -168,4 +201,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent})(Students);
+export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, hideNotification})(Students);

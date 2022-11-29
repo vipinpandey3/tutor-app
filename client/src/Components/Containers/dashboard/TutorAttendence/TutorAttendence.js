@@ -1,26 +1,24 @@
-import {Table as MuiTable, Grid, makeStyles, TableBody, TableCell, TableHead, TableRow, Toolbar } from '@material-ui/core';
-import React, { useRef, useState } from 'react';
-import { useContext } from 'react';
-import { useEffect } from 'react';
-import { DashboardContext } from '../../../../context/dashboard-context';
-import Input from '../../../Common/Input';
-import Table from '../../../Common/Table';
-import MatButton from '../../../Common/Button';
-import ActionButton from '../../../Common/ActionButton';
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
-import PropTypes from 'prop-types'
-import {connect} from 'react-redux';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Grid, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, makeStyles} from '@material-ui/core';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  getAllAttendenceOfTutorById,
   getAllTutorAttendence,
-  toggleTutorAttendenceElement,
   getTutorById,
-  markTutorAttendceById,
-  updateTutorAttendence,
   markTutorAbsence,
-  getAllAttendenceOfTutorById
+  markTutorAttendceById,
+  toggleTutorAttendenceElement,
+  updateTutorAttendence
 } from '../../../../redux/actions/dashboardAction'
 
+import ActionButton from '../../../Common/ActionButton';
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import Input from '../../../Common/Input';
+import MatButton from '../../../Common/Button';
+import PropTypes from 'prop-types'
+import Table from '../../../Common/Table';
+import {connect} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   searchUserInput: {
@@ -41,17 +39,10 @@ const useStyles = makeStyles((theme) => ({
   actionButton: {
     width: "90%",
     marginLeft: "30px"
-  },
-  // "MuiToolbar-gutters":  {
-  //   paddingRight: "0px",
-  //   actionButton: {
-  //     width: "100%"
-  //   },
-  // }
+  }
 }))
 
 const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, tutorAttendenceRecord, markAttendenceTableData}, markTutorAttendceById, getTutorById, getAllTutorAttendence, toggleTutorAttendenceElement, updateTutorAttendence, markTutorAbsence, getAllAttendenceOfTutorById}) => {
-  const {} = useContext(DashboardContext)
   const styles = useStyles();
   const searchRef = useRef();
   const [inputValue, setInputValue] = useState("")
@@ -86,7 +77,6 @@ const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, 
   }
 
   const searchTutor = () => {
-    console.log('INPUT Value', inputValue)
     getTutorById(inputValue)
   }
 
@@ -112,7 +102,6 @@ const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, 
   }
 
   const updateAttendence = (row, type) => {
-    console.log('updateAttendence', row, type)
     if(type === 'timeOut') {
       return updateTutorAttendence(row.attendenceId)
     }
@@ -129,7 +118,7 @@ const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, 
           <Grid item xs={3}>
             <Input
               onChange={onInputChange}
-              label="Search Student"
+              label="Search Tutor"
               className={styles.searchUserInput}
               value={inputValue}
               name="tutor"             

@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { FormControl, Grid, IconButton, InputAdornment, InputLabel, makeStyles, OutlinedInput, Paper } from '@material-ui/core'
-import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MatButton from '../../Common/Button'
 import Text from '../../Common/Text'
 import {MdGroupAdd} from 'react-icons/md'
@@ -44,12 +46,6 @@ const initialUserValues = {
 
 const Users = ({user:{loading, error, message, userTableData, userFormFields, showForm, formDetails}, getUsers, getUserForm, createUser}) => {
     const styles = useStyles();
-    // const {searchUser, getUserFormFields, createUser} = useContext(UserContext);
-    // const loading = useSelector(state => state.loading);
-    // const userData = useSelector(state => state.users)
-    // const showUserForm = useSelector(state => state.userForm);
-    // const message = useSelector(state => state.message);
-    // const attributes = useSelector(state => state.userAttributes)
     const [userObj, setUserObject] = useState({
         attributes: [],
         userData: []
@@ -60,16 +56,6 @@ const Users = ({user:{loading, error, message, userTableData, userFormFields, sh
 
     const handleSearch = (event) => {
         setSearchInputValue(event.target.value)
-        // searchUser(searchInputValue)
-        //         .then(result => {
-        //             setUserObject({
-        //                 ...userObj,
-        //                 userData: result.users
-        //             })
-        //         })
-        //         .catch((err) => {
-        //             console.log('err')
-        //         })
     }
 
     const ClearSearchUser = () => {
@@ -89,39 +75,14 @@ const Users = ({user:{loading, error, message, userTableData, userFormFields, sh
     const showUserFormFields = () => {
         setShowUserForm(true);
         getUserForm()
-        //     .then(result => {
-        //         setFormsFields(result.formAttributes);
-        //     })
-        //     .catch(err => {
-        //         console.log(err)
-        //     })
     }
 
     const fetchUser = () => {
         getUsers()
-            // .then(usersObj => {
-            //     // setUserObject({
-            //     //     attributes: usersObj.attributes,
-            //     //     userData: usersObj.userData
-            //     // })
-            // })
-            // .catch(error => {
-            //     console.log('Error', error)
-            // })
     }
 
     useEffect(() => {
         fetchUser()
-        // getUsers()
-        //     .then(usersObj => {
-        //         setUserObject({
-        //             attributes: usersObj.attributes,
-        //             userData: usersObj.userData
-        //         })
-        //     })
-        //     .catch(error => {
-        //         console.log('Error', error)
-        //     })
     }, [])
     return (
         <React.Fragment>

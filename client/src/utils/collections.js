@@ -1,6 +1,6 @@
 import * as cookies from "sfcookies";
+
 import axios from 'axios'
-import * as types from '../redux/types'
 
 export const setCookies = (key, value) => cookies.bake_cookie(key, value);
 export const getCookie = (key) => cookies.read_cookie(key).length < 1 ? "" : cookies.read_cookie(key);
@@ -15,7 +15,6 @@ export const setHeader = (token) => {
     if(token) {
         headers['Authorization'] = token;
     };
-    console.log("Headers", headers)
     return headers
 }
 
@@ -26,3 +25,7 @@ export const setAuthToken = token => {
         delete axios.defaults.headers.common['Authorization']
     }
 }
+
+
+
+export const baseUrl = "http://localhost:6000"

@@ -1,12 +1,13 @@
-const StudentEducationDetails = require("../models/student-education-details");
 const attributes = require('../attributes/attributes.json');
 const OptionServices = require('../services/optionServices')
 const moment = require('moment');
-const models = require('../models')
+const models = require('../models');
+const {io} = require('../services/socket');
 
 const getStudent = (req, res, next) => {
+  console.log("Inside the get all students funcion");
   const columnsAttributes = attributes[6].columnsHeader
-  models.Student.findAll()
+  return models.Student.findAll()
     .then((students) => {
       const respose = {
         resultShort: "success",
@@ -14,7 +15,8 @@ const getStudent = (req, res, next) => {
         students: students,
         attributes: columnsAttributes
       };
-
+      // console.log('io ============>', io.io);
+      io.emit('get_student', {data: respose})
       res.status(200).json(respose);
     })
     .catch((err) => {
@@ -67,6 +69,7 @@ const getStudentById = (req, res, next) => {
 };
 
 const addStudentInDatabase = (req, res, next) => {
+  console.log("Inside the addStudentInDatabase functions");
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const emailId = req.body.emailId;
@@ -76,7 +79,7 @@ const addStudentInDatabase = (req, res, next) => {
   const gender = req.body.gender;
   const aadharNo = req.body.aadharNo;
   const userId = req.user.id;
-  models.Student.create({
+  return models.Student.create({
     firstName,
     lastName,
     emailId,
@@ -88,6 +91,7 @@ const addStudentInDatabase = (req, res, next) => {
     userId,
   })
     .then((student) => {
+      console.log("Students **************", student);
       const response = {
         resultShort: "success",
         resultLong: "Student created with id: " + student.id,
@@ -127,7 +131,7 @@ const getTeacher = (req, res, next) => {
     });
 };
 
-const getTeacherById = (req, res, next) => {
+const getTeacherById = (req, res) => {
   console.log("in /teachersDetails/:teacherId route")
   console.log("in getTeacherById function");
   const teacherId = req.params.teacherId;
@@ -411,14 +415,12 @@ const getFeesDetailsByStudentId = (req, res, next) => {
   const studentId = req.params.studentId;
   const tableHeader = attributes[12].columnAttributes;
   const feesDBAttributes = attributes[12].feesDBAttributes;
-  console.log('studentId ============>', studentId)
   models.Fees.findAll({where: {studentId: studentId}}, {attributes: feesDBAttributes})
     .then((fees) => {
       fees.map(feeDetails => {
         feeDetails.reamarks = feeDetails.reamarks ? feeDetails.reamarks : "-";
         feeDetails.date = new Date(feeDetails.createdAt).toLocaleDateString()
       })
-      console.log('Fees', fees)
       const response = {
         resultShort: "success",
         resultLong: "Successfully retrieved fees details for student with id: " + studentId,

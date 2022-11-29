@@ -6,8 +6,10 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {
     login,
-    removeAuthToken
+    removeAuthToken,
+    hideNotification
 } from '../redux/actions/authAction'
+import Notification from '../Components/Common/Alert';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -17,51 +19,61 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const Login = ({auth: {isAuth, token}, login, removeAuthToken}) => {
+const Login = ({auth: {isAuth, token, error, message}, login, removeAuthToken, hideNotification}) => {
     const styles = useStyles();
-    const [emailId, setEmaildId] = useState('');
-    const [password, setPassword] = useState()
-    const handleEmailId = (e) => {
-        setEmaildId(e.target.value);
-    }
+    const [formValues, setFormValues] = useState({
+        emailId: "",
+        password: ""
+    })
 
-    const handlePaswordInput = (e) => {
-        setPassword(e.target.value)
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        setFormValues({
+            ...formValues,
+            [name]: value
+        })
     }
 
     const submitHandler = (e) => {
         e.preventDefault();
-        const loginObj =  {
-            emailId: emailId,
-            password: password
-        }
-        login(loginObj)
+        login(formValues);
     }
+
     return (
-        <Paper className={styles.paperContent}>
-            <form onSubmit={submitHandler}>
-                <Grid container>
-                    <Grid item xs={12} style={{marginTop: "20px"}}>
-                        <Input value={emailId} style={{width: '100%'}} onChange={handleEmailId} label="Email Id" />
+        <>
+            <Notification 
+                open={error} 
+                handleClose={hideNotification} 
+                severity="error" 
+                duration={6000} 
+                message={message} 
+            />
+            <Paper className={styles.paperContent}>
+                <form onSubmit={submitHandler}>
+                    <Grid container>
+                        <Grid item xs={12} style={{marginTop: "20px"}}>
+                            <Input value={formValues.emailId} name="emailId" style={{width: '100%'}} onChange={handleInputChange} label="Email Id" />
+                        </Grid>
+                        <Grid item sm={12} style={{marginTop: "20px"}}>
+                            <Input value={formValues.password} name="password" style={{width: '100%'}} onChange={handleInputChange} label="Password" type="password" />
+                        </Grid>
                     </Grid>
-                    <Grid item sm={12} style={{marginTop: "20px"}}>
-                        <Input value={password} style={{width: '100%'}} onChange={handlePaswordInput} label="Password" type="password" />
+                    <Grid container>
+                        <Grid item xs={12} style={{marginTop: "20px"}}>
+                            <MatButton color="primary" style={{width: '100%'}} variant="contained" type="submit" size="large">Login</MatButton>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container>
-                    <Grid item xs={12} style={{marginTop: "20px"}}>
-                        <MatButton color="primary" style={{width: '100%'}} variant="contained" type="submit" size="large">Login</MatButton>
-                    </Grid>
-                </Grid>
-            </form>
-        </Paper>
+                </form>
+            </Paper>
+        </>
     )
 }
 
 Login.propTypes= {
     auth: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
-    removeAuthToken: PropTypes.func.isRequired
+    removeAuthToken: PropTypes.func.isRequired,
+    hideNotification: PropTypes.func.isRequired
 }
 
 const mapStateToProps =state => {
@@ -70,4 +82,4 @@ const mapStateToProps =state => {
     }
 }
 
-export default connect(mapStateToProps, {login, removeAuthToken})(Login)
+export default connect(mapStateToProps, {login, removeAuthToken, hideNotification})(Login)

@@ -5,7 +5,6 @@ const XLSX = require('xlsx');
 const models = require('../models');
 const fillerFunction = require('./excelimport/fillerFunction');
 const studentService = require('./studentServices');
-const student = require('../models/student');
 
 const SaveFileDetailsInDB = (inputFileObj) => {
     const fileName = inputFileObj.inputfile.name;
@@ -34,7 +33,7 @@ const SaveFileDetailsInDB = (inputFileObj) => {
             },
             function(uploadedFile, callback) {
                 var file = JSON.parse(JSON.stringify(uploadedFile));
-                var path1 = "/home/vipin/Documents";
+                var path1 = "/Users/vipinpandey/Documents/Personal";
                 var finalPath = path.join(path1, file.fileName);
                 inputFileObj.inputfile.mv(finalPath, function(err) {
                     if (err) {
@@ -249,7 +248,6 @@ function get_header_row(sheet) {
 
   function get_cell_value(sheet, colNum, rowNum) {
     var cell = sheet[XLSX.utils.encode_cell({ c: colNum, r: rowNum })];
-    console.log("")
     var returnVar = '';
     if (cell && cell.t) {
       return returnVar = XLSX.utils.format_cell(cell);
@@ -260,7 +258,6 @@ function get_header_row(sheet) {
 
   const createFees = (fees) => {
     return new Promise((resolve, reject) => {
-        console.log("Fees", fees);
         const whereQuery = {
             aadharNo: fees.aadharNo
         }

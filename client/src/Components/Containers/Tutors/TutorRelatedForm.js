@@ -1,7 +1,8 @@
-import React from 'react'
-import Form from '../../Common/Form'
 import {addTeacherEducationDetails, updateTutorEducationDetail} from '../../../redux/actions/tutorAction';
+
+import Form from '../../Common/Form'
 import PropTypes from 'prop-types'
+import React from 'react'
 import { connect } from 'react-redux';
 
 const EducationForm = (props) => {
@@ -14,7 +15,6 @@ const EducationForm = (props) => {
         addTeacherEducationDetails,
         updateTutorEducationDetail
     } = props
-
     const addEducationDetails = (values) => {
         values.TutorId = tutorId;
         console.log("Values", values)

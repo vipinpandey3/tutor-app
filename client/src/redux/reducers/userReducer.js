@@ -85,6 +85,13 @@ const userReducer = (state = initialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
             }
+
+        case types.HIDE_NOTIFICATION:
+            return {
+                ...state,
+                error: false,
+                message: ""
+            }
     
         default:
             return state

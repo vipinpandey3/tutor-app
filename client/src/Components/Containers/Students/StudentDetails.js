@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -7,7 +8,7 @@ import {
   Typography,
   Accordion,
   AccordionDetails,
-  Table,
+  Table as MuiTable,
   TableCell,
   TableHead,
   TableRow,
@@ -15,6 +16,7 @@ import {
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import Text from "../../Common/Text";
+import Table from '../../Common/Table'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ParentForms, StudentEducationForms } from "./StudentRelatedForms";
 import MatButton from "../../Common/Button";
@@ -28,10 +30,15 @@ import {fetchParentFormFields,
   fetchStudentEducationFormfields,
   addStudeEducationDetails,
   fetchStudentFeesDetails,
-  updateEducationDetails
+  updateEducationDetails,
+  fetchStudentAttendence,
+  markStudentAbsence,
+  hideNotification
 } from "../../../redux/actions/studentAction"
+
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
+import Notification from "../../Common/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
@@ -44,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   flexcontainer: {
     display: "flex",
     flexDirection: "row",
+    alignItems: 'center'
   },
   block: {
     fontWeight: "900",
@@ -68,7 +76,25 @@ const useStyles = makeStyles((theme) => ({
   },
   alignRight: {
     marginLeft: '119px'
-  }
+  },
+  halfWidth: {
+    width: "50%"
+  },
+  table: {
+    marginTop: theme.spacing(3),
+    "& thead th": {
+      fontWeight: "600",
+      color: theme.palette.text.main,
+      backgroundColor: theme.palette.primary.main,
+    },
+    "& tbody td": {
+      fontWeight: "300",
+    },
+    "& tbody tr:hover": {
+      backgroundColor: "#fffbf2",
+      cursor: "pointer",
+    },
+  },
 }));
 
 const parentFormInitialValue = {
@@ -94,7 +120,7 @@ const educationInitialValue = {
   percentage: "",
 };
 
-const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails}) => {
+const StudentDetails = ({student: {formFields, showForm, studentDetails, error, message, formDetails, feesDetails, totalPaid, studentAttendenceTable, studentAttendenceData, severity}, updateEducationDetails, fetchStudentFeesDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, addParentDetails, fetchParentFormFields, fetchStudentDetails, toggleForm, addStudeEducationDetails, fetchStudentAttendence, markStudentAbsence, hideNotification}) => {
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
@@ -108,7 +134,8 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
 
   useEffect(() => {
     loadStudentDteails();
-    fetchStudentFeesDetails(studentId)
+    fetchStudentFeesDetails(studentId);
+    fetchStudentAttendence(studentId)
   }, []);
 
   const fetchFormForm = (value) => {
@@ -163,8 +190,19 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
     }
   }
 
+  const markAbsence = (row) => {
+    markStudentAbsence(row.id)
+  }
+
   return (
     <>
+      <Notification
+        open={error} 
+        handleClose={hideNotification} 
+        severity={severity} 
+        duration={3000} 
+        message={message} 
+      />
       <Paper className={`${styles.paperContent} `}>
         <Grid container>
           {studentDetails.studentDetailAttributes.map((atributes, index) => {
@@ -201,14 +239,14 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
       )}
       <Paper className={styles.paperContent}>
         <Grid container className={styles.columnContainer}>
-          <Grid item xs={9}>
-            <Text className={`${styles.block} ${styles.noPadding}`}>
+          <Grid item xs={3}>
+            <Text component="h6" className={`${styles.block} ${styles.noPadding}`}>
               Parents Details
             </Text>
           </Grid>
+          <Grid item sm></Grid>
           <Grid item xs={3}>
             <MatButton
-              className={styles.alignRight}
               variant="outlined"
               startIcon={<AddIcon />}
               onClick={loadParentFormFields}
@@ -286,6 +324,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
                   {`${studentDetails.details.lastName} ${studentDetails.details.firstName}`}
                 </Text>
               </Grid>
+              <Grid item sm></Grid>
               <Grid>
                 <MatButton
                     variant="outlined"
@@ -343,49 +382,74 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
           </Grid>
         </AccordionDetails>
       </Accordion>
-      <Paper className={`${styles.paperContent} `}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Text variant="subtitle1">
-              Fee details
-            </Text>
+      <div className={`${styles.flexcontainer}`}>
+        <Paper className={`${styles.paperContent} ${styles.halfWidth}`}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Text variant="subtitle1">
+                Fee details
+              </Text>
+            </Grid>
           </Grid>
-        </Grid>
-        <Table>
-          <TableHead>
-            <TableRow key="Header">
-              {feesDetails.feesTableHeaders.map((header, index) => {
+          <MuiTable className={`${styles.table}`}>
+            <TableHead>
+              <TableRow key="Header">
+                {feesDetails.feesTableHeaders.map((header, index) => {
+                  return (
+                    <TableCell key={index}>{header.label}</TableCell>
+                  )
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {feesDetails.feesDetailsRow.map(row => {
                 return (
-                  <TableCell key={index}>{header.label}</TableCell>
+                  <TableRow key={row.id}>
+                    {
+                      feesDetails.feesTableHeaders.map((rowCell,index) => {
+                        const value = row[rowCell.id];
+                        return <TableCell key={index}>{value}</TableCell>
+                      })
+                    }
+                  </TableRow>
                 )
               })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {feesDetails.feesDetailsRow.map(row => {
-              return (
-                <TableRow key={row.id}>
-                  {
-                    feesDetails.feesTableHeaders.map((rowCell,index) => {
-                      const value = row[rowCell.id];
-                      return <TableCell key={index}>{value}</TableCell>
-                    })
-                  }
-                </TableRow>
-              )
-            })}
-            <TableRow key="lastRow">
-              <TableCell key="empty1"></TableCell>
-              <TableCell key="empty2"></TableCell>
-              <TableCell key="empty3"></TableCell>
-              <TableCell key="totalPaid" style={{ textAlign: "right" }}>Total Paid</TableCell>
-              <TableCell key="empty4">{totalPaid}</TableCell>
-              <TableCell key="empty5"></TableCell>
-              <TableCell key="empty6"></TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </Paper>
+              <TableRow key="lastRow">
+                <TableCell key="empty1"></TableCell>
+                <TableCell key="empty2"></TableCell>
+                <TableCell key="empty3"></TableCell>
+                <TableCell key="totalPaid" style={{ textAlign: "right" }}>Total Paid</TableCell>
+                <TableCell key="empty4">{totalPaid}</TableCell>
+                <TableCell key="empty5"></TableCell>
+                <TableCell key="empty6"></TableCell>
+              </TableRow>
+            </TableBody>
+          </MuiTable>
+        </Paper>
+        <Paper className={`${styles.paperContent} ${styles.halfWidth}`}>
+        <Grid container>
+            <Grid item xs={3}>
+            </Grid>
+            <Grid item sm></Grid>
+            <Grid item xs={3.5}>
+              <Text variant="subtitle1">
+                {
+                  `Attendence - ${studentAttendenceData.attendence}, Absence: ${studentAttendenceData.absence}`
+                }
+              </Text>
+            </Grid>
+          </Grid>
+          {
+            studentAttendenceTable.attendenceTableColumns && 
+            studentAttendenceTable.attendenceTableColumns.length > 0 &&
+            <Table
+              records={studentAttendenceTable.attendenceTableRows}
+              headCells={studentAttendenceTable.attendenceTableColumns}
+              edit={markAbsence}
+            />
+          }
+        </Paper>
+      </div>
     </>
   );
 };
@@ -400,7 +464,10 @@ StudentDetails.propTypes = {
   fetchStudentEducationFormfields: PropTypes.func.isRequired,
   addStudeEducationDetails: PropTypes.func.isRequired,
   fetchStudentFeesDetails: PropTypes.func.isRequired,
-  updateEducationDetails: PropTypes.func.isRequired
+  updateEducationDetails: PropTypes.func.isRequired,
+  fetchStudentAttendence: PropTypes.func.isRequired,
+  markStudentAbsence: PropTypes.func.isRequired,
+  hideNotification: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -409,4 +476,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails})(StudentDetails);
+export default connect(mapStateToProps, {updateEducationDetails, fetchStudentFeesDetails, addStudeEducationDetails, fetchStudentEducationFormfields, fetchEditParentFormFields, toggleForm, fetchParentFormFields, fetchStudentDetails, addParentDetails, fetchStudentAttendence, markStudentAbsence, hideNotification})(StudentDetails);

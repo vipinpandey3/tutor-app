@@ -41,7 +41,9 @@ export const ADD_STUDENT_EDUCATION_DATA_ERROR = "ADD_STUDENT_EDUCATION_DATA_ERRO
 export const FETCH_STUDENT_FEES_DATA = "FETCH_FEES_DATA";
 export const FETCH_STUDENT_FEES_DATA_ERROR = "FETCH_FEES_DATA_ERROR";
 export const UPDATE_STUDENT_EDUCATION_DETAILS = "UPDATE_STUDENT_EDUCATION_DETAILS";
-export const UPDATE_STUDENT_EDUCATION_DETAILS_ERROR = "UPDATE_STUDENT_EDUCATION_DETAILS_ERROR"
+export const UPDATE_STUDENT_EDUCATION_DETAILS_ERROR = "UPDATE_STUDENT_EDUCATION_DETAILS_ERROR";
+export const GET_STUDENT_ATTENDENCE = "GET_STUDENT_ATTENDENCE";
+export const GET_STUDENT_ATTENDENCE_ERROR = "GET_STUDENT_ATTENDENCE_ERROR"; 
 
 // Fees Action Types
 export const FETCH_FEES_FORM_FIELDS = "FETCH_FEES_FORM_FIELDS";
@@ -125,8 +127,46 @@ export const USER_LOGOUT = "USER_LOGOUT";
 // APP Constant types;
 export const AUTH_TOKEN = "cookie_auth_hash";
 export const REMOVE_COOKIE = "REMOVE_COOKIE"
+export const RESULT_SUCCESS = "success";
+export const RESULT_FAILURE = 'failure'
+
+// Hide Notification
+export const HIDE_NOTIFICATION = "HIDE_NOTIFICATION";
 
 
 
+// URL
+export const LOGIN_URL = '/login';
 
 
+// STUDENT URLS
+export const GET_STUDENT_URL = 'admin/get-students'
+export const GET_STUDENT_FORMFIELDS_URL = 'admin/get-student-formFields';
+export const ADD_STUDENT_URL = 'admin/add-student';
+export const FETCH_STUDENT_DETAILS_URL = 'admin/studentDetails/'
+export const FETCH_STUDENT_FEES_URL = 'admin/getFeesDetailsById/';
+export const FETCH_STUDENT_ATTENDENCE_URL = 'faculty/get-student-attendenceById/';
+export const MARK_STUDENT_ABSENCE_URL = "faculty/mark_student_absence";
+export const FETCH_PARENT_FORM_FIELDS_URL = '/admin/get-parent-formFields';
+
+
+// Tutor URLS
+export const GET_TUTOR_URLS = "/admin/get-teachers";
+export const FETCH_TUTOR_DETAILS_URL = "/admin/teachersDetails"
+export const ADD_TUTOR_EDUCATION_URL = '/admin/addTutorEducation';
+export const ADD_TUTOR_URL = '/admin/add-teacher';
+export const TUTOR_EDUCATION_FORM_FIELDS_URL = "/admin/getTutorFormFields";
+export const TUTOR_FORM_FIELD_URL = "/admin/get-tutor-formFields";
+export const UPDATE_TUTOR_EDUCATION_URL = "/admin/updateTutorEducation";
+
+// Dashboard URLs
+export const STUDENT_ALL_ATTENDENCE_URL = "/faculty/getStudentAttendenceById";
+export const TUROR_ALL_ATTENDENCE_URL = "/faculty/getTutorAttendenceById";
+export const ALL_STUDENT_ATTENDENCE_URL = "/faculty/getAllStudentAttendence";
+export const ALL_TUTOR_ATTENDENCE_URL = "/faculty/get_All_Tutor_Attendence";
+export const GET_STUDENT_BY_ID_URL = "/faculty/getStudentById/";
+export const GET_TUTOR_BY_ID_URL = '/faculty/getTutorById/';
+export const MARK_STUDENT_ATTENDENCE_URL = "/faculty/markStudentAttendence";
+export const MARK_TUTOR_ABSENCE_URL = "/faculty/martkTutorAbsence";
+export const MARK_TUTOR_ATTENDENCE_URL =  "/faculty/markTutorAttedence"
+export const UPDATE_TUTOR_ATTENDENCE_URL = "/faculty/martkTutorTimeOut"

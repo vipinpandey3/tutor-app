@@ -1,126 +1,50 @@
+import * as collection from '../../utils/collections';
 import * as types from "../types";
+
+import dispatchEngine, { addPayload }  from './actionHelper';
+
 import axios from 'axios';
-import * as collection from '../../utils/collections'
+import axiosHelper from "../../utils/AxiosHelper";
 
 export const getStudents = () => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
         })
-        const getData = async() => {
-            const response = await axios.get('admin/get-students', {headers: collection.setHeader(token)})
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch students!');
-            }
-            return response.data
-        }
-
-        try {
-            const studentData = await getData();
-            if(studentData.resultShort === "success") {
-                dispatch({
-                    type: types.FETCH_STUDENTS,
-                    payload: {
-                        loading: false,
-                        meesage: studentData.resultLong,
-                        data: studentData.students,
-                        attributes: studentData.attributes,
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_STUDENTS_ERROR,
-                    payload: {
-                        loading: false,
-                        meesage: studentData.resultLong,
-                        error: true
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error ****", error)
-            dispatch({
-                type: types.FETCH_STUDENTS_ERROR,
-                payload: {
-                    loading: false,
-                    meesage: "Error fetching students list",
-                    error: true
-                }
-            })
-        }
+        // const loaderDispatcher = dispatch()
+        const axiosData = await axiosHelper.sendRequest(types.GET_STUDENT_URL, 'GET', token, null);
+        return dispatchEngine(axiosData, types.FETCH_STUDENTS, dispatch, types.FETCH_STUDENTS_ERROR)
     }
 }
 
 export const fetchStudentFormFields = () => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
-        })
-
-        const getData = async() => {
-            const response = await axios.get('/admin/get-student-formFields', {headers: collection.setHeader(token)})
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch student form!');
-            }
-            return response.data
+        });
+        const axiosData = await axiosHelper.sendRequest(types.GET_STUDENT_FORMFIELDS_URL, 'GET', token, null);
+        const payload = {
+            formDetails: {
+                formName: "Add Student",
+                buttonName: "Submit",
+                editFlag: false
+            },
+            loading: false,
+            message: axiosData.resultLong,
+            showForm: true,
+            error: true,
+            severity: "success"
         }
-
-        try {
-            const formFieldsData = await getData();
-            if(formFieldsData.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_STUDENT_FORM,
-                    payload: {
-                        studentFormFields: formFieldsData.formFields,
-                        formDetails: {
-                            formName: "Add Student",
-                            buttonName: "Submit",
-                            editFlag: false
-                        },
-                        loading: false,
-                        message: formFieldsData.resultLong,
-                        showForm: true
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_STUDENT_FORM_ERROR,
-                    payload: {
-                        formDetails: {
-                            formName: "",
-                            buttonName: "",
-                            editFlag: false
-                        },
-                        loading: false,
-                        error: false,
-                        message: formFieldsData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error while getting student form", error)
-            dispatch({
-                type: types.FETCH_STUDENT_FORM_ERROR,
-                payload: {
-                    formDetails: {
-                        formName: "",
-                        buttonName: "",
-                        editFlag: false
-                    },
-                    loading: false,
-                    error: false,
-                    message: "Error while getting student form"
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload)
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENT_FORM, dispatch, types.FETCH_STUDENT_FORM_ERROR);
     }
 }
 
@@ -135,132 +59,61 @@ export const toggleForm = (flag) => {
 
 export const editStudentFormFields = () => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
         })
-
-        const getData = async() => {
-            const response = await axios.get('/admin/get-student-formFields', {headers: collection.setHeader(token)})
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch student form!');
-            }
-            return response.data
+        const axiosData = await axiosHelper.sendRequest(types.GET_STUDENT_FORMFIELDS_URL, 'GET', token, null);
+        const payload = {
+            formDetails: {
+                formName: "Update Student",
+                buttonName: "Update",
+                editFlag: true
+            },
+            loading: false,
+            message: axiosData.resultLong,
+            showForm: true,
+            severity: "success"
         }
-
-        try {
-            const formFieldsData = await getData();
-            if(formFieldsData.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_STUDENT_FORM,
-                    payload: {
-                        studentFormFields: formFieldsData.formFields,
-                        formDetails: {
-                            formName: "Update Student",
-                            buttonName: "Update",
-                            editFlag: true
-                        },
-                        loading: false,
-                        message: formFieldsData.resultLong,
-                        showForm: true
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_STUDENT_FORM_ERROR,
-                    payload: {
-                        formDetails: {
-                            formName: "",
-                            buttonName: "",
-                            editFlag: false
-                        },
-                        loading: false,
-                        error: false,
-                        message: formFieldsData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error while getting student form", error)
-            dispatch({
-                type: types.FETCH_STUDENT_FORM_ERROR,
-                payload: {
-                    formDetails: {
-                        formName: "",
-                        buttonName: "",
-                        editFlag: false
-                    },
-                    loading: false,
-                    error: false,
-                    message: "Error while getting student form"
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload)
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENT_FORM, dispatch, types.FETCH_STUDENT_FORM_ERROR);
     }
 }
 
 export const addStudent = (studentData) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
         })
-
-        const addData = async() => {
-            const response = await axios.post('/admin/add-student', {headers: collection.setHeader(token)}, studentData)
-            if(response.statusText !== "OK") {
-                throw new Error('Could not add student in the database!');
-            }
-            return response.data;
+        const axiosData = await axiosHelper.sendRequest(types.ADD_STUDENT_URL, 'POST', token, studentData);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showForm: false,
+            formDetails: {
+                formName: "",
+                buttonName: "",
+                editFlag: false
+            },
+            severity: "success"
         }
-
-        try {
-            const addStudentData = await addData();
-            if(addStudentData.resultShort === 'success') {
-                dispatch({
-                    type: types.ADD_STUDENT,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: addStudentData.resultLong,
-                        showForm: false,
-                        formDetails: {
-                            formName: "",
-                            buttonName: "",
-                            editFlag: false
-                        }
-                    }
-                })
-                getStudents()
-            } else {
-                dispatch({
-                    type: types.ADD_STUDENT_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: addStudentData.resultLong,
-                        showForm: true
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error adding student in database", error)
-            dispatch({
-                type: types.ADD_STUDENT_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: "Error adding student in database",
-                    showForm: true
-                }
-            })
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: "Error adding student in database",
+            showForm: true,
+            severity: "error"
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload)
+        return dispatchEngine(axiosAndPayloadData, types.ADD_STUDENT, dispatch, types.ADD_STUDENT_ERROR)
     }
 }
 
@@ -301,7 +154,8 @@ export const uploadFile = (postObj) => {
                         error: false,
                         loading: false,
                         message: uplaodedData.resultLong,
-                        showFileImport: false
+                        showFileImport: false,
+                        severity: "success"
                     }
                 })
             } else {
@@ -310,7 +164,8 @@ export const uploadFile = (postObj) => {
                     payload: {
                         error: true,
                         loading: false,
-                        message: uplaodedData.resultLong
+                        message: uplaodedData.resultLong,
+                        severity: "error"
                     }
                 })
             }
@@ -320,7 +175,8 @@ export const uploadFile = (postObj) => {
                 payload: {
                     error: true,
                     loading: false,
-                    message: error
+                    message: error,
+                    severity: "error"
                 }
             })
         }
@@ -336,67 +192,41 @@ export const uploadFile = (postObj) => {
 // }
 
 export const fetchParentFormFields = (flag) => {
+    console.log('fetchParentFormFields fetchParentFormFields')
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
-        });
+        })
         const postObj = {
             flag: flag
         }
-        const getData = async() => {
-            const response = await axios.post('/admin/get-parent-formFields', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch parent form!');
-            }
-            return response.data
+        const axiosData = await axiosHelper.sendRequest(types.FETCH_PARENT_FORM_FIELDS_URL, "POST", token, postObj);
+        const payload = {
+            loading: false,
+            message: axiosData.resultLong,
+            error: true,
+            showForm: true,
+            severity: "error"
+        };
+        const errorPayload = {
+            loading: false,
+            message: axiosData.resultLong,
+            error: true,
+            showForm: false,
+            severity: "error"
         }
-
-        try {
-            const parentForm = await getData();
-            if(parentForm.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_PARENT_FORM,
-                    payload: {
-                        parentFormFields: parentForm.formFields,
-                        loading: false,
-                        message: parentForm.resultLong,
-                        error: false,
-                        showForm: true,
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_PARENT_FORM_ERROR,
-                    payload: {
-                        loading: false,
-                        message: parentForm.resultLong,
-                        error: true,
-                        showForm: false
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error while fetching parent form", error)
-            dispatch({
-                type: types.FETCH_PARENT_FORM_ERROR,
-                payload: {
-                    loading: false,
-                    message: "Error while fetching parent form",
-                    error: true,
-                    showForm: false
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, types.FETCH_PARENT_FORM, dispatch, types.FETCH_PARENT_FORM_ERROR)
     }
 }
 
 export const fetchEditParentFormFields = (flag) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
@@ -406,115 +236,49 @@ export const fetchEditParentFormFields = (flag) => {
         const postObj = {
             flag: flag
         }
-        const getData = async() => {
-            console.log("collection.setHeader(token)", collection.setHeader(token))
-            const response = await axios.post('/admin/get-parent-formFields', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch parent form!');
-            }
-            return response.data
-        }
-
-        try {
-            const parentForm = await getData();
-            if(parentForm.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_EDIT_PARENT_FORM,
-                    payload: {
-                        parentFormFields: parentForm.formFields,
-                        loading: false,
-                        message: parentForm.resultLong,
-                        error: false,
-                        showForm: true,
-                        formDetails: {
-                            formName: "Update Details",
-                            buttonTitle: "Update",
-                            editFlag: true
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_EDIT_PARENT_FORM_ERROR,
-                    payload: {
-                        loading: false,
-                        message: parentForm.resultLong,
-                        error: true,
-                        showForm: false,
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error while fetching parent form", error)
-            dispatch({
-                type: types.FETCH_EDIT_PARENT_FORM_ERROR,
-                payload: {
-                    loading: false,
-                    message: "Error while fetching parent form",
-                    error: true,
-                    showForm: false
-                }
-            })
-        }
+        const axiosData = await axiosHelper.sendRequest(types.FETCH_PARENT_FORM_FIELDS_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            message: axiosData.resultLong,
+            error: false,
+            showForm: true,
+            formDetails: {
+                formName: "Update Details",
+                buttonTitle: "Update",
+                editFlag: true
+            },
+            severity: "success"
+        };
+        const errorPayload = {
+            oading: false,
+            message: axiosData.resultLong,
+            error: true,
+            showForm: false,
+            severity: "error"
+        };
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, types.FETCH_EDIT_PARENT_FORM, dispatch, types.FETCH_EDIT_PARENT_FORM_ERROR)
     }
 }
 
 export const fetchStudentDetails = (studentId) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
         });
-        const getData = async() => {
-            const response = await axios.get(`/admin/studentDetails/${studentId}`, {headers: collection.setHeader(token)})
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch student details!');
-            }
-            return response.data;
+        let FETCH_STUDENT_DETAILS_URL = `/${types.FETCH_STUDENT_DETAILS_URL}${studentId}`;
+        const axiosData = await axiosHelper.sendRequest(FETCH_STUDENT_DETAILS_URL, 'GET', token, null)
+        let payload = {
+            loading: false,
+            message: axiosData.resultLong,
+            error: false,
         }
-
-        try {
-            const studentDetailsData = await getData();
-            if(studentDetailsData.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_STUDENTS_DETAILS,
-                    payload: {
-                        loading: false,
-                        message: studentDetailsData.resultLong,
-                        error: false,
-                        studentDetail: studentDetailsData.studentDetails,
-                        parentDetails: studentDetailsData.studentDetails.Parent,
-                        educationDetails: studentDetailsData.studentDetails.StudentEducationDetails,
-                        studentDetailAttributes: studentDetailsData.studentDetailAttributes,
-                        parentDetailsAttributes: studentDetailsData.parentDetailsAttributes,
-                        educationDetailsAttributes: studentDetailsData.educationDetailsAttributes
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_STUDENTS_DETAILS_ERROR,
-                    payload: {
-                        loading: false,
-                        message: studentDetailsData.resultLong,
-                        error: true,
-                        
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.FETCH_STUDENTS_DETAILS_ERROR,
-                payload: {
-                    loading: false,
-                    message: "Error while fetching student details",
-                    error: true,
-                    showForm: false
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload)
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENTS_DETAILS, dispatch, types.FETCH_STUDENTS_DETAILS_ERROR)
     }
 }
 
@@ -544,7 +308,8 @@ export const addParentDetails = (parentsValue) => {
                         showForm: false,
                         error: false,
                         message: parentData.resultLong,
-                        loading: false
+                        loading: false,
+                        severity: "success"
                     }
                 });
                 fetchStudentDetails()
@@ -555,7 +320,8 @@ export const addParentDetails = (parentsValue) => {
                         showForm: true,
                         error: true,
                         message: parentData.resultLong,
-                        loading: false
+                        loading: false,
+                        severity: "error",
                     }
                 }) 
             }
@@ -566,7 +332,8 @@ export const addParentDetails = (parentsValue) => {
                     showForm: false,
                     error: true,
                     loading: false,
-                    message: "Error while adding student Parent"
+                    message: "Error while adding student Parent",
+                    severity: "error"
                 }
             })
         }
@@ -601,7 +368,8 @@ export const fetchStudentEducationFormfields = (editObj) => {
                     payload: {
                         loading: false,
                         message: educationFormFieldData.resultLong,
-                        error: false,
+                        error: true,
+                        severity: "success",
                         showForm: true,
                         formFields: {
                             educationFormFields: educationFormFieldData.formFields
@@ -610,7 +378,8 @@ export const fetchStudentEducationFormfields = (editObj) => {
                             formName: editObj.formName,
                             buttonTitle: editObj.buttonTitle,
                             editFlag: editObj.editFlag
-                        }
+                        },
+
                     }
                 })
             } else {
@@ -619,7 +388,7 @@ export const fetchStudentEducationFormfields = (editObj) => {
                     payload: {
                         error: true,
                         loading: false,
-                        message: "Error while fetching Education formfields",
+                        message: educationFormFieldData.resultLong,
                         showForm: false
                     }
                 })
@@ -669,7 +438,8 @@ export const addStudeEducationDetails = (values) => {
                             formName: "",
                             buttonTitle: "",
                             editFlag: false
-                        }
+                        },
+                        severity: "success",
                     }
                 })
                 fetchStudentDetails();
@@ -680,7 +450,8 @@ export const addStudeEducationDetails = (values) => {
                         loading: false,
                         message: educationData.resultLong,
                         error: true,
-                        showForm: true
+                        showForm: true,
+                        severity: "error"
                     }
                 })
             }
@@ -691,7 +462,8 @@ export const addStudeEducationDetails = (values) => {
                     loading: false,
                     message: "Error while fetching student education details",
                     error: true,
-                    showForm: false
+                    showForm: false,
+                    severity: "error"
                 }
             })
         }
@@ -723,7 +495,8 @@ export const updateEducationDetails = (values) => {
                             formName: "",
                             buttonTitle: "",
                             editFlag: false
-                        }
+                        },
+                        severity: "succes"
                     }
                 })
             } else {
@@ -733,7 +506,8 @@ export const updateEducationDetails = (values) => {
                         showForm: true,
                         error: true,
                         message: updatedData.resultLong,
-                        loading: false
+                        loading: false,
+                        severity: "error"
                     }
                 })
             }
@@ -744,7 +518,8 @@ export const updateEducationDetails = (values) => {
                     showForm: true,
                     error: true,
                     message: error,
-                    loading: false
+                    loading: false,
+                    severity: "error"
                 }
             })
         }
@@ -753,59 +528,81 @@ export const updateEducationDetails = (values) => {
 
 export const fetchStudentFeesDetails = (studentId) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
-        dispatch({
-            type: types.SET_LOADING,
-            payload: {
-                loading: true
-            }
-        })
-        const getData = async() => {
-            const response = await axios.get(`/admin/getFeesDetailsById/${studentId}`, {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch fees details!');
-            }
-            return response.data
+        const {auth: {token}} = getState();
+        let STUDENT_FEES_DATA_URL = `/${types.FETCH_STUDENT_FEES_URL}${studentId}`;
+        const axiosData = await axiosHelper.sendRequest(STUDENT_FEES_DATA_URL, 'GET', token, null);
+        const payload = {
+            error: false, 
+            loading: false,
+            message: axiosData.resultLong,
         }
-        
-        try {
-            const feesData = await getData();
-            if(feesData.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_STUDENT_FEES_DATA,
-                    payload: {
-                        error: false, 
-                        loading: false,
-                        message: feesData.resultLong,
-                        feesDetails: {
-                            feesTableHeaders: feesData.header,
-                            feesDetailsRow: feesData.fees,
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_STUDENT_FEES_DATA_ERROR,
-                    payload: {
-                        error: true, 
-                        loading: false,
-                        message: feesData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error while fetching fees", error)
-            dispatch({
-                type: types.FETCH_STUDENT_FEES_DATA_ERROR,
-                payload: {
-                    error: true, 
-                    loading: false,
-                    message: "Error while fetching fees for student with Id: " + studentId
-                }
-            })
+        const errorPayload = {
+            error: true, 
+            loading: false,
+            message: "Error while fetching fees for student with Id: " + studentId
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_STUDENT_FEES_DATA, dispatch, types.FETCH_STUDENT_FEES_DATA_ERROR)
     }
 }
+
+export const fetchStudentAttendence = (studentId) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        const STUDENT_ATTENDENCE_URL = `/${types.FETCH_STUDENT_ATTENDENCE_URL}${studentId}`;
+        const axiosData = await axiosHelper.sendRequest(STUDENT_ATTENDENCE_URL, 'GET', token, null);
+        const payload = {
+            error: false, 
+            loading: false,
+            message: axiosData.resultLong,
+        }
+        const errorPayload = {
+            error: true, 
+            loading: false,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return dispatchEngine(axiosAndPayloadData, types.GET_STUDENT_ATTENDENCE, dispatch, types.GET_STUDENT_ATTENDENCE_ERROR)
+    }
+}
+
+export const markStudentAbsence = (id) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        const postObj = {
+            attedenceId: id
+        };
+        const axiosData = await axiosHelper.sendRequest(types.MARK_STUDENT_ABSENCE_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+        }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return dispatchEngine(axiosAndPayloadData, types.MARK_STUDENT_ABSENCE, dispatch, types.MARK_STUDENT_ABSENCE_ERROR);
+    }
+}
+
+export const hideNotification = () => {
+    return async(dispatch) => {
+        console.log("Hide notification button clicked");
+        dispatch({
+            type: types.HIDE_NOTIFICATION
+        })
+    }
+}
+
+// export const socketConnect = () => {
+//     const socket = io.connect('http://localhost:4000')
+//     socket.on('upload_excel',(socket)=> {
+//         console.log('socket ==========>', socket)
+//     })
+// }
 
 // const setLoading = () => {
 //     return dispatch => {

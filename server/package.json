@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon --trace-warnings app.js"
   },
   "keywords": [
     "tutor",
@@ -19,6 +19,7 @@
     "async": "^3.2.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "bull": "^4.10.0",
     "child_process": "^1.0.2",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
@@ -36,6 +37,7 @@
     "passport-local": "^1.0.0",
     "redis": "^3.1.2",
     "sequelize": "^6.6.5",
+    "socket.io": "^4.5.2",
     "xlsx": "^0.17.3"
   },
   "devDependencies": {

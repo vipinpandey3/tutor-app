@@ -5,7 +5,7 @@ const UserService = require("../services/userServices")
 const cacheMiddleware = require('../services/cache/cache')
 
 
-router.get("/get-students", cacheMiddleware, adminController.getStudent);
+router.get("/get-students", adminController.getStudent);
 
 router.post("/add-student", adminController.addStudentInDatabase);
 

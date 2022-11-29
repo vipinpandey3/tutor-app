@@ -1,17 +1,17 @@
 /* eslint-disable no-unused-vars */
-import { Accordion, AccordionDetails, AccordionSummary, Chip, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, Chip, Grid, Paper, Typography, makeStyles } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import Text from '../../Common/Text';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TeacherAttendenceTable from './TeacherAttendenceTable';
-import { TutorContext } from '../../../context/tutor-context';
-import MatButton from '../../Common/Button';
+import {fetchTutorDetails, fetchTutorEducationFormFields, toggleForm} from '../../../redux/actions/tutorAction';
+
 import AddIcon from "@material-ui/icons/Add";
 import EducationForm from './TutorRelatedForm';
-import {connect} from 'react-redux';
-import {fetchTutorDetails, fetchTutorEducationFormFields, toggleForm} from '../../../redux/actions/tutorAction';
+// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MatButton from '../../Common/Button';
 import PropTypes from 'prop-types'
+// import TeacherAttendenceTable from './TeacherAttendenceTable';
+import Text from '../../Common/Text';
+import {connect} from 'react-redux';
+import { useParams } from 'react-router';
 
 const useStyles = makeStyles(theme => ({
     paperContent: {
@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1),
         margin: theme.spacing(2),
         '&.MuiAccordion-root.Mui-expanded': {
-            // margin: theme.spacing(2),
             padding: theme.spacing(1.1),
         }
     },
@@ -75,13 +74,13 @@ const TutorDetails = (props) => {
     const {tutorId} = params;
     const [educationFormValues, setEducationFormValues] = useState(educationInitialValue)
     
-
     const loadTutorDetails = () => {
         fetchTutorDetails(tutorId);
     }
 
     useEffect(() => {
         loadTutorDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const addTutorEducation = () => {

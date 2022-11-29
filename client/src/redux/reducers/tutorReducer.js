@@ -7,7 +7,7 @@ const initialState = {
     },
     formDetails: {
         formName: "Add Tutor",
-        buttonName: "Submit",
+        buttonTitle: "Submit",
         editFlag: false
     },
     showForm: false,
@@ -15,6 +15,7 @@ const initialState = {
     tutorDetails: {
         tutorData: {},
         tutorDetailsAttributes: [],
+
         educationDetails: [],
         educationAttrbutes: []
     },
@@ -24,12 +25,11 @@ const initialState = {
 const tutorReducer = (state = initialState, action) => {
     switch(action.type) {
         case types.FETCH_TUTORS:
-            console.log('action', action.payload)
             return {
                 ...state,
                 tutors: {
                     tutorRows: action.payload.data,
-                    tutorTableAttributes: action.payload.tutorTableAttributes
+                    tutorTableAttributes: action.payload.tutorTableAtttibutes
                 }
             };
 
@@ -105,9 +105,9 @@ const tutorReducer = (state = initialState, action) => {
             return {
                 ...state,
                 tutorDetails: {
-                    tutorData: action.payload.tutorData,
-                    tutorDetailsAttributes: action.payload.tutorDetailsAttributes,
-                    educationDetails: action.payload.educationDetails,
+                    tutorData: action.payload.data,
+                    tutorDetailsAttributes: action.payload.attributes,
+                    educationDetails: action.payload.data.TutorEducationDetails,
                     educationAttrbutes: action.payload.educationAttributes
                 }
             };
@@ -118,7 +118,7 @@ const tutorReducer = (state = initialState, action) => {
                 educationFormFields: action.payload.formFields,
                 formDetails: {
                     formName: action.payload.title,
-                    buttonName: action.payload.buttonName,
+                    buttonTitle: action.payload.buttonName,
                     editFlag: action.payload.editFlag
                 },
                 showForm: action.payload.showForm
@@ -180,6 +180,13 @@ const tutorReducer = (state = initialState, action) => {
                 },
                 showForm: action.payload.showForm
             };
+
+        case types.HIDE_NOTIFICATION:
+            return {
+                ...state,
+                error: false,
+                message: ""
+            }
 
         default: return state;
     }

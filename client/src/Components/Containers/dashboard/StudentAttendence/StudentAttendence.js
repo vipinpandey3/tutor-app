@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, createRef } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import Table from '../../../Common/Table';
 import {Grid, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles} from "@material-ui/core";
 import ActionButton from '../../../Common/ActionButton';
@@ -45,6 +45,7 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
 
   useEffect(() => {
     loadAttendence()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadAttendence = () => {

@@ -1,37 +1,52 @@
-/* eslint-disable camelcase */
-var http = require('http');
-var express = require('express');
-// var fs = require('fs');
-var client = null;
-
-// Create a http or https server based on the config
-var server = null;
-server = http.createServer(express());
-var listener = require('socket.io')(server, {
+const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+let listener
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, { 
     cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
-    }
+        origin: "*"
+      }
 });
-server.listen(process.env.SOCKET_SERVER_PORT, function () {
-    console.log(`Listening socket on ${process.env.SOCKET_SERVER_PORT}`);
-});
-listener.on('connection', function (socket) {
-  client = socket;
-  socket.on('join_room', data => {
-      console.log("Data for room join", data);
-      socket.join(data)
+
+io.on("connection", (socket) => {
+  // ..
+  listener = socket
+  socket.on('on_ping', data => {
+    console.log('Notificatio recieved', data);
+
+   io.sockets.emit('on_pong', {text: 'pong'});
   })
-  socket.emit('status', 'connection to server made');
-//   socket.on('instruct_escalate', function (uniqueUserId) {
-//     socket.join(uniqueUserId);
-//   });
-  socket.on('disconnect', function () {
-    console.log('user disconnected from socket');
-  });
 });
+
+httpServer.listen(4000);
 
 module.exports = {
-  listener: listener,
-  client: client
-};
+    io: io,
+    listener: listener
+}
+
+// const express = require('express');
+// const app = express();
+// const cors = require('cors');
+
+// app.use(cors());
+// app.use(express.json())
+
+// const server = app.listen(process.env.SOCKET_SERVER_PORT, () => {
+//     console.log('socket Server is up and running');
+// })
+
+// var listener = require('socket.io')(server, {
+//     cors: {
+//         origin: "*"
+//     }
+// });
+// listener.on('connection', (socket) => {
+//     console.log('Socket is connected & id is:', socket.id);
+// });
+
+// module.exports = {
+//     listener: listener
+// }

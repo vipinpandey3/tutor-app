@@ -1,6 +1,16 @@
 import * as types from '../types';
-import * as collection from '../../utils/collections'
+
 import axios from 'axios';
+import axiosHelper from '../../utils/AxiosHelper';
+
+export const loginThree = (postObj) => {
+    return async(dispatch, getState) => {
+        // const {auth: {token}} = getState();
+        const axiosData = await axiosHelper.sendRequest(types.LOGIN_URL, "POST", null, postObj)
+        console.log('Axios data =========', axiosData)
+        return dispatchEngine(axiosData, types.LOGIN_USER, dispatch, types.LOGIN_USER_ERROR)
+    }
+}
 
 export const login = (postObj) => {
     return async(dispatch) => {
@@ -22,7 +32,6 @@ export const login = (postObj) => {
         try {
             const authdata = await loginData();
             if(authdata.resultShort === 'success') {
-                console.log('AUthData', authdata);
                 localStorage.setItem('firstName', authdata.user.firstName);
                 localStorage.setItem('lastName', authdata.user.lastName);
                 localStorage.setItem('role', authdata.user.role);
@@ -70,6 +79,14 @@ export const logout = () => {
     }
 }
 
+export const hideNotification = () => {
+    return async(dispatch) => {
+        dispatch({
+            type: types.HIDE_NOTIFICATION
+        })
+    }
+}
+
 export const removeAuthToken = () => {
     return async(dispatch) => {
         console.log('Inside the removeAUthTOKEN');
@@ -81,4 +98,19 @@ export const removeAuthToken = () => {
             }
         });
     }
+}
+
+export const dispatchAction = (type, payload = null) => (payload != null ? { type, payload } : { type });
+
+const dispatchEngine = (axiosData, type, dispatch, errorType) => {
+    return new Promise(() => {
+        if(axiosData && axiosData.data) {
+            const dispatchPayload = axiosData.result;
+            console.log('dispatchPayload dispatchPayload', dispatchPayload)
+            return dispatch(dispatchAction(type, dispatchPayload))
+        } else {
+            const dispatchPayload = axiosData.result;
+            return dispatch(dispatchAction(type, dispatchPayload))
+        }
+    })
 }

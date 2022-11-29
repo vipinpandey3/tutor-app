@@ -80,7 +80,6 @@ const addUser = (req) => {
     const password = req.body.password
     const hashedPassword = bcrypt.hashSync(password, 8);
     const status = "active"
-    console.log("Req.body", req.body);
     return models.User.findOrCreate({
         where: {
             emailId: emailId
@@ -97,11 +96,6 @@ const addUser = (req) => {
     .then(user => {
         console.log('User Created', JSON.stringify(user))
         return Promise.resolve(user)
-        // const response = {
-        //     resultShort: "success",
-        //     resultLong: "User created with id " + user[0].emailId,
-        // }
-        // return res.status(200).json(response)
     })
     .catch(err => {
         return Promise.reject(err)

@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { InputAdornment, makeStyles, Paper, Toolbar } from "@material-ui/core";
 import Table from "../../Common/Table";
@@ -80,6 +81,7 @@ const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTut
           toggleForm={toggleForms}
           formDetails={formDetails} 
           addTutors={addTutors}
+          loadTutors={loadTutors}
         />
       }
       <Paper className={classes.paperCotent}>

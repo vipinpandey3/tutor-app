@@ -157,5 +157,16 @@ export const ADD_TUTOR_EDUCATION_URL = '/admin/addTutorEducation';
 export const ADD_TUTOR_URL = '/admin/add-teacher';
 export const TUTOR_EDUCATION_FORM_FIELDS_URL = "/admin/getTutorFormFields";
 export const TUTOR_FORM_FIELD_URL = "/admin/get-tutor-formFields";
-// export const GET_TUTOR_URL = "/admin/get-teacher";
 export const UPDATE_TUTOR_EDUCATION_URL = "/admin/updateTutorEducation";
+
+// Dashboard URLs
+export const STUDENT_ALL_ATTENDENCE_URL = "/faculty/getStudentAttendenceById";
+export const TUROR_ALL_ATTENDENCE_URL = "/faculty/getTutorAttendenceById";
+export const ALL_STUDENT_ATTENDENCE_URL = "/faculty/getAllStudentAttendence";
+export const ALL_TUTOR_ATTENDENCE_URL = "/faculty/get_All_Tutor_Attendence";
+export const GET_STUDENT_BY_ID_URL = "/faculty/getStudentById/";
+export const GET_TUTOR_BY_ID_URL = '/faculty/getTutorById/';
+export const MARK_STUDENT_ATTENDENCE_URL = "/faculty/markStudentAttendence";
+export const MARK_TUTOR_ABSENCE_URL = "/faculty/martkTutorAbsence";
+export const MARK_TUTOR_ATTENDENCE_URL =  "/faculty/markTutorAttedence"
+export const UPDATE_TUTOR_ATTENDENCE_URL = "/faculty/martkTutorTimeOut"

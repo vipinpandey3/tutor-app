@@ -1,470 +1,301 @@
-import * as collection from '../../utils/collections'
-import * as types from '../types';
+import * as constant from '../types';
 
-import axios from 'axios';
+import dispatchEngine, {addPayload} from './actionHelper';
 
-export const getAllStudentAttendence = () => {
-    return async(dispatch, getState) => {
-        const {auth: {token}} = getState();
-        dispatch({
-            type: types.SET_LOADING,
-            payload: true
-        })
-
-        const getData = async() => {
-            const response = await axios.get('/faculty/getAllStudentAttendence', {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while fetching student attendence");
-            }
-            return response.data;
-        };
-
-        try {
-            const attendenceData = await getData();
-            if(attendenceData.resultShort === "success") {
-                console.log("AttendenceData", attendenceData)
-                dispatch({
-                    type: types.FETCH_STUDENT_ATTENDENCE,
-                    payload: {
-                        studentAttendenceTableData: {
-                            attendenceRows: attendenceData.attendence,
-                            attendenceAttributes: attendenceData.attributes
-                        },
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showStudentTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_STUDENT_ATTENDENCE_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            console.log("Error in fetchin student attendence ********", error)
-            dispatch({
-                type: types.FETCH_STUDENT_ATTENDENCE_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
-        }
-    }
-}
-
-export const toggleStudenAttendenceElements = (postObj) => {
-    return async(dispatch) => {
-        dispatch({
-            type: types.TOGGLE_STUDENT_ATTENDENCE_ELEMENT,
-            payload: {
-                searchUserInput: postObj.flag1,
-                searchAttendeceInput: postObj.flag2,
-                showStudentTable: postObj.flag3,
-                showattendenceTable: postObj.flag4
-            }
-        });
-    }
-}
+import axiosHelper from '../../utils/AxiosHelper';
 
 export const getAllAttendenceOfStudentById = (emailId) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} =getState();
         dispatch({
-            type: types.SET_LOADING,
+            type: constant.SET_LOADING,
             payload: {
                 loading: true
             }
         })
-
-        const getData = async(postObj) => {
-            const response = await axios.post('/faculty/getStudentAttendenceById', postObj, {headers: collection.setHeader(token)})
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while fetching student attendence");
-            }
-            return response.data;
+        const postObj = {
+            studentEmail: emailId
         }
-
-        try {
-            const postObj = {
-                studentEmail: emailId
+        const axiosData = await axiosHelper.sendRequest(constant.STUDENT_ALL_ATTENDENCE_URL, "POST", token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showStudentTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
             }
-            const attendenceData = await getData(postObj);
-            if(attendenceData.resultShort === 'success'){
-                dispatch({
-                    type: types.SEARCH_STUDENT_ATTENDENCE_BY_ID,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showStudentTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        },
-                        studentAttendenceTableData: {
-                            attendenceRows: attendenceData.attendence,
-                            attendenceAttributes: attendenceData.attributes
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.SEARCH_STUDENT_ATTENDENCE_BY_ID_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong,
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.SEARCH_STUDENT_ATTENDENCE_BY_ID_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
         }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong,
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.SEARCH_STUDENT_ATTENDENCE_BY_ID, dispatch, constant.SEARCH_STUDENT_ATTENDENCE_BY_ID_ERROR);
     }
 }
 
-export const getStudentById = (id) => {
+export const getAllAttendenceOfTutorById = (emailId) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} =getState();
         dispatch({
-            type: types.SET_LOADING,
+            type: constant.SET_LOADING,
             payload: {
                 loading: true
             }
         })
-
-        const getStudent = async() => {
-            const response = await axios.get(`/faculty/getStudentById/${id}`, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while fetching student attendence");
-            }
-            return response.data;
+        const postObj = {
+            tutorEmail: emailId
         }
-
-        try {
-            const student = await getStudent();
-            if(student.resultShort === 'success') {
-                dispatch({
-                    type: types.SEARCH_STUDENT_BY_ID,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: student.resultLong,
-                        showStudentTables: {
-                            searchUserInput: true,
-                            searchAttendeceInput: false,
-                            showStudentTable: true,
-                            showattendenceTable: false
-                        },
-                        markStudentAttendenceTableData: {
-                            rows: student.studentDetails,
-                            attributes: student.attributes
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.SEARCH_STUDENT_BY_ID_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: student.resultLong
-                    }
-                })
+        const axiosData = await axiosHelper.sendRequest(constant.TUROR_ALL_ATTENDENCE_URL, "POST", token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showTutorTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
             }
-        } catch (error) {
-            dispatch({
-                type: types.SEARCH_STUDENT_BY_ID_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
         }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong,
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.SEARCH_TUTOR_ATTENDENCE_BY_ID, dispatch, constant.SEARCH_TUTOR_ATTENDENCE_BY_ID_ERROR);
     }
-};
+}
 
-export const markStudentAttendenceById = (id) => {
+export const getAllStudentAttendence = () => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} =getState();
         dispatch({
-            type: types.SET_LOADING,
+            type: constant.SET_LOADING,
             payload: {
                 loading: true
             }
-        });
-
-        const addAttendence = async(postObj) => {
-            const response = await axios.post('/faculty/markStudentAttendence', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while marking student attendence");
+        })
+        const axiosData = await axiosHelper.sendRequest(constant.ALL_STUDENT_ATTENDENCE_URL, 'GET', token, null);
+        const payload =  {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showStudentTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
             }
-            return response.data;
-        }
-
-        try {
-            const postObj = {
-                StudentId: id
-            };
-            const attendenceData = await addAttendence(postObj);
-            if(attendenceData.resultShort === 'success') {
-                dispatch({
-                    type: types.MARK_STUDENT_ATTENDENCE,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showStudentTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        }
-                    }
-                });
-                return getAllStudentAttendence();
-            } else {
-                dispatch({
-                    type: types.MARK_STUDENT_ATTENDENCE_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.MARK_STUDENT_ATTENDENCE_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
-        }
-    }
-};
-
-export const markStudentAbsence = (id) => {
-    return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
-        dispatch({
-            type: types.SET_LOADING,
-            payload: {
-                loading: true
-            }
-        });
-
-        const absenceData = async(postObj) => {
-            const response = await axios.post('/faculty/mark_student_absence', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while marking student attendence");
-            }
-            return response.data;
         };
-
-        try {
-            const postObj = {
-                attedenceId: id
-            };
-            const attendenceData = await absenceData(postObj);
-            if(attendenceData.resultShort === 'success') {
-                dispatch({
-                    type: types.MARK_STUDENT_ABSENCE,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showStudentTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        }
-                    }
-                })
-                return getAllStudentAttendence()
-            } else {
-                dispatch({
-                    type: types.MARK_STUDENT_ABSENCE_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.MARK_STUDENT_ABSENCE_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.FETCH_STUDENT_ATTENDENCE, dispatch, constant.FETCH_STUDENT_ATTENDENCE_ERROR);
     }
 }
 
 export const getAllTutorAttendence = () => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} =getState();
         dispatch({
-            type: types.SET_LOADING,
+            type: constant.SET_LOADING,
             payload: {
                 loading: true
             }
-        });
-
-        const getData = async() => {
-            const response = await axios.get('/faculty/get_All_Tutor_Attendence', {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while marking tutor attendence");
+        })
+        const axiosData = await axiosHelper.sendRequest(constant.ALL_TUTOR_ATTENDENCE_URL, 'GET', token, null);
+        const payload =  {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showTutorTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showTutorTable: false,
+                showattendenceTable: true
             }
-            return response.data;
         };
-
-        try {
-            const attendenceData = await getData();
-            if(attendenceData.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_TUTOR_ATTENDENCE,
-                    payload: {
-                        tutorAttendenceRecord: {
-                            attedenceRows: attendenceData.attendence,
-                            attendenceTableAttributes: attendenceData.attributes
-                        },
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showTutorTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showTutorTable: false,
-                            showattendenceTable: true
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_TUTOR_ATTENDENCE_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong
-                    }
-                });
-            }
-        } catch (error) {
-            dispatch({
-                type: types.FETCH_TUTOR_ATTENDENCE_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            });
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.FETCH_TUTOR_ATTENDENCE, dispatch, constant.FETCH_TUTOR_ATTENDENCE_ERROR);
     }
 }
 
-export const toggleTutorAttendenceElement = (postObj) => {
-    return async(dispatch) => {
+export const getStudentById = (id) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} =getState();
         dispatch({
-            type: types.TOGGLE_TUTOR_ATTENDENCE_ELEMENT,
+            type: constant.SET_LOADING,
             payload: {
-                searchUserInput: postObj.flag1,
-                searchAttendeceInput: postObj.flag2,
-                showStudentTable: postObj.flag3,
-                showattendenceTable: postObj.flag4
+                loading: true
             }
         })
+        const FINAL_URL = `${constant.GET_STUDENT_BY_ID_URL}${id}`
+        const axiosData = await axiosHelper.sendRequest(FINAL_URL, 'GET', token, null);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showStudentTables: {
+                searchUserInput: true,
+                searchAttendeceInput: false,
+                showStudentTable: true,
+                showattendenceTable: false
+            }
+        }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.SEARCH_STUDENT_BY_ID, dispatch, constant.SEARCH_STUDENT_BY_ID_ERROR);
+    }
+}
+export const getTutorById = (id) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} =getState();
+        dispatch({
+            type: constant.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        const FINAL_URL = `${constant.GET_TUTOR_BY_ID_URL}${id}`
+        const axiosData = await axiosHelper.sendRequest(FINAL_URL, 'GET', token, null);
+        const payload ={
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showTutorTables: {
+                searchUserInput: true,
+                searchAttendeceInput: false,
+                showTutorTable: true,
+                showattendenceTable: false
+            }
+        }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.SEARCH_TUTOR_BY_ID, dispatch, constant.SEARCH_TUTOR_BY_ID_ERROR);
     }
 }
 
-export const getTutorById = (id) => {
+export const markStudentAbsence = (id) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
-            type: types.SET_LOADING,
+            type: constant.SET_LOADING,
             payload: {
                 loading: true
             }
         });
-
-        const getData = async() => {
-            const response = await axios.get(`/faculty/getTutorById/${id}`, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while getting tutor for attendence!");
+        const postObj = {
+            attedenceId: id
+        };
+        const axiosData = await axiosHelper.sendRequest(constant.MARK_STUDENT_ABSENCE_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showStudentTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
             }
-            return response.data
         }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.MARK_STUDENT_ABSENCE, dispatch, constant.MARK_STUDENT_ABSENCE_ERROR)
+    }
+}
 
-        try {
-            const tutorData = await getData();
-            if(tutorData.resultShort === 'success') {
-                dispatch({
-                    type: types.SEARCH_TUTOR_BY_ID,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: tutorData.resultLong,
-                        showTutorTables: {
-                            searchUserInput: true,
-                            searchAttendeceInput: false,
-                            showTutorTable: true,
-                            showattendenceTable: false
-                        },
-                        markAttendenceTableData: {
-                            rows: tutorData.tutorDetails,
-                            attributes: tutorData.attributes
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.SEARCH_TUTOR_BY_ID_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: tutorData.resultLong
-                    }
-                })
+export const markStudentAttendenceById = (id) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: constant.SET_LOADING,
+            payload: {
+                loading: true
             }
-        } catch (error) {
-            dispatch({
-                type: types.SEARCH_TUTOR_BY_ID_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
+        });
+        const postObj = {
+            StudentId: id
+        };
+        const axiosData = await axiosHelper.sendRequest(constant.MARK_STUDENT_ATTENDENCE_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showStudentTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
+            }
         }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.MARK_STUDENT_ATTENDENCE, dispatch, constant.MARK_STUDENT_ATTENDENCE_ERROR)
+    }
+}
+
+export const markTutorAbsence = (id) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: constant.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        });
+        const postObj = {
+            attedenceId: id
+        };
+        const axiosData = await axiosHelper.sendRequest(constant.MARK_TUTOR_ABSENCE_URL, "POST", token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showTutorTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
+            }
+        };
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload)
+        return await dispatchEngine(axiosAndPayloadData, constant.MARK_TUTOR_ABSENCE, dispatch, constant.MARK_TUTOR_ABSENCE_ERROR)
     }
 }
 
@@ -472,257 +303,94 @@ export const markTutorAttendceById = (id) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
-            type: types.SET_LOADING,
+            type: constant.SET_LOADING,
             payload: {
                 loading: true
             }
         });
-
-        const addAttendence = async(postObj) => {
-            const response = await axios.post('/faculty/markTutorAttedence', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while marking tutor attendence");
+        const postObj = {
+            tutorId: id
+        };
+        const axiosData = await axiosHelper.sendRequest(constant.MARK_TUTOR_ATTENDENCE_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showTutorTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
             }
-            return response.data;
         }
-
-        try {
-            const postObj = {
-                tutorId: id
-            };
-            const attendenceData = await addAttendence(postObj);
-            if(attendenceData.resultShort === 'success') {
-                dispatch({
-                    type: types.MARK_TUTOR_ATTENDENCE,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showTutorTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        }
-                    }
-                });
-                return getAllTutorAttendence();
-            } else {
-                dispatch({
-                    type: types.MARK_TUTOR_ATTENDENCE_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.MARK_TUTOR_ATTENDENCE_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.MARK_TUTOR_ATTENDENCE, dispatch, constant.MARK_TUTOR_ATTENDENCE_ERROR)
     }
-};
+}
+
+export const toggleStudenAttendenceElements = (postObj) => {
+    return async(dispatch) => {
+        dispatch({
+            type: constant.TOGGLE_STUDENT_ATTENDENCE_ELEMENT,
+            payload: {
+                searchUserInput: postObj.flag1,
+                searchAttendeceInput: postObj.flag2,
+                showStudentTable: postObj.flag3,
+                showattendenceTable: postObj.flag4
+            }
+        });
+    }
+}
+
+export const toggleTutorAttendenceElement = (postObj) => {
+    return async(dispatch) => {
+        dispatch({
+            type: constant.TOGGLE_TUTOR_ATTENDENCE_ELEMENT,
+            payload: {
+                searchUserInput: postObj.flag1,
+                searchAttendeceInput: postObj.flag2,
+                showStudentTable: postObj.flag3,
+                showattendenceTable: postObj.flag4
+            }
+        })
+    }
+}
 
 export const updateTutorAttendence = (id) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
-            type: types.SET_LOADING,
+            type: constant.SET_LOADING,
             payload: {
                 loading: true
             }
         });
-
-        const addAttendence = async(postObj) => {
-            const response = await axios.post('/faculty/martkTutorTimeOut', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while updating tutor attendence");
-            }
-            return response.data;
+        const postObj = {
+            attedenceId: id
         }
-
-        try {
-            const postObj = {
-                attedenceId: id
+        const axiosData = await axiosHelper.sendRequest(constant.UPDATE_TUTOR_ATTENDENCE_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showTutorTables: {
+                searchUserInput: false,
+                searchAttendeceInput: true,
+                showStudentTable: false,
+                showattendenceTable: true
             }
-            const attendenceData = await addAttendence(postObj);
-            if(attendenceData.resultShort === 'success') {
-                dispatch({
-                    type: types.UPDATE_TUTOR_ATTENDENCE,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showTutorTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        }
-                    }
-                });
-                return getAllTutorAttendence();
-            } else {
-                dispatch({
-                    type: types.UPDATE_TUTOR_ATTENDENCE_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.UPDATE_TUTOR_ATTENDENCE_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
         }
-    }
-};
-
-export const markTutorAbsence = (id) => {
-    return async(dispatch, getState) => {
-        const {auth: {token}} = getState();
-        dispatch({
-            type: types.SET_LOADING,
-            payload: {
-                loading: true
-            }
-        });
-
-        const absenceData = async(postObj) => {
-            const response = await axios.post('/faculty/martkTutorAbsence', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while marking student absence");
-            }
-            return response.data;
-        };
-
-        try {
-            const postObj = {
-                attedenceId: id
-            };
-            const attendenceData = await absenceData(postObj);
-            if(attendenceData.resultShort === 'success') {
-                dispatch({
-                    type: types.MARK_TUTOR_ABSENCE,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showTutorTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        }
-                    }
-                })
-                return getAllTutorAttendence()
-            } else {
-                dispatch({
-                    type: types.MARK_TUTOR_ABSENCE_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.MARK_TUTOR_ABSENCE_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
         }
-    }
-}
-
-export const getAllAttendenceOfTutorById = (emailId) => {
-    return async(dispatch, getState) => {
-        const {auth: {token}} = getState();
-        dispatch({
-            type: types.SET_LOADING,
-            payload: {
-                loading: true
-            }
-        })
-
-        const getData = async(postObj) => {
-            const response = await axios.post('/faculty/getTutorAttendenceById', postObj, {headers: collection.setHeader(token)})
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while fetching student attendence");
-            }
-            return response.data;
-        }
-
-        try {
-            const postObj = {
-                tutorEmail: emailId
-            }
-            const attendenceData = await getData(postObj);
-            if(attendenceData.resultShort === 'success'){
-                dispatch({
-                    type: types.SEARCH_TUTOR_ATTENDENCE_BY_ID,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: attendenceData.resultLong,
-                        showTutorTables: {
-                            searchUserInput: false,
-                            searchAttendeceInput: true,
-                            showStudentTable: false,
-                            showattendenceTable: true
-                        },
-                        tutorAttendenceRecord: {
-                            attendenceRows: attendenceData.attendence,
-                            attendenceAttributes: attendenceData.attributes
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.SEARCH_TUTOR_ATTENDENCE_BY_ID_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: attendenceData.resultLong,
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.SEARCH_TUTOR_ATTENDENCE_BY_ID_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
-        }
-    }
-}
-
-export const hideNotification = () => {
-    return async(dispatch) => {
-        dispatch({
-            type: types.HIDE_NOTIFICATION
-        })
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return await dispatchEngine(axiosAndPayloadData, constant.UPDATE_TUTOR_ATTENDENCE, dispatch, constant.UPDATE_TUTOR_ATTENDENCE_ERROR)
     }
 }

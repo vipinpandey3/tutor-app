@@ -43,8 +43,8 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 studentAttendenceTableData: {
-                    attendenceRows: action.payload.studentAttendenceTableData.attendenceRows,
-                    attendenceAttributes: action.payload.studentAttendenceTableData.attendenceAttributes
+                    attendenceRows: action.payload.attendence,
+                    attendenceAttributes: action.payload.attributes
                 },
                 showStudentTables: {
                     searchUserInput: action.payload.showStudentTables.searchUserInput,
@@ -80,8 +80,8 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 studentAttendenceTableData: {
-                    attendenceRows: action.payload.studentAttendenceTableData.attendenceRows,
-                    attendenceAttributes: action.payload.studentAttendenceTableData.attendenceAttributes
+                    attendenceRows: action.payload.attendence,
+                    attendenceAttributes: action.payload.attributes
                 },
                 showStudentTables: {
                     searchUserInput: action.payload.showStudentTables.searchUserInput,
@@ -112,8 +112,8 @@ const dashboardReducer = (state=intitalState, action) => {
                     showattendenceTable: action.payload.showStudentTables.showattendenceTable
                 },
                 markStudentAttendenceTableData: {
-                    rows: action.payload.markStudentAttendenceTableData.rows,
-                    attributes: action.payload.markStudentAttendenceTableData.attributes
+                    rows: action.payload.studentDetails,
+                    attributes: action.payload.attributes
                 }
             };
 
@@ -176,8 +176,8 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 tutorAttendenceRecord: {
-                    attedenceRows: action.payload.tutorAttendenceRecord.attedenceRows,
-                    attendenceTableAttributes: action.payload.tutorAttendenceRecord.attendenceTableAttributes,
+                    attedenceRows: action.payload.attendence,
+                    attendenceTableAttributes: action.payload.attributes,
                 },
                 showTutorTables: {
                     searchUserInput: action.payload.showTutorTables.searchUserInput,
@@ -216,8 +216,8 @@ const dashboardReducer = (state=intitalState, action) => {
                     showattendenceTable: action.payload.showTutorTables.showattendenceTable
                 },
                 markAttendenceTableData: {
-                    rows: action.payload.markAttendenceTableData.rows,
-                    attributes: action.payload.markAttendenceTableData.attributes
+                    rows: action.payload.tutorDetails,
+                    attributes: action.payload.attributes
                 }
             };
 
@@ -280,10 +280,10 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 showTutorTables: {
-                    searchUserInput: action.payload.showStudentTables.searchUserInput,
-                    searchAttendeceInput: action.payload.showStudentTables.searchAttendeceInput,
-                    showStudentTable: action.payload.showStudentTables.showStudentTable,
-                    showattendenceTable: action.payload.showStudentTables.showattendenceTable
+                    searchUserInput: action.payload.showTutorTables.searchUserInput,
+                    searchAttendeceInput: action.payload.showTutorTables.searchAttendeceInput,
+                    showStudentTable: action.payload.showTutorTables.showStudentTable,
+                    showattendenceTable: action.payload.showTutorTables.showattendenceTable
                 }
             };
 
@@ -302,8 +302,8 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 tutorAttendenceRecord: {
-                    attedenceRows: action.payload.tutorAttendenceRecord.attendenceRows,
-                    attendenceTableAttributes: action.payload.tutorAttendenceRecord.attendenceAttributes
+                    attedenceRows: action.payload.attendence,
+                    attendenceTableAttributes: action.payload.attributes
                 },
                 showTutorTables: {
                     searchUserInput: action.payload.showTutorTables.searchUserInput,

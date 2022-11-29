@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 var fileUpload = require('express-fileupload');
 const adminRoute = require("./routes/admin");
 const facultyRoute = require('./routes/faculty');
+const dashboardRoute = require('./routes/dashboard');
 const models = require("./models");
 var Redis = require('ioredis');
 
@@ -87,8 +88,7 @@ app.use(passport.initialize());
 app.use('/',authenticateRoute)
 app.use("/admin", authenticateToken, adminRoute);
 app.use('/faculty', authenticateToken, facultyRoute);
-
-
+app.use('/dashboard', authenticateToken, dashboardRoute);
 
 models.sequelize
   .sync({force: false})

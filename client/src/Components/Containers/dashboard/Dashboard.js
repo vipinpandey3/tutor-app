@@ -18,12 +18,12 @@ import StudentAttendence from "./StudentAttendence/StudentAttendence";
 import TutorAttendence from "./TutorAttendence/TutorAttendence";
 
 const data = [
-  { name: "Page A", uv: 400, pv: 2400, amt: 2000 },
-  { name: "Page ", uv: 600, pv: 2400, amt: 2400 },
-  { name: "Page A", uv: 800, pv: 2400, amt: 2400 },
-  { name: "Page A", uv: 700, pv: 2400, amt: 2400 },
-  { name: "Page A", uv: 430, pv: 2400, amt: 2400 },
-  { name: "Page A", uv: 40, pv: 2400, amt: 2400 },
+  { name: "Page A", uv: 400, pv: 800, xv: 600, amt: 2000 },
+  { name: "Page ", uv: 600, pv: 2400, xv: 600, amt: 2400 },
+  { name: "Page A", uv: 800, pv: 2400, xv: 600, amt: 2400 },
+  { name: "Page A", uv: 700, pv: 2400, xv: 600, amt: 2400 },
+  { name: "Page A", uv: 430, pv: 2400, xv: 600, amt: 2400 },
+  { name: "Page A", uv: 40, pv: 2400, xv: 600, amt: 2400 },
 ];
 
 const data01 = [
@@ -138,6 +138,7 @@ const Dashboard = () => {
                         <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
                         <Line type="monotone" dataKey="uv" stroke="#8884d8" />
                         <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
+                        <Line type="monotone" dataKey="xv" stroke="#67aacf" />
                         <Tooltip />
                     </LineChart>
                 </Grid>

@@ -1,20 +1,21 @@
-import React, { useState, useEffect, createRef } from 'react';
-import Table from '../../../Common/Table';
 import {Grid, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles} from "@material-ui/core";
+import React, { createRef, useEffect, useState } from 'react';
+import {
+  getAllAttendenceOfStudentById,
+  getAllStudentAttendence,
+  getStudentById,
+  markStudentAbsence,
+  markStudentAttendenceById,
+  toggleStudenAttendenceElements
+} from "../../../../redux/actions/dashboardAction"
+
 import ActionButton from '../../../Common/ActionButton';
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import Input from '../../../Common/Input';
 import MatButton from '../../../Common/Button';
 import PropTypes from 'prop-types'
+import Table from '../../../Common/Table';
 import {connect} from 'react-redux';
-import {
-  getAllStudentAttendence,
-  toggleStudenAttendenceElements,
-  getAllAttendenceOfStudentById,
-  getStudentById,
-  markStudentAttendenceById,
-  markStudentAbsence
-} from "../../../../redux/actions/dashboardAction"
 
 const useStyles = makeStyles((theme) => ({
   searchUserInput: {
@@ -104,7 +105,7 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
       {
        showStudentTables.searchUserInput && (
         <Grid container>
-          <Grid item xs={3}>
+          <Grid xs={3} items="true">
             <Input
               onChange={onInputChange}
               label="Search Student"
@@ -133,7 +134,7 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
       {
         showStudentTables.searchAttendeceInput && (
           <Grid container>
-              <Grid items xs={6}>
+              <Grid xs={6}>
                   <input  
                     onKeyDown={searchStudentAttendence} 
                     className={styles.searchInput} 
@@ -177,16 +178,16 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
           </TableHead>
           <TableBody>
             {
-              studentAttendenceTableData.attendenceRows.map((details, cellIndex) => {
+              studentAttendenceTableData.attendenceRows.map((details, rowCellIndex) => {
                 return (
-                  <TableRow key={details.id}>
+                  <TableRow key={rowCellIndex}>
                     {
                       studentAttendenceTableData.attendenceAttributes.map((rowCell, cellIndex) => {
                         const value = details[rowCell.props];
                         if(rowCell.props && rowCell.props.includes('.')) {
                           const itemSplit = rowCell.props.split('.');
                           return (
-                            <TableCell>
+                            <TableCell key={cellIndex}>
                               {details[itemSplit[0]][itemSplit[1]] ? details[itemSplit[0]][itemSplit[1]] : "-"}
                             </TableCell>
                           )

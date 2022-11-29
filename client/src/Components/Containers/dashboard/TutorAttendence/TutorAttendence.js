@@ -144,7 +144,7 @@ const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, 
       {
         showTutorTables.searchAttendeceInput && (
           <Grid container>
-              <Grid items xs={6}>
+              <Grid xs={6} items="true">
                 <input  onKeyDown={searchTutorAttendence} className={styles.searchInput} ref={searchRef} name="studentAttendence" placeholder="Search"/>
               </Grid>
               <Grid item sm></Grid>
@@ -183,7 +183,7 @@ const TutorAttendence = ({dashboard: {error, message, loading, showTutorTables, 
               tutorAttendenceRecord.attedenceRows.map((details, index) => {
                 return (
                   <TableRow 
-                    key={details.id}
+                    key={index}
                   >
                     {
                       tutorAttendenceRecord.attendenceTableAttributes.map((rowCell, cellIndex) => {

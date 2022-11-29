@@ -44,6 +44,14 @@ module.exports = function(sequelize, DataTypes) {
                 unique: false
             }
         });
+        StandardMaster.belongsToMany(models.Student, {
+            as: "StandarddMap",
+            foreignKey: "StandardId",
+            through: {
+                model: models.StudentStandardMap,
+                unique: false
+            }
+        })
         StandardMaster.hasMany(models.SubjectMaster)
     };
 

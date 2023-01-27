@@ -33,6 +33,48 @@ module.exports = function(sequelize, DataTypes) {
             foreignKey: "StandardId",
             as: "StandardMap"
         })
+
+        StudentStandardMap.getAllAttendenceByStandard = () => {
+            // return models.Student.findAll({
+            //     where: {
+            //         status: models.Student.STUDENT_STATUS_ACTIVE_VALUE
+            //     },
+            //     include: [
+            //         {
+            //             model: models.StudentAttendence
+            //         }
+            //     ]
+            // })
+            return models.StudentStandardMap.findAll({
+                where: {
+                    status: 'Current'
+                },
+                include: [
+                    {
+                        model: models.StandardMaster,
+                        as: "StandardMap",
+                        include: [
+                            {
+                                model: models.StudentAttendence,
+                                required: true
+                            }
+                        ]
+                    },
+                    // {
+                    //     model: models.Student,
+                    //     where: {
+                    //         status: models.Student.STUDENT_STATUS_ACTIVE_VALUE
+                    //     },
+                    //     as: "StudentMap",
+                    //     include: [
+                    //         {
+                    //             model: models.StudentAttendence,
+                    //         }
+                    //     ]
+                    // }
+                ]
+            })
+        }
     }
 
     return StudentStandardMap

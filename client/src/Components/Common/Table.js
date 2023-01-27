@@ -1,17 +1,19 @@
-import React from "react";
 import {
-  makeStyles,
   Table as MuiTable,
   TableCell,
   TableHead,
   TableRow,
   TableSortLabel,
+  makeStyles,
 } from "@material-ui/core";
+
+import ActionButton from "./ActionButton";
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import React from "react";
 import { TableBody } from "@material-ui/core";
 import useTable from "../../customsHooks/useTable";
-import ActionButton from "./ActionButton";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+
 // import Tooltip from '@mui/material/Tooltip';
 
 const useStyles = makeStyles((theme) => ({

@@ -218,8 +218,8 @@ function get_header_row(sheet) {
                     result.reason = "Student Aadhar not Found";
                     return reject(result)
                 };
+                defCreatePromises.push(student)
             })
-            defCreatePromises.push(student)
         }
         if(fileType === "2") {
             createFees(defCreatePromises).then(resultObj => {
@@ -255,8 +255,7 @@ function get_header_row(sheet) {
     return returnVar;
   }
 
-
-  const createFees = (fees) => {
+const createFees = (fees) => {
     return new Promise((resolve, reject) => {
         const whereQuery = {
             aadharNo: fees.aadharNo
@@ -357,9 +356,10 @@ function get_header_row(sheet) {
   }
 
   const addStudentInSerializedManner = async(studentArray) => {
+    // console.log('studentArray =======', JSON.stringify(studentArray))
     let result
     for (let index = 0; index < studentArray.length; index++) {
-        result = await  createStudentWithAllEntities(studentArray[index]);
+        result = await createStudentWithAllEntities(studentArray[index]);
     }
     return result
   }

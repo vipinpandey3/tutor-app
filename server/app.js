@@ -46,12 +46,12 @@ app.use((req, res, next) => {
 function authenticateToken(req, res, next) {
   const token = req.headers['authorization'];
   if(token  == null) return res.status(401);
-  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+  return jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if(err) return res.status(403).json({
       resultShort: "failure",
       resultLong: 'Authorization failed'
     });
-    models.User.findOne({
+    return models.User.findOne({
       where: {
         emailId: user.emailId
       }

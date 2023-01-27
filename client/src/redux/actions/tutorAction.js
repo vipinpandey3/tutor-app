@@ -7,8 +7,22 @@ import axiosHelper from '../../utils/AxiosHelper';
 export const getTutors = () => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState();
+        dispatch({
+            type: constant.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
         const axiosData = await axiosHelper.sendRequest(constant.GET_TUTOR_URLS, 'GET', token, null)
-        return await dispatchEngine(axiosData, constant.FETCH_TUTORS, dispatch, constant.FETCH_TUTORS_ERROR);
+        const payload = {
+            loading: false
+        }
+
+        const errorPayload = {
+            loading: true
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return dispatchEngine(axiosAndPayloadData, constant.FETCH_TUTORS, dispatch, constant.FETCH_TUTORS_ERROR);
     }
 }
 
@@ -102,7 +116,8 @@ export const fetchTutorEducationFormFields = (postObj) => {
             title: postObj.title,
             buttonName: postObj.buttonName,
             editFlag: postObj.editFlag,
-            showForm: true
+            showForm: true,
+            loading: true
         }
         const errorPayload = {
             title: postObj.title,

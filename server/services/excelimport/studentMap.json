@@ -99,7 +99,7 @@
         {
             "DBTableName": "Parents",
             "DBColumnName": "motherdob",
-            "excelColumnName": "Mother Name",
+            "excelColumnName": "Mother DOB",
             "functionName": ""
         },
         {

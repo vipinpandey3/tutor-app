@@ -1,9 +1,13 @@
-import React from 'react'
 import '../../loader.css'
+
+import React from 'react'
 
 const Loader = () => {
   return (
-    <div class="lds-dual-ring"></div>
+    <div className="loader">
+      <div className="spinner"></div>
+    </div>
+    // <div class="lds-dual-ring"></div>
   )
 }
 

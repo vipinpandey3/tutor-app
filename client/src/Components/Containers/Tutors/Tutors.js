@@ -1,17 +1,19 @@
+import { InputAdornment, Paper, Toolbar, makeStyles } from "@material-ui/core";
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { InputAdornment, makeStyles, Paper, Toolbar } from "@material-ui/core";
-import Table from "../../Common/Table";
+import {addTutors, getTutorForm, getTutors, toggleForm} from '../../../redux/actions/tutorAction'
+
+import AddIcon from "@material-ui/icons/Add";
 import { Grid } from "@material-ui/core";
 import Input from "../../Common/Input";
-import SearchIcon from "@material-ui/icons/Search";
+import Loader from "../../Common/Loader";
 import MatButton from "../../Common/Button";
-import AddIcon from "@material-ui/icons/Add";
+import PropTypes from 'prop-types'
+import SearchIcon from "@material-ui/icons/Search";
+import Table from "../../Common/Table";
 import TutorsForm from "./TutorsForm";
 import {connect} from 'react-redux';
-import {getTutors, getTutorForm, toggleForm, addTutors} from '../../../redux/actions/tutorAction'
-import PropTypes from 'prop-types'
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -35,7 +37,7 @@ const initialFormValues = {
   address: ""
 };
 
-const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTutors, getTutorForm, toggleForm, addTutors}) => {
+const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm, loading}, getTutors, getTutorForm, toggleForm, addTutors}) => {
   const history = useHistory()
   const classes = useStyles();
   const [formValues, setFormValues] = useState(initialFormValues)
@@ -72,6 +74,9 @@ const Tutors = ({tutor: {tutors, formDetails, tutorFormFields, showForm}, getTut
 
   return (
     <>
+      {
+        loading && < Loader />
+      }
       {
         showForm &&
         <TutorsForm 

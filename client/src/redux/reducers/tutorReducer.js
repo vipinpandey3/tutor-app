@@ -19,7 +19,8 @@ const initialState = {
         educationDetails: [],
         educationAttrbutes: []
     },
-    educationFormFields: []
+    educationFormFields: [],
+    loading: false
 }
 
 const tutorReducer = (state = initialState, action) => {
@@ -29,8 +30,9 @@ const tutorReducer = (state = initialState, action) => {
                 ...state,
                 tutors: {
                     tutorRows: action.payload.data,
-                    tutorTableAttributes: action.payload.tutorTableAtttibutes
-                }
+                    tutorTableAttributes: action.payload.turorTableAtttibutes
+                },
+                loading: action.payload.loading
             };
 
         case types.FETCH_TUTORS_ERROR: 
@@ -39,7 +41,8 @@ const tutorReducer = (state = initialState, action) => {
                 tutors: {
                     tutorRows: action.payload.data,
                     tutorTableAttributes: action.payload.tutorTableAttributes
-                }
+                },
+                loading: action.payload.loading
             };
 
         case types.FETCH_TUTOR_FORM: 
@@ -121,7 +124,8 @@ const tutorReducer = (state = initialState, action) => {
                     buttonTitle: action.payload.buttonName,
                     editFlag: action.payload.editFlag
                 },
-                showForm: action.payload.showForm
+                showForm: action.payload.showForm,
+                loading: action.payload.loading
             };
 
         case types.FETCH_TUTOR_EDUCATION_FORMFIELD_ERROR:

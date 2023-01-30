@@ -29,6 +29,7 @@ const intitalState = {
         rows: [],
         attributes: []
     },
+    chartData: [],
     loading: false,
     error: false,
     message: ""
@@ -294,6 +295,12 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message
             };
+
+        case types.GET_STUDENT_ATTENDENCE_CHART_DATA:
+            return {
+                ...state,
+                chartData: action.payload.result
+            }
 
         case types.SEARCH_TUTOR_ATTENDENCE_BY_ID:
             return {

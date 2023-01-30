@@ -104,6 +104,8 @@ export const UPDATE_TUTOR_ATTENDENCE_ERROR = "UPDATE_TUTOR_ATTENDENCE_ERROR";
 export const MARK_TUTOR_ABSENCE = "MARK_TUTOR_ABSENCE";
 export const MARK_TUTOR_ABSENCE_ERROR = "MARK_TUTOR_ABSENCE_ERROR";
 
+export const GET_STUDENT_ATTENDENCE_CHART_DATA = "GET_STUDENT_ATTENDENCE_CHART_DATA";
+export const GET_STUDENT_ATTENDENCE_CHART_DATA_ERROR = "GET_STUDENT_ATTENDENCE_CHART_DATA_ERROR";
 
 // User Constant types
 export const FETCH_USERS = "FETCH_USER";
@@ -170,3 +172,4 @@ export const MARK_STUDENT_ATTENDENCE_URL = "/faculty/markStudentAttendence";
 export const MARK_TUTOR_ABSENCE_URL = "/faculty/martkTutorAbsence";
 export const MARK_TUTOR_ATTENDENCE_URL =  "/faculty/markTutorAttedence"
 export const UPDATE_TUTOR_ATTENDENCE_URL = "/faculty/martkTutorTimeOut"
+export const GET_STUDENT_ATTENDENCE_CHART_URL = "/dashboard/get-student-attendence-chart-data"

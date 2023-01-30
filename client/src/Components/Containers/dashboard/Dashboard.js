@@ -1,30 +1,16 @@
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import {
-  CartesianGrid,
   Cell,
-  Line,
-  LineChart,
   Pie,
   PieChart,
-  Tooltip,
-  XAxis,
-  YAxis
 } from "recharts";
 import { Grid, Paper, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 
+import Chart from './ChartsComponents/LineChart'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StudentAttendence from "./StudentAttendence/StudentAttendence";
 import TutorAttendence from "./TutorAttendence/TutorAttendence";
-
-const data = [
-  { name: "Page A", uv: 400, pv: 800, xv: 600, amt: 2000 },
-  { name: "Page ", uv: 600, pv: 2400, xv: 600, amt: 2400 },
-  { name: "Page A", uv: 800, pv: 2400, xv: 600, amt: 2400 },
-  { name: "Page A", uv: 700, pv: 2400, xv: 600, amt: 2400 },
-  { name: "Page A", uv: 430, pv: 2400, xv: 600, amt: 2400 },
-  { name: "Page A", uv: 40, pv: 2400, xv: 600, amt: 2400 },
-];
 
 const data01 = [
   {
@@ -118,7 +104,6 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
     const styles = useStyles();
     const [expanded, setExpanded] = useState(false);
-
     const handleChange = (panel) => (event, isExpanded) => {
       setExpanded(isExpanded ? panel : false);
     };
@@ -127,20 +112,7 @@ const Dashboard = () => {
         <Paper className={styles.paperContent}>
             <Grid container className={styles.rowContainer}>
                 <Grid item xs={6}>
-                    <LineChart
-                        width={500}
-                        height={300}
-                        data={data}
-                        margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-                    >
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                        <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                        <Line type="monotone" dataKey="xv" stroke="#67aacf" />
-                        <Tooltip />
-                    </LineChart>
+                  <Chart />
                 </Grid>
                 <Grid item xs={6}>
                     <PieChart width={400} height={400}  className={styles.pieChartContainer} >

@@ -4,7 +4,7 @@ class Redis {
     }
 
     static set(key, value) {
-        return global.CACHE_OBJ.set(key, JSON.stringify(data));
+        return global.CACHE_OBJ.set(key, JSON.stringify(value));
     }
 
     static cacheDataAndReturn(key, callback, params, ttl) {

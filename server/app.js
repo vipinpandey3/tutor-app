@@ -11,6 +11,7 @@ const facultyRoute = require('./routes/faculty');
 const dashboardRoute = require('./routes/dashboard');
 const models = require("./models");
 var Redis = require('ioredis');
+const {authenticateRequest} = require('./services/Authentication.js')
 
 const app = express();
 if(process.env.TO_CACHE_DATA) {
@@ -43,52 +44,12 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-function authenticateToken(req, res, next) {
-  const token = req.headers['authorization'];
-  if(token  == null) return res.status(401);
-  return jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-    if(err) return res.status(403).json({
-      resultShort: "failure",
-      resultLong: 'Authorization failed'
-    });
-    return models.User.findOne({
-      where: {
-        emailId: user.emailId
-      }
-    })
-    .then(result => {
-      // const userObj = JSON.stringify(result)
-      if(!result) {
-        res.status(400).json({
-          resultShort: "failure",
-          resultLong: "User not find"
-        })
-      }
-      req.user = {
-        firstName: result.firstName,
-        lastName: result.lastName,
-        emailId: result.emailId,
-        role: result.role
-      };
-      global.CACHE_OBJ.set("LOGGED_IN_USERS", JSON.stringify(req.user));
-      next()
-    })
-    .catch(error => {
-      console.log("Error while user find", error);
-      res.status(400).json({
-        resultShort: "failure",
-        resultLong: "User not find for authorization"
-      })
-    })
-  })
-}
-
 app.use(passport.initialize());
 // app.use(passport.session())
 app.use('/',authenticateRoute)
-app.use("/admin", authenticateToken, adminRoute);
-app.use('/faculty', authenticateToken, facultyRoute);
-app.use('/dashboard', authenticateToken, dashboardRoute);
+app.use("/admin", authenticateRequest, adminRoute);
+app.use('/faculty', authenticateRequest, facultyRoute);
+app.use('/dashboard', authenticateRequest, dashboardRoute);
 
 models.sequelize
   .sync({force: false})

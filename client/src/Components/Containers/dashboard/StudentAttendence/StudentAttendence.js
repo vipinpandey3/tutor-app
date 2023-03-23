@@ -184,6 +184,13 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
                     {
                       studentAttendenceTableData.attendenceAttributes.map((rowCell, cellIndex) => {
                         const value = details[rowCell.props];
+                        if (!value) {
+                          return (
+                            <TableCell key={cellIndex}>
+                              {"-"}
+                            </TableCell>
+                          )
+                        }
                         if(rowCell.props && rowCell.props.includes('.')) {
                           const itemSplit = rowCell.props.split('.');
                           return (

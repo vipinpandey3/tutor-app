@@ -21,7 +21,7 @@ queue.on('completed', job => {
   })
 
 const doProcess = (data, type) => {
-    return queue.add({type: type, data: data}, { delay: 5000 })
+    return queue.add({type: type, data: data}, { priority: 3 })
     .then(result => {
         return Promise.resolve(result)
     })

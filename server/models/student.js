@@ -77,11 +77,13 @@ module.exports = function(sequelize, DataTypes) {
             })
         };
 
-        Student.createStudents = function(whereQuery, student) {
-            return models.Student.findOrCreate({
-                where: whereQuery,
-                defaults: student
-            })
+        Student.createStudents = function(student, t) {
+            return models.Student.create(student,
+            { transaction: t })
+        }
+
+        Student.findStudent = function(whereQuery, t) {
+            return models.Student.findAll({where: whereQuery}, {transaction: t});
         }
 
         Student.getAllStudentAndTheirAttendence = function() {

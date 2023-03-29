@@ -40,8 +40,8 @@ module.exports = function(sequelize, DataTypes) {
     StudentEducationDetails.associate = function(models) {
         StudentEducationDetails.belongsTo(models.Student);
 
-        StudentEducationDetails.createDetails = function(data) {
-            return models.StudentEducationDetails.create(data);
+        StudentEducationDetails.createDetails = function(data, t) {
+            return models.StudentEducationDetails.create(data,{ transaction: t });
         }
     }
 

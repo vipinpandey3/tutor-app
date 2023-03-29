@@ -9,8 +9,9 @@ const authenticattionObj = {
         if(token  == null) return res.status(401);
         return jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
             if(err) return res.status(403).json({
-            resultShort: "failure",
-            resultLong: 'Authorization failed'
+                resultShort: "failure",
+                resultLong: 'Authorization failed',
+                status: 403
             });
             const hashKey = crypto.createHash("sha256", process.env.SECRET_KEY);
             const hash = hashKey.update(token).digest("hex");
@@ -19,7 +20,8 @@ const authenticattionObj = {
                     console.log("savedToken", savedToken == `"${user.emailId}"`)
                     return res.status(400).json({
                         resultShort: "failure",
-                        resultLong: "Authentication failed"
+                        resultLong: "Authentication failed",
+                        status: 403
                     })
                 }
                 return models.User.findOne({
@@ -31,8 +33,9 @@ const authenticattionObj = {
                 // const userObj = JSON.stringify(result)
                 if(!result) {
                     res.status(400).json({
-                    resultShort: "failure",
-                    resultLong: "User not find"
+                        resultShort: "failure",
+                        resultLong: "User not find",
+                        status: 403
                     })
                 }
                 req.user = {
@@ -48,7 +51,8 @@ const authenticattionObj = {
                 console.log("Error while user find", error);
                 res.status(400).json({
                     resultShort: "failure",
-                    resultLong: "User not find for authorization"
+                    resultLong: "User not find for authorization",
+                    status: 403
                 })
                 })
             })

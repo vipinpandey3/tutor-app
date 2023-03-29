@@ -399,7 +399,6 @@ export const getChartData = () => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState();
         const axiosData = await axiosHelper.sendRequest(constant.GET_STUDENT_ATTENDENCE_CHART_URL, 'GET', token, null);
-        console.log("Axios result =====", JSON.stringify(axiosData.result));
         return dispatchEngine(axiosData,  constant.GET_STUDENT_ATTENDENCE_CHART_DATA, dispatch, constant.GET_STUDENT_ATTENDENCE_CHART_DATA_ERROR)
     }
 }

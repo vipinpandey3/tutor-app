@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {removeTokenFromCookes} from "./collections"
 
 class AxiosHelper  {
     sendRequest(url, method, token, payload) {
@@ -32,7 +33,12 @@ class AxiosHelper  {
             if(response && response.data) {
                 let result = response.data && response.data.resultShort === "success" ? response.data : null;
                 return callback(result);
-            } else if (error && error.response) return callback({ error: error.response, result: null });
+            } else if (error && error.response) {
+                if(error.response.status === 403) {
+                    return removeTokenFromCookes()
+                }
+                return callback({ error: error.response, result: null });
+            }
             else {
                 return callback({ error: "Something went wrong. Unable to capture error values" });
             }

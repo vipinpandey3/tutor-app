@@ -26,6 +26,8 @@ export const setAuthToken = token => {
     }
 }
 
-
+export const removeTokenFromCookes = () => {
+    return deleteCookie('cookie_auth_hash');
+}
 
 export const baseUrl = "http://localhost:6000"

@@ -27,7 +27,19 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     TutorAttendence.associate = function(models) {
-        TutorAttendence.belongsTo(models.Tutor)
+        TutorAttendence.belongsTo(models.Tutor);
+
+
+        TutorAttendence.getAllAttendenceWithTuttos = function() {
+            return models.TutorAttendence.findAll({
+                include: [
+                    {
+                        model: models.Tutor
+                    }
+                ],
+                groupBy: ['attendenceDate']
+            })
+        }
     }
 
     return TutorAttendence;

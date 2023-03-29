@@ -47,6 +47,11 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.CHAR(55),
             allowNull: true,
             unique: true
+        },
+        status: {
+            type: DataTypes.CHAR,
+            allowNull: false,
+            default: "active"
         }
     })
 
@@ -55,7 +60,14 @@ module.exports = function(sequelize, DataTypes) {
         Student.belongsTo(models.Parent)
         Student.hasMany(models.StudentEducationDetails, {foreignKey: "StudentId"});
         Student.hasMany(models.StudentAttendence, {foreignKey: "StudentId"});
-
+        Student.belongsToMany(models.StandardMaster, {
+            as : "StudentMap",
+            foreignKey: "StudentId",
+            through: {
+                model: models.StudentStandardMap,
+                unique: false
+            }
+        })
 
         Student.STUDENT_STATUS_ACTIVE_VALUE = 'Active';
 
@@ -65,10 +77,36 @@ module.exports = function(sequelize, DataTypes) {
             })
         };
 
-        Student.createStudents = function(whereQuery, student) {
-            return models.Student.findOrCreate({
-                where: whereQuery,
-                defaults: student
+        Student.createStudents = function(student, t) {
+            return models.Student.create(student,
+            { transaction: t })
+        }
+
+        Student.findStudent = function(whereQuery, t) {
+            return models.Student.findAll({where: whereQuery}, {transaction: t});
+        }
+
+        Student.getAllStudentAndTheirAttendence = function() {
+            console.log('Inside the models getAllStudentAndTheirAttendence function');
+            return models.Student.findAll({
+                where: {
+                    status: Student.STUDENT_STATUS_ACTIVE_VALUE
+                },
+                include: [
+                    {
+                        model: models.StandardMaster,
+                        as: "StudentMap",
+                        through: {
+                            where: {
+                                status: "current"
+                            }
+                        }
+                    },
+                    {
+                        model: models.StudentAttendence,
+                        required: true
+                    }
+                ]
             })
         }
     };

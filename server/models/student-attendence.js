@@ -29,9 +29,24 @@ module.exports = function(sequelize, DataTypes) {
 
     StudentAttendence.associate = function(models) {
         StudentAttendence.belongsTo(models.Student);
+        StudentAttendence.belongsTo(models.StandardMaster)
 
         StudentAttendence.findAllAttendence = (where) => {
             return models.StudentAttendence.findAll({where: where})
+        }
+
+        StudentAttendence.getAllAttendencewithStandard = () => {
+            return models.StudentAttendence.findAll({
+                include: [
+                    {
+                        model: models.StandardMaster
+                    },
+                    {
+                        model: models.Student
+                    }
+                ],
+                groupBy: ['attendenceDate']
+            })
         }
     }
 

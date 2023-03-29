@@ -1,8 +1,8 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import NavLinks from './NavLinks'
-import styles from './MainNavigation.module.css'
+import React from 'react'
 import { makeStyles } from '@material-ui/core'
+import styles from './MainNavigation.module.css'
 
 const useStyles = makeStyles(theme => ({
     container: {

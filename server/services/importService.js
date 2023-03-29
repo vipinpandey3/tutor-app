@@ -184,7 +184,6 @@ function get_header_row(sheet) {
         var C;
         var H;
         var defCreatePromises = [];
-        let promiseArr = [];
         let returnVar;
         for (R = range.s.r + 1; R <= range.e.r; ++R) {
             let feesArray = [];
@@ -255,8 +254,7 @@ function get_header_row(sheet) {
     return returnVar;
   }
 
-
-  const createFees = (fees) => {
+const createFees = (fees) => {
     return new Promise((resolve, reject) => {
         const whereQuery = {
             aadharNo: fees.aadharNo
@@ -356,25 +354,18 @@ function get_header_row(sheet) {
     })
   }
 
-  const addStudentInSerializedManner = async(studentArray) => {
+const addStudentInSerializedManner = async(studentArray) => {
+    // console.log('studentArray =======', JSON.stringify(studentArray))
     let result
     for (let index = 0; index < studentArray.length; index++) {
-        result = await  createStudentWithAllEntities(studentArray[index]);
+        result = await createStudentWithAllEntities(studentArray[index]);
     }
     return result
-  }
+}
 
-  const createStudentWithAllEntities = async (student) => {
-    console.log("Inside the createStudentWithAllEntities function");
-    const createdParents = await createParents(student);
-    const createdStudents = await createStudentWithParentId(createdParents);
-    const createdOrUpdatedEducation = await createStudentEudcationDetails(createdStudents.StudentEducationDetails)
-    return createdOrUpdatedEducation;
-  }
-
-  const createParents = (student) => {
-    let result = {}
-    return new Promise((resolve, reject) => {
+const createStudentWithAllEntities = async (student) => {
+    const t = await models.sequelize.transaction();
+    try {
         if(student.aadharNo === undefined || student.aadharNo === null || student.aadharNo === '' ) {
             result.status = 'Failure';
             result.message = 'Student Aadhar not found';
@@ -387,15 +378,40 @@ function get_header_row(sheet) {
             result.student = student;
             reject(result)
         }
-        const whereCondition = {
-            fatherAadhar: student.Parents.fatherAadhar,
-            motherAadhar: student.Parents.motherAadhar,
-        }
-        models.Parent.createParents(student.Parents, whereCondition)
-        .then(parents => {
-            student['ParentId']= parents[0].id
-            result.student = student;
-            resolve(student);
+
+        console.log("student student", student);
+        const parent = await findParents(student, t);
+        const createdParents = await createParent(parent, student, t)
+        const foundStudent = await findStudent(student, t) 
+        const createdStudents = await createStudents(createdParents, student, foundStudent, t);
+        student = await bakeEducationDetails(student, createdStudents)
+        const createdOrUpdatedEducation = await createStudentEudcationDetails(student.StudentEducationDetails, t)
+        await t.commit();
+    }
+    catch(e) {
+        console.log("Error =======>", e);
+        await t.rollback();
+    }
+}
+
+  const findParents = async(student, t) => {
+    console.log("inside the student.findParents function");
+    const whereCondition = {
+        fatherAadhar: student.Parents.fatherAadhar,
+        motherAadhar: student.Parents.motherAadhar,
+    }
+    const parent = await models.Parent.findParents(whereCondition, t)
+    return parent;
+  }
+
+  const createParent = (parent, student, t) => {
+    return new Promise((resolve, reject) => {
+        if(parent && parent.length > 0) {
+            return resolve(parent);
+        };
+        return models.Parent.createParents(student.Parents, t)
+        .then(parent => {
+            return resolve(parent);
         })
         .catch(error => {
             console.log("Error inside the createparents function", error);
@@ -404,22 +420,37 @@ function get_header_row(sheet) {
     })
   }
 
-  const createStudentWithParentId = async(student) => {
+  const findStudent = async(student, t) => {
     const where = {
         aadharNo: student.aadharNo
-    }
-    const studentObj = await models.Student.createStudents(where, student);
-    let studentEudcation = student.StudentEducationDetails;
-    studentEudcation['StudentId'] = studentObj[0].id
-    student.StudentEducationDetails = studentEudcation;
-    return student;
+    };
+    const foundStudent = await models.Student.findStudent(where, t)
+    return foundStudent;
   }
 
-  const createStudentEudcationDetails = async(educationDetails) => {
+  const createStudents = async(parents, student, foundStudent, t) => {
+    if(foundStudent && foundStudent.length) {
+        return foundStudent
+    }
+    student.ParentId = parents.id
+    const studentObj = await models.Student.createStudents(student, t);
+    return studentObj;
+  }
+
+  const bakeEducationDetails = (student, studentObj) => {
+    return new Promise((resolve) => {
+        let studentEudcation = student.StudentEducationDetails;
+        studentEudcation['StudentId'] = studentObj.id
+        student.StudentEducationDetails = studentEudcation;
+        return resolve(student);
+    })
+  }
+
+  const createStudentEudcationDetails = async(educationDetails, t) => {
     if(educationDetails.StudentId !== undefined && educationDetails.StudentId === "") {
         return "Student Id form education details not found";
     };
-    const createdData = models.StudentEducationDetails.createDetails(educationDetails)
+    const createdData = models.StudentEducationDetails.createDetails(educationDetails, t)
     return createdData;
   }
 

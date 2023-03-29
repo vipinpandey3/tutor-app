@@ -44,7 +44,40 @@ module.exports = function(sequelize, DataTypes) {
                 unique: false
             }
         });
+        StandardMaster.belongsToMany(models.Student, {
+            as: "StandarddMap",
+            foreignKey: "StandardId",
+            through: {
+                model: models.StudentStandardMap,
+                unique: false
+            }
+        })
+        StandardMaster.hasMany(models.StudentAttendence)
         StandardMaster.hasMany(models.SubjectMaster)
+
+        StandardMaster.getAllAttendenceByStandard = () => {
+            return models.StandardMaster.findAll({
+                logging: console.log,
+                where: {
+                    status: "Active"
+                },
+                include: [
+                    {
+                        model: models.StudentStandardMap,
+                        as: "StandarddMap",
+                        through: {
+                            where: {
+                                status: "current"
+                            }
+                        }
+                    },
+                    {
+                        model: models.StudentAttendence,
+                        required: true
+                    }
+                ]
+            })
+        }
     };
 
     return StandardMaster

@@ -16,12 +16,12 @@ queue.process(async(job)=> {
 queue.on('completed', job => {
     // client.emit("queue_notification", {result: 'Task completed'})
     console.log('Job with id: ', job.id);
-    console.log('Emit ===============', io);
-    listener.emit('upload_excel', {data: resultObj});
+    // console.log('Emit ===============', io);
+    // listener.emit('upload_excel', {data: resultObj});
   })
 
 const doProcess = (data, type) => {
-    return queue.add({type: type, data: data}, { delay: 5000 })
+    return queue.add({type: type, data: data}, { priority: 3 })
     .then(result => {
         return Promise.resolve(result)
     })

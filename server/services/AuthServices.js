@@ -7,6 +7,8 @@ const CustomStrategy = require('passport-custom').Strategy;
 // const UserService = require('../services/userServices');
 const models = require('../models/');
 const moment = require('moment');
+const crypto = require('crypto');
+const Redis = require('../services/cache/redis');
 
 module.exports = function(passport) {
     passport.use('login-custom', new CustomStrategy(
@@ -42,8 +44,12 @@ module.exports = function(passport) {
                             message: "User emailId or password does not match"
                         })
                     } else {
+                        const token = jwt.sign({emailId: dbUser.emailId, password: dbUser.password}, process.env.SECRET_KEY,  { expiresIn: '8h' })
+                        const hashKey = crypto.createHash("sha256", process.env.SECRET_KEY);
+                        const hash = hashKey.update(token).digest("hex");
+                        Redis.set(hash, req.body.emailId);
                         return done(null, {
-                            token: jwt.sign({emailId: dbUser.emailId, password: dbUser.password}, process.env.SECRET_KEY,  { expiresIn: '8h' }),
+                            token: token,
                             firstName: dbUser.firstName,
                             lastName: dbUser.lastName,
                             status: dbUser.status,

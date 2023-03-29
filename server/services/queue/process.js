@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const Process = (job) => {
     if(job.data.type === "import") {
+        console.log(job.data);
         return uploadExcel(job.data.data)
         .then(result => {
             return Promise.resolve(result)

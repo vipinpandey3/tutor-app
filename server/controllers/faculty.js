@@ -795,23 +795,33 @@ const markStudentAttendence = (req, res) => {
     const attendenceDate = moment().format('YYYY-MM-DD');
     const inTime = moment().format('HH:mm:ss');
     const attendenceStatus = 1
-    return models.StudentAttendence.create({attendenceDate, inTime,attendenceStatus, StudentId})
-    .then(attendenceObj => {
-        console.log('attendenceObj', attendenceObj)
-        const result = {
-            resultShort: 'success',
-            resultLong: 'attendence marked for student with Id: ' + StudentId
+    return models.StudentStandardMap.findAll({
+        where: {
+            status: 'current',
+            StudentId: StudentId
         }
-
-        res.status(200).json(result)
     })
-    .catch(error => {
-        console.log('Failure while marking attendence for student with id: ', StudentId, error);
-        const result = {
-            resultShort: 'failure',
-            resultLong: 'Failure while marking attendence for student with id: ' + StudentId
-        }
-        res.status(200).json(result)
+    .then(standObj => {
+        console.log('standObj standObj standObj', JSON.stringify(standObj))
+        let StandardMasterId = standObj[0].StandardId;
+        return models.StudentAttendence.create({attendenceDate, inTime,attendenceStatus, StudentId, StandardMasterId})
+        .then(attendenceObj => {
+            console.log('attendenceObj', attendenceObj)
+            const result = {
+                resultShort: 'success',
+                resultLong: 'attendence marked for student with Id: ' + StudentId
+            }
+    
+            res.status(200).json(result)
+        })
+        .catch(error => {
+            console.log('Failure while marking attendence for student with id: ', StudentId, error);
+            const result = {
+                resultShort: 'failure',
+                resultLong: 'Failure while marking attendence for student with id: ' + StudentId
+            }
+            res.status(200).json(result)
+        })
     })
 }
 

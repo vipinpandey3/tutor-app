@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.white.white,
     color: "#000",
+    position: "sticky"
   },
   searchInput: {
     opacity: "0.6",

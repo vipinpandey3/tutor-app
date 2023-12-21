@@ -14,7 +14,7 @@ import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import Input from '../../../Common/Input';
 import MatButton from '../../../Common/Button';
 import PropTypes from 'prop-types'
-import Table from '../../../Common/Table';
+import Table from '../../../Common/OldTable';
 import {connect} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({

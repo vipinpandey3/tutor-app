@@ -4,8 +4,8 @@ import { createTheme } from '@material-ui/core'
 import { Route, Switch } from 'react-router-dom'
 import Dashboard from './Components/Containers/dashboard/Dashboard';
 import Tutors from './Components/Containers/Tutors/Tutors';
-import Students from './Components/Containers/Students/Students';
-import StudentDetails from './Components/Containers/Students/StudentDetails';
+import Students from './Components/Containers/Students/students/Loadable';
+import StudentDetails from './Components/Containers/Students/studentDetails/Loadable';
 import Exams from './Components/Containers/Exams/Exams'
 import TutorDetails from './Components/Containers/Tutors/TutorDetails'
 import Fees from './Components/Containers/Fees/Fees'
@@ -112,14 +112,14 @@ function App({auth: {isAuth}}) {
         <Switch>
           {!isAuth && <Route exact path="/" component={Login} /> }
           {isAuth && <Route exact path="/" component={Dashboard} /> }
-          <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={isAuth} />
-          <ProtectedRoute exact path="/tutors" component={Tutors} isAuth={isAuth} />
-          <ProtectedRoute exact path="/tutors/:tutorId" component={TutorDetails} isAuth={isAuth} />
-          <ProtectedRoute exact path="/students" component={Students} isAuth={isAuth} />
-          <ProtectedRoute exact path="/students/:studentId" component={StudentDetails} isAuth={isAuth} />
-          <ProtectedRoute exact path="/exams" component={Exams} isAuth={isAuth} />
-          <ProtectedRoute exact path="/fees" component={Fees} isAuth={isAuth} />
-          <ProtectedRoute exact path="/users" component={Users} isAuth={isAuth} />
+          <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+          <ProtectedRoute exact path="/tutors" component={Tutors} />
+          <ProtectedRoute exact path="/tutors/:tutorId" component={TutorDetails} />
+          <ProtectedRoute exact path="/students" component={Students} />
+          <ProtectedRoute exact path="/students/:studentId" component={StudentDetails} />
+          <ProtectedRoute exact path="/exams" component={Exams} />
+          <ProtectedRoute exact path="/fees" component={Fees} />
+          <ProtectedRoute exact path="/users" component={Users} />
 
           {/* <Route path="/" render={() => {!isAuthenticated ? <Login setIsAuthenticated={setIsAuthenticated} loginHandler={loginHandler} /> : <ProtectedRoute />}} /> */}
         </Switch>

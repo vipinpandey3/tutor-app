@@ -1,20 +1,33 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { alpha } from '@mui/material/styles';
+import { useTheme } from "@mui/material";
+import Box from '@mui/material/Box';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { visuallyHidden } from '@mui/utils';
+import { tokens } from "../../utils/theme.js";
+
 import {
-  Table as MuiTable,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableSortLabel,
   makeStyles,
 } from "@material-ui/core";
-
-import ActionButton from "./ActionButton";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import React from "react";
-import { TableBody } from "@material-ui/core";
-import useTable from "../../customsHooks/useTable";
-
-// import Tooltip from '@mui/material/Tooltip';
+import ActionButton from './ActionButton.js';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -26,107 +39,346 @@ const useStyles = makeStyles((theme) => ({
     },
     "& tbody td": {
       fontWeight: "300",
+      backgroundColor: "#fffbf2",
+      cursor: "pointer",
     },
     "& tbody tr:hover": {
       backgroundColor: "#fffbf2",
       cursor: "pointer",
     },
   },
+  tableContainer: {
+    overflowX: 'auto',
+    maxWidth: '100%',
+  },
+  tableCell: {
+    minWidth: '50px'
+  }
 }));
 
-function Table(props) {
-  const classes = useStyles();
-  const {
-    headCells,
-    records,
-    redirectToDetailsPage,
-    edit,
-    showCloseButton= false
-  } = props;
-  // filterFunction,
-  // openInPopup,
-  // const [tableRecords, setTableRecords] = useState(records);
-  // const [filterFunction, setFilterFunction] = useState({fn: items => {return items}})
-  const {
-    stableSort, handleTableSorting, Pagination, getComparator, orderBy, order, page, rowsPerPage
-  } = useTable(records);
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+function EnhancedTableHead(props) {
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } =
+    props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
   return (
-    <>
-      <MuiTable className={classes.table}>
-        <TableHead>
-          <TableRow key="header">
-            {headCells && headCells.length > 0 && headCells.map((cell, index) => {
-              return (
-                <TableCell key={index}>
-                  {cell.disableSorting ? (
-                    cell.label
-                  ) : (
-                    <TableSortLabel
-                      active={orderBy === cell.id}
-                      direction={orderBy === cell.id ? order : "asc"}
-                      onClick={() => handleTableSorting(cell.id)}
-                    >
-                      {cell.label}
-                    </TableSortLabel>
-                  )}
-                </TableCell>
-              );
-            })}
-            <TableCell key={'Actions'}>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {records && records.length > 0 ? 
-            stableSort(records, getComparator(order, orderBy))
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row) => {
-              return (
-                <TableRow
-                  key={row.id}
-                >
-                  {headCells.map((rowCell, index) => {
-                    const value = row[rowCell.id];
-                    return <TableCell key={index} onClick={() => {
-                      redirectToDetailsPage(row.id);
-                    }}>{value}</TableCell>;
-                  })}
-                  <TableCell key={'actionButtons'}>
-                    <ActionButton
-                      onClick={() => edit(row)}
-                      color="primary"
-                    >
-                      <EditOutlinedIcon fontSize="small" />
-                    </ActionButton>
-                    {/* <MuiToolTip title="Add" placement="top-start"> */}
-                    {
-                      showCloseButton && 
-                      <ActionButton
-                        // color="secondary"
-                        onClick={() => {
-                          // setConfirmDialog({
-                          //     isOpen: true,
-                          //     title: "Are you sure you want to delete tutor?",
-                          //     subTitle: "Operation once done can not be undone?",
-                          //     onConfirm: () => {onDeleteT(tutor.id)}
-                          // })
-                        }}
-                      >
-                      <CloseOutlinedIcon fontSize="small" />
-                    </ActionButton>
-                    }
-                  {/* </MuiToolTip>                   */}
-                </TableCell>
-              </TableRow>
-            );
-          }) : <TableRow>
-            No Data Found
-          </TableRow>
-          }
-        </TableBody>
-      </MuiTable>
-      <Pagination />
-    </>
+    <TableHead>
+      <TableRow>
+        <TableCell padding="checkbox">
+          <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{
+              'aria-label': 'select all desserts',
+            }}
+          />
+        </TableCell>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
   );
 }
 
-export default Table;
+EnhancedTableHead.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+};
+
+function EnhancedTableToolbar(props) {
+  const { numSelected, title, downloadResults, showDownloadButton, showFilterSection} = props;
+
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) =>
+            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+        }),
+      }}
+    >
+      {numSelected > 0 ? (
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <>
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            {title}
+          </Typography>
+        </>
+      )}
+
+      {numSelected > 0 ? (
+        <Tooltip title="Delete">
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <>
+          {showDownloadButton && <ActionButton
+            onClick={() => downloadResults()}
+          >
+            Download
+          </ActionButton>}
+          <Tooltip title="Filter list">
+            <IconButton onClick={() => showFilterSection(true)}>
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+        </>
+      )}
+    </Toolbar>
+  );
+}
+
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+};
+
+export default function EnhancedTable(props) {
+  const {records, headCells, redirectToDetailsPage, edit, showCloseButton= false, showActionButton = false, 
+    title, getallSelectedRows, selected, setSelected, showDownloadButton, downloadResults, showFilterSection
+  } = props
+  console.log('headCells', headCells)
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('calories');
+  // const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = records.map((n) => {return n.id});
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked);
+  };
+
+  const isSelected = (name) => {
+    return selected.indexOf(name) !== -1};
+
+  const getCellValue = (row, id) => {
+    const keys = id.split('.');
+    let value = row;
+    for (let key of keys) {
+      if (key.includes('[') && key.includes(']')) {
+        const [arrayKey, index] = key.split(/[\[\]]/).filter(Boolean);
+        value = value[arrayKey][index];
+      } else {
+        value = value[key];
+      }
+      if (!value) break;
+    }
+    return value || '-';
+  };
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - records.length) : 0;
+
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(records, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage,
+      ),
+    [order, orderBy, page, rowsPerPage],
+  );
+
+  return (
+    <Box sx={{ width: '100%' }} backgroundColor={colors.primary[400]}>
+      <Paper sx={{ width: '100%', mb: 2 }}>
+        <EnhancedTableToolbar numSelected={selected.length} title={title} showFilterSection={showFilterSection} downloadResults={downloadResults} showDownloadButton={showDownloadButton} />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={dense ? 'small' : 'medium'}
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={records.length}
+              headCells={headCells}
+            />
+            <TableBody>
+              {visibleRows.map((row, index) => {
+                const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </TableCell>
+                    {headCells.map((rowCell, index) => {
+                      return <TableCell key={index} style={{ minWidth: rowCell.minWidth, flex: rowCell.flex }} onClick={() => {
+                        redirectToDetailsPage(row.id);
+                      }}>{getCellValue(row,rowCell.id)}</TableCell>;
+                    })}
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={records.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+      {/* <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label="Dense padding"
+      /> */}
+    </Box>
+  );
+}

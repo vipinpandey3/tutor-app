@@ -10,7 +10,7 @@ import Loader from "../../Common/Loader";
 import MatButton from "../../Common/Button";
 import PropTypes from 'prop-types'
 import SearchIcon from "@material-ui/icons/Search";
-import Table from "../../Common/Table";
+import Table from "../../Common/OldTable";
 import TutorsForm from "./TutorsForm";
 import {connect} from 'react-redux';
 import { useHistory } from "react-router";

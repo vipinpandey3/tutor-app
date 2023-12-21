@@ -1,5 +1,5 @@
 {
-  "name": "tutorist-app",
+  "name": "classment",
   "version": "1.0.0",
   "description": "App to manage students data and teachers data",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "start": "nodemon --trace-warnings app.js"
   },
   "keywords": [
-    "tutor",
+    "teachers",
     "coaching",
     "student",
     "management"

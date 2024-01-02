@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Grid, makeStyles, Paper } from '@material-ui/core'
 import React, { createRef, useEffect, useState } from 'react'
-import Text from '../../Common/Text';
+import Text from '../../common/Text';
 import FeesTable from './FeesTable';
-import MatButton from '../../Common/Button';
+import MatButton from '../../common/Button';
 import FeesForm from './FeesForm';
 import FeesFileUpload from './FeesFileUpload';
 import {AiOutlineUpload} from 'react-icons/ai'

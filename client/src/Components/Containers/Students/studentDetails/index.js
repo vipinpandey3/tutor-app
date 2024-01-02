@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Box } from "@mui/material";
 import {
   AccordionSummary,
   makeStyles,
@@ -15,11 +16,13 @@ import {
   TableBody,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
-import Text from "../../common/Text";
-import Table from '../../common/Table'
+import Text from "../../../common/Text";
+import {tokens} from '../../../../utils/theme'
+import { useTheme } from "@mui/material";
+import Table from '../../../common/OldTable'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { ParentForms, StudentEducationForms } from "./StudentRelatedForms";
-import MatButton from "../../common/Button";
+import { ParentForms, StudentEducationForms } from "../studentForms/StudentRelatedForms";
+import MatButton from "../../../common/Button";
 import AddIcon from "@material-ui/icons/Add";
 import moment from 'moment';
 import {fetchParentFormFields, 
@@ -34,21 +37,19 @@ import {fetchParentFormFields,
   fetchStudentAttendence,
   markStudentAbsence,
   hideNotification
-} from "../../../redux/actions/studentAction"
+} from "../../../../redux/actions/studentAction"
 
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import Notification from "../../common/Alert";
-import {tokens} from '../../../utils/theme'
-import { useTheme } from "@mui/material";
+import Notification from "../../../common/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
-    // margin: theme.spacing(2),
-    // padding: theme.spacing(3),
-    // "&.MuiAccordion-root.Mui-expanded": {
-    //   margin: theme.spacing(2),
-    // },
+    margin: theme.spacing(2),
+    padding: theme.spacing(3),
+    "&.MuiAccordion-root.Mui-expanded": {
+      margin: theme.spacing(2),
+    },
   },
   flexcontainer: {
     display: "flex",
@@ -128,7 +129,6 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   const { studentId } = params;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
   const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
 
@@ -200,6 +200,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
 
   return (
     <>
+      
       <Notification
         open={error} 
         handleClose={hideNotification} 
@@ -207,11 +208,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
         duration={3000} 
         message={message} 
       />
-      <Paper className={`${styles.paperContent} `} style={
-      {
-        backgroundColor: colors.blueAccent[200]
-      }
-    }>
+      <Paper className={`${styles.paperContent} `}>
         <Grid container>
           {studentDetails.studentDetailAttributes.map((atributes, index) => {
             return (

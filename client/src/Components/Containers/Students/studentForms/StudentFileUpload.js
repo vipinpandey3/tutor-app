@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { Grid, makeStyles, Paper, TextField } from '@material-ui/core'
 import React, { useContext, useRef, useState } from 'react'
-import { FeesContext } from '../../../context/fees-context';
-import MatButton from '../../Common/Button';
+import { FeesContext } from '../../../../context/fees-context';
+import MatButton from '../../../common/Button';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {

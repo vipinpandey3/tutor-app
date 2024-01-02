@@ -1,5 +1,5 @@
 import React from 'react';
-import Form from '../../Common/Form';
+import Form from '../../../common/Form';
 
 
 export const ParentForms = (props) => {

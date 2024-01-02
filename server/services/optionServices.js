@@ -164,7 +164,7 @@ const getStudentStreamData = () => {
             },
             {
                 id: 4,
-                type: "Common"
+                type: "common"
             }
         ]
 

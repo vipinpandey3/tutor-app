@@ -825,6 +825,8 @@ const markStudentAttendence = (req, res) => {
     })
 }
 
+const get
+
 const getAllStudentAttendence = (req, res) => {
     console.log('inside getAllStudentAttendence function');
     const tableAttributes = attributes[20].columnsHeader;

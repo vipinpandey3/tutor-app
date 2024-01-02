@@ -2,6 +2,7 @@ import * as types from '../types';
 
 import axios from 'axios';
 import axiosHelper from '../../utils/AxiosHelper';
+import dispatchEngine, { addPayload } from './actionHelper';
 
 export const loginThree = (postObj) => {
     return async(dispatch, getState) => {
@@ -98,19 +99,4 @@ export const removeAuthToken = () => {
             }
         });
     }
-}
-
-export const dispatchAction = (type, payload = null) => (payload != null ? { type, payload } : { type });
-
-const dispatchEngine = (axiosData, type, dispatch, errorType) => {
-    return new Promise(() => {
-        if(axiosData && axiosData.data) {
-            const dispatchPayload = axiosData.result;
-            console.log('dispatchPayload dispatchPayload', dispatchPayload)
-            return dispatch(dispatchAction(type, dispatchPayload))
-        } else {
-            const dispatchPayload = axiosData.result;
-            return dispatch(dispatchAction(type, dispatchPayload))
-        }
-    })
 }

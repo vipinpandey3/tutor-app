@@ -1,6 +1,6 @@
 import {addTeacherEducationDetails, updateTutorEducationDetail} from '../../../redux/actions/tutorAction';
 
-import Form from '../../Common/Form'
+import Form from '../../common/Form'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux';

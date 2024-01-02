@@ -1,11 +1,17 @@
 /* eslint-disable array-callback-return */
 import { Grid, makeStyles, Paper } from "@material-ui/core";
 import React, { useState } from "react";
-import MatButton from "../../Common/Button";
-import DatePicker from "../../Common/DatePicker";
-import Select from "../../Common/Select";
-import Text from "../../Common/Text";
-import Input from '../../Common/Input';
+// import MatButton from "../../../common/Button";
+// import DatePicker from "../../../common/DatePicker";
+// import Select from "../../../common/Select";
+// import Text from "../../../common/Text";
+// import Input from '../../../common/Input';
+
+import MatButton from "../../../common/Button";
+import DatePicker from "../../../common/DatePicker";
+import Select from "../../../common/Select";
+import Text from "../../../common/Text";
+import Input from '../../../common/Input';
 
 const useStyles = makeStyles((theme) => ({
   // root: {

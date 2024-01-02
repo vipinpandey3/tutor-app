@@ -2,8 +2,8 @@
 /* eslint-disable no-unused-vars */
 import { FormControl, Grid, IconButton, InputAdornment, InputLabel, makeStyles, OutlinedInput, Paper } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
-import MatButton from '../../Common/Button'
-import Text from '../../Common/Text'
+import MatButton from '../../common/Button'
+import Text from '../../common/Text'
 import {MdGroupAdd} from 'react-icons/md'
 import UserTable from './UserTable'
 import {AiFillCloseCircle} from 'react-icons/ai'

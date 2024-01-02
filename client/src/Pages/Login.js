@@ -1,7 +1,7 @@
 import { Grid, makeStyles, Paper } from '@material-ui/core'
 import React, { useState } from 'react'
-import MatButton from '../Components/Common/Button'
-import Input from '../Components/Common/Input';
+import MatButton from '../components/common/Button'
+import Input from '../components/common/Input';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {
@@ -9,7 +9,7 @@ import {
     removeAuthToken,
     hideNotification
 } from '../redux/actions/authAction'
-import Notification from '../Components/Common/Alert';
+import Notification from '../components/common/Alert';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {

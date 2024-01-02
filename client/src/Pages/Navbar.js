@@ -23,8 +23,9 @@ import { logout } from '../redux/actions/authAction'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.white.white,
+    backgroundColor: '#ffffff',
     color: "#000",
+    position: "sticky"
   },
   searchInput: {
     opacity: "0.6",

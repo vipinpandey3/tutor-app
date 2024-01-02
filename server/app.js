@@ -35,14 +35,14 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use((req, res, next) => {
-  models.User.findByPk(1)
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
-});
+// app.use((req, res, next) => {
+//   models.User.findByPk(1)
+//     .then((user) => {
+//       req.user = user;
+//       next();
+//     })
+//     .catch((err) => console.log(err));
+// });
 
 app.use(passport.initialize());
 // app.use(passport.session())

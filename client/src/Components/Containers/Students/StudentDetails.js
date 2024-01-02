@@ -15,11 +15,11 @@ import {
   TableBody,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
-import Text from "../../Common/Text";
-import Table from '../../Common/Table'
+import Text from "../../common/Text";
+import Table from '../../common/Table'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ParentForms, StudentEducationForms } from "./StudentRelatedForms";
-import MatButton from "../../Common/Button";
+import MatButton from "../../common/Button";
 import AddIcon from "@material-ui/icons/Add";
 import moment from 'moment';
 import {fetchParentFormFields, 
@@ -38,15 +38,17 @@ import {fetchParentFormFields,
 
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import Notification from "../../Common/Alert";
+import Notification from "../../common/Alert";
+import {tokens} from '../../../utils/theme'
+import { useTheme } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(3),
-    "&.MuiAccordion-root.Mui-expanded": {
-      margin: theme.spacing(2),
-    },
+    // margin: theme.spacing(2),
+    // padding: theme.spacing(3),
+    // "&.MuiAccordion-root.Mui-expanded": {
+    //   margin: theme.spacing(2),
+    // },
   },
   flexcontainer: {
     display: "flex",
@@ -124,6 +126,8 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
   const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
@@ -203,7 +207,11 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
         duration={3000} 
         message={message} 
       />
-      <Paper className={`${styles.paperContent} `}>
+      <Paper className={`${styles.paperContent} `} style={
+      {
+        backgroundColor: colors.blueAccent[200]
+      }
+    }>
         <Grid container>
           {studentDetails.studentDetailAttributes.map((atributes, index) => {
             return (

@@ -7,10 +7,10 @@
 // } from "@material-ui/core";
 // import React, { useEffect, useState, useRef } from "react";
 // import { useHistory } from "react-router";
-// import Input from "../../Common/Input";
-// import Table from "../../Common/Table";
+// import Input from "../../common/Input";
+// import Table from "../../common/Table";
 // import SearchIcon from "@material-ui/icons/Search";
-// import MatButton from "../../Common/Button";
+// import MatButton from "../../common/Button";
 // import AddIcon from "@material-ui/icons/Add";
 // // import StudentForm from "./StudentForm";
 // import moment from 'moment'
@@ -28,9 +28,9 @@
 //   hideNotification
 // } from '../../../redux/actions/studentAction'
 // import StudentFileUpload from "./StudentFileUpload";
-// import Notification from "../../Common/Alert";
+// import Notification from "../../common/Alert";
 
-// // import Loader from '../../Common/Loader'
+// // import Loader from '../../common/Loader'
 
 
 // const useStyles = makeStyles((theme) => ({
@@ -52,7 +52,7 @@
 //   aadharNo: "",
 //   gender: "Male",
 //   dob: moment().format('YYYY-MM-DD'),
-//   stream: 'Common',
+//   stream: 'common',
 // };
 // const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields, error, severity, message}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile, hideNotification}) => {
 //   const history = useHistory();

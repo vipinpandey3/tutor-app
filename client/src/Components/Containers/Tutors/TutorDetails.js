@@ -6,10 +6,10 @@ import {fetchTutorDetails, fetchTutorEducationFormFields, toggleForm} from '../.
 import AddIcon from "@material-ui/icons/Add";
 import EducationForm from './TutorRelatedForm';
 // import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MatButton from '../../Common/Button';
+import MatButton from '../../common/Button';
 import PropTypes from 'prop-types'
 // import TeacherAttendenceTable from './TeacherAttendenceTable';
-import Text from '../../Common/Text';
+import Text from '../../common/Text';
 import {connect} from 'react-redux';
 import { useParams } from 'react-router';
 

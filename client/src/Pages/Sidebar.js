@@ -1,7 +1,9 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import NavLinks from "./NavLinks";
+import NavLinks from "../utils/NavLinks";
+import {tokens} from '../utils/theme'
+import { useTheme } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   sideMenu: {
@@ -56,17 +58,29 @@ const useStyles = makeStyles((theme) => ({
 
 const Sidebar = () => {
   const classes = useStyles();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   return (
-    <section className={classes.sideMenu}>
+    <section className={classes.sideMenu} style={
+      {
+        backgroundColor: colors.blueAccent[200]
+      }
+    }>
       <div className={classes.logoConttainer}>
-        <p className={classes.logo}>Tutors App</p>
+        <p className={classes.logo} style={{
+              color: colors.white['white']
+            }}>Tutors App</p>
       </div>
       <ul className={classes.menuContainer}>
         {NavLinks.map((link) => {
           return (
-            <li key={link.id} className={classes.menuList}>
+            <li key={link.id} style={{
+              color: colors.white['white']
+            }} className={classes.menuList}>
               <span className={classes.iconPadding}>{link.icons}</span>
-              <NavLink className={classes.linkStyle} to={link.path}>
+              <NavLink className={classes.linkStyle} style={{
+              color: colors.white['white']
+            }} to={link.path}>
                 {link.name}
               </NavLink>
             </li>

@@ -2,13 +2,13 @@
 /* eslint-disable array-callback-return */
 import React, { useState } from "react";
 import { Paper, makeStyles, Grid } from "@material-ui/core";
-import Input from "../../Common/Input";
-import MatButton from "../../Common/Button";
-import Text from "../../Common/Text";
-import DatePicker from "../../Common/DatePicker";
-import Select from '../../Common/Select'
-import MultiSelect from "../../Common/MultiSelect";
-import TimePicker from "../../Common/TimePicker";
+import Input from "../../common/Input";
+import MatButton from "../../common/Button";
+import Text from "../../common/Text";
+import DatePicker from "../../common/DatePicker";
+import Select from '../../common/Select'
+import MultiSelect from "../../common/MultiSelect";
+import TimePicker from "../../common/TimePicker";
 
 const useStyles = makeStyles((theme) => ({
   paperConent: {

@@ -8,10 +8,10 @@ import {
 import React, { useEffect, useState, useRef } from "react";
 import { Box } from "@mui/material";
 import { useHistory } from "react-router";
-import Input from "../../../Common/Input";
-import Table from "../../../Common/Table.js";
+import Input from "../../../common/Input";
+import Table from "../../../common/Table.js";
 import SearchIcon from "@material-ui/icons/Search";
-import MatButton from "../../../Common/Button";
+import MatButton from "../../../common/Button";
 import AddIcon from "@material-ui/icons/Add";
 import StudentForm from "../studentForms/StudentForm";
 import moment from 'moment'
@@ -29,12 +29,12 @@ import {
   hideNotification
 } from '../../../../redux/actions/studentAction'
 import StudentFileUpload from "../studentForms/StudentFileUpload";
-import Notification from "../../../Common/Alert";
+import Notification from "../../../common/Alert";
 import {tokens} from '../../../../utils/theme'
 import { useTheme } from "@mui/material";
-import Header from "../../../Common/Header";
+import Header from "../../../common/Header";
   
-  // import Loader from '../../Common/Loader'
+  // import Loader from '../../common/Loader'
   
   
   const useStyles = makeStyles((theme) => ({
@@ -56,7 +56,7 @@ import Header from "../../../Common/Header";
     aadharNo: "",
     gender: "Male",
     dob: moment().format('YYYY-MM-DD'),
-    stream: 'Common',
+    stream: 'common',
   };
   const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields, error, severity, message}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile, hideNotification}) => {
     const history = useHistory();

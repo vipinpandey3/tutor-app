@@ -7,7 +7,7 @@ import {
 import { Grid, Paper, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 
-import Chart from './ChartsComponents/LineChart'
+import Chart from './ChartsComponents/LineChart.js'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StudentAttendence from "./StudentAttendence/StudentAttendence";
 import TutorAttendence from "./TutorAttendence/TutorAttendence";

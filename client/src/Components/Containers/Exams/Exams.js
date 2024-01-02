@@ -8,8 +8,8 @@ import {
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import { ExamContext } from "../../../context/exam-context";
-import MatButton from "../../Common/Button";
-import Text from "../../Common/Text";
+import MatButton from "../../common/Button";
+import Text from "../../common/Text";
 import ExamForm from "./ExamForm";
 import ExamTable from "./ExamTable";
 import PropTypes from 'prop-types'

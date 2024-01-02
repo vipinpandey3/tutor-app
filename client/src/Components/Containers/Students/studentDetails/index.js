@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Box } from "@mui/material";
 import {
   AccordionSummary,
   makeStyles,
@@ -15,11 +16,13 @@ import {
   TableBody,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
-import Text from "../../../Common/Text";
-import Table from '../../../Common/OldTable'
+import Text from "../../../common/Text";
+import {tokens} from '../../../../utils/theme'
+import { useTheme } from "@mui/material";
+import Table from '../../../common/OldTable'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ParentForms, StudentEducationForms } from "../studentForms/StudentRelatedForms";
-import MatButton from "../../../Common/Button";
+import MatButton from "../../../common/Button";
 import AddIcon from "@material-ui/icons/Add";
 import moment from 'moment';
 import {fetchParentFormFields, 
@@ -38,7 +41,7 @@ import {fetchParentFormFields,
 
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import Notification from "../../../Common/Alert";
+import Notification from "../../../common/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
@@ -124,7 +127,8 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   const styles = useStyles();
   const params = useParams();
   const { studentId } = params;
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
   const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
 

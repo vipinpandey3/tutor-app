@@ -2,7 +2,7 @@
 import { Grid, makeStyles, Paper, TextField } from '@material-ui/core'
 import React, { useContext, useRef, useState } from 'react'
 import { FeesContext } from '../../../../context/fees-context';
-import MatButton from '../../../Common/Button';
+import MatButton from '../../../common/Button';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {

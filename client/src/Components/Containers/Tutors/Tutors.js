@@ -5,12 +5,12 @@ import {addTutors, getTutorForm, getTutors, toggleForm} from '../../../redux/act
 
 import AddIcon from "@material-ui/icons/Add";
 import { Grid } from "@material-ui/core";
-import Input from "../../Common/Input";
-import Loader from "../../Common/Loader";
-import MatButton from "../../Common/Button";
+import Input from "../../common/Input";
+import Loader from "../../common/Loader";
+import MatButton from "../../common/Button";
 import PropTypes from 'prop-types'
 import SearchIcon from "@material-ui/icons/Search";
-import Table from "../../Common/OldTable";
+import Table from "../../common/OldTable";
 import TutorsForm from "./TutorsForm";
 import {connect} from 'react-redux';
 import { useHistory } from "react-router";

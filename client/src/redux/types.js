@@ -43,7 +43,7 @@ export const FETCH_STUDENT_FEES_DATA_ERROR = "FETCH_FEES_DATA_ERROR";
 export const UPDATE_STUDENT_EDUCATION_DETAILS = "UPDATE_STUDENT_EDUCATION_DETAILS";
 export const UPDATE_STUDENT_EDUCATION_DETAILS_ERROR = "UPDATE_STUDENT_EDUCATION_DETAILS_ERROR";
 export const GET_STUDENT_ATTENDENCE = "GET_STUDENT_ATTENDENCE";
-export const GET_STUDENT_ATTENDENCE_ERROR = "GET_STUDENT_ATTENDENCE_ERROR"; 
+export const GET_STUDENT_ATTENDENCE_ERROR = "GET_STUDENT_ATTENDENCE_ERROR";
 
 // Fees Action Types
 export const FETCH_FEES_FORM_FIELDS = "FETCH_FEES_FORM_FIELDS";
@@ -150,7 +150,10 @@ export const FETCH_STUDENT_FEES_URL = 'admin/getFeesDetailsById/';
 export const FETCH_STUDENT_ATTENDENCE_URL = 'faculty/get-student-attendenceById/';
 export const MARK_STUDENT_ABSENCE_URL = "faculty/mark_student_absence";
 export const FETCH_PARENT_FORM_FIELDS_URL = '/admin/get-parent-formFields';
-
+export const ADD_PARENT_URL = "/admin/add-parent";
+export const GET_EDUCATION_FORMFIELDS_URL = "/admin/get-education-formFields";
+export const ADD_STUDENT_EDUCATION_DETAILS_URL = "/admin/add-studentEducation-details";
+export const UPDATE_EDUCATION_DETAIL_URL = "/admin/update-education-details";
 
 // Tutor URLS
 export const GET_TUTOR_URLS = "/admin/get-teachers";

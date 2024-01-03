@@ -72,6 +72,7 @@ export const FETCH_EXAM_SUBJECTS_ERROR = "FETCH_EXAM_SUBJECTS_ERROR";
 export const DELETE_EXAM = "DELETE_EXAM";
 export const DELETE_EXAM_ERROR = "DELETE_EXAM_ERROR"
 
+
 // Dashboard constant types
 export const FETCH_STUDENT_ATTENDENCE = 'FETCH_STUDENT_ATTENDENCE';
 export const FETCH_STUDENT_ATTENDENCE_ERROR = 'FETCH_STUDENT_ATTENDENCE_ERROR';
@@ -176,3 +177,10 @@ export const MARK_TUTOR_ABSENCE_URL = "/faculty/martkTutorAbsence";
 export const MARK_TUTOR_ATTENDENCE_URL =  "/faculty/markTutorAttedence"
 export const UPDATE_TUTOR_ATTENDENCE_URL = "/faculty/martkTutorTimeOut"
 export const GET_STUDENT_ATTENDENCE_CHART_URL = "/dashboard/get-student-attendence-chart-data"
+
+// Exam URLS
+export const FETCH_EXAMS_URL = "/faculty/get-exams";
+export const FECTH_EXAM_FORM_FIELDS_URL = "/faculty/getExamFormFields";
+export const FETCH_SUBJECT_URL = "/faculty/getSubjects/"
+export const CREATE_EXAM_URL = "/faculty/create-exam";
+export const DELETE_EXAM_URL = "/faculty/disableExam"

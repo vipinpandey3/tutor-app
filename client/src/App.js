@@ -7,7 +7,7 @@ import Dashboard from './components/containers/dashboard/Dashboard';
 import Tutors from './components/containers/Tutors/Tutors';
 import Students from './components/containers/Students/students/Loadable';
 import StudentDetails from './components/containers/Students/studentDetails/Loadable';
-import Exams from './components/containers/Exams/Exams'
+import Exams from './components/containers/Exams/exams/Loadable'
 import TutorDetails from './components/containers/Tutors/TutorDetails'
 import Fees from './components/containers/Fees/Fees'
 import Users from './components/containers/Users/Users';

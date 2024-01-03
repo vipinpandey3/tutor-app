@@ -28,9 +28,9 @@ const examReducer = (state = initialState, action) => {
                 message: action.payload.message,
                 error: action.payload.error,
                 examData: {
-                    rows: action.payload.examData.rows,
-                    examTableHeader: action.payload.examData.examTableHeader,
-                    examNestedTableHeader: action.payload.examData.examNestedTableHeader
+                    rows: action.payload.exams,
+                    examTableHeader: action.payload.examTableHeader,
+                    examNestedTableHeader: action.payload.examNestedTableHeader
                 }
             };
 

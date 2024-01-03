@@ -1,167 +1,68 @@
 import * as types from '../types';
 import axios from 'axios';
 import * as collection from '../../utils/collections'
+import axiosHelper from "../../utils/AxiosHelper";
+import dispatchEngine, { addPayload }  from './actionHelper';
 
 export const fetchAllExams = () => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
-
-        const getData = async() => {
-            const response = await axios.get('/faculty/get-exams', {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch tutor data!');
-            }
-            return response.data
-        };
-
-        try {
-            const examData = await getData();
-            if(examData.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_EXAMS,
-                    payload: {
-                        error: false,
-                        message: examData.resultLong,
-                        loading: false,
-                        examData: {
-                            rows: examData.exams,
-                            examTableHeader: examData.examTableHeader,
-                            examNestedTableHeader: examData.examNestedTableHeader
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_EXAMS_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        mesaage: examData.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.FETCH_EXAMS_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    mesaage: error
-                }
-            })
+        const axiosData = await axiosHelper.sendRequest(types.FETCH_EXAMS_URL, "GET", token, null);
+        const payload = {
+            error: false,
+            message: axiosData.resultLong,
+            loading: false,
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return await dispatchEngine(axiosAndPayloadData, types.FETCH_EXAMS, dispatch, types.FETCH_EXAMS_ERROR)
     }
-};
+}
 
 export const fetchExamFormFields = () => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
-        const getData = async() => {
-            const response = await axios.get('/faculty/getExamFormFields', {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error("Could not fetch exam formfields");
+        const axiosData = await axiosHelper.sendRequest(types.FECTH_EXAM_FORM_FIELDS_URL, "GET", token, null);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showForm: true,
+            formDetails: {
+                formName: "Create Exam",
+                buttonName: "Create",
+                editFlag: false
             }
-            return response.data;
         }
 
-        try {
-            const formData = await getData();
-            if(formData.resultShort === 'success') {
-                dispatch({
-                    type: types.FECTH_EXAM_FORM_FIELDS,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: formData.resultLong,
-                        formFields: formData.formFields,
-                        showForm: true,
-                        formDetails: {
-                            formName: "Create Exam",
-                            buttonName: "Create",
-                            editFlag: false
-                        }
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FECTH_EXAM_FORM_FIELDS_ERROR,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        mesage: formData.resultLong
-                    } 
-                })
-            }
-        } catch (error) {
-            console.log("Error ==>>", error)
-            dispatch({
-                type: types.FECTH_EXAM_FORM_FIELDS_ERROR,
-                payload: {
-                    loading: false,
-                    error: false,
-                    mesage: error
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return await dispatchEngine(axiosAndPayloadData, types.FECTH_EXAM_FORM_FIELDS, dispatch, types.FECTH_EXAM_FORM_FIELDS_ERROR)
     }
 }
 
 export const fetchSubjectByStandard = (stdId) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: true
         });
-
-        const getSubjects = async() => {
-            const response = await axios.get(`/faculty/getSubjects/${stdId}`, {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error("Errrow while fetching Subjects");
-            }
-            return response.data
-        };
-
-        try {
-            const subjects = await getSubjects();
-            if(subjects.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_EXAM_SUBJECTS,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: subjects.resultLong,
-                        subjects: subjects.subjects
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_EXAM_SUBJECTS_ERROR,
-                    payload: {
-                        error: true,
-                        loading: false,
-                        mesaage: subjects.resultLong
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.FETCH_EXAM_SUBJECTS_ERROR,
-                payload: {
-                    error: true,
-                    loading: false,
-                    mesaage: error
-                }
-            })
+        const url = types.FETCH_SUBJECT_URL + stdId;
+        const axiosData = await axiosHelper.sendRequest(url,'GET', token, null);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return await dispatchEngine(axiosAndPayloadData, types.FETCH_EXAM_SUBJECTS, dispatch, types.FETCH_EXAM_SUBJECTS_ERROR)
     }
 }
 
@@ -172,54 +73,20 @@ export const createExam = (examObj) => {
             type: types.SET_LOADING,
             payload: true
         })
-        const addData = async() => {
-            const response = await axios.post('/faculty/create-exam', examObj, {headers: collection.setHeader(token)})
-            if(response.statusText !== "OK") {
-                throw new Error("Could not fetch exam formfields");
+        const axiosData = await axiosHelper.sendRequest(types.CREATE_EXAM_URL, 'POST', token, examObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+            showForm: false,
+            formDetails: {
+                formName: "",
+                buttonName: "",
+                editFlag: false
             }
-            return response.data;
         }
-
-        try {
-            const addedData = await addData();
-            if(addedData.resultShort === 'success') {
-                dispatch({
-                    type: types.ADD_EXAM,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: addedData.resultLong,
-                        showForm: false,
-                        formDetails: {
-                            formName: "",
-                            buttonName: "",
-                            editFlag: false
-                        }
-                    }
-                });
-                return fetchAllExams();
-            } else {
-                dispatch({
-                    type: types.ADD_EXAM_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: addedData.resultLong,
-                        show: true
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.ADD_FEES_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error,
-                    showForm: true
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return await dispatchEngine(axiosAndPayloadData, types.ADD_EXAM, dispatch, types.ADD_EXAM_ERROR)
     }
 }
 
@@ -248,47 +115,14 @@ export const deleteExam = (data) => {
             payload: true
         });
 
-        const updateData = async() => {
-            const response = await axios.post('/faculty/disableExam', postObj, {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error("Could not delete exam");
-            }
-            return response.data;
-        };
-
-        try {
-            const deletedData = await updateData();
-            if(deletedData.resultShort === 'success') {
-                dispatch({
-                    type: types.DELETE_EXAM,
-                    payload: {
-                        loading: false,
-                        error: false,
-                        message: deletedData.resultLong
-                    }
-                })
-                return fetchAllExams();
-            } else {
-                dispatch({
-                    type: types.DELETE_EXAM_ERROR,
-                    payload: {
-                        loading: false,
-                        error: true,
-                        message: deletedData.resultLong
-                    }
-                })
-            }
-            return fetchAllExams();
-        } catch (error) {
-            dispatch({
-                type: types.DELETE_EXAM_ERROR,
-                payload: {
-                    loading: false,
-                    error: true,
-                    message: error
-                }
-            })
+        const axiosData = await axiosHelper.sendRequest(types.DELETE_EXAM_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return await dispatchEngine(axiosAndPayloadData, types.DELETE_EXAM, dispatch, types.DELETE_EXAM_ERROR)
     }
 }
 

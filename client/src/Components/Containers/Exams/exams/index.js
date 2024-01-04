@@ -7,21 +7,16 @@ import {
   Paper,
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
-import { ExamContext } from "../../../../context/exam-context";
-import MatButton from "../../../common/Button";
-import Text from "../../../common/Text";
-import ExamForm from "../examForm/Loadable";
-import ExamTable from "../examTable/Loadable";
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import {
   fetchAllExams,
-  fetchExamFormFields,
-  createExam,
-  toggleForm,
-  deleteExam,
-  fetchSubjectByStandard
 } from '../../../../redux/actions/examAction'
+import CMentTabs from "../../../common/Tabs";
+import OngoingExams from "./ongoingExams/Loadable";
+import Box from '@mui/material/Box';
+import CompletedExams from "./completedExams/Loadable";
+import CanceledExams from "./canceledExams/Loadable";
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -42,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const initialExamFormValue = {
   examType: "",
   timeStart: "10.00",
@@ -53,17 +50,50 @@ const initialExamFormValue = {
   hours: 1
 }
 
-const Exams = ({exam: {loading, error, message, examData, examFormFields, formDetails, showForm, subjects}, toggleForm, createExam, fetchExamFormFields, fetchAllExams, deleteExam, fetchSubjectByStandard}) => {
+const tabs = [
+  {
+    label: "OnGoing Exams",
+    id: 0
+  },
+  {
+    label: "Completed Exams",
+    id: 1
+  },
+  {
+    label: "Canceled Exams",
+    id: 2
+  }
+]
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 1 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+const Exams = () => {
   const styles = useStyles();
-  
-  const [formTitle, setFormTitle] = useState({
-    title: '"Schedule Exam"',
-    buttonTitle: "Schedule Exam"
-  })
-  const [searchStudent, setSearchStudent] = useState("")
-  const [editFormFieldValue, setEditFormFieldValues] = useState([]);
-  const [editFormFlag, setEditExamFormFlag] = useState(false)
-  // const {fetchSubjectByStandard, getExamById} = useContext(ExamContext);
+  const [tabValue, setTabValue] = useState(0)
 
   useEffect(() => {
     loadExam()
@@ -73,53 +103,30 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
     fetchAllExams()
   }
 
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   return (
     <>
-      { showForm &&  
-        <ExamForm
-          toggleForm={toggleForm} 
-          loadExam={loadExam} 
-          initialExamFormValue={initialExamFormValue} 
-          formTitle={formTitle} 
-          examFormInput={examFormFields} 
-          fetchSubjectByStandard={fetchSubjectByStandard} 
-          subjects={subjects}
-          createExam={createExam}
-        />
-      }      
-      <Paper className={styles.paperCotent}>
-        <Grid container>
-          <Grid item xs={3}>
-              <Text variable="subtitle1" component="subtitle1">Upcoming Exam</Text>
-          </Grid>
-          <Grid item sm></Grid>
-          <Grid item xs={3}>
-            <MatButton onClick={fetchExamFormFields} variant="contained" style={{ flex: "1", width: "90%" }}>Create Exam</MatButton>
-          </Grid>
-        </Grid>
-        {
-          examData.examTableHeader && 
-          <ExamTable 
-            rows={examData.rows} 
-            ExamTableHeader={examData.examTableHeader} 
-            ExamNestedTableHeader={examData.examNestedTableHeader}
-            disableExam={deleteExam}
-            loadExam={loadExam}
-          />
-        }
-      </Paper>
+      <CMentTabs tabs={tabs} tabValue={1} handleChange={handleTabChange} value={tabValue}>
+        <CustomTabPanel value={tabValue} index={0}>
+          <OngoingExams />
+        </CustomTabPanel>
+        <CustomTabPanel value={tabValue} index={1}>
+          <CompletedExams />
+        </CustomTabPanel>
+        <CustomTabPanel value={tabValue} index={2}>
+          <CanceledExams />
+          {/* <OngoingExams /> */}
+        </CustomTabPanel>
+      </CMentTabs>
     </>
   );
 };
 
 Exams.propTypes = {
-  fetchAllExams: PropTypes.func.isRequired,
-  fetchExamFormFields: PropTypes.func.isRequired,
-  exam: PropTypes.object.isRequired,
-  createExam: PropTypes.func.isRequired,
-  toggleForm: PropTypes.func.isRequired,
-  deleteExam: PropTypes.func.isRequired,
-  fetchSubjectByStandard: PropTypes.func.isRequired
+
 };
 
 const mapStateToProps = state => {
@@ -128,4 +135,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {deleteExam, createExam, fetchAllExams, fetchExamFormFields, toggleForm, fetchSubjectByStandard})(Exams);
+export default connect(mapStateToProps, {})(Exams);

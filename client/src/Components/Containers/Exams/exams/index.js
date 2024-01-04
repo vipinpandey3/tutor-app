@@ -91,15 +91,20 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const Exams = () => {
-  const styles = useStyles();
-  const [tabValue, setTabValue] = useState(0)
+const Exams = ({fetchAllExams}) => {
+  const [tabValue, setTabValue] = useState(0);
+  const abortController = new AbortController();
 
   useEffect(() => {
-    loadExam()
-  }, [])
+    loadExam();
+    return () => {
+      abortController.abort(); // Cancel the request if component unmounts
+    };
+  }, [tabValue])
 
   const loadExam = () => {
+    console.log("Calling this. api")
+    console.log("tabvalue", tabValue);
     fetchAllExams()
   }
 
@@ -126,7 +131,7 @@ const Exams = () => {
 };
 
 Exams.propTypes = {
-
+  fetchAllExams: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -135,4 +140,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {})(Exams);
+export default connect(mapStateToProps, {fetchAllExams})(Exams);

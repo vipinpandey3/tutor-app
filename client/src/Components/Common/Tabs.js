@@ -56,7 +56,7 @@ export default function CMentTabs({tabs, handleChange, value, children}) {
             {
                 tabs.map(tab => {
                     console.log("Tab", tab);
-                    return <Tab label={tab?.label} {...a11yProps(tab?.id)} />
+                    return <Tab label={tab?.label} key={tab?.id} {...a11yProps(tab?.id)} />
                 })
             }
         </Tabs>

@@ -1,6 +1,4 @@
 import * as types from '../types';
-import axios from 'axios';
-import * as collection from '../../utils/collections'
 import axiosHelper from "../../utils/AxiosHelper";
 import dispatchEngine, { addPayload }  from './actionHelper';
 

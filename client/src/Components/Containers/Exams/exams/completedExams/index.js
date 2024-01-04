@@ -68,7 +68,7 @@ const CompletedExams = ({exam: {loading, error, message, examData, examFormField
   }, [])
 
   const loadExam = () => {
-    fetchAllExams()
+    // fetchAllExams()
   }
 
   return (

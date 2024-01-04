@@ -81,11 +81,11 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
   // const {fetchSubjectByStandard, getExamById} = useContext(ExamContext);
 
   useEffect(() => {
-    loadExam()
+    // loadExam()
   }, [])
 
   const loadExam = () => {
-    fetchAllExams()
+    // fetchAllExams()
   }
 
   return (

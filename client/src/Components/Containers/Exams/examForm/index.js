@@ -12,8 +12,8 @@ import TimePicker from "../../../common/TimePicker";
 
 const useStyles = makeStyles((theme) => ({
   paperConent: {
-    padding: theme.spacing(3),
-    margin: theme.spacing(5),
+    padding: theme.spacing(1),
+    margin: theme.spacing(1.5),
   },
   contentMargin: {
     margin: "10px 0",

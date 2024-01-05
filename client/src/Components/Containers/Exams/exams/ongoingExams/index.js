@@ -53,21 +53,6 @@ const initialExamFormValue = {
   hours: 1
 }
 
-const tabs = [
-  {
-    label: "Tab One",
-    id: 1
-  },
-  {
-    label: "Tab Two",
-    id: 2
-  },
-  {
-    label: "Tab Three",
-    id: 3
-  }
-]
-
 const Exams = ({exam: {loading, error, message, examData, examFormFields, formDetails, showForm, subjects}, toggleForm, createExam, fetchExamFormFields, fetchAllExams, deleteExam, fetchSubjectByStandard}) => {
   const styles = useStyles();
   
@@ -78,14 +63,8 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
   const [searchStudent, setSearchStudent] = useState("")
   const [editFormFieldValue, setEditFormFieldValues] = useState([]);
   const [editFormFlag, setEditExamFormFlag] = useState(false)
-  // const {fetchSubjectByStandard, getExamById} = useContext(ExamContext);
-
-  useEffect(() => {
-    // loadExam()
-  }, [])
-
   const loadExam = () => {
-    // fetchAllExams()
+    fetchAllExams({status: "onGoing"})
   }
 
   return (
@@ -119,7 +98,6 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
             ExamTableHeader={examData.examTableHeader} 
             ExamNestedTableHeader={examData.examNestedTableHeader}
             disableExam={deleteExam}
-            loadExam={loadExam}
           />
         }
       </Paper>

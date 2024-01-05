@@ -46,7 +46,7 @@ const CanceledExams = ({exam: {loading, error, message, examData, examFormFields
   const [editFormFlag, setEditExamFormFlag] = useState(false)
 
   useEffect(() => {
-    loadExam()
+    // loadExam()
   }, [])
 
   const loadExam = () => {

@@ -51,7 +51,7 @@ router.post('/uploadFile', Faculty.fileUpload)
 
 router.post('/create-exam', Faculty.createExam);
 
-router.get('/get-exams', Faculty.getExams);
+router.post('/get-exams', Faculty.getExams);
 
 router.get('/getExamFormFields', (req, res, next) => {
     Faculty.getExamFormFields()

@@ -93,7 +93,9 @@ CustomTabPanel.propTypes = {
 
 const Exams = ({fetchAllExams}) => {
   const [tabValue, setTabValue] = useState(0);
+  const [filter, setFilter] = useState({status: "onGoing"})
   const abortController = new AbortController();
+
 
   useEffect(() => {
     loadExam();
@@ -103,12 +105,27 @@ const Exams = ({fetchAllExams}) => {
   }, [tabValue])
 
   const loadExam = () => {
-    console.log("Calling this. api")
-    console.log("tabvalue", tabValue);
-    fetchAllExams()
+    fetchAllExams(filter)
   }
 
   const handleTabChange = (event, newValue) => {
+    console.log("event", newValue);
+    if(newValue === 0) {
+      setFilter({
+        ...filter,
+        status: "onGoing"
+      })
+    } else if(newValue === 1) {
+      setFilter({
+        ...filter,
+        status: "completed"
+      })
+    } else if(newValue === 2) {
+      setFilter({
+        ...filter,
+        status: "canceled"
+      })
+    }
     setTabValue(newValue);
   };
 
@@ -123,7 +140,6 @@ const Exams = ({fetchAllExams}) => {
         </CustomTabPanel>
         <CustomTabPanel value={tabValue} index={2}>
           <CanceledExams />
-          {/* <OngoingExams /> */}
         </CustomTabPanel>
       </CMentTabs>
     </>

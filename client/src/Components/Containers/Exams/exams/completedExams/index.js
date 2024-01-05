@@ -73,18 +73,6 @@ const CompletedExams = ({exam: {loading, error, message, examData, examFormField
 
   return (
     <>
-      { showForm &&  
-        <ExamForm
-          toggleForm={toggleForm} 
-          loadExam={loadExam} 
-          initialExamFormValue={initialExamFormValue} 
-          formTitle={formTitle} 
-          examFormInput={examFormFields} 
-          fetchSubjectByStandard={fetchSubjectByStandard} 
-          subjects={subjects}
-          createExam={createExam}
-        />
-      }      
       <Paper className={styles.paperCotent}>
         <Grid container>
           <Grid item xs={3}>

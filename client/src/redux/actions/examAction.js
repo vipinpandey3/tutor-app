@@ -2,14 +2,14 @@ import * as types from '../types';
 import axiosHelper from "../../utils/AxiosHelper";
 import dispatchEngine, { addPayload }  from './actionHelper';
 
-export const fetchAllExams = () => {
+export const fetchAllExams = (postObj) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
-        const axiosData = await axiosHelper.sendRequest(types.FETCH_EXAMS_URL, "GET", token, null);
+        const axiosData = await axiosHelper.sendRequest(types.FETCH_EXAMS_URL, "POST", token, postObj);
         const payload = {
             error: false,
             message: axiosData.resultLong,

@@ -18,6 +18,7 @@ class AxiosHelper  {
                 data: payload
             }
             return axios(requestOptions).then(response => {
+                console.log("response", response);
                 return this.resolveResponse(null, response, resolve)
             })
             .catch(error => {

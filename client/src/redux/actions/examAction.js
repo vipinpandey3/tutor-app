@@ -10,6 +10,7 @@ export const fetchAllExams = (postObj) => {
             payload: true
         })
         const axiosData = await axiosHelper.sendRequest(types.FETCH_EXAMS_URL, "POST", token, postObj);
+        console.log("Axios", axiosData)
         const payload = {
             error: false,
             message: axiosData.resultLong,

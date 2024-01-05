@@ -179,8 +179,8 @@ export const UPDATE_TUTOR_ATTENDENCE_URL = "/faculty/martkTutorTimeOut"
 export const GET_STUDENT_ATTENDENCE_CHART_URL = "/dashboard/get-student-attendence-chart-data"
 
 // Exam URLS
-export const FETCH_EXAMS_URL = "/faculty/get-exams";
-export const FECTH_EXAM_FORM_FIELDS_URL = "/faculty/getExamFormFields";
+export const FETCH_EXAMS_URL = "/api/exams/get-exams";
+export const FECTH_EXAM_FORM_FIELDS_URL = "/api/exams/getExamFormFields";
 export const FETCH_SUBJECT_URL = "/faculty/getSubjects/"
 export const CREATE_EXAM_URL = "/faculty/create-exam";
 export const DELETE_EXAM_URL = "/faculty/disableExam"

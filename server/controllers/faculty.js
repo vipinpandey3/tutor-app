@@ -131,49 +131,6 @@ const fileUpload = (req, res, next) => {
         })
 }
 
-const getExamFormFields = (req, res, next) => {
-    return new Promise((resolve, reject) => {
-        var examFormFields = attributes[4].attributes;
-        var optionObjPromise = []
-        for (let i = 0; i < examFormFields.length; i++) {
-            if(examFormFields[i]['method']) {
-                const methodPromise = getInputOptions(examFormFields[i]);
-                methodPromise                
-                    .then(data => {
-                        examFormFields[i].option = data
-                    })
-                    .catch((error) => {
-                        console.log("Error from MadePromise function", error)
-                        examFormFields[i].option = [];
-                    })
-                optionObjPromise.push(methodPromise)
-            }
-        }
-        Promise.all(optionObjPromise)
-            .then(data => {
-                return resolve(examFormFields);
-            })
-            .catch((error) => {
-                return reject(error);
-            })
-    })
-}
-
-const getInputOptions = (optionObject) => {
-    console.log('Inside the GetInputOption for optionObject with method', optionObject.method);
-    return new Promise((resolve, reject) => {
-        // if(optionObject.service === "standardData") 
-            OptionServices[optionObject.method]()
-                .then(data => {
-                    return resolve(data)
-                })
-                .catch(error => {
-                    console.log('Error', error);
-                    return reject(error)
-                })
-    })
-}
-
 const createExam = (req, res, next) => {
     console.log('Inside Create Exam Function', JSON.stringify(req.user))
     const reqBody = req.body;
@@ -1028,10 +985,8 @@ const getAllStudentAttendenceByStudentId = (req, res) => {
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
-    getExamFormFields,
     createExam,
     getExams,
-    getSubjectsByStandard,
     disableExam,
     getExamDetailsById,
     getTutorById,

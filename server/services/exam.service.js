@@ -4,7 +4,7 @@ const models = require("../models/index")
 const Op = Sequelize.Op;
 const moment = require('moment');
 const { QueryTypes } = require('sequelize');
-const {getInputOptions} = require('./helperServices/optionServices.js')
+const {getInputOptions, getSubjectOptionForStandard} = require('./helperServices/optionServices.js')
 
 const examService = {
     getAllExam: async(reqBody, reqUser) => {
@@ -53,6 +53,27 @@ const examService = {
         } catch (error) {
             return {
                 message: "Error fetching Exam formfields",
+                status: false,
+            }
+        }
+    },
+    
+    getSubjectsByStandard: async(reqParam, resUser) => {
+        try {
+            console.log('Inside the Get Subject By Standard', reqParam);
+            const std = reqParam.stdId;
+            const standard = await models.StandardMaster.findAll({where: {remarks: std}});
+            const stdId = standard[0].id;
+            const data = await getSubjectOptionForStandard(stdId)
+            return {
+                message: 'Fetched subject for Standard ' + stdId,
+                status: true,
+                data: data
+            }
+        } catch (error) {
+            console.log("Error getting subject", error)
+            return {
+                message: "Error getting subject",
                 status: false,
             }
         }

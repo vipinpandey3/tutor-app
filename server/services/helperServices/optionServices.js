@@ -284,5 +284,6 @@ const getInputOptions = (formFields, reqUser) => {
 }
 
 module.exports = {
-    getInputOptions
+    getInputOptions,
+    getSubjectOptionForStandard
 }

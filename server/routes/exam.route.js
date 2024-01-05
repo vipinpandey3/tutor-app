@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express();
-const {getAllExams, getExamFormFields} = require('../controllers/exams.controller')
+const {getAllExams, getExamFormFields, getSubjectsByStandard} = require('../controllers/exams.controller')
 
 
 /**
@@ -13,5 +13,10 @@ router.post('/get-exams', (req, res) => getAllExams(req, res));
 */ 
 
 router.get('/getExamFormFields', (req, res) => getExamFormFields(req, res))
+
+/**
+ * GET /api/exams//getSubjects/7th
+ * */ 
+router.get('/getSubjects/:stdId', (req,res) => getSubjectsByStandard(req, res));
 
 module.exports = router;

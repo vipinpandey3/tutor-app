@@ -72,7 +72,7 @@ const examReducer = (state = initialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
                 error: action.payload.error,
-                subjects: action.payload.subjects
+                subjects: action.payload.data
             }
 
         case types.FETCH_EXAM_SUBJECTS_ERROR:

@@ -1,4 +1,4 @@
-const {getAllExam, getExamFormFields} = require('../services/exam.service')
+const {getAllExam, getExamFormFields, getSubjectsByStandard} = require('../services/exam.service')
 const {res_ok, res_err} = require('../services/data.service')
 
 const examController = {
@@ -46,6 +46,32 @@ const examController = {
             return res_ok(res, resObj)
         } catch (error) {
             console.log("Error inside the getExamFormFields", error)
+            const resObj = {
+                resultShort: 'failure',
+                resultLong: error.errorObj.message,
+            }
+            return res_err(res, resObj);
+        }
+    },
+
+    getSubjectsByStandard: async(req, res) => {
+        try {
+            const result = await getSubjectsByStandard(req.params, req.user);
+            if(!result?.status) {
+                const resObj = {
+                    resultShort: 'failure',
+                    resultLong: result.message,
+                }
+                return res_err(res, resObj)
+            }
+            const resObj = {
+                resultShort: 'success',
+                resultLong: result.message,
+                data: result.data 
+            }
+            return res_ok(res, resObj)
+        } catch (error) {
+            console.log("Error inside the getSubjectsByStandard", error)
             const resObj = {
                 resultShort: 'failure',
                 resultLong: error.errorObj.message,

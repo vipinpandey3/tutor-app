@@ -55,22 +55,12 @@ export default function CMentTabs({tabs, handleChange, value, children}) {
         >
             {
                 tabs.map(tab => {
-                    console.log("Tab", tab);
                     return <Tab label={tab?.label} key={tab?.id} {...a11yProps(tab?.id)} />
                 })
             }
         </Tabs>
       </Box>
       {children}
-      {/* <CustomTabPanel value={value} index={0}>
-        Live Exams
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Finished Exams
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Canceled Exams
-      </CustomTabPanel> */}
     </Box>
   );
 }

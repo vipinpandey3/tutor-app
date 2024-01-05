@@ -109,7 +109,6 @@ const Exams = ({fetchAllExams}) => {
   }
 
   const handleTabChange = (event, newValue) => {
-    console.log("event", newValue);
     if(newValue === 0) {
       setFilter({
         ...filter,

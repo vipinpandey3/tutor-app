@@ -244,7 +244,6 @@ const getOptions = async(optionObject, reqUser) => {
             throw new Error(`Method ${methodName} is not defined`);
         }
         let data = await method()
-        console.log("Data ======>", data);
         return Promise.resolve(data)
     } catch (error) {
         console.log("Error in getOptions", error);
@@ -256,23 +255,12 @@ const getInputOptions = (formFields, reqUser) => {
     return new Promise(async(resolve, reject) => {
         let optionObjPromise = []
         for (let i = 0; i < formFields.length; i++) {
-            
             if(formFields[i]['method']) {
                 const methodPromise = await getOptions(formFields[i], reqUser);
-                console.log("methodPromise", methodPromise);
                 formFields[i].option = methodPromise
-                // methodPromise                
-                //     .then(data => {
-                //         formFields[i].option = data
-                //     })
-                //     .catch((error) => {
-                //         console.log("Error from MadePromise function", error)
-                //         formFields[i].option = [];
-                //     })
                 optionObjPromise.push(methodPromise)
             }
         }
-        console.log("formFields", formFields);
         Promise.all(optionObjPromise)
             .then(data => {
                 return resolve(formFields);

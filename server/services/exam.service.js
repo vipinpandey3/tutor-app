@@ -77,6 +77,32 @@ const examService = {
                 status: false,
             }
         }
+    },
+
+    disableExam: async(reqBody, resUser) => {
+        console.log("Inside disableExam Function");
+        try {
+            const examId = reqBody.examId;
+            if(!examId) {
+                throw new Error("Exam id is undefined, please try later")
+            }
+            const resultObj = await models.ExamStdMap.update({status: 0},{where : {ExamId: examId}})
+            console.log("resultObj", resultObj)
+            if(!resultObj[0]) {
+                throw new Error("Error updaing exam status")
+            }
+            return {
+                status: true,
+                message: "Updated Exam status to canceled"
+            }
+        } catch (error) {
+            console.log("Error =>", error.message)
+            const result = {
+                status: false,
+                message: error.message
+            }
+            return result
+        }
     }
 }
 

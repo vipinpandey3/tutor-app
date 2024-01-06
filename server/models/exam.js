@@ -21,6 +21,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DATEONLY,
             allowNull: false
         },
+        endDate: {
+            type: DataTypes.DATEONLY,
+            allowNull: false
+        },
         remarks: {
             type: DataTypes.JSON,
             allowNull: true

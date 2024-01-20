@@ -182,5 +182,5 @@ export const GET_STUDENT_ATTENDENCE_CHART_URL = "/dashboard/get-student-attenden
 export const FETCH_EXAMS_URL = "/api/exams/get-exams";
 export const FECTH_EXAM_FORM_FIELDS_URL = "/api/exams/getExamFormFields";
 export const FETCH_SUBJECT_URL = "/api/exams/getSubjects/"
-export const CREATE_EXAM_URL = "/faculty/create-exam";
+export const CREATE_EXAM_URL = "/api/exam/create-exam";
 export const DELETE_EXAM_URL = "/api/exams/disableExam"

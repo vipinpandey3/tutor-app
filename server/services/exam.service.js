@@ -4,7 +4,7 @@ const models = require("../models/index")
 const Op = Sequelize.Op;
 const moment = require('moment');
 const { QueryTypes } = require('sequelize');
-const {getInputOptions, getSubjectOptionForStandard} = require('./helperServices/optionServices.js')
+const {getInputOptions, getSubjectOptionForStandard} = require('./helperServices/optionServices.js');
 
 const examService = {
     getAllExam: async(reqBody, reqUser) => {
@@ -58,7 +58,7 @@ const examService = {
         }
     },
     
-    getSubjectsByStandard: async(reqParam, resUser) => {
+    getSubjectsByStandard: async(reqParam, reqUser) => {
         try {
             console.log('Inside the Get Subject By Standard', reqParam);
             const std = reqParam.stdId;
@@ -79,7 +79,7 @@ const examService = {
         }
     },
 
-    disableExam: async(reqBody, resUser) => {
+    disableExam: async(reqBody, reqUser) => {
         console.log("Inside disableExam Function");
         try {
             const examId = reqBody.examId;
@@ -97,6 +97,62 @@ const examService = {
             }
         } catch (error) {
             console.log("Error =>", error.message)
+            const result = {
+                status: false,
+                message: error.message
+            }
+            return result
+        }
+    },
+
+    createExam: async(reqBody, reqUser) => {
+        try {
+            console.log('Inside Create Exam Function', JSON.stringify(reqUser))
+            // const createdBy = req.user.id;
+            const createdBy = 1;
+            const hours = reqBody.hours
+            const timeStart = moment(reqBody.timeStart, 'HH:mm:ss').format('HH:mm:ss');
+            const timeEnd = moment(timeStart, 'HH:mm').add(hours,'hours').format('HH:mm');
+            const examDate = moment(reqBody.examDate).format('YYYY-MM-DD');
+            const endDate = moment(reqBody.examDate).format('YYYY-MM-DD');
+            const academicYear = reqBody.academicYear;
+            const examTypeName = reqBody.examType;
+            const marks = reqBody.marks
+            const standardId = req.body.standard;
+            const examTypeAttributes = attributes[5].type;
+            const subjects = reqBody.subjects;
+            let subArry = []
+            subjects.forEach((sub, index) => {
+                const SubjectObj = {
+                    hours: hours,
+                    subject: sub,
+                    date: moment(examDate).add(index, 'd').format('YYYY-MM-DD'),
+                    marks: marks
+                }
+                subArry.push(SubjectObj);
+            })
+
+            let examType;
+            examTypeAttributes.forEach(types => {
+                if(types.type === examTypeName) {
+                    examType = types.id
+                }
+            });
+            const examSubjects = {subjects: subArry};
+            const exam = await models.Exam.create({examSubjects, timeStart, timeEnd, examDate, marks, examType, academicYear, endDate: endDate})
+            if(!exam.id) {
+                throw new Error("Error creating exam")
+            }
+            const ExamId = exam.id
+            const StandardId = await getStandardId(standardId);
+            const examStdObj = await models.ExamStdMap.create({ExamId, StandardId, createdBy, status})
+            return {
+                status: true,
+                message: "Exam Created",
+                data: examStdObj
+            }
+        } catch (error) {
+            console.log("Error creating exams", error.message);
             const result = {
                 status: false,
                 message: error.message

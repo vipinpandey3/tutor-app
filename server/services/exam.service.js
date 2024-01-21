@@ -11,15 +11,19 @@ const examService = {
         try {
             const ExamTableHeader = attributes[2].attributes;
             const ExamNestedTableHeader = attributes[3].attributes;
-            const currentDate = moment().format('YYYY-MM-DD')
+            const currentDate = moment().format('YYYY-MM-DD');
+            let replacements = []
             const whereQuery = {
                 examDate: {
                     [Op.gte]: currentDate
                 }
             }
-            const exams = await models.sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1 and e.examDate >= ?", 
+            if(reqBody && reqBody.status && reqBody.status.length > 0) {
+                replacements.push(reqBody.status)
+            }
+            const exams = await models.sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status in (?)", 
                 { 
-                    replacements: [currentDate],
+                    replacements: replacements,
                     type: QueryTypes.SELECT 
                 }
             )

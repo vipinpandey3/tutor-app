@@ -112,17 +112,17 @@ const Exams = ({fetchAllExams}) => {
     if(newValue === 0) {
       setFilter({
         ...filter,
-        status: "onGoing"
+        status: [1,2]
       })
     } else if(newValue === 1) {
       setFilter({
         ...filter,
-        status: "completed"
+        status: [3]
       })
     } else if(newValue === 2) {
       setFilter({
         ...filter,
-        status: "canceled"
+        status: [0]
       })
     }
     setTabValue(newValue);

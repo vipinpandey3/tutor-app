@@ -107,6 +107,20 @@ const getMarksData = async() => {
     }
 }
 
+const getSubjects = async() => {
+    const subjectItem = [
+        {
+            "id": 1,
+            "type": "Hindi"
+        },
+        {
+            "id": 2,
+            "type": "English"
+        }
+    ]
+    return Promise.resolve(subjectItem)
+}
+
 const getSubjectOptionForStandard = async(id) => {
     const subjectOption = await models.SubjectMaster.findAll({
         where: {
@@ -231,7 +245,8 @@ const methodMapper = {
     getGenderData,
     getStudentStreamData,
     getBranchData,
-    getReligiondata
+    getReligiondata,
+    getSubjects
 };
 
 const getOptions = async(optionObject, reqUser) => {
@@ -252,12 +267,13 @@ const getOptions = async(optionObject, reqUser) => {
 }
 
 const getInputOptions = (formFields, reqUser) => {
+    console.log("Inside the getInputOptions function");
     return new Promise(async(resolve, reject) => {
         let optionObjPromise = []
         for (let i = 0; i < formFields.length; i++) {
             if(formFields[i]['method']) {
                 const methodPromise = await getOptions(formFields[i], reqUser);
-                formFields[i].option = methodPromise
+                formFields[i].options = methodPromise
                 optionObjPromise.push(methodPromise)
             }
         }

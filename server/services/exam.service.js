@@ -44,7 +44,7 @@ const examService = {
     getExamFormFields: async(reqBody, reqUser) => {
         try {
             var examFormFields = attributes[4].attributes;
-            var optionObjPromise = await getInputOptions(examFormFields, reqUser)
+            var optionObjPromise = await getInputOptions(examFormFields, reqUser);
             return {
                 message: "All Exams formfields fetch",
                 status: true,
@@ -118,7 +118,7 @@ const examService = {
             const academicYear = reqBody.academicYear;
             const examTypeName = reqBody.examType;
             const marks = reqBody.marks
-            const standardId = req.body.standard;
+            const standardId = reqBody.standard;
             const examTypeAttributes = attributes[5].type;
             const subjects = reqBody.subjects;
             let subArry = []
@@ -144,7 +144,8 @@ const examService = {
                 throw new Error("Error creating exam")
             }
             const ExamId = exam.id
-            const StandardId = await getStandardId(standardId);
+            const StandardId = await examService.getStandardId(standardId);
+            const status = 1
             const examStdObj = await models.ExamStdMap.create({ExamId, StandardId, createdBy, status})
             return {
                 status: true,
@@ -152,13 +153,30 @@ const examService = {
                 data: examStdObj
             }
         } catch (error) {
-            console.log("Error creating exams", error.message);
+            console.log("Error creating exams", error);
             const result = {
                 status: false,
                 message: error.message
             }
             return result
         }
+    },
+
+    getStandardId: (std) => {
+        console.log('Inside getStandardId function');
+        return models.StandardMaster.findAll({where: {remarks: std}})
+            .then(stdArr => {
+                const arry = stdArr
+                if(arry && arry.length > 0) {
+                    const id = arry[0].id
+                    return arry[0].id;
+                } else {
+                    return false
+                }
+            })
+            .catch(error => {
+                return error
+            })
     }
 }
 

@@ -112,7 +112,7 @@ const examController = {
         }
     },
 
-    createExam: async() => {
+    createExam: async(req, res) => {
         try {
             const result = await createExam(req.body, req.user);
             if(!result?.status) {

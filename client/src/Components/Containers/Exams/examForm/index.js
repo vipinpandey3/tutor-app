@@ -109,15 +109,14 @@ const ExamForm = (props) => {
             } else if(input.type === 'select') {
               return (
                 <Grid key={input.id} item xs={3} className={styles.contentMargin}>
-                    {/* <DatePicker style={{ width: "90%" }} name={input.name} value={examFormValue[input.name]} onChange={valueChange} label={input.label}/> */}
-                  <Select style={{width: "90%"}} value={examFormValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.option} />
+                  <Select style={{width: "90%"}} value={examFormValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.options} />
                 </Grid>
               )
             }
             else if(input.type === 'multiselect') {
               return (
                 <Grid key={input.id} item xs={3} className={styles.contentMargin}>
-                  <MultiSelect style={{width: "90%"}} value={examFormValue[input.name]} onChange={onSelectionInputChange} name={input.name} label={input.label} options={subjects} />
+                  <MultiSelect style={{width: "90%"}} value={examFormValue[input.name]} onChange={onSelectionInputChange} name={input.name} label={input.label} options={subjects.length > 0 ? subjects : input.options } />
                 </Grid>
               )
             } 

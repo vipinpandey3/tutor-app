@@ -21,6 +21,34 @@ const examService = {
             if(reqBody && reqBody.status && reqBody.status.length > 0) {
                 replacements.push(reqBody.status)
             }
+            // const exams = await models.Exam.findAll({
+            //     attributes: [
+            //         'id', 
+            //         ['examSubjects', 'ExamSubjects'], 
+            //         ['timeStart', 'TimeStart'], 
+            //         ['timeEnd', 'TimeEnd'], 
+            //         ['examDate', 'ExamStartDate'], 
+            //         ['academicYear', 'AcademicYear'], 
+            //         ['examType', 'ExamType']
+            //     ],
+            //     include: [
+            //         {
+            //             model: models.ExamStdMap,
+            //             as: 'ExamMap', // Replace 'ExamMap' with the correct alias if different
+            //             attributes: [['status', 'ExamStatus']],
+            //             where: {
+            //                 status: replacements // Make sure replacements is an array of status values
+            //             },
+            //             include: [
+            //                 {
+            //                     model: models.StandardMaster,
+            //                     as: 'Standard', // Replace 'Standard' with the correct alias if different
+            //                     attributes: [['remarks', 'Standard']]
+            //                 }
+            //             ]
+            //         }
+            //     ]
+            // });
             const exams = await models.sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status in (?)", 
                 { 
                     replacements: replacements,

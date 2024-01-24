@@ -54,7 +54,7 @@ app.use('/dashboard', authenticateRequest, dashboardRoute);
 app.use('/api/exams', authenticateRequest, examRoute);
 
 models.sequelize
-  .sync({force: false})
+  .sync({ alter: false })
   .then((user) => {
     app.listen(process.env.SERVER_PORT);
     console.log("Listning to port",process.env.SERVER_PORT)

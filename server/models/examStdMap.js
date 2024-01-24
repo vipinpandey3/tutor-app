@@ -30,13 +30,13 @@ module.exports = function(sequelize, DataTypes) {
         ExamStdMap.belongsTo(models.Exam,
             {
             foreignKey: "ExamId",
-            as: "ExamMap"
+            as: "Exam"
             }
         );
         ExamStdMap.belongsTo(models.StandardMaster,
             {
                 foreignKey: "StandardId",
-                as: "StdMap"
+                as: "Standard"
             }
         );
 

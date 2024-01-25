@@ -51,7 +51,7 @@
         {
             "DBTableName": "Student",
             "DBColumnName": "dob",
-            "excelColumnName": "Fees amount",
+            "excelColumnName": "dob",
             "functionName": ""
         },
         {

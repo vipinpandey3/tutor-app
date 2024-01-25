@@ -119,6 +119,10 @@ import Header from "../../../common/Header";
       editStudentFormFields();
       setFormValues(row)
     }
+
+    const handleToggleUploadSection = () => {
+      toggleUploadSection(true)
+    }
   
     return (
       <>
@@ -131,8 +135,10 @@ import Header from "../../../common/Header";
           message={message} 
         />
         {/* <Loader /> */}
-        {/* {showFileImport && <StudentFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />}
-        {showForm && (
+        {
+          showFileImport && <StudentFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />
+        }
+         {showForm && (
             <StudentForm 
               initialcFormValues={formValues} 
               formTitle={formDetails}
@@ -141,7 +147,7 @@ import Header from "../../../common/Header";
               toggleForm={showHideForm}
               loadStudents={loadStudents}
             />
-        )} */}
+        )}
         {/* <Header
           title="Students"
         /> */}
@@ -200,7 +206,7 @@ import Header from "../../../common/Header";
                 <MatButton
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  onClick={toggleUploadSection}
+                  onClick={handleToggleUploadSection}
                 >
                   Upload Excel
                 </MatButton>

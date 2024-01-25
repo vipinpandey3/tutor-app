@@ -27,6 +27,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "10px",
     paddingTop: "10px",
     textTransform: "uppercase",
+    // display: "inline-block",
+    // width: "250px",
     "&:hover": {
       backgroundColor: theme.palette.primary.dark,
       width: "250px",
@@ -40,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   iconPadding: {
-    paddingLeft: "20px"
+    paddingLeft: "10px",
+    paddingRight: "10px"
   },
   logoConttainer: {
     width: "100%",
@@ -53,7 +56,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
+  activeMenuItem: {
+    backgroundColor: "#6a5acd",
+    width: "250px",
+    display: "inline-block"
+  },
 }));
 
 const Sidebar = () => {
@@ -77,10 +85,16 @@ const Sidebar = () => {
             <li key={link.id} style={{
               color: colors.white['white']
             }} className={classes.menuList}>
-              <span className={classes.iconPadding}>{link.icons}</span>
-              <NavLink className={classes.linkStyle} style={{
-              color: colors.white['white']
-            }} to={link.path}>
+              {/* <span className={classes.iconPadding}>{link.icons}</span> */}
+              <NavLink 
+                className={classes.linkStyle}
+                style={{
+                  color: colors.white['white']
+                }}
+                to={link.path}
+                activeClassName={classes.activeMenuItem}  
+              >
+                <span className={classes.iconPadding}>{link.icons}</span>
                 {link.name}
               </NavLink>
             </li>

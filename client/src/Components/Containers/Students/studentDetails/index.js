@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     "&.MuiAccordion-root.Mui-expanded": {
       margin: theme.spacing(2),
     },
+    backgroundColor: "white"
   },
   flexcontainer: {
     display: "flex",
@@ -59,6 +60,10 @@ const useStyles = makeStyles((theme) => ({
   block: {
     fontWeight: "900",
     paddingLeft: theme.spacing(1),
+    color: "black"
+  },
+  title: {
+    color: "black"
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -213,7 +218,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
           {studentDetails.studentDetailAttributes.map((atributes, index) => {
             return (
               <Grid key={index} item xs={atributes.size} className={styles[atributes.class]}>
-                <Text>
+                <Text className={styles.title}>
                   {atributes.name}: 
                 </Text>
                 <Text variant="subtitle1" component="h6" className={styles.block}>
@@ -267,7 +272,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
                 studentDetails.parentDetailsAttributes.map((attributes) => {
                   return (
                     <Grid key={attributes.id} item xs={attributes.size} className={`${styles[attributes.class]} pt_5`}>
-                      <Text>
+                      <Text className={styles.title}>
                         {attributes.name}: 
                       </Text>
                       <Text variant="subtitle1" component="h6" className={styles.block}>
@@ -310,7 +315,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography className={styles.heading}>
+          <Typography className={`${styles.heading} ${styles.title}`}>
             Student Education Details
           </Typography>
         </AccordionSummary>
@@ -318,7 +323,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
           <Grid container className={styles.columnContainer}>
             <Grid container>
               <Grid item xs={6} className={styles.flexcontainer}>
-                <Text variant="subtitle1" >
+                <Text variant="subtitle1"  className={styles.title}>
                   FullName:
                 </Text>
                 <Text
@@ -336,7 +341,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
                     startIcon={<AddIcon />}
                     onClick={() => fetchFormForm("educationForm")}
                 >
-                    "Add Details"
+                  Add Details
                 </MatButton>
               </Grid>
             </Grid>
@@ -351,7 +356,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
                           studentDetails.educationDetailsAttributes.map((attributes) => {
                             return (
                               <Grid item xs={attributes.size} className={`${styles[attributes.class]} ${styles.paddingTop}`}>
-                                <Text>
+                                <Text className={styles.title}>
                                   {attributes.name}: 
                                 </Text>
                                 <Text 

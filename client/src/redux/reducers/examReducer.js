@@ -28,9 +28,9 @@ const examReducer = (state = initialState, action) => {
                 message: action.payload.message,
                 error: action.payload.error,
                 examData: {
-                    rows: action.payload.examData.rows,
-                    examTableHeader: action.payload.examData.examTableHeader,
-                    examNestedTableHeader: action.payload.examData.examNestedTableHeader
+                    rows: action.payload.data.exams,
+                    examTableHeader: action.payload.data.examTableHeader,
+                    examNestedTableHeader: action.payload.data.examNestedTableHeader
                 }
             };
 
@@ -48,7 +48,7 @@ const examReducer = (state = initialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
                 error: action.payload.error,
-                examFormFields: action.payload.formFields,
+                examFormFields: action.payload.data,
                 formDetails: {
                     formName: action.payload.formDetails.formName,
                     buttonName: action.payload.formDetails.buttonName,
@@ -72,7 +72,7 @@ const examReducer = (state = initialState, action) => {
                 loading: action.payload.loading,
                 message: action.payload.message,
                 error: action.payload.error,
-                subjects: action.payload.subjects
+                subjects: action.payload.data
             }
 
         case types.FETCH_EXAM_SUBJECTS_ERROR:

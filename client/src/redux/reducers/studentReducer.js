@@ -261,7 +261,7 @@ const studentReducer = (state = intitialState, action) => {
                 message: action.payload.message,
                 showForm: action.payload.showForm,
                 formFields: {
-                    educationFormFields: action.payload.formFields.educationFormFields,
+                    educationFormFields: action.payload.formFields,
                     parentFormFields: []
                 },
                 formDetails: {

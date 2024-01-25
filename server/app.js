@@ -9,6 +9,7 @@ var fileUpload = require('express-fileupload');
 const adminRoute = require("./routes/admin");
 const facultyRoute = require('./routes/faculty');
 const dashboardRoute = require('./routes/dashboard');
+const examRoute = require('./routes/exam.route.js')
 const models = require("./models");
 var Redis = require('ioredis');
 const {authenticateRequest} = require('./services/Authentication.js')
@@ -50,9 +51,10 @@ app.use('/',authenticateRoute)
 app.use("/admin", authenticateRequest, adminRoute);
 app.use('/faculty', authenticateRequest, facultyRoute);
 app.use('/dashboard', authenticateRequest, dashboardRoute);
+app.use('/api/exams', authenticateRequest, examRoute);
 
 models.sequelize
-  .sync({force: false})
+  .sync({ alter: false })
   .then((user) => {
     app.listen(process.env.SERVER_PORT);
     console.log("Listning to port",process.env.SERVER_PORT)

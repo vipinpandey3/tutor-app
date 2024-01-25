@@ -37,12 +37,9 @@ module.exports = function(sequelize, DataTypes) {
 
     StandardMaster.associate = function(models) {
         StandardMaster.belongsToMany(models.Exam, {
-            as: "StdMap",
+            as: "Exams",
             foreignKey: "StandardId",
-            through: {
-                model: models.ExamStdMap,
-                unique: false
-            }
+            through: models.ExamStdMap
         });
         StandardMaster.belongsToMany(models.Student, {
             as: "StandarddMap",

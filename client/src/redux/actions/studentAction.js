@@ -291,238 +291,97 @@ export const addParentDetails = (parentsValue) => {
                 loading: true
             }
         });
-        const addData = async() => {
-            const response = await axios.post("/admin/add-parent", parentsValue, {headers: collection.setHeader(token)});
-            if(response.statusText !== 'OK') {
-                throw new Error("Error while adding parent Details")
-            }
-            return response.data
+        const axiosData = await axiosHelper.sendRequest(types.ADD_PARENT_URL, "POST", token, parentsValue)
+        const payload = {
+            showForm: false,
+            error: false,
+            message: axiosData.resultLong,
+            severity: "success",
+            loading: false
         }
-
-        try {
-            const parentData = await addData();
-            if(parentData.resultShort === "success") {
-                dispatch({
-                    type: types.ADD_PARENT_DATA,
-                    payload: {
-                        showForm: false,
-                        error: false,
-                        message: parentData.resultLong,
-                        loading: false,
-                        severity: "success"
-                    }
-                });
-                fetchStudentDetails()
-            } else {
-                dispatch({
-                    type: types.ADD_PARENT_DATA_ERROR,
-                    payload: {
-                        showForm: true,
-                        error: true,
-                        message: parentData.resultLong,
-                        loading: false,
-                        severity: "error",
-                    }
-                }) 
-            }
-        } catch (error) {
-            dispatch({
-                type: types.ADD_PARENT_DATA_ERROR,
-                payload: {
-                    showForm: false,
-                    error: true,
-                    loading: false,
-                    message: "Error while adding student Parent",
-                    severity: "error"
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return dispatchEngine(axiosAndPayloadData, types.ADD_PARENT_DATA, dispatch, types.ADD_PARENT_DATA_ERROR)
     }
 }
 
 export const fetchStudentEducationFormfields = (editObj) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState();
-        console.log(token);
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
         })
-
-        const getData = async() => {
-            const response = await axios.get('/admin/get-education-formFields',{headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch education form!');
-            }
-            return response.data
-        };
-
-        try {
-            const educationFormFieldData = await getData()
-            console.log("educationFormFieldData", educationFormFieldData)
-            if(educationFormFieldData.resultShort === 'success') {
-                dispatch({
-                    type: types.FETCH_EDUCATION_FORM,
-                    payload: {
-                        loading: false,
-                        message: educationFormFieldData.resultLong,
-                        error: true,
-                        severity: "success",
-                        showForm: true,
-                        formFields: {
-                            educationFormFields: educationFormFieldData.formFields
-                        },
-                        formDetails: {
-                            formName: editObj.formName,
-                            buttonTitle: editObj.buttonTitle,
-                            editFlag: editObj.editFlag
-                        },
-
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.FETCH_EDUCATION_FORM_ERROR,
-                    payload: {
-                        error: true,
-                        loading: false,
-                        message: educationFormFieldData.resultLong,
-                        showForm: false
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.FETCH_EDUCATION_FORM_ERROR,
-                payload: {
-                    error: true,
-                    loading: false,
-                    message: "Error while fetching Education formfields",
-                    showForm: false
-                }
-            })
+        const axiosData = await axiosHelper.sendRequest(types.GET_EDUCATION_FORMFIELDS_URL, "GET", token, null);
+        const payload = {
+            loading: false,
+            message: axiosData.resultLong,
+            error: true,
+            severity: "success",
+            showForm: true,
+            formDetails: {
+                formName: editObj.formName,
+                buttonTitle: editObj.buttonTitle,
+                editFlag: editObj.editFlag
+            },
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        console.log("axiosAndPayloadData", axiosAndPayloadData);
+        return dispatchEngine(axiosAndPayloadData, types.FETCH_EDUCATION_FORM, dispatch, types.FETCH_EDUCATION_FORM_ERROR);
     }
 }
 
 export const addStudeEducationDetails = (values) => {
     return async(dispatch, getState) => {
-        const {auth: {token}} = getState()
+        const {auth: {token}} = getState();
         dispatch({
             type: types.SET_LOADING,
             payload: {
                 loading: true
             }
-        })
-
-        const addData = async() => {
-            const response = await axios.post('/admin/add-studentEducation-details', values, {headers: collection.setHeader(token)});
-            if(response.statusText !== "OK") {
-                throw new Error('Could not add student education details!');
-            }
-            return response.data;
-        };
-
-        try {
-            const educationData = await addData();
-            if(educationData.resultShort === 'success') {
-                dispatch({
-                    type: types.ADD_STUDENT_EDUCATION_DATA,
-                    payload: {
-                        showForm: false,
-                        message: educationData.resultLong,
-                        error: false,
-                        formDetails: {
-                            formName: "",
-                            buttonTitle: "",
-                            editFlag: false
-                        },
-                        severity: "success",
-                    }
-                })
-                fetchStudentDetails();
-            } else {
-                dispatch({
-                    type: types.ADD_STUDENT_EDUCATION_DATA_ERROR,
-                    payload: {
-                        loading: false,
-                        message: educationData.resultLong,
-                        error: true,
-                        showForm: true,
-                        severity: "error"
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.ADD_STUDENT_EDUCATION_DATA_ERROR,
-                payload: {
-                    loading: false,
-                    message: "Error while fetching student education details",
-                    error: true,
-                    showForm: false,
-                    severity: "error"
-                }
-            })
+        });
+        const axiosData = await axiosHelper.sendRequest(types.ADD_STUDENT_EDUCATION_DETAILS_URL, "POST", token, values);
+        const payload = {
+            showForm: false,
+            message: axiosData.resultLong,
+            error: false,
+            formDetails: {
+                formName: "",
+                buttonTitle: "",
+                editFlag: false
+            },
+            severity: "success"
         }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return await dispatchEngine(axiosAndPayloadData, types.ADD_STUDENT_EDUCATION_DATA, dispatch, types.ADD_STUDENT_EDUCATION_DATA_ERROR);
     }
-};
+}
 
 export const updateEducationDetails = (values) => {
     return async(dispatch, getState) => {
-        const {auth: [token]} = getState
-        const updateData = async () => {
-            const response = await axios.post('/admin/update-education-details', values, {headers: collection.setHeader(token)})
-            if(response.statusText !== "OK") {
-                throw new Error('Could not fetch fees details!');
+        const {auth: {token}} = getState();
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
             }
-            return response.data
+        });
+        const axiosData = await axiosHelper.sendRequest(types.UPDATE_EDUCATION_DETAIL_URL, "POST", token, values);
+        const payload = {
+            showForm: false,
+            error: false,
+            message: axiosData.resultLong,
+            loading: false,
+            formDetails: {
+                formName: "",
+                buttonTitle: "",
+                editFlag: false
+            },
+            severity: "succes"
         }
-
-        try {
-            const updatedData = await updateData();
-            if(updatedData.resultShort === 'success') {
-                dispatch({
-                    type: types.UPDATE_STUDENT_EDUCATION_DETAILS,
-                    payload: {
-                        showForm: false,
-                        error: false,
-                        message: updatedData.resultLong,
-                        loading: false,
-                        formDetails: {
-                            formName: "",
-                            buttonTitle: "",
-                            editFlag: false
-                        },
-                        severity: "succes"
-                    }
-                })
-            } else {
-                dispatch({
-                    type: types.UPDATE_STUDENT_EDUCATION_DETAILS_ERROR,
-                    payload: {
-                        showForm: true,
-                        error: true,
-                        message: updatedData.resultLong,
-                        loading: false,
-                        severity: "error"
-                    }
-                })
-            }
-        } catch (error) {
-            dispatch({
-                type: types.UPDATE_STUDENT_EDUCATION_DETAILS_ERROR,
-                payload: {
-                    showForm: true,
-                    error: true,
-                    message: error,
-                    loading: false,
-                    severity: "error"
-                }
-            })
-        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload);
+        return await dispatchEngine(axiosAndPayloadData, types.UPDATE_STUDENT_EDUCATION_DETAILS, dispatch, types.UPDATE_STUDENT_EDUCATION_DETAILS_ERROR)
     }
 }
 

@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             default: 1
         },
-        //  0 - cancel, 1 - Active, 2-Done, 3-Postpone 
+        //  0 - cancel, 1 - Active, 2-Postpone, 3-Done,
         status: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -30,13 +30,13 @@ module.exports = function(sequelize, DataTypes) {
         ExamStdMap.belongsTo(models.Exam,
             {
             foreignKey: "ExamId",
-            as: "ExamMap"
+            as: "Exam"
             }
         );
         ExamStdMap.belongsTo(models.StandardMaster,
             {
                 foreignKey: "StandardId",
-                as: "StdMap"
+                as: "Standard"
             }
         );
 

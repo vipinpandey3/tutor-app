@@ -15,7 +15,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { visuallyHidden } from '@mui/utils';
-import useTable from '../../../customsHooks/useTable';
+import useTable from '../../../../customsHooks/useTable';
 import {makeStyles} from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ExamTable = (props) => {
     // eslint-disable-next-line no-unused-vars
-    const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam, loadExam} = props; 
+    const {rows, ExamTableHeader, ExamNestedTableHeader, disableExam} = props; 
     const [open, setOpen] = useState(false)
     const styles = useStyles()
 

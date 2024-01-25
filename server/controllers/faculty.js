@@ -4,7 +4,7 @@ const ImportService = require('../services/importService');
 const attributes = require('../attributes/attributes.json');
 const StandardMaster = require('../models/standardMaster');
 const { QueryTypes } = require('sequelize');
-const OptionServices = require('../services/optionServices');
+const OptionServices = require('../services/helperServices/optionServices')
 const moment = require('moment');
 const SubjectMaster = require('../models/subjectMatser');
 const models = require('../models/index')
@@ -131,49 +131,6 @@ const fileUpload = (req, res, next) => {
         })
 }
 
-const getExamFormFields = (req, res, next) => {
-    return new Promise((resolve, reject) => {
-        var examFormFields = attributes[4].attributes;
-        var optionObjPromise = []
-        for (let i = 0; i < examFormFields.length; i++) {
-            if(examFormFields[i]['method']) {
-                const methodPromise = getInputOptions(examFormFields[i]);
-                methodPromise                
-                    .then(data => {
-                        examFormFields[i].option = data
-                    })
-                    .catch((error) => {
-                        console.log("Error from MadePromise function", error)
-                        examFormFields[i].option = [];
-                    })
-                optionObjPromise.push(methodPromise)
-            }
-        }
-        Promise.all(optionObjPromise)
-            .then(data => {
-                return resolve(examFormFields);
-            })
-            .catch((error) => {
-                return reject(error);
-            })
-    })
-}
-
-const getInputOptions = (optionObject) => {
-    console.log('Inside the GetInputOption for optionObject with method', optionObject.method);
-    return new Promise((resolve, reject) => {
-        // if(optionObject.service === "standardData") 
-            OptionServices[optionObject.method]()
-                .then(data => {
-                    return resolve(data)
-                })
-                .catch(error => {
-                    console.log('Error', error);
-                    return reject(error)
-                })
-    })
-}
-
 const createExam = (req, res, next) => {
     console.log('Inside Create Exam Function', JSON.stringify(req.user))
     const reqBody = req.body;
@@ -272,28 +229,15 @@ const getStandardId = (std) => {
         })
 }
 
-const getExams = (req, res, next) => {
+const getExams = async(req, res, next) => {
     console.log("Inside the Get Exam Function");
+
     const currentDate = moment().format('YYYY-MM-DD')
+    const examsObj = await getAllExam(currentDate);
     getAllExam(currentDate)
-    .then(examsObj => {
+    // .then(examsObj => {
         const ExamTableHeader = attributes[2].attributes;
-        const ExamNestedTableHeader = attributes[3].attributes
-        const exams = []
-        // for (let i = 0; i <= examsObj.length; i++) {
-        //     i['exapanded'] = false;
-        //     i['std'] = i.ExamMap[0].remarks;
-        //     i['status'] = i.ExamMap[0].ExamStdMap.status
-        //     return exams.push(i)
-        // }
-        // examsObj.map(exam => {
-        //     exam['exapanded'] = false;
-        //     exam['std'] = exam.ExamMap[0].remarks;
-        //     exam['status'] = exam.ExamMap[0].ExamStdMap.status
-        //     return exams.push(exam)
-        // })
-        // console.log("ExamObj **************", JSON.stringify(examsObj));
-        // console.log("examArray ***********", JSON.stringify(examArray));
+        const ExamNestedTableHeader = attributes[3].attributes;
         const result = {
             resultShort: 'success',
             resultLong: 'Successfully retrieved all the exam',
@@ -302,14 +246,14 @@ const getExams = (req, res, next) => {
             examNestedTableHeader: ExamNestedTableHeader
         }
         return res.status(200).json(result);
-    })
-    .catch(error => {
-        const result = {
-            resultShort: 'failure',
-            resultLong: 'Failed to get exam'
-        }
-        return res.json(400).status(result);
-    })
+    // })
+    // .catch(error => {
+        // const result = {
+        //     resultShort: 'failure',
+        //     resultLong: 'Failed to get exam'
+        // }
+        // return res.json(400).status(result);
+    // })
 }
 
 const getAllExam = (currentDate) => {
@@ -320,15 +264,6 @@ const getAllExam = (currentDate) => {
                 [Op.gte]: currentDate
             }
         }
-        // models.Exam.getActiveExamByCondition(whereQuery)
-        // .then(result => {
-        //     resolve(result)
-        // })
-        // .catch(error => {
-        //     console.error("Exam error", error);
-        //     reject(error)
-        // });
-        // sequelize.query("select * from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join StandardMaster sm on esm.standardId = sm.id where esm.status=1;", { type: QueryTypes.SELECT })
         return models.sequelize.query("select esm.id as 'ExamId', e.examSubjects, e.timeStart, e.timeEnd, e.examDate as 'ExamStartDate', sm.remarks as 'Standard', e.academicYear as 'AcademicYear', e.examType as 'ExamType', esm.status as 'ExamStatus' from `Exam` e inner join `ExamStdMap` esm on e.id = esm.ExamId inner join `StandardMaster` sm on esm.standardId = sm.id where esm.status=1 and e.examDate >= ?", 
             { 
                 replacements: [currentDate],
@@ -825,7 +760,6 @@ const markStudentAttendence = (req, res) => {
     })
 }
 
-const get
 
 const getAllStudentAttendence = (req, res) => {
     console.log('inside getAllStudentAttendence function');
@@ -1051,10 +985,8 @@ const getAllStudentAttendenceByStudentId = (req, res) => {
 module.exports = {
     getFeesDetailsBySearchParam,
     fileUpload,
-    getExamFormFields,
     createExam,
     getExams,
-    getSubjectsByStandard,
     disableExam,
     getExamDetailsById,
     getTutorById,

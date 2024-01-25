@@ -43,7 +43,7 @@ export const FETCH_STUDENT_FEES_DATA_ERROR = "FETCH_FEES_DATA_ERROR";
 export const UPDATE_STUDENT_EDUCATION_DETAILS = "UPDATE_STUDENT_EDUCATION_DETAILS";
 export const UPDATE_STUDENT_EDUCATION_DETAILS_ERROR = "UPDATE_STUDENT_EDUCATION_DETAILS_ERROR";
 export const GET_STUDENT_ATTENDENCE = "GET_STUDENT_ATTENDENCE";
-export const GET_STUDENT_ATTENDENCE_ERROR = "GET_STUDENT_ATTENDENCE_ERROR"; 
+export const GET_STUDENT_ATTENDENCE_ERROR = "GET_STUDENT_ATTENDENCE_ERROR";
 
 // Fees Action Types
 export const FETCH_FEES_FORM_FIELDS = "FETCH_FEES_FORM_FIELDS";
@@ -71,6 +71,7 @@ export const FETCH_EXAM_SUBJECTS = "FETCH_EXAM_SUBJECTS";
 export const FETCH_EXAM_SUBJECTS_ERROR = "FETCH_EXAM_SUBJECTS_ERROR";
 export const DELETE_EXAM = "DELETE_EXAM";
 export const DELETE_EXAM_ERROR = "DELETE_EXAM_ERROR"
+
 
 // Dashboard constant types
 export const FETCH_STUDENT_ATTENDENCE = 'FETCH_STUDENT_ATTENDENCE';
@@ -150,7 +151,10 @@ export const FETCH_STUDENT_FEES_URL = 'admin/getFeesDetailsById/';
 export const FETCH_STUDENT_ATTENDENCE_URL = 'faculty/get-student-attendenceById/';
 export const MARK_STUDENT_ABSENCE_URL = "faculty/mark_student_absence";
 export const FETCH_PARENT_FORM_FIELDS_URL = '/admin/get-parent-formFields';
-
+export const ADD_PARENT_URL = "/admin/add-parent";
+export const GET_EDUCATION_FORMFIELDS_URL = "/admin/get-education-formFields";
+export const ADD_STUDENT_EDUCATION_DETAILS_URL = "/admin/add-studentEducation-details";
+export const UPDATE_EDUCATION_DETAIL_URL = "/admin/update-education-details";
 
 // Tutor URLS
 export const GET_TUTOR_URLS = "/admin/get-teachers";
@@ -173,3 +177,10 @@ export const MARK_TUTOR_ABSENCE_URL = "/faculty/martkTutorAbsence";
 export const MARK_TUTOR_ATTENDENCE_URL =  "/faculty/markTutorAttedence"
 export const UPDATE_TUTOR_ATTENDENCE_URL = "/faculty/martkTutorTimeOut"
 export const GET_STUDENT_ATTENDENCE_CHART_URL = "/dashboard/get-student-attendence-chart-data"
+
+// Exam URLS
+export const FETCH_EXAMS_URL = "/api/exams/get-exams";
+export const FECTH_EXAM_FORM_FIELDS_URL = "/api/exams/getExamFormFields";
+export const FETCH_SUBJECT_URL = "/api/exams/getSubjects/"
+export const CREATE_EXAM_URL = "/api/exams/create-exam";
+export const DELETE_EXAM_URL = "/api/exams/disableExam"

@@ -21,6 +21,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DATEONLY,
             allowNull: false
         },
+        endDate: {
+            type: DataTypes.DATEONLY,
+            allowNull: false
+        },
         remarks: {
             type: DataTypes.JSON,
             allowNull: true
@@ -49,12 +53,9 @@ module.exports = function(sequelize, DataTypes) {
     Exam.associate = function(models) {
         // Exam.belongsTo(models.)
         Exam.belongsToMany(models.StandardMaster, {
-            as: "ExamMap",
+            as: "Standards",
             foreignKey: "ExamId",
-            through: {
-                model: models.ExamStdMap,
-                unique: false
-            }
+            through: models.ExamStdMap,
         });
 
         Exam.getActiveExamByCondition = function(whereQuery) {

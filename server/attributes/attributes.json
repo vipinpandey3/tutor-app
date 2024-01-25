@@ -175,7 +175,7 @@
                 "name": "examType",
                 "label": "Exam Type",
                 "type": "select",
-                "option": [],
+                "options": [],
                 "service": "examTypeData",
                 "method": "getExamTypeData"
             },
@@ -202,7 +202,7 @@
                 "name": "standard",
                 "label": "Standard",
                 "type": "select",
-                "option": [],
+                "options": [],
                 "service": "standardData",
                 "method": "getStandardData",
                 "updateChildInput": true,
@@ -219,6 +219,7 @@
                 "name": "subjects",
                 "label": "Subjects",
                 "type": "multiselect",
+                "method": "getSubjects",
                 "options": []
             },
             {

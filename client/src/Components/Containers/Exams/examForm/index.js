@@ -2,18 +2,18 @@
 /* eslint-disable array-callback-return */
 import React, { useState } from "react";
 import { Paper, makeStyles, Grid } from "@material-ui/core";
-import Input from "../../common/Input";
-import MatButton from "../../common/Button";
-import Text from "../../common/Text";
-import DatePicker from "../../common/DatePicker";
-import Select from '../../common/Select'
-import MultiSelect from "../../common/MultiSelect";
-import TimePicker from "../../common/TimePicker";
+import Input from "../../../common/Input";
+import MatButton from "../../../common/Button";
+import Text from "../../../common/Text";
+import DatePicker from "../../../common/DatePicker";
+import Select from '../../../common/Select'
+import MultiSelect from "../../../common/MultiSelect";
+import TimePicker from "../../../common/TimePicker";
 
 const useStyles = makeStyles((theme) => ({
   paperConent: {
-    padding: theme.spacing(3),
-    margin: theme.spacing(5),
+    padding: theme.spacing(1),
+    margin: theme.spacing(1.5),
   },
   contentMargin: {
     margin: "10px 0",
@@ -109,15 +109,14 @@ const ExamForm = (props) => {
             } else if(input.type === 'select') {
               return (
                 <Grid key={input.id} item xs={3} className={styles.contentMargin}>
-                    {/* <DatePicker style={{ width: "90%" }} name={input.name} value={examFormValue[input.name]} onChange={valueChange} label={input.label}/> */}
-                  <Select style={{width: "90%"}} value={examFormValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.option} />
+                  <Select style={{width: "90%"}} value={examFormValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.options} />
                 </Grid>
               )
             }
             else if(input.type === 'multiselect') {
               return (
                 <Grid key={input.id} item xs={3} className={styles.contentMargin}>
-                  <MultiSelect style={{width: "90%"}} value={examFormValue[input.name]} onChange={onSelectionInputChange} name={input.name} label={input.label} options={subjects} />
+                  <MultiSelect style={{width: "90%"}} value={examFormValue[input.name]} onChange={onSelectionInputChange} name={input.name} label={input.label} options={subjects.length > 0 ? subjects : input.options } />
                 </Grid>
               )
             } 

@@ -7,11 +7,10 @@ import {
   Paper,
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
-import { ExamContext } from "../../../context/exam-context";
-import MatButton from "../../common/Button";
-import Text from "../../common/Text";
-import ExamForm from "./ExamForm";
-import ExamTable from "./ExamTable";
+import MatButton from "../../../../common/Button";
+import Text from "../../../../common/Text";
+import ExamForm from "../../examForm/Loadable";
+import ExamTable from "../../examTable/Loadable";
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import {
@@ -21,12 +20,13 @@ import {
   toggleForm,
   deleteExam,
   fetchSubjectByStandard
-} from '../../../redux/actions/examAction'
+} from '../../../../../redux/actions/examAction'
+import CMentTabs from "../../../../common/Tabs";
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
+    margin: theme.spacing(1),
+    padding: theme.spacing(1.5),
   },
   table: {
     width: "1300px",
@@ -63,14 +63,8 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
   const [searchStudent, setSearchStudent] = useState("")
   const [editFormFieldValue, setEditFormFieldValues] = useState([]);
   const [editFormFlag, setEditExamFormFlag] = useState(false)
-  // const {fetchSubjectByStandard, getExamById} = useContext(ExamContext);
-
-  useEffect(() => {
-    loadExam()
-  }, [])
-
   const loadExam = () => {
-    fetchAllExams()
+    fetchAllExams({status: "onGoing"})
   }
 
   return (
@@ -104,7 +98,6 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
             ExamTableHeader={examData.examTableHeader} 
             ExamNestedTableHeader={examData.examNestedTableHeader}
             disableExam={deleteExam}
-            loadExam={loadExam}
           />
         }
       </Paper>

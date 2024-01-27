@@ -43,11 +43,6 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             unique: true
         },
-        panNo: {
-            type: DataTypes.CHAR(55),
-            allowNull: true,
-            unique: true
-        },
         status: {
             type: DataTypes.CHAR,
             allowNull: false,

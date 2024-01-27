@@ -120,6 +120,7 @@ export const tokens = (mode) => ({
         white: {
           white: "white"
         },
+        bluishPurple: '#6a5acd'
       }),
 });
 
@@ -146,6 +147,9 @@ export const themeSettings = (mode) => {
             background: {
               default: colors.primary[500],
             },
+            hover: {
+              main: colors.bluishPurple
+            }
           }
         : {
             // palette values for light mode
@@ -163,6 +167,9 @@ export const themeSettings = (mode) => {
             background: {
               default: "#fcfcfc",
             },
+            hover: {
+              main: colors.bluishPurple
+            }
           }),
     },
     typography: {

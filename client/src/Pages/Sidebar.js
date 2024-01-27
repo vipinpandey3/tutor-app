@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import NavLinks from "../utils/NavLinks";
 import {tokens} from '../utils/theme'
 import { useTheme } from "@mui/material";
+import logo from '../assets/img/classMent.png'
 
 const useStyles = makeStyles((theme) => ({
   sideMenu: {
@@ -27,6 +28,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "10px",
     paddingTop: "10px",
     textTransform: "uppercase",
+    // display: "inline-block",
+    // width: "250px",
     "&:hover": {
       backgroundColor: theme.palette.primary.dark,
       width: "250px",
@@ -40,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   iconPadding: {
-    paddingLeft: "20px"
+    paddingLeft: "10px",
+    paddingRight: "10px"
   },
   logoConttainer: {
     width: "100%",
@@ -53,7 +57,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
+  activeMenuItem: {
+    backgroundColor: "#6a5acd",
+    width: "250px",
+    display: "inline-block"
+  },
 }));
 
 const Sidebar = () => {
@@ -67,9 +76,10 @@ const Sidebar = () => {
       }
     }>
       <div className={classes.logoConttainer}>
-        <p className={classes.logo} style={{
+        {/* <p className={classes.logo} style={{
               color: colors.white['white']
-            }}>Tutors App</p>
+            }}>Tutors App</p> */}
+        <img src={logo} alt="Logo" className={classes.logoImage} width={250} height={63} />
       </div>
       <ul className={classes.menuContainer}>
         {NavLinks.map((link) => {
@@ -77,10 +87,16 @@ const Sidebar = () => {
             <li key={link.id} style={{
               color: colors.white['white']
             }} className={classes.menuList}>
-              <span className={classes.iconPadding}>{link.icons}</span>
-              <NavLink className={classes.linkStyle} style={{
-              color: colors.white['white']
-            }} to={link.path}>
+              {/* <span className={classes.iconPadding}>{link.icons}</span> */}
+              <NavLink 
+                className={classes.linkStyle}
+                style={{
+                  color: colors.white['white']
+                }}
+                to={link.path}
+                activeClassName={classes.activeMenuItem}  
+              >
+                <span className={classes.iconPadding}>{link.icons}</span>
                 {link.name}
               </NavLink>
             </li>

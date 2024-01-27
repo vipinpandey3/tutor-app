@@ -9,17 +9,11 @@ import {
   Typography,
   Accordion,
   AccordionDetails,
-  Table as MuiTable,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableBody,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import Text from "../../../common/Text";
 import {tokens} from '../../../../utils/theme'
 import { useTheme } from "@mui/material";
-import Table from '../../../common/OldTable'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ParentForms, StudentEducationForms } from "../studentForms/StudentRelatedForms";
 import MatButton from "../../../common/Button";
@@ -42,6 +36,10 @@ import {fetchParentFormFields,
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import Notification from "../../../common/Alert";
+import CMentTabs from "../../../common/Tabs";
+import {StudentDetailTabs} from "../../../../utils/utilities";
+import StudentFees from "./studentFees";
+import StudentAttendence from "./studentAttendence";
 
 const useStyles = makeStyles((theme) => ({
   paperContent: {
@@ -50,6 +48,11 @@ const useStyles = makeStyles((theme) => ({
     "&.MuiAccordion-root.Mui-expanded": {
       margin: theme.spacing(2),
     },
+    backgroundColor: "white"
+  },
+  tabContainer: {
+    margin: theme.spacing(2),
+    padding: theme.spacing(1),
     backgroundColor: "white"
   },
   flexcontainer: {
@@ -105,6 +108,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 1 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
 const parentFormInitialValue = {
   fatherName: "",
   fatherAadhar: "",
@@ -136,7 +165,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   const colors = tokens(theme.palette.mode);
   const [studentEducationInitialValue, setStudentEducationInitialValue] = useState(educationInitialValue)
   const [parentIntitialValue, setParentInititalValue] = useState(parentFormInitialValue)
-
+  const [tabValue, setTabValue] = useState(0);
   const loadStudentDteails = () => {
     fetchStudentDetails(studentId)
   }
@@ -202,6 +231,10 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   const markAbsence = (row) => {
     markStudentAbsence(row.id)
   }
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   return (
     <>
@@ -392,74 +425,19 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
           </Grid>
         </AccordionDetails>
       </Accordion>
-      <div className={`${styles.flexcontainer}`}>
-        <Paper className={`${styles.paperContent} ${styles.halfWidth}`}>
-          <Grid container>
-            <Grid item xs={12}>
-              <Text variant="subtitle1">
-                Fee details
-              </Text>
-            </Grid>
-          </Grid>
-          <MuiTable className={`${styles.table}`}>
-            <TableHead>
-              <TableRow key="Header">
-                {feesDetails.feesTableHeaders.map((header, index) => {
-                  return (
-                    <TableCell key={index}>{header.label}</TableCell>
-                  )
-                })}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {feesDetails.feesDetailsRow.map(row => {
-                return (
-                  <TableRow key={row.id}>
-                    {
-                      feesDetails.feesTableHeaders.map((rowCell,index) => {
-                        const value = row[rowCell.id];
-                        return <TableCell key={index}>{value}</TableCell>
-                      })
-                    }
-                  </TableRow>
-                )
-              })}
-              <TableRow key="lastRow">
-                <TableCell key="empty1"></TableCell>
-                <TableCell key="empty2"></TableCell>
-                <TableCell key="empty3"></TableCell>
-                <TableCell key="totalPaid" style={{ textAlign: "right" }}>Total Paid</TableCell>
-                <TableCell key="empty4">{totalPaid}</TableCell>
-                <TableCell key="empty5"></TableCell>
-                <TableCell key="empty6"></TableCell>
-              </TableRow>
-            </TableBody>
-          </MuiTable>
-        </Paper>
-        <Paper className={`${styles.paperContent} ${styles.halfWidth}`}>
-        <Grid container>
-            <Grid item xs={3}>
-            </Grid>
-            <Grid item sm></Grid>
-            <Grid item xs={3.5}>
-              <Text variant="subtitle1">
-                {
-                  `Attendence - ${studentAttendenceData.attendence}, Absence: ${studentAttendenceData.absence}`
-                }
-              </Text>
-            </Grid>
-          </Grid>
-          {
-            studentAttendenceTable.attendenceTableColumns && 
-            studentAttendenceTable.attendenceTableColumns.length > 0 &&
-            <Table
-              records={studentAttendenceTable.attendenceTableRows}
-              headCells={studentAttendenceTable.attendenceTableColumns}
-              edit={markAbsence}
-            />
-          }
-        </Paper>
-      </div>
+      <Paper className={`${styles.tabContainer}`}>
+        <CMentTabs tabs={StudentDetailTabs} value={tabValue} handleChange={handleTabChange}>
+          <CustomTabPanel value={tabValue} index={0}>
+            <StudentFees feesDetails={feesDetails} totalPaid={totalPaid} />
+          </CustomTabPanel>
+          <CustomTabPanel value={tabValue} index={1}>
+            <StudentAttendence 
+              studentAttendenceData={studentAttendenceData} 
+              studentAttendenceTable={studentAttendenceTable} 
+              markAbsence={markAbsence} />
+          </CustomTabPanel>
+        </CMentTabs>
+      </Paper>
     </>
   );
 };

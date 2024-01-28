@@ -1205,14 +1205,19 @@
         "name": "studentAttendenceTableDetails",
         "columnsHeader": [
             {
-                "id": "attendenceDate",
-                "label": "Date",
-                "props": "attendenceDate"
+                "id": "fullName",
+                "label": "Fullname",
+                "props": "fullName"
             },
             {
-                "id": "inTime",
+                "id": "lastAttendenceDate",
+                "label": "Date",
+                "props": "lastAttendenceDate"
+            },
+            {
+                "id": "lastInTime",
                 "label": "In Time",
-                "props": "inTime"
+                "props": "lastInTime"
             }
         ]
     }

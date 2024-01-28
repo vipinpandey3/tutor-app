@@ -10,12 +10,11 @@ const studentService = {
                 attributes: ['id', 'firstName', 'lastName']
             });
             student = JSON.parse(JSON.stringify(student));
-            console.log("Student", student);
             let studentDetails = [];
             let object = {}, studentAttendenceAll;
             if(student) {
                 studentAttendenceAll = await models.StudentAttendence.findAll({where: {StudentId: studentId}})
-                object.firstName = student.firstName;
+                object.fullName = student.firstName + " " + student.lastName;
                 object.id = student.id;
                 object.lastAttendenceDate = studentAttendenceAll.length > 0 ? studentAttendenceAll[studentAttendenceAll.length - 1].attendenceDate : "-";
                 object.lastInTime = studentAttendenceAll.length > 0 ? studentAttendenceAll[studentAttendenceAll.length - 1].inTime : "-";
@@ -25,7 +24,7 @@ const studentService = {
                     message: "Fetched student with last attendence",
                     data: {
                         studentDetails,
-                        attributes: attributes[18].columnsHeader
+                        attributes: attributes[23].columnsHeader
                     }
                 }
             } else {

@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
   },
   attendenceButton: {
     width: "90%"
+  },
+  title: {
+    color: "black"
   }
 }))
 
@@ -167,13 +170,14 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
                   return (
                     <TableCell
                       key={index}
+                      className={styles.title}
                     >
                       {cell.label}
                     </TableCell>
                   )
                 })
               }
-              <TableCell key={'Actions'}>Actions</TableCell>
+              <TableCell className={styles.title} key={'Actions'}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -186,7 +190,7 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
                         const value = details[rowCell.props];
                         if (!value) {
                           return (
-                            <TableCell key={cellIndex}>
+                            <TableCell key={cellIndex} className={styles.title}>
                               {"-"}
                             </TableCell>
                           )
@@ -194,7 +198,7 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
                         if(rowCell.props && rowCell.props.includes('.')) {
                           const itemSplit = rowCell.props.split('.');
                           return (
-                            <TableCell key={cellIndex}>
+                            <TableCell key={cellIndex} className={styles.title}>
                               {details[itemSplit[0]][itemSplit[1]] ? details[itemSplit[0]][itemSplit[1]] : "-"}
                             </TableCell>
                           )

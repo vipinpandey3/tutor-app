@@ -9,7 +9,8 @@ var fileUpload = require('express-fileupload');
 const adminRoute = require("./routes/admin");
 const facultyRoute = require('./routes/faculty');
 const dashboardRoute = require('./routes/dashboard');
-const examRoute = require('./routes/exam.route.js')
+const examRoute = require('./routes/exam.route.js');
+const studentRoute = require('./routes/students.route.js')
 const models = require("./models");
 var Redis = require('ioredis');
 const {authenticateRequest} = require('./services/Authentication.js')
@@ -36,15 +37,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-// app.use((req, res, next) => {
-//   models.User.findByPk(1)
-//     .then((user) => {
-//       req.user = user;
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
-
 app.use(passport.initialize());
 // app.use(passport.session())
 app.use('/',authenticateRoute)
@@ -52,6 +44,7 @@ app.use("/admin", authenticateRequest, adminRoute);
 app.use('/faculty', authenticateRequest, facultyRoute);
 app.use('/dashboard', authenticateRequest, dashboardRoute);
 app.use('/api/exams', authenticateRequest, examRoute);
+app.use('/api/students', authenticateRequest, studentRoute);
 
 models.sequelize
   .sync({ alter: false })

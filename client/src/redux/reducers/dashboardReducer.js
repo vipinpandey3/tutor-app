@@ -113,8 +113,8 @@ const dashboardReducer = (state=intitalState, action) => {
                     showattendenceTable: action.payload.showStudentTables.showattendenceTable
                 },
                 markStudentAttendenceTableData: {
-                    rows: action.payload.studentDetails,
-                    attributes: action.payload.attributes
+                    rows: action.payload.data.studentDetails,
+                    attributes: action.payload.data.attributes
                 }
             };
 

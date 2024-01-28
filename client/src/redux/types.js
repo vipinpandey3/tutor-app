@@ -168,7 +168,7 @@ export const UPDATE_TUTOR_EDUCATION_URL = "/admin/updateTutorEducation";
 // Dashboard URLs
 export const STUDENT_ALL_ATTENDENCE_URL = "/faculty/getStudentAttendenceById";
 export const TUROR_ALL_ATTENDENCE_URL = "/faculty/getTutorAttendenceById";
-export const ALL_STUDENT_ATTENDENCE_URL = "/faculty/getAllStudentAttendence";
+export const ALL_STUDENT_ATTENDENCE_URL = "/api/students/getAllStudentAttendence";
 export const ALL_TUTOR_ATTENDENCE_URL = "/faculty/get_All_Tutor_Attendence";
 export const GET_STUDENT_BY_ID_URL = "/api/students/getStudentById/";
 export const GET_TUTOR_BY_ID_URL = '/faculty/getTutorById/';

@@ -37,6 +37,37 @@ const studentService = {
                 message: error.message
             }
         }
+    },
+
+    getAllStudentAttendence: async(req) => {
+        try {
+            const result = await models.StudentAttendence.findAll({
+                attributes: [['id', 'attendenceId'], 'attendenceDate', 'inTime'],
+                include: [
+                    {
+                        model: models.Student,
+                        attributes: [['id', 'StudentId'], 'firstName', 'emailId']
+                    }
+                ]
+            })
+            if(!result.length) {
+                throw new Error("No student attendence found for the date")
+            }
+            return {
+                status: true,
+                message: "All student attendence found", 
+                data: {
+                    attendence: result,
+                    attributes: tableAttributes = attributes[20].columnsHeader
+                }
+            }
+        } catch (error) {
+            console.log("Error inside the getAllStudentAttendence of student.service", error);
+            return {
+                status: false,
+                message: error.message
+            }
+        }
     }
 }
 

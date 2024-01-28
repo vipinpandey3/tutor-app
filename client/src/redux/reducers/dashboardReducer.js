@@ -44,8 +44,8 @@ const dashboardReducer = (state=intitalState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 studentAttendenceTableData: {
-                    attendenceRows: action.payload.attendence,
-                    attendenceAttributes: action.payload.attributes
+                    attendenceRows: action.payload.data.attendence,
+                    attendenceAttributes: action.payload.data.attributes
                 },
                 showStudentTables: {
                     searchUserInput: action.payload.showStudentTables.searchUserInput,

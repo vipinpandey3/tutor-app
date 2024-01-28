@@ -1,4 +1,4 @@
-import {Grid, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles} from "@material-ui/core";
+import { Grid, Table as MuiTable, TableBody, TableCell, TableHead, TableRow, Toolbar, makeStyles } from "@material-ui/core";
 import React, { createRef, useEffect, useState } from 'react';
 import {
   getAllAttendenceOfStudentById,
@@ -15,7 +15,7 @@ import Input from '../../../common/Input';
 import MatButton from '../../../common/Button';
 import PropTypes from 'prop-types'
 import Table from '../../../common/OldTable';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   searchUserInput: {
@@ -39,17 +39,20 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     color: "black"
+  },
+  "MuiOutlinedInput-input": {
+    width: "1000px"
   }
 }))
 
-const StudentAttendence = ({dashboard: {error, message, loading, showStudentTables, studentAttendenceTableData, markStudentAttendenceTableData}, toggleStudenAttendenceElements, getAllStudentAttendence, getAllAttendenceOfStudentById, getStudentById, markStudentAttendenceById, markStudentAbsence}) => {
+const StudentAttendence = ({ dashboard: { error, message, loading, showStudentTables, studentAttendenceTableData, markStudentAttendenceTableData }, toggleStudenAttendenceElements, getAllStudentAttendence, getAllAttendenceOfStudentById, getStudentById, markStudentAttendenceById, markStudentAbsence }) => {
   const searchRef = createRef()
   const styles = useStyles();
   const [inputValue, setInputValue] = useState("")
 
   useEffect(() => {
     loadAttendence()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadAttendence = () => {
@@ -81,9 +84,9 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
 
   const searchStudentAttendence = (event) => {
     if (event.code === 'Enter') {
-      if(searchRef.current.value !== "") {
+      if (searchRef.current.value !== "") {
         getAllAttendenceOfStudentById(searchRef.current.value)
-      } else if(searchRef.current.value === "") {
+      } else if (searchRef.current.value === "") {
         loadAttendence();
       }
     }
@@ -102,29 +105,37 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
     }
     toggleStudenAttendenceElements(postObj)
   }
-  
+
+  const getNestedValue = (obj, path) => {
+    return path.split('.').reduce((current, pathPart) => {
+      return current ? current[pathPart] : null;
+    }, obj);
+  }
+
   return (
     <>
       {
-       showStudentTables.searchUserInput && (
-        <Grid container>
-          <Grid xs={3} items="true">
-            <Input
-              onChange={onInputChange}
-              label="Search Student"
-              className={styles.searchUserInput}
-              value={inputValue}
-              name="tutor"
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <MatButton onClick={searchStudent} variant="contained" style={{ flex: "1", width: "80%" }}>Search</MatButton>
-          </Grid>
-          <Grid item xs={2}>
+        showStudentTables.searchUserInput && (
+          <Grid container>
+            <Grid xs={6} items="true">
+              <input
+                onChange={onInputChange}
+                label="Search Student"
+                className={styles.searchInput}
+                value={inputValue}
+                placeholder="Student Id"
+                
+              />
+            </Grid>
+            <Grid item sm></Grid>
+            <Grid item xs={3}>
+              <MatButton onClick={searchStudent} variant="contained" style={{ flex: "1", width: "80%" }}>Search</MatButton>
+            </Grid>
+            <Grid item xs={2}>
               <MatButton onClick={hideSearchInputForStudentAttendence} variant="contained" style={{ flex: "1", width: "90%" }}>Cancel</MatButton>
+            </Grid>
           </Grid>
-        </Grid> 
-       )
+        )
       }
       {
         showStudentTables.showStudentTable &&
@@ -137,31 +148,31 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
       {
         showStudentTables.searchAttendeceInput && (
           <Grid container>
-              <Grid xs={6}>
-                  <input  
-                    onKeyDown={searchStudentAttendence} 
-                    className={styles.searchInput} 
-                    ref={searchRef} 
-                    name="studentAttendence" 
-                    placeholder="Search"  
-                  />
-              </Grid>
-              <Grid item sm></Grid>
-              <Grid item>
-                <Toolbar>
-                  <MatButton
-                    variant="outlined"
-                    onClick={showInputStudentForAttendence}
-                  >
-                    Mark Attendence
-                  </MatButton>
-                </Toolbar>
-              </Grid>
+            <Grid xs={6}>
+              <input
+                onKeyDown={searchStudentAttendence}
+                className={styles.searchInput}
+                ref={searchRef}
+                name="studentAttendence"
+                placeholder="Search"
+              />
+            </Grid>
+            <Grid item sm></Grid>
+            <Grid item>
+              <Toolbar>
+                <MatButton
+                  variant="outlined"
+                  onClick={showInputStudentForAttendence}
+                >
+                  Mark Attendence
+                </MatButton>
+              </Toolbar>
+            </Grid>
           </Grid>
         )
       }
       {
-        showStudentTables.showattendenceTable && 
+        showStudentTables.showattendenceTable &&
         <MuiTable>
           <TableHead>
             <TableRow>
@@ -187,29 +198,14 @@ const StudentAttendence = ({dashboard: {error, message, loading, showStudentTabl
                   <TableRow key={rowCellIndex}>
                     {
                       studentAttendenceTableData.attendenceAttributes.map((rowCell, cellIndex) => {
-                        const value = details[rowCell.props];
-                        if (!value) {
-                          return (
-                            <TableCell key={cellIndex} className={styles.title}>
-                              {"-"}
-                            </TableCell>
-                          )
-                        }
-                        if(rowCell.props && rowCell.props.includes('.')) {
-                          const itemSplit = rowCell.props.split('.');
-                          return (
-                            <TableCell key={cellIndex} className={styles.title}>
-                              {details[itemSplit[0]][itemSplit[1]] ? details[itemSplit[0]][itemSplit[1]] : "-"}
-                            </TableCell>
-                          )
-                        }
+                        const value = getNestedValue(details, rowCell.props)
                         return (
                           value === null ? (
                             <TableCell key={cellIndex} className={styles.largeFont}>
                               -
                             </TableCell>
                           ) : (
-                            <TableCell key={cellIndex}>
+                            <TableCell className={styles.title} key={cellIndex}>
                               {value}
                             </TableCell>
                           )
@@ -251,4 +247,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, {markStudentAbsence, markStudentAttendenceById, getAllStudentAttendence, toggleStudenAttendenceElements, getAllAttendenceOfStudentById, getStudentById})(StudentAttendence);
+export default connect(mapStateToProps, { markStudentAbsence, markStudentAttendenceById, getAllStudentAttendence, toggleStudenAttendenceElements, getAllAttendenceOfStudentById, getStudentById })(StudentAttendence);

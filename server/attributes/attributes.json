@@ -1220,5 +1220,26 @@
                 "props": "lastInTime"
             }
         ]
+    },
+    {
+        "index": 24,
+        "name": "getStudentAllAttendenceById",
+        "columnsHeader": [
+            {
+                "id": "attendenceDate",
+                "label": "Date",
+                "props": "attendenceDate"
+            },
+            {
+                "id": "inTime",
+                "label": "In Time",
+                "props": "inTime"
+            },
+            {
+                "id": "status",
+                "label": "Attendence Status",
+                "props": "status"
+            }
+        ]
     }
 ]

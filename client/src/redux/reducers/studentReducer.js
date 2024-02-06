@@ -355,12 +355,12 @@ const studentReducer = (state = intitialState, action) => {
         return {
             ...state,
             studentAttendenceTable: {
-                attendenceTableRows: action.payload.attendence,
-                attendenceTableColumns: action.payload.attributes
+                attendenceTableRows: action.payload.data.rows,
+                attendenceTableColumns: action.payload.data.attributes
             },
             studentAttendenceData: {
-                attendence: action.payload.studentAttendence.attendence,
-                absence: action.payload.studentAttendence.absence
+                attendence: action.payload.data.attendenceData.currentStudentAttendence,
+                absence: action.payload.data.attendenceData.totalAbsence
             },
             loading: action.payload.loading,
             message: action.payload.message

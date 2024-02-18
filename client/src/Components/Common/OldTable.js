@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
+  title: {
+    color: "black"
+  }
 }));
 
 function Table(props) {
@@ -58,7 +61,7 @@ function Table(props) {
           <TableRow key="header">
             {headCells && headCells.length > 0 && headCells.map((cell, index) => {
               return (
-                <TableCell key={index}>
+                <TableCell key={index} >
                   {cell.disableSorting ? (
                     cell.label
                   ) : (
@@ -81,13 +84,16 @@ function Table(props) {
             stableSort(records, getComparator(order, orderBy))
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row) => {
+              console.log("Rows", row)
               return (
                 <TableRow
                   key={row.id}
+                  className={classes.title}
                 >
                   {headCells.map((rowCell, index) => {
                     const value = row[rowCell.id];
-                    return <TableCell key={index} onClick={() => {
+                    console.log("Value", value, rowCell.id);
+                    return <TableCell className={classes.title} key={index} onClick={() => {
                       redirectToDetailsPage(row.id);
                     }}>{value}</TableCell>;
                   })}

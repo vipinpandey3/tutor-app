@@ -56,7 +56,7 @@ const CompletedExams = ({exam: {loading, error, message, examData, examFormField
   const styles = useStyles();
   
   const [formTitle, setFormTitle] = useState({
-    title: '"Schedule Exam"',
+    title: 'Schedule Exam',
     buttonTitle: "Schedule Exam"
   })
   const [searchStudent, setSearchStudent] = useState("")
@@ -79,9 +79,7 @@ const CompletedExams = ({exam: {loading, error, message, examData, examFormField
               <Text variable="subtitle1" component="subtitle1">Upcoming Exam</Text>
           </Grid>
           <Grid item sm></Grid>
-          <Grid item xs={3}>
-            <MatButton onClick={fetchExamFormFields} variant="contained" style={{ flex: "1", width: "90%" }}>Create Exam</MatButton>
-          </Grid>
+          
         </Grid>
         {
           examData.examTableHeader && 

@@ -173,7 +173,7 @@ const StudentDetails = ({student: {formFields, showForm, studentDetails, error, 
   useEffect(() => {
     loadStudentDteails();
     fetchStudentFeesDetails(studentId);
-    fetchStudentAttendence(studentId)
+    fetchStudentAttendence(studentId, {limit: 5, offset: 0})
   }, []);
 
   const fetchFormForm = (value) => {

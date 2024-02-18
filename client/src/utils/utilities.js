@@ -8,3 +8,14 @@ export const StudentDetailTabs = [
       id: 1
     }
 ]
+
+export const initialExamFormValue = {
+  examType: "",
+  timeStart: "10.00",
+  examDate: new Date(),
+  academicYear: "",
+  marks: "",
+  standard: "",
+  subjects: [],
+  hours: 1
+}

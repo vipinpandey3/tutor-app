@@ -11,12 +11,14 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import {
   fetchAllExams,
+  hideNotification
 } from '../../../../redux/actions/examAction'
 import CMentTabs from "../../../common/Tabs";
 import OngoingExams from "./ongoingExams/Loadable";
 import Box from '@mui/material/Box';
 import CompletedExams from "./completedExams/Loadable";
 import CanceledExams from "./canceledExams/Loadable";
+import Notification from "../../../common/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paperCotent: {
@@ -91,15 +93,21 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const Exams = ({fetchAllExams}) => {
+const Exams = ({fetchAllExams, hideNotification, exam: {
+  loading, 
+  error,
+  message,
+  severity
+}}) => {
   const [tabValue, setTabValue] = useState(0);
-  const [filter, setFilter] = useState({status: "onGoing"})
+  const [filter, setFilter] = useState({status: [1]})
   const abortController = new AbortController();
 
 
   useEffect(() => {
     loadExam();
     return () => {
+      console.log("Insid the useEffect")
       abortController.abort(); // Cancel the request if component unmounts
     };
   }, [tabValue])
@@ -130,6 +138,13 @@ const Exams = ({fetchAllExams}) => {
 
   return (
     <>
+      <Notification
+          open={error} 
+          handleClose={hideNotification} 
+          severity={severity}
+          duration={3000} 
+          message={message} 
+      />
       <CMentTabs tabs={tabs} tabValue={1} handleChange={handleTabChange} value={tabValue}>
         <CustomTabPanel value={tabValue} index={0}>
           <OngoingExams />
@@ -147,6 +162,8 @@ const Exams = ({fetchAllExams}) => {
 
 Exams.propTypes = {
   fetchAllExams: PropTypes.func.isRequired,
+  hideNotification: PropTypes.func.isRequired,
+  exam: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
@@ -155,4 +172,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {fetchAllExams})(Exams);
+export default connect(mapStateToProps, {fetchAllExams, hideNotification})(Exams);

@@ -1,21 +1,21 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import {TimePicker as MuiTimePicker} from '@mui/lab';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
-export default function TimePicker(props) {
+export default function TimePickerValue(props) {
   const {value, onChange, name, label} = props
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <MuiTimePicker
-        label={label}
-        name={name}
-        value={value}
-        onChange={onChange}
-        renderInput={(params) => <TextField {...params} />}
-      />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['TimePicker', 'TimePicker']}>
+        <TimePicker
+          label={label}
+          value={value}
+          onChange={onChange}
+        />
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

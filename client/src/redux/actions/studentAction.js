@@ -405,11 +405,11 @@ export const fetchStudentFeesDetails = (studentId) => {
     }
 }
 
-export const fetchStudentAttendence = (studentId) => {
+export const fetchStudentAttendence = (studentId, postObj) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState();
         const STUDENT_ATTENDENCE_URL = `/${types.FETCH_STUDENT_ATTENDENCE_URL}${studentId}`;
-        const axiosData = await axiosHelper.sendRequest(STUDENT_ATTENDENCE_URL, 'GET', token, null);
+        const axiosData = await axiosHelper.sendRequest(STUDENT_ATTENDENCE_URL, 'POST', token, postObj);
         const payload = {
             error: false, 
             loading: false,

@@ -12,8 +12,9 @@ export const fetchAllExams = (postObj) => {
         const axiosData = await axiosHelper.sendRequest(types.FETCH_EXAMS_URL, "POST", token, postObj);
         console.log("Axios", axiosData)
         const payload = {
-            error: false,
+            error: axiosData.resultShort,
             message: axiosData.resultLong,
+            severity: axiosData.resultShort,
             loading: false,
         }
         const axiosAndPayloadData = await addPayload(axiosData, payload);
@@ -65,19 +66,20 @@ export const fetchSubjectByStandard = (stdId) => {
     }
 }
 
-export const createExam = (examObj) => {
+export const createExam = (examObj, examSubjects) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
+        examObj.examSubjects = examSubjects
         const axiosData = await axiosHelper.sendRequest(types.CREATE_EXAM_URL, 'POST', token, examObj);
         const payload = {
             loading: false,
-            error: false,
+            error: true,
             message: axiosData.resultLong,
-            showForm: false,
+            severity: axiosData.resultShort,
             formDetails: {
                 formName: "",
                 buttonName: "",

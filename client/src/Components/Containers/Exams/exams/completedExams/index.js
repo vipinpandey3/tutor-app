@@ -79,9 +79,7 @@ const CompletedExams = ({exam: {loading, error, message, examData, examFormField
               <Text variable="subtitle1" component="subtitle1">Upcoming Exam</Text>
           </Grid>
           <Grid item sm></Grid>
-          <Grid item xs={3}>
-            <MatButton onClick={fetchExamFormFields} variant="contained" style={{ flex: "1", width: "90%" }}>Create Exam</MatButton>
-          </Grid>
+          
         </Grid>
         {
           examData.examTableHeader && 

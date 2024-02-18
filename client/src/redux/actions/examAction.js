@@ -12,8 +12,9 @@ export const fetchAllExams = (postObj) => {
         const axiosData = await axiosHelper.sendRequest(types.FETCH_EXAMS_URL, "POST", token, postObj);
         console.log("Axios", axiosData)
         const payload = {
-            error: false,
+            error: axiosData.resultShort,
             message: axiosData.resultLong,
+            severity: axiosData.resultShort,
             loading: false,
         }
         const axiosAndPayloadData = await addPayload(axiosData, payload);
@@ -76,8 +77,9 @@ export const createExam = (examObj, examSubjects) => {
         const axiosData = await axiosHelper.sendRequest(types.CREATE_EXAM_URL, 'POST', token, examObj);
         const payload = {
             loading: false,
-            error: false,
+            error: true,
             message: axiosData.resultLong,
+            severity: axiosData.resultShort,
             formDetails: {
                 formName: "",
                 buttonName: "",

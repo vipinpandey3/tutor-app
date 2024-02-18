@@ -85,7 +85,6 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
 
 Exams.propTypes = {
   fetchAllExams: PropTypes.func.isRequired,
-  fetchExamFormFields: PropTypes.func.isRequired,
   exam: PropTypes.object.isRequired,
   createExam: PropTypes.func.isRequired,
   toggleForm: PropTypes.func.isRequired,

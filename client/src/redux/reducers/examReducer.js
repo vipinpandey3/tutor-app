@@ -9,6 +9,7 @@ const initialState = {
     subjects: [],
     showForm: false,
     examFormFields: [],
+    severity: "",
     examData: {
         rows: [],
         examTableHeader: [],
@@ -31,7 +32,8 @@ const examReducer = (state = initialState, action) => {
                     rows: action.payload.data.exams,
                     examTableHeader: action.payload.data.examTableHeader,
                     examNestedTableHeader: action.payload.data.examNestedTableHeader
-                }
+                },
+                severity: action.payload.severity
             };
 
         case types.FETCH_EXAMS_ERROR: 
@@ -88,15 +90,25 @@ const examReducer = (state = initialState, action) => {
                 ...state,
                 loading: action.payload.loading,
                 message: action.payload.message,
+                severity: action.payload.severity,
                 error: action.payload.error,
                 formDetails: {
                     formName: action.payload.formDetails.formName,
                     buttonName: action.payload.formDetails.buttonName,
                     editFlag: action.payload.formDetails.editFlag
                 },
-                showForm: action.payload.data.showForm
+                showForm: action.payload.data.showForm,
             };
 
+        case types.ADD_EXAM_ERROR:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                message: action.payload.message,
+                severity: action.payload.severity,
+                error: action.payload.error,
+                showForm: true,
+            };
 
         case types.TOGGLE_FORM:
             return {

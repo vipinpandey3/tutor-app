@@ -93,7 +93,7 @@ CustomTabPanel.propTypes = {
 
 const Exams = ({fetchAllExams}) => {
   const [tabValue, setTabValue] = useState(0);
-  const [filter, setFilter] = useState({status: "onGoing"})
+  const [filter, setFilter] = useState({status: [1]})
   const abortController = new AbortController();
 
 

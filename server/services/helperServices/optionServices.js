@@ -80,23 +80,23 @@ const getMarksData = async() => {
     const hours = [
         {
             id: 1,
-            type: 1
+            type: 20
         },
         {
             id: 2,
-            type: 1.5,
+            type: 40,
         },
         {
             id: 3,
-            type: 2,
+            type: 50,
         },
         {
             id: 4,
-            type: 2.5
+            type: 80
         },
         {
             id: 5,
-            type: 3
+            type: 100
         }
     ]
 

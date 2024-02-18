@@ -13,9 +13,9 @@ import ExamForm from "../../examForm/Loadable";
 import ExamTable from "../../examTable/Loadable";
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
+import { useHistory } from "react-router";
 import {
   fetchAllExams,
-  fetchExamFormFields,
   createExam,
   toggleForm,
   deleteExam,
@@ -42,45 +42,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const initialExamFormValue = {
-  examType: "",
-  timeStart: "10.00",
-  examDate: new Date(),
-  academicYear: "",
-  marks: "",
-  standard: "",
-  subjects: [],
-  hours: 1
-}
-
-const Exams = ({exam: {loading, error, message, examData, examFormFields, formDetails, showForm, subjects}, toggleForm, createExam, fetchExamFormFields, fetchAllExams, deleteExam, fetchSubjectByStandard}) => {
+const Exams = ({exam: {loading, error, message, examData, examFormFields, formDetails, showForm, subjects}, toggleForm, createExam, fetchAllExams, deleteExam, fetchSubjectByStandard}) => {
   const styles = useStyles();
+  const history = useHistory();
   
-  const [formTitle, setFormTitle] = useState({
-    title: '"Schedule Exam"',
-    buttonTitle: "Schedule Exam"
-  })
   const [searchStudent, setSearchStudent] = useState("")
   const [editFormFieldValue, setEditFormFieldValues] = useState([]);
   const [editFormFlag, setEditExamFormFlag] = useState(false)
   const loadExam = () => {
-    fetchAllExams({status: "onGoing"})
+    fetchAllExams({status: 1})
+  }
+
+  const createExams = () => {
+    history.push('/exams/createExams')
   }
 
   return (
     <>
-      { showForm &&  
-        <ExamForm
-          toggleForm={toggleForm} 
-          loadExam={loadExam} 
-          initialExamFormValue={initialExamFormValue} 
-          formTitle={formTitle} 
-          examFormInput={examFormFields} 
-          fetchSubjectByStandard={fetchSubjectByStandard} 
-          subjects={subjects}
-          createExam={createExam}
-        />
-      }      
       <Paper className={styles.paperCotent}>
         <Grid container>
           <Grid item xs={3}>
@@ -88,7 +66,7 @@ const Exams = ({exam: {loading, error, message, examData, examFormFields, formDe
           </Grid>
           <Grid item sm></Grid>
           <Grid item xs={3}>
-            <MatButton onClick={fetchExamFormFields} variant="contained" style={{ flex: "1", width: "90%" }}>Create Exam</MatButton>
+            <MatButton onClick={createExams} variant="contained" style={{ flex: "1", width: "90%" }}>Create Exam</MatButton>
           </Grid>
         </Grid>
         {
@@ -121,4 +99,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {deleteExam, createExam, fetchAllExams, fetchExamFormFields, toggleForm, fetchSubjectByStandard})(Exams);
+export default connect(mapStateToProps, {deleteExam, createExam, fetchAllExams, toggleForm, fetchSubjectByStandard})(Exams);

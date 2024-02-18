@@ -145,9 +145,9 @@
         "name": "nestedTableHeader",
         "attributes": [
             {
-                "id": "date",
+                "id": "examDate",
                 "label": "Date",
-                "props": "date"
+                "props": "examDate"
             },
             {
                 "id": "subject",
@@ -155,9 +155,9 @@
                 "props": "subject"
             },
             {
-                "id": "hours",
-                "label": "Hours",
-                "props": "hours"
+                "id": "timeStart",
+                "label": "Time",
+                "props": "timeStart"
             },
             {
                 "id": "marks",
@@ -178,12 +178,6 @@
                 "options": [],
                 "service": "examTypeData",
                 "method": "getExamTypeData"
-            },
-            {
-                "id": "timeStart",
-                "name": "timeStart",
-                "label": "Time Start",
-                "type": "time"
             },
             {
                 "id": "examDate",
@@ -213,14 +207,6 @@
                 "resetChildIdKey": {
                     "class": "hide"
                 }
-            },
-            {
-                "id": "subject",
-                "name": "subjects",
-                "label": "Subjects",
-                "type": "multiselect",
-                "method": "getSubjects",
-                "options": []
             },
             {
                 "id": "hours",

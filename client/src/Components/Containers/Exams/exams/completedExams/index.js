@@ -56,7 +56,7 @@ const CompletedExams = ({exam: {loading, error, message, examData, examFormField
   const styles = useStyles();
   
   const [formTitle, setFormTitle] = useState({
-    title: '"Schedule Exam"',
+    title: 'Schedule Exam',
     buttonTitle: "Schedule Exam"
   })
   const [searchStudent, setSearchStudent] = useState("")

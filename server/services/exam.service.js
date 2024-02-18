@@ -152,17 +152,18 @@ const examService = {
             const marks = reqBody.marks
             const standardId = reqBody.standard;
             const examTypeAttributes = attributes[5].type;
-            const subjects = reqBody.subjects;
-            let subArry = []
-            subjects.forEach((sub, index) => {
-                const SubjectObj = {
-                    hours: hours,
-                    subject: sub,
-                    date: moment(examDate).add(index, 'd').format('YYYY-MM-DD'),
-                    marks: marks
-                }
-                subArry.push(SubjectObj);
-            })
+            const examSubjects = reqBody.examSubjects
+            // const subjects = reqBody.subjects;
+            // let subArry = []
+            // subjects.forEach((sub, index) => {
+            //     const SubjectObj = {
+            //         hours: hours,
+            //         subject: sub,
+            //         date: moment(examDate).add(index, 'd').format('YYYY-MM-DD'),
+            //         marks: marks
+            //     }
+            //     subArry.push(SubjectObj);
+            // })
 
             let examType;
             examTypeAttributes.forEach(types => {
@@ -170,7 +171,7 @@ const examService = {
                     examType = types.id
                 }
             });
-            const examSubjects = {subjects: subArry};
+            // const examSubjects = {subjects: subArry};
             const exam = await models.Exam.create({examSubjects, timeStart, timeEnd, examDate, marks, examType, academicYear, endDate: endDate})
             if(!exam.id) {
                 throw new Error("Error creating exam")
@@ -182,13 +183,17 @@ const examService = {
             return {
                 status: true,
                 message: "Exam Created",
-                data: examStdObj
+                data: {
+                    examStdObj,
+                    showForm: false
+                },
             }
         } catch (error) {
             console.log("Error creating exams", error);
             const result = {
                 status: false,
-                message: error.message
+                message: error.message,
+                showForm: true
             }
             return result
         }

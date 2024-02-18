@@ -7,7 +7,8 @@ import Dashboard from './components/containers/dashboard/Dashboard';
 import Tutors from './components/containers/Tutors/Tutors';
 import Students from './components/containers/Students/students/Loadable';
 import StudentDetails from './components/containers/Students/studentDetails/Loadable';
-import Exams from './components/containers/Exams/exams/Loadable'
+import Exams from './components/containers/Exams/exams/Loadable';
+import ExamForm from './components/containers/Exams/examForm'
 import TutorDetails from './components/containers/Tutors/TutorDetails'
 import Fees from './components/containers/Fees/Fees'
 import Users from './components/containers/Users/Users';
@@ -121,6 +122,7 @@ function App({auth: {isAuth}}) {
             <ProtectedRoute exact path="/students" component={Students} />
             <ProtectedRoute exact path="/students/:studentId" component={StudentDetails} />
             <ProtectedRoute exact path="/exams" component={Exams} />
+            <ProtectedRoute exact path="/exams/createExams" component={ExamForm} />
             <ProtectedRoute exact path="/fees" component={Fees} />
             <ProtectedRoute exact path="/users" component={Users} />
 

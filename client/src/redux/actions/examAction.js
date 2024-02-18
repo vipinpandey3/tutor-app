@@ -65,19 +65,19 @@ export const fetchSubjectByStandard = (stdId) => {
     }
 }
 
-export const createExam = (examObj) => {
+export const createExam = (examObj, examSubjects) => {
     return async(dispatch, getState) => {
         const {auth: {token}} = getState()
         dispatch({
             type: types.SET_LOADING,
             payload: true
         })
+        examObj.examSubjects = examSubjects
         const axiosData = await axiosHelper.sendRequest(types.CREATE_EXAM_URL, 'POST', token, examObj);
         const payload = {
             loading: false,
             error: false,
             message: axiosData.resultLong,
-            showForm: false,
             formDetails: {
                 formName: "",
                 buttonName: "",

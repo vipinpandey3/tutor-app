@@ -94,7 +94,7 @@ const examReducer = (state = initialState, action) => {
                     buttonName: action.payload.formDetails.buttonName,
                     editFlag: action.payload.formDetails.editFlag
                 },
-                showForm: action.payload.showForm
+                showForm: action.payload.data.showForm
             };
 
 
@@ -106,7 +106,7 @@ const examReducer = (state = initialState, action) => {
                     formName: action.payload.formName,
                     buttonName: action.payload.buttonName,
                     editFlag: action.payload.editFlag
-                }
+                },
             }
 
         case types.HIDE_NOTIFICATION:

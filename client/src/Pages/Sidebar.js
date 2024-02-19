@@ -69,6 +69,14 @@ const Sidebar = () => {
   const classes = useStyles();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const navLinks = () => {
+    let roleId = JSON.parse(localStorage.getItem('roleId'))
+    const filteredNavLinks = NavLinks.filter((link) => link.roles.includes(roleId));
+    return filteredNavLinks
+  }
+
+
   return (
     <section className={classes.sideMenu} style={
       {
@@ -82,7 +90,7 @@ const Sidebar = () => {
         <img src={logo} alt="Logo" className={classes.logoImage} width={250} height={63} />
       </div>
       <ul className={classes.menuContainer}>
-        {NavLinks.map((link) => {
+        {navLinks().map((link) => {
           return (
             <li key={link.id} style={{
               color: colors.white['white']

@@ -22,7 +22,16 @@ module.exports = function(passport) {
                     resultLong:"Error loging User"
                 })
             }
-            return models.User.findOne({ where: {emailId: req.body.emailId}})
+            return models.User.findOne({ 
+                where: {emailId: req.body.emailId},
+                include: [
+                    {
+                        model: models.Roles,
+                        as: 'role',
+                        attributes: ['id', "name"]
+                    }
+                ]
+            })
             .then(user => {
                 if(!user) {
                     console.log("User Not Found");
@@ -54,7 +63,8 @@ module.exports = function(passport) {
                             lastName: dbUser.lastName,
                             status: dbUser.status,
                             emailId: dbUser.emailId,
-                            role: dbUser.role,
+                            roleId: dbUser.roleId,
+                            roleName: dbUser.role.name,
                             id: userObj.id,
                             success: true
                         })

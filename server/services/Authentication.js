@@ -25,12 +25,18 @@ const authenticattionObj = {
                     })
                 }
                 return models.User.findOne({
-                where: {
-                    emailId: user.emailId
-                }
+                    where: {
+                        emailId: user.emailId
+                    },
+                    include: [
+                        {
+                            model: models.Roles,
+                            as: 'role',
+                            attributes: ['id', "name"]
+                        }
+                    ]
                 })
                 .then(result => {
-                // const userObj = JSON.stringify(result)
                 if(!result) {
                     res.status(400).json({
                         resultShort: "failure",
@@ -42,7 +48,7 @@ const authenticattionObj = {
                     firstName: result.firstName,
                     lastName: result.lastName,
                     emailId: result.emailId,
-                    role: result.role
+                    role: result.role.name
                 };
                 global.CACHE_OBJ.set("LOGGED_IN_USERS", JSON.stringify(req.user));
                 next()

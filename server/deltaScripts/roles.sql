@@ -1,0 +1,1 @@
+INSERT INTO Roles (name, description, createdAt, updatedAt)  VALUES ('Admin', 'Admin', now(), now()), ('Teacher', 'Teacher', now(), now());

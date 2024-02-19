@@ -35,7 +35,8 @@ export const login = (postObj) => {
             if(authdata.resultShort === 'success') {
                 localStorage.setItem('firstName', authdata.user.firstName);
                 localStorage.setItem('lastName', authdata.user.lastName);
-                localStorage.setItem('role', authdata.user.role);
+                localStorage.setItem('roleId', authdata.user.roleId);
+                localStorage.setItem('roleName', authdata.user.roleName);
                 localStorage.setItem('emailId', authdata.user.emailId);
                 localStorage.setItem('userId', authdata.user.id)
                 dispatch({

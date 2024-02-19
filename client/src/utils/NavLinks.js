@@ -8,37 +8,43 @@ const NavLinks = [
         id: 1,
         name: "Dashboard",
         path: "/dashboard",
-        icons: <HiHome />
+        icons: <HiHome />,
+        roles: [1,2]
     },
     {
         id: 2,
         name: "Tutors",
         path: "/tutors",
-        icons: <GiTeacher />
+        icons: <GiTeacher />,
+        roles: [1]
     },
     {
         id: 3,
         name: "Students",
         path: "/students",
-        icons: <HiOutlineUsers />
+        icons: <HiOutlineUsers />,
+        roles: [1,2]
     },
     {
         id: 4,
         name: "Exams",
         path: "/exams",
-        icons: <GiPapers />
+        icons: <GiPapers />,
+        roles: [1,2]
     },
     {
         id: 5,
         name: 'Fees',
         path: '/fees',
-        icons: <GiReceiveMoney />
+        icons: <GiReceiveMoney />,
+        roles: [1]
     },
     {
         id: 6,
         name: 'Users',
         path: '/users',
-        icons: <HiOutlineUsers />
+        icons: <HiOutlineUsers />,
+        roles: [1]
     }
 ];
 

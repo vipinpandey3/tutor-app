@@ -27,12 +27,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.CHAR,
             allowNull: false,
             default: "active"
-        },
-        role: {
-            type: DataTypes.STRING,
-            allowNull: false,
         }
     });
+
+    User.associate = function(models) {
+        User.belongsTo(models.Roles, {
+            foreignKey: 'roleId', // Ensure 'roleId' is added as an attribute to the User model
+            as: 'role'
+        });
+    }
 
     return User
 }

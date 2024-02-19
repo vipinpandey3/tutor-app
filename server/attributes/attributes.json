@@ -1149,7 +1149,10 @@
                 "id": "role",
                 "name": "role",
                 "label": "Role",
-                "type": "input"
+                "type": "select",
+                "options": [],
+                "service": "roleData",
+                "method": "getRoleData"
             }
         ]
     },

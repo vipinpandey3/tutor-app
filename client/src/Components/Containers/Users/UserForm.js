@@ -5,6 +5,7 @@ import MatButton from '../../common/Button';
 import DatePicker from '../../common/DatePicker';
 import Input from '../../common/Input';
 import Text from '../../common/Text';
+import Select from '../../common/Select';
 
 const useStyles = makeStyles((theme) => ({
     paperContent: {
@@ -97,6 +98,14 @@ const UserForm = (props) => {
                         </Grid>
                         );
                     }
+                    else if(input.type === 'select') {
+                        return (
+                          <Grid key={input.id} item xs={3} className={styles.contentMargin}  style={{paddingTop: '10px'}}>
+                              {/* <DatePicker style={{ width: "90%" }} name={input.name} value={formValue[input.name]} onChange={valueChange} label={input.label}/> */}
+                            <Select style={{width: "90%"}} value={userFormValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.options} />
+                          </Grid>
+                        )
+                      }
                     })}
                 </Grid>
                 <Grid container style={{ paddingTop: "10px" }}>

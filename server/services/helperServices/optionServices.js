@@ -236,6 +236,30 @@ const getReligiondata = async() => {
     }
 }
 
+const getRoleData = async() => {
+    try {
+        let roles = await models.Roles.findAll({
+            attributes: ['id', ['name', 'type']]
+        })
+        roles = JSON.parse(JSON.stringify(roles));
+        if(!roles.length) {
+            throw new Error("Error getting user roles");
+        }
+        return Promise.resolve(roles);
+    } catch (error) {
+        return Promise.resolve([
+            {
+                id: 1,
+                type: 'Admin'
+            },
+            {
+                id: 2,
+                type: "Teacher"
+            }
+        ]);
+    }
+}
+
 const methodMapper = {
     getExamTypeData,
     getStandardData,
@@ -246,7 +270,8 @@ const methodMapper = {
     getStudentStreamData,
     getBranchData,
     getReligiondata,
-    getSubjects
+    getSubjects,
+    getRoleData
 };
 
 const getOptions = async(optionObject, reqUser) => {

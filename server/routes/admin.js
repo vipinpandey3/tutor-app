@@ -277,7 +277,7 @@ router.post('/add-User', (req, res) => {
 
 router.get('/get-user-formFields', (req, res) => {
     console.log('Inside /get-tutor-formFields route');
-    return UserService.getUserFormFields()
+    return UserService.getUserFormFields(req.user)
     .then((data) => {
         const result = {
             resultShort: 'success',

@@ -35,7 +35,6 @@ module.exports = function(sequelize, DataTypes) {
             foreignKey: 'roleId', // Ensure 'roleId' is added as an attribute to the User model
             as: 'role'
         });
-        User.hasMany(models.UserEducationDetails)
     }
 
     return User

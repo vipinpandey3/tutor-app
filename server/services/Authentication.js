@@ -32,7 +32,6 @@ const authenticattionObj = {
                         {
                             model: models.Roles,
                             as: 'role',
-                            attributes: ['id', "name"]
                         }
                     ]
                 })

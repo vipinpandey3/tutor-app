@@ -27,6 +27,18 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: true
         },
     });
+    
+    UserStandardMaps.associate = function(models) {
+        UserStandardMaps.belongsTo(models.User, {
+            foreignKey: 'user_id',
+            as: "UserMap",
+        })
+
+        UserStandardMaps.belongsTo(models.StandardMaster, {
+            foreignKey: 'standard_id',
+            as: "StandardMap",
+        })
+    }
 
     return UserStandardMaps
 }

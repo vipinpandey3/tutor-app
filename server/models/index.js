@@ -15,7 +15,7 @@ let sequelize;
   // sequelize = new Sequelize(config.database, config.username, config.password, config);
 // }
 
-sequelize = new Sequelize('tutorapp', 'root', 'Vipin@123', {dialect: 'mysql', host: 'localhost'})
+sequelize = new Sequelize('classment', 'root', 'Vipin@123', {dialect: 'mysql', host: 'localhost'})
 
 fs
   .readdirSync(__dirname)

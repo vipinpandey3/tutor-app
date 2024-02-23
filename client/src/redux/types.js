@@ -184,3 +184,6 @@ export const FECTH_EXAM_FORM_FIELDS_URL = "/api/exams/getExamFormFields";
 export const FETCH_SUBJECT_URL = "/api/exams/getSubjects/"
 export const CREATE_EXAM_URL = "/api/exams/create-exam";
 export const DELETE_EXAM_URL = "/api/exams/disableExam"
+
+// Class URLs
+export const FETCH_ALL_STANDARDS = '/api/user/fetchAllStandards'

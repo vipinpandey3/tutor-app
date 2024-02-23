@@ -32,7 +32,6 @@ module.exports = function(passport) {
                         attributes: ['id', "name"]
                     }
                 ],
-                attributes: ['id, ']
             })
             .then(user => {
                 if(!user) {

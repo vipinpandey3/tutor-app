@@ -26,11 +26,13 @@ const userService = {
                 include: [
                     {
                         model: models.StandardMaster,
-                        as: 'StandardMap'
+                        as: 'StandardMap',
+                        attributes: ['id', "stdCode", "std", "remarks"]
                     },
                     {
                         model: models.User,
-                        as: 'UserMap'
+                        as: 'UserMap',
+                        attributes: ['id', "firstName", "lastName", "emailId", "roleId"]
                     }
                 ]
             })
@@ -56,7 +58,8 @@ const userService = {
                 status: true,
                 result: "All standard fetched for User",
                 data: {
-                    class: userData
+                    class: userData,
+                    attributes: attributes[25].columnsHeader
                 }
             }
         } catch (error) {

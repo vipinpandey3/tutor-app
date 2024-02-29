@@ -9,7 +9,7 @@ export const fetchAllStandards = (postObj) => {
             type: types.SET_LOADING,
             payload: true
         })
-        const axiosData = await axiosHelper.sendRequest(types.FETCH_EXAMS_URL, "POST", token, postObj);
+        const axiosData = await axiosHelper.sendRequest(types.FETCH_ALL_STANDARDS, "POST", token, postObj);
         console.log("Axios", axiosData)
         const payload = {
             error: axiosData.resultShort,
@@ -18,6 +18,6 @@ export const fetchAllStandards = (postObj) => {
             loading: false,
         }
         const axiosAndPayloadData = await addPayload(axiosData, payload);
-        return await dispatchEngine(axiosAndPayloadData, types.FETCH_EXAMS, dispatch, types.FETCH_EXAMS_ERROR)
+        return await dispatchEngine(axiosAndPayloadData, types.FETCH_CLASSES, dispatch, types.FETCH_CLASSES_ERROR)
     }
 }

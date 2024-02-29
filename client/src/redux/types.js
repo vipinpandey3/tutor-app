@@ -124,7 +124,9 @@ export const LOGIN_USER_ERROR = "LOGIN_USER_ERROR";
 export const USER_LOGOUT = "USER_LOGOUT";
 
 
-
+// Class constant types
+export const FETCH_CLASSES = "FETCH_CLASSES";
+export const FETCH_CLASSES_ERROR = "FETCH_CLASSES_ERROR";
 
 
 // APP Constant types;

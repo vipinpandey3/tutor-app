@@ -82,7 +82,7 @@ const StudentForm = (props) => {
               return (
                 <Grid key={input.id} item xs={6} className={styles.contentMargin}>
                     {/* <DatePicker style={{ width: "90%" }} name={input.name} value={formValue[input.name]} onChange={valueChange} label={input.label}/> */}
-                  <Select style={{width: "90%"}} value={formValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.option} />
+                  <Select style={{width: "90%"}} value={formValue[input.name]} name={input.name} label={input.label} onChange={valueChange} options={input.options} />
                 </Grid>
               )
             }

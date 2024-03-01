@@ -330,7 +330,7 @@
                 "name": "gender",
                 "label": "Gender",
                 "type": "select",
-                "option": [],
+                "options": [],
                 "service": "genderData",
                 "method": "getGenderData"
             },
@@ -345,7 +345,7 @@
                 "name": "stream",
                 "label": "Stream",
                 "type": "select",
-                "option": [],
+                "options": [],
                 "service": "studentStream",
                 "method": "getStudentStreamData"
             }

@@ -79,6 +79,7 @@ const addStudentInDatabase = (req, res, next) => {
   const gender = req.body.gender;
   const aadharNo = req.body.aadharNo;
   const userId = req.user.id;
+  const status = "active"
   return models.Student.create({
     firstName,
     lastName,
@@ -89,6 +90,7 @@ const addStudentInDatabase = (req, res, next) => {
     gender,
     aadharNo,
     userId,
+    status
   })
     .then((student) => {
       console.log("Students **************", student);

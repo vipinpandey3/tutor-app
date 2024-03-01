@@ -330,7 +330,7 @@
                 "name": "gender",
                 "label": "Gender",
                 "type": "select",
-                "option": [],
+                "options": [],
                 "service": "genderData",
                 "method": "getGenderData"
             },
@@ -345,7 +345,7 @@
                 "name": "stream",
                 "label": "Stream",
                 "type": "select",
-                "option": [],
+                "options": [],
                 "service": "studentStream",
                 "method": "getStudentStreamData"
             }
@@ -1149,7 +1149,10 @@
                 "id": "role",
                 "name": "role",
                 "label": "Role",
-                "type": "input"
+                "type": "select",
+                "options": [],
+                "service": "roleData",
+                "method": "getRoleData"
             }
         ]
     },
@@ -1225,6 +1228,32 @@
                 "id": "status",
                 "label": "Attendence Status",
                 "props": "status"
+            }
+        ]
+    },
+    {
+        "index": 25,
+        "name": "fetchAllStandards",
+        "columnsHeader": [
+            {
+                "id": "std",
+                "label": "Standard",
+                "props": "StandardMap.std"
+            },
+            {
+                "id": "stdCode",
+                "label": "Standard Code",
+                "props": "StandardMap.stdCode"
+            },
+            {
+                "id": "subject_name",
+                "label": "Subjetc Name",
+                "props": "subject_name"
+            },
+            {
+                "id": "academic_year",
+                "label": "Academic Year",
+                "props": "academic_year"
             }
         ]
     }

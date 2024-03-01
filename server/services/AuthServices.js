@@ -22,6 +22,7 @@ module.exports = function(passport) {
                     resultLong:"Error loging User"
                 })
             }
+            console.log("At line number 25");
             return models.User.findOne({ 
                 where: {emailId: req.body.emailId},
                 include: [
@@ -30,7 +31,7 @@ module.exports = function(passport) {
                         as: 'role',
                         attributes: ['id', "name"]
                     }
-                ]
+                ],
             })
             .then(user => {
                 if(!user) {

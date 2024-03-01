@@ -11,6 +11,7 @@ const facultyRoute = require('./routes/faculty');
 const dashboardRoute = require('./routes/dashboard');
 const examRoute = require('./routes/exam.route.js');
 const studentRoute = require('./routes/students.route.js')
+const userRoute = require('./routes/user.route.js')
 const models = require("./models");
 var Redis = require('ioredis');
 const {authenticateRequest} = require('./services/Authentication.js')
@@ -45,6 +46,7 @@ app.use('/faculty', authenticateRequest, facultyRoute);
 app.use('/dashboard', authenticateRequest, dashboardRoute);
 app.use('/api/exams', authenticateRequest, examRoute);
 app.use('/api/students', authenticateRequest, studentRoute);
+app.use('/api/user', authenticateRequest, userRoute)
 
 models.sequelize
   .sync({ alter: false })

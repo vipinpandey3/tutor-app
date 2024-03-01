@@ -35,20 +35,6 @@ module.exports = function(sequelize, DataTypes) {
             foreignKey: 'roleId', // Ensure 'roleId' is added as an attribute to the User model
             as: 'role'
         });
-        // User.belongsToMany(models.StandardMaster, { 
-        //     through: 'UserStandardMap', 
-        //     foreignKey: 'user_id',
-        //     as: 'Standards'
-        // });
-        User.belongsToMany(models.StandardMaster, {
-            as: "UserMap", 
-            through: {
-                model: models.UserStandardMaps,
-                unique: false
-            },
-            foreignKey: 'user_id'
-        })
-        User.hasMany(models.UserEducationDetails)
     }
 
     return User

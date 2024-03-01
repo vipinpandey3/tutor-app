@@ -51,8 +51,12 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     Tutor.associate = function(models) {
-        Tutor.hasMany(models.TutorEducationDetails, {foreignKey: "TutorId"});
-        Tutor.hasMany(models.TutorAttendence, {foreignKey: "TutorId"})
+        // Tutor.hasMany(models.TutorEducationDetails, {foreignKey: "TutorId"});
+        // Tutor.hasMany(models.TutorAttendence, {foreignKey: "TutorId"});
+        // Tutor.belongsToMany(models.StandardMaster, {
+        //     through: 'TutorStandardMaps',
+        //     foreignKey: 'teacher_id'
+        // });
     };
 
     return Tutor;

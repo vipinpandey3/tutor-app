@@ -79,6 +79,7 @@ const addStudentInDatabase = (req, res, next) => {
   const gender = req.body.gender;
   const aadharNo = req.body.aadharNo;
   const userId = req.user.id;
+  const status = "active"
   return models.Student.create({
     firstName,
     lastName,
@@ -89,6 +90,7 @@ const addStudentInDatabase = (req, res, next) => {
     gender,
     aadharNo,
     userId,
+    status
   })
     .then((student) => {
       console.log("Students **************", student);
@@ -494,7 +496,16 @@ const getFeesFormFields = () => {
   })
 }
 
-const getStudentFormFields = (req, res) => {
+const getStudentFormFields = async(req, res) => {
+  try {
+    console.log('Inside getStudentFormFields function')
+    const studentFormFields = attributes[7].formFields;
+    var optionObjPromise = await OptionServices.getInputOptions(studentFormFields, req.user);
+    return Promise.resolve(optionObjPromise)
+  } catch (error) {
+    console.log("Error inside the getStudentFormFields", error)
+    return Promise.reject(error);
+  }
   console.log('Inside getStudentFormFields function')
   const studentFormFields = attributes[7].formFields
   return new Promise((resolve, reject) => {

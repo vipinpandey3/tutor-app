@@ -2,7 +2,8 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const attributes = require('../attributes/attributes.json');
 const { use } = require('passport');
-const models = require('../models')
+const models = require('../models');
+const {getInputOptions} = require('./helperServices/optionServices.js');
 
 const getUser = (useEmailId) => {
     return models.User.findAll({where: {emailId: useEmailId}})
@@ -18,31 +19,39 @@ const getUser = (useEmailId) => {
         })
 }
 
-const getUserFormFields = () => {
-    return new Promise((resolve, reject) => {
+const getUserFormFields = async(reqUser) => {
+    try {
         var userFormFields = attributes[21].formFields;
-        var optionObjPromise = []
-        for (let i = 0; i < userFormFields.length; i++) {
-            if(userFormFields[i]['method']) {
-                const methodPromise = getInputOptions(userFormFields[i]);
-                methodPromise                
-                    .then(data => {
-                        userFormFields[i].option = data
-                    })
-                    .catch((error) => {
-                        console.log("Error from MadePromise function", error)
-                        userFormFields[i].option = [];
-                    })
-                optionObjPromise.push(methodPromise)
-            }
-        }
-        Promise.all(optionObjPromise)
-            .then(data => {
-                return resolve(userFormFields);
-            })
-            .catch((error) => {
-                return reject(error);
-            })
+        var optionObjPromise = await getInputOptions(userFormFields, reqUser);
+        return Promise.resolve(optionObjPromise)
+    } catch (error) {
+        return Promise.reject(error);
+    }
+    return new Promise(async(resolve, reject) => {
+        var userFormFields = attributes[21].formFields;
+        var optionObjPromise = await getInputOptions(userFormFields, reqUser);
+        return optionObjPromise
+        // for (let i = 0; i < userFormFields.length; i++) {
+        //     if(userFormFields[i]['method']) {
+        //         const methodPromise = getInputOptions(userFormFields[i]);
+        //         methodPromise                
+        //             .then(data => {
+        //                 userFormFields[i].option = data
+        //             })
+        //             .catch((error) => {
+        //                 console.log("Error from MadePromise function", error)
+        //                 userFormFields[i].option = [];
+        //             })
+        //         optionObjPromise.push(methodPromise)
+        //     }
+        // }
+        // Promise.all(optionObjPromise)
+        //     .then(data => {
+        //         return resolve(userFormFields);
+        //     })
+        //     .catch((error) => {
+        //         return reject(error);
+        //     })
       })
 }
 

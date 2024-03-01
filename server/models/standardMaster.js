@@ -50,7 +50,22 @@ module.exports = function(sequelize, DataTypes) {
             }
         })
         StandardMaster.hasMany(models.StudentAttendence)
-        StandardMaster.hasMany(models.SubjectMaster)
+        StandardMaster.hasMany(models.SubjectMaster);
+        // StandardMaster.belongsToMany(models.User, {
+        //     through: 'UserStandardMaps',
+        //     foreignKey: 'standard_id',
+        //     as: 'Users'
+        // });
+        StandardMaster.belongsToMany(models.User, {
+            as: "StandardMap", 
+            through: {
+                model: models.UserStandardMaps,
+                unique: false
+            },
+            foreignKey: 'standard_id'
+        })
+        // StandardMaster.belongsToMany(models.User, { through: 'UserStandardMap', as: 'Users' });
+
 
         StandardMaster.getAllAttendenceByStandard = () => {
             return models.StandardMaster.findAll({

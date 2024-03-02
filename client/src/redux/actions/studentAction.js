@@ -97,13 +97,6 @@ export const addStudent = (studentData) => {
             loading: false,
             error: false,
             message: axiosData.resultLong,
-            showForm: false,
-            formDetails: {
-                formName: "",
-                buttonName: "",
-                editFlag: false
-            },
-            severity: "success"
         }
         const errorPayload = {
             loading: false,

@@ -117,12 +117,12 @@ const studentReducer = (state = intitialState, action) => {
                 error: action.payload.error,
                 message: action.payload.message,
                 formDetails: {
-                    formName: action.payload.formDetails.formName,
-                    buttonTitle: action.payload.formDetails.buttonName,
-                    editFlag: action.payload.formDetails.editFlag
+                    formName: action.payload.data.formDetails.formName,
+                    buttonTitle: action.payload.data.formDetails.buttonName,
+                    editFlag: action.payload.data.formDetails.editFlag
                 },
-                showForm: action.payload.showForm,
-                severity: action.payload.severity
+                showForm: action.payload.data.showForm,
+                severity: action.payload.data.severity
             };
 
         case types.ADD_STUDENT_ERROR:

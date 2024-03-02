@@ -2,6 +2,7 @@ const models = require('../models')
 const attributes = require('../attributes/attributes.json');
 var Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const moment = require('moment');
 
 const studentService = {
     getStudentById: async(req) => {
@@ -137,6 +138,42 @@ const studentService = {
             }
         } catch (error) {
             console.log("getStudentAllAttendenceById", error);
+            return {
+                status: false,
+                message: error.message
+            }
+        }
+    },
+
+    /**
+     * @param req {"firstName": "Viraj", "lastName": "Pandey", "emailId": "viraj.pandeyshukla@gmail.com", "mobile": "9321475789", "address": "88/01, A. D. Street, C. P. Tank, Mumbai-400004", "aadharNo": "231546978099", "gender": "Male", "dob": "1996-11-20T18:30:00.000Z", "stream": "common"}
+     * @returns {}
+     * */ 
+    createStudents: async(req) => {
+        try {
+            console.log("Inside the addStudentInDatabase functions");
+            let reqBody = req.body;
+            reqBody.status = "active";
+            reqBody.dob = moment(reqBody.dob).format('YYYY-MM-DD')
+            let student = await models.Student.create(reqBody);
+            if(!student) {
+                throw new Error("Error creating student");
+            }
+            return {
+                status: true,
+                message: "Created student with id: " + student.id,
+                data: {
+                    showForm: false,
+                    formDetails:  {
+                        formName: "",
+                        buttonName: "",
+                        editFlag: false
+                    },
+                    severity: "success"
+                }
+            }
+        } catch (error) {
+            console.log("Error inside the createStudent service function", error);
             return {
                 status: false,
                 message: error.message

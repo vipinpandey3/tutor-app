@@ -4,10 +4,12 @@ import {
   DialogTitle,
   makeStyles,
   Typography,
+  DialogActions
 } from "@material-ui/core";
 import React from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import ActionButton from "./ActionButton";
+import Button from '@mui/material/Button';
 
 const useStyle = makeStyles((theme) => ({
   dialogWrapper: {
@@ -24,13 +26,14 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function Popup(props) {
-  const { title, children, openPopup, setOpenPopup } = props;
+  const { title, children, openPopup, setOpenPopup, handleSuccess } = props;
   const classes = useStyle();
 
   return (
     <Dialog
       open={openPopup}
-      maxWidth="md"
+      maxWidth="xs"
+      sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
       classes={{ paper: classes.dialogWrapper }}
     >
       <DialogTitle className={classes.dialogTitle}>
@@ -47,6 +50,12 @@ export default function Popup(props) {
         </div>
       </DialogTitle>
       <DialogContent dividers>{children}</DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={() => setOpenPopup(false)}>
+          Cancel
+        </Button>
+        <Button onClick={handleSuccess}>Ok</Button>
+      </DialogActions>
     </Dialog>
   );
 }

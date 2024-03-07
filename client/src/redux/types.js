@@ -44,6 +44,11 @@ export const UPDATE_STUDENT_EDUCATION_DETAILS = "UPDATE_STUDENT_EDUCATION_DETAIL
 export const UPDATE_STUDENT_EDUCATION_DETAILS_ERROR = "UPDATE_STUDENT_EDUCATION_DETAILS_ERROR";
 export const GET_STUDENT_ATTENDENCE = "GET_STUDENT_ATTENDENCE";
 export const GET_STUDENT_ATTENDENCE_ERROR = "GET_STUDENT_ATTENDENCE_ERROR";
+export const GET_STANDARDS = "GET_STANDARDS"
+export const GET_STANDARDS_ERROR = "GET_STANDARDS_ERROR"
+export const ASSIGN_CLASS = "ASSIGN_CLASS";
+export const ASSIGN_CLASS_ERROR = "ASSIGN_CLASS_ERROR";
+
 
 // Fees Action Types
 export const FETCH_FEES_FORM_FIELDS = "FETCH_FEES_FORM_FIELDS";
@@ -157,6 +162,8 @@ export const ADD_PARENT_URL = "/admin/add-parent";
 export const GET_EDUCATION_FORMFIELDS_URL = "/admin/get-education-formFields";
 export const ADD_STUDENT_EDUCATION_DETAILS_URL = "/admin/add-studentEducation-details";
 export const UPDATE_EDUCATION_DETAIL_URL = "/admin/update-education-details";
+export const FETCH_STANDARD_URL = "/api/generic/getStandards"
+export const ASSIGN_CLASS_URL = "/api/students/assign-class"
 
 // Tutor URLS
 export const GET_TUTOR_URLS = "/admin/get-teachers";

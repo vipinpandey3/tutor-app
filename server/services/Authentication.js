@@ -47,7 +47,8 @@ const authenticattionObj = {
                     firstName: result.firstName,
                     lastName: result.lastName,
                     emailId: result.emailId,
-                    role: result.role.name
+                    role: result.role.name,
+                    id: result.id
                 };
                 global.CACHE_OBJ.set("LOGGED_IN_USERS", JSON.stringify(req.user));
                 next()

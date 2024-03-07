@@ -145,7 +145,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, title, downloadResults, showDownloadButton, showFilterSection} = props;
+  const { numSelected, title, downloadResults, showDownloadButton, showFilterSection, actionButtons, actionButtonClick} = props;
 
   return (
     <Toolbar
@@ -159,14 +159,38 @@ function EnhancedTableToolbar(props) {
       }}
     >
       {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
+        <>
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
+          >
+            {numSelected} selected
+          </Typography>
+          {
+            actionButtons.map(button => {
+              return (
+                <IconButton 
+                  key={button.id}
+                  onClick={() => actionButtonClick(button.type)}
+                >
+                  {button.icon}
+                </IconButton>
+                // <MatButton 
+                //   onClick={() => actionButtonClick(button.type)}
+                //   variant="contained"
+                //   style={{ flex: "1", width: "90%" }}
+                //   color="primary"
+                //   type="submit"
+                //   size="large"
+                // >
+                //   {}
+                // </MatButton>
+              )
+            })
+          }
+        </>
       ) : (
         <>
           <Typography
@@ -208,9 +232,10 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable(props) {
+export default function  EnhancedTable(props) {
   const {records, headCells, redirectToDetailsPage, edit, showCloseButton= false, showActionButton = false, 
-    title, getallSelectedRows, selected, setSelected, showDownloadButton, downloadResults, showFilterSection
+    title, getallSelectedRows, selected, setSelected, showDownloadButton, downloadResults, showFilterSection,
+    actionButtons, actionButtonClick
   } = props
   console.log('headCells', headCells)
   const [order, setOrder] = React.useState('asc');
@@ -304,7 +329,7 @@ export default function EnhancedTable(props) {
   return (
     <Box sx={{ width: '100%' }} backgroundColor={colors.primary[400]}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} title={title} showFilterSection={showFilterSection} downloadResults={downloadResults} showDownloadButton={showDownloadButton} />
+        <EnhancedTableToolbar actionButtons={actionButtons} numSelected={selected.length} title={title} showFilterSection={showFilterSection} downloadResults={downloadResults} showDownloadButton={showDownloadButton} actionButtonClick={actionButtonClick} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

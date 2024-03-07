@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express();
-const {getStudentById, getAllStudentAttendence, getStudentAllAttendenceById, createStudents} = require('../controllers/students.controller')
+const {getStudentById, getAllStudentAttendence, getStudentAllAttendenceById, createStudents, assignClass} = require('../controllers/students.controller')
 
 
 /**
@@ -13,8 +13,13 @@ router.get('/getAllStudentAttendence', (req, res) => getAllStudentAttendence(req
 router.post('/getStudentAllAttendenceById/:id', (req, res) => getStudentAllAttendenceById(req, res))
 
 /**
- * POST /api/students/student/
+ * POST /api/students/student
 */
 router.post('/create-student', (req, res) => createStudents(req, res))
+
+/**
+ * POST /api/students/assign-class
+ * */ 
+router.post('/assign-class', (req, res) => assignClass(req, res));
 
 module.exports = router

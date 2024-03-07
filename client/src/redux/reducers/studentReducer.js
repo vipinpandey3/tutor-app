@@ -41,7 +41,8 @@ const intitialState = {
         attendence: 0,
         absence: 0
     },
-    severity: ""
+    severity: "",
+    standards: []
 };
 
 const studentReducer = (state = intitialState, action) => {
@@ -367,6 +368,39 @@ const studentReducer = (state = intitialState, action) => {
         };
 
     case types.GET_STUDENT_ATTENDENCE_ERROR:
+        return {
+            ...state,
+            loading: action.payload.loading,
+            message: action.payload.message,
+            error: action.payload.error
+        }
+
+    case types.GET_STANDARDS:
+        return {
+            ...state,
+            standards: action.payload.data,
+            loading: action.payload.loading,
+            message: action.payload.message,
+            error: action.payload.error
+        }
+
+    case types.GET_STANDARDS_ERROR:
+        return {
+            ...state,
+            loading: action.payload.loading,
+            message: action.payload.message,
+            error: action.payload.error
+        }
+
+    case types.ASSIGN_CLASS:
+        return {
+            ...state,
+            loading: action.payload.loading,
+            message: action.payload.message,
+            error: action.payload.error
+        }
+
+    case types.ASSIGN_CLASS_ERROR:
         return {
             ...state,
             loading: action.payload.loading,

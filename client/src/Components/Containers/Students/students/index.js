@@ -1,8 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
     Grid,
     InputAdornment,
     makeStyles,
-    Paper,
     Toolbar,
   } from "@material-ui/core";
 import React, { useEffect, useState, useRef } from "react";
@@ -17,6 +17,7 @@ import StudentForm from "../studentForms/StudentForm";
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
+import {studentTableButtons} from "../../../../utils/utilities.js"
   // import { socket } from "../../../socket";
 import {
   addStudent,
@@ -26,13 +27,16 @@ import {
   editStudentFormFields, 
   toggleUploadSection, 
   uploadFile, 
-  hideNotification
+  hideNotification,
+  fetchStandards,
+  assignClass
 } from '../../../../redux/actions/studentAction'
 import StudentFileUpload from "../studentForms/StudentFileUpload";
 import Notification from "../../../common/Alert";
 import {tokens} from '../../../../utils/theme'
 import { useTheme } from "@mui/material";
-import Header from "../../../common/Header";
+import Popup from "../../../common/Popup.js";
+import Select from "../../../common/Select.js";
   
   // import Loader from '../../common/Loader'
   
@@ -58,14 +62,21 @@ import Header from "../../../common/Header";
     dob: moment().format('YYYY-MM-DD'),
     stream: 'common',
   };
-  const Students = ({student: {students, loading, showFileImport, formDetails, showForm, studentFormFields, error, severity, message}, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, toggleUploadSection, uploadFile, hideNotification}) => {
+  const Students = ({student: {students, loading, showFileImport, formDetails, showForm, 
+    studentFormFields, error, severity, message, standards}, 
+    getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, 
+    addStudent, toggleUploadSection, uploadFile, hideNotification, fetchStandards,
+    assignClass
+  }) => {
     const history = useHistory();
     const currentRef = useRef(true)
     const classes = useStyles();
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [selected, setSelected] = React.useState([]);
+    const [std, setStd] = useState("")
     const [formValues, setFormValues] = useState(initialcFormValues);
+    const [openPopup, setOpenPopup] = useState()
     // const [filterFunction, setFilterFunction] = useState({
     //   fn: (item) => {
     //     return item;
@@ -92,6 +103,10 @@ import Header from "../../../common/Header";
     // socket.on('upload_excel', (data) => {
     //   console.log('socket connected', data)
     // })
+
+    useEffect(() => {
+      fetchStandards();
+    }, [])
     const searchUser = (event) => {};
   
     const loadForm = () => {
@@ -123,9 +138,41 @@ import Header from "../../../common/Header";
     const handleToggleUploadSection = () => {
       toggleUploadSection(true)
     }
+
+    const actionButtonClick = (type) => {
+      setOpenPopup(true)
+    }
+    
+    const handleInputChange = (e) => {
+      setStd(e.target.value)
+    }
+
+    const handleSuccess = () => {
+      let postObj = {
+        std: std,
+        students: selected
+      }
+      assignClass(postObj)
+    }
   
     return (
       <>
+      <Popup 
+        title="Asign Standard"
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        handleSuccess={handleSuccess}
+      >
+        <Grid item xs={3}>
+          <Select
+            name="std"
+            label="Standard"
+            value={std}
+            onChange={handleInputChange}
+            options={standards}
+          />
+        </Grid>
+      </Popup>
         <Box m="20px">
         <Notification
           open={error} 
@@ -148,9 +195,6 @@ import Header from "../../../common/Header";
               loadStudents={loadStudents}
             />
         )}
-        {/* <Header
-          title="Students"
-        /> */}
         <Box 
           m="40px 0 0 0"
           height="50vh"
@@ -236,61 +280,12 @@ import Header from "../../../common/Header";
               showDownloadButton={true}
               redirectToDetailsPage={redirectToStudentDetailsPage}
               showFilterSection={toggleFilterSection}
+              actionButtons={studentTableButtons}
+              actionButtonClick={actionButtonClick}
             />
           }
         </Box>
       </Box>
-        {/* <Paper className={classes.paperCotent}>
-          <Grid container>
-            <Grid item xs={6}>
-              <Toolbar>
-                <Input
-                  onChange={searchUser}
-                  label="Search Users"
-                  className={classes.seacrhInput}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Toolbar>
-            </Grid>
-            <Grid item sm></Grid>
-            <Grid item>
-              <Toolbar>
-                <MatButton
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  onClick={toggleUploadSection}
-                >
-                  Upload Excel
-                </MatButton>
-              </Toolbar>
-            </Grid>
-            <Grid item>
-              <Toolbar>
-                <MatButton
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  onClick={loadForm}
-                >
-                  Add New
-                </MatButton>
-              </Toolbar>
-            </Grid>
-          </Grid>
-          {
-            students.studentTableAttributes && students.studentTableAttributes.length > 0 &&  <Table
-              records={students.studentTablerows}
-              headCells={students.studentTableAttributes}
-              edit={editStudent}
-              redirectToDetailsPage={redirectToStudentDetailsPage}
-            />
-          }
-        </Paper> */}
       </>
     );
   };
@@ -305,7 +300,8 @@ import Header from "../../../common/Header";
     toggleUploadSection: PropTypes.func.isRequired,
     uploadFile: PropTypes.func.isRequired,
     hideNotification: PropTypes.func.isRequired,
-    // socketConnect: PropTypes.func.isRequired
+    fetchStandards: PropTypes.func.isRequired,
+    assignClass: PropTypes.func.isRequired
   }
   
   const mapStateToProps = state => {
@@ -315,4 +311,4 @@ import Header from "../../../common/Header";
   }
   
   
-  export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, hideNotification})(Students);
+  export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, hideNotification, fetchStandards, assignClass})(Students);

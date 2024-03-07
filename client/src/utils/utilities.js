@@ -1,3 +1,5 @@
+import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
+
 export const StudentDetailTabs = [
     {
       label: "Fees",
@@ -19,3 +21,12 @@ export const initialExamFormValue = {
   subjects: [],
   hours: 1
 }
+
+export const studentTableButtons = [
+  {
+    type: "mapStudent",
+    name: "Map Standards",
+    icon: <PersonAddAltSharpIcon />,
+    id: 1
+  }
+]

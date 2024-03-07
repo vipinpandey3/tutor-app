@@ -1,5 +1,5 @@
 const {res_ok, res_err} = require('../services/data.service')
-const {getStudentById, getAllStudentAttendence, getStudentAllAttendenceById, createStudents} = require('../services/students.service');
+const {getStudentById, getAllStudentAttendence, getStudentAllAttendenceById, createStudents, assignClass} = require('../services/students.service');
 
 const studentController = {
     getStudentById: async(req, res) => {
@@ -83,6 +83,31 @@ const studentController = {
     createStudents: async(req, res) => {
         try {
             const result = await createStudents(req);
+            if(!result?.status) {
+                const resObj = {
+                    resultShort: 'failure',
+                    resultLong: result.message,
+                }
+                return res_err(res, resObj)
+            }
+            const resObj = {
+                resultShort: 'success',
+                resultLong: result.message,
+                data: result.data 
+            }
+            return res_ok(res, resObj)
+        } catch (error) {
+            const resObj = {
+                resultShort: 'failure',
+                resultLong: error.message,
+            }
+            return res_err(res, resObj);
+        }
+    },
+
+    assignClass: async(req, res) => {
+        try {
+            const result = await assignClass(req);
             if(!result?.status) {
                 const resObj = {
                     resultShort: 'failure',

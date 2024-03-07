@@ -449,6 +449,44 @@ export const hideNotification = () => {
     }
 }
 
+export const fetchStandards = () => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        const axiosData = await axiosHelper.sendRequest(types.FETCH_STANDARD_URL, 'GET', token, null);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+        }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return dispatchEngine(axiosAndPayloadData, types.GET_STANDARDS, dispatch, types.GET_STANDARDS_ERROR);
+    }
+}
+
+export const assignClass = (postObj) => {
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        const axiosData = await axiosHelper.sendRequest(types.ASSIGN_CLASS_URL, 'POST', token, postObj);
+        const payload = {
+            loading: false,
+            error: false,
+            message: axiosData.resultLong,
+        }
+        const errorPayload = {
+            loading: false,
+            error: true,
+            message: axiosData.resultLong
+        }
+        const axiosAndPayloadData = await addPayload(axiosData, payload, errorPayload);
+        return dispatchEngine(axiosAndPayloadData, types.ASSIGN_CLASS, dispatch, types.ASSIGN_CLASS_ERROR);
+    }
+}
+
 // export const socketConnect = () => {
 //     const socket = io.connect('http://localhost:4000')
 //     socket.on('upload_excel',(socket)=> {

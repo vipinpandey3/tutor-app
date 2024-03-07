@@ -179,6 +179,55 @@ const studentService = {
                 message: error.message
             }
         }
+    },
+
+     /**
+     * @param req {"students": [1,2,3], "std": "4th"}
+     * @returns {}
+     * */ 
+     assignClass: async(req) => {
+        try {
+            console.log("inside the asign class off the studentService", req.user);
+            let reqBody = req.body;
+            let reqUser = req.user
+            if(!reqBody.students.length) {
+                throw new Error("Not student list found in request")
+            }
+            let stdId = await models.StandardMaster.findAll({
+                where: {
+                    remarks: reqBody.std
+                },
+                attributes: ["id"]
+            })
+            if(!stdId.length) {
+                throw new Error("No standards found with parameter");
+            }
+            stdId = JSON.parse(JSON.stringify(stdId))[0];
+            let arr = [];
+            for (let index = 0; index < reqBody.students.length; index++) {
+                let object = {
+                    StudentId: reqBody.students[index],
+                    StandardId: stdId.id,
+                    createdBy: reqUser.id,
+                    updatedBy: reqUser.id
+                }
+                arr.push(object)
+            }
+            let result = await models.StudentStandardMap.bulkCreate(arr);
+            if(!result) {
+                throw new Error("Error assigning the class to student")
+            }
+            return {
+                status: true,
+                message: "Assigned class to student"
+            }
+        } catch (error) {
+            console.log("Error inside the asignClass", error)
+            return {
+                status: false,
+                message: error.message
+            }
+        }
     }
 }
 

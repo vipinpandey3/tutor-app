@@ -114,6 +114,10 @@ let dataObj = {
         let decrypted = decipher.update(encryptedString);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
         return decrypted.toString();
+    },
+
+    getArray: (array, key) => {
+        return array.map(x => x[key])
     }
 };
 

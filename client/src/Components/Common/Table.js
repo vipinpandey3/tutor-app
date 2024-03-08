@@ -329,7 +329,15 @@ export default function  EnhancedTable(props) {
   return (
     <Box sx={{ width: '100%' }} backgroundColor={colors.primary[400]}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar actionButtons={actionButtons} numSelected={selected.length} title={title} showFilterSection={showFilterSection} downloadResults={downloadResults} showDownloadButton={showDownloadButton} actionButtonClick={actionButtonClick} />
+        <EnhancedTableToolbar 
+          actionButtons={actionButtons}
+          numSelected={selected.length}
+          title={title}
+          showFilterSection={showFilterSection}
+          downloadResults={downloadResults}
+          showDownloadButton={showDownloadButton}
+          actionButtonClick={actionButtonClick} 
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -391,7 +399,7 @@ export default function  EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[2, 5, 10, 25]}
           component="div"
           count={records.length}
           rowsPerPage={rowsPerPage}

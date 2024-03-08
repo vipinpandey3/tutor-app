@@ -3,6 +3,8 @@ const attributes = require('../attributes/attributes.json');
 var Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const moment = require('moment');
+const {getArray} = require('../services/data.service');
+const student = require('../models/student');
 
 const studentService = {
     getStudentById: async(req) => {
@@ -227,6 +229,71 @@ const studentService = {
                 status: false,
                 message: error.message
             }
+        }
+    },
+
+    getStudents: async(req) => {
+        try {
+            console.log("Inside the getStudents");
+            let reqBody = req.body;
+            let reqUser = req.user;
+            let query = {};
+            let filter = reqBody.filter
+            let stdWhere = {}, sstdWhere = {};
+            let studentWhere = {};
+            let message = "Fetched all students"
+            query.limit = reqBody.limit,
+            query.offset = reqBody.offset;
+            if(reqBody.status) {
+                sstdWhere.status = status
+            };
+            if(filter.stdId) {
+                stdWhere.id = filter.stdId;
+            }
+            let students = await models.Student.findAll({
+                where: studentWhere,
+                attributes: ["id", 'firstName', "lastName", "emailId", "dob", "gender"],
+                include: [
+                  {
+                    model: models.StandardMaster,
+                    where: stdWhere,
+                    as: 'StudentMap',
+                    through: { 
+                        model: models.StudentStandardMap, 
+                        where: sstdWhere,
+                        attributes: ['status', 'id']
+                    },
+                    attributes: ["id", 'std', 'stdCode']
+                  },
+                  {
+                    model: models.Parent,
+                    attributes: ["id", "fatherName", "motherName"]
+                  }
+                ],
+                limit: reqBody.limit,
+                offset: reqBody.offset
+            });
+            students = JSON.parse(JSON.stringify(students))
+            console.log("students", students);
+            if(!students.length) {
+                message = "No students found"
+            }
+
+            const columnsAttributes = attributes[6].columnsHeader;
+            return {
+                status: true,
+                message: message,
+                data: {
+                    students: students,
+                    attributes: columnsAttributes
+                }
+            }
+        } catch (error) {
+            console.error("getStudents error", error);
+            return {
+                status: false,
+                message: error.message
+            } 
         }
     }
 }

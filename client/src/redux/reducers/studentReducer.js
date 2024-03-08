@@ -69,8 +69,8 @@ const studentReducer = (state = intitialState, action) => {
             return {
                 ...state,
                 students: {
-                    studentTablerows: action.payload.students,
-                    studentTableAttributes: action.payload.attributes
+                    studentTablerows: action.payload.data.students,
+                    studentTableAttributes: action.payload.data.attributes
                 },
                 loading: action.payload.loading,
                 message: action.payload.message,

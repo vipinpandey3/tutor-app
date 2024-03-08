@@ -9,7 +9,8 @@ import Students from './components/containers/Students/students/Loadable';
 import StudentDetails from './components/containers/Students/studentDetails/Loadable';
 import Exams from './components/containers/Exams/exams/Loadable';
 import ExamForm from './components/containers/Exams/examForm'
-import Class from './components/containers/class/Loadable'
+import Class from './components/containers/class/Loadable';
+import ClassDetails from './components/containers/class/classDetails';
 import TutorDetails from './components/containers/Tutors/TutorDetails'
 import Fees from './components/containers/Fees/Fees'
 import Users from './components/containers/Users/Users';
@@ -127,6 +128,7 @@ function App({auth: {isAuth}}) {
             <ProtectedRoute exact path="/fees" component={Fees} />
             <ProtectedRoute exact path="/users" component={Users} />
             <ProtectedRoute exact path="/class" component={Class} />
+            <ProtectedRoute exact path="/class/:classId" component={ClassDetails} />
 
             {/* <Route path="/" render={() => {!isAuthenticated ? <Login setIsAuthenticated={setIsAuthenticated} loginHandler={loginHandler} /> : <ProtectedRoute />}} /> */}
           </Switch>

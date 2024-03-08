@@ -280,8 +280,12 @@
                 "label": "Date of Birth"
             },
             {
-                "id": "aadharNo",
-                "label": "Aadhar Number"
+                "id": "StudentMap.0.std",
+                "label": "Standard"
+            },
+            {
+                "id": "StudentMap.0.StudentStandardMap.status",
+                "label": "Status"
             }
         ]
     },

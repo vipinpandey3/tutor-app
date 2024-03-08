@@ -21,3 +21,19 @@ export const fetchAllStandards = (postObj) => {
         return await dispatchEngine(axiosAndPayloadData, types.FETCH_CLASSES, dispatch, types.FETCH_CLASSES_ERROR)
     }
 }
+
+export const getStudents = (postObj) => {
+    console.log("postObj", postObj);
+    return async(dispatch, getState) => {
+        const {auth: {token}} = getState();
+        dispatch({
+            type: types.SET_LOADING,
+            payload: {
+                loading: true
+            }
+        })
+        // const loaderDispatcher = dispatch()
+        const axiosData = await axiosHelper.sendRequest(types.GET_STUDENT_URL, 'POST', token, postObj);
+        return dispatchEngine(axiosData, types.FETCH_STUDENTS, dispatch, types.FETCH_STUDENTS_ERROR)
+    }
+}

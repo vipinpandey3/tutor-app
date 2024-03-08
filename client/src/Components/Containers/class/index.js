@@ -6,7 +6,8 @@ import {connect} from 'react-redux';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import {fetchAllStandards} from "../../../redux/actions/classAction"
+import {fetchAllStandards} from "../../../redux/actions/classAction";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Class = ({class: {message, error, loading, standardsData}, fetchAllStandards}) => {
+  let history = useHistory();
   const styles = useStyles();
   useEffect(() => {
     let userId = JSON.parse(localStorage.getItem('userId'))
@@ -39,11 +41,16 @@ const Class = ({class: {message, error, loading, standardsData}, fetchAllStandar
     }
     fetchAllStandards(postObj)
   }, [])
+
+  const redirect = (id) => {
+    history.push(`/class/${id}`);
+  }
+
   return (
     <div className={styles.mainContainer}>
       {
         standardsData.data.map(std => {
-          return <Card className={styles.cardContainer} key={std.id} style={{ marginBottom: '20px' }}>
+          return <Card className={styles.cardContainer} key={std.id} onClick={() => redirect(std.StandardMap.id)} style={{ marginBottom: '20px' }}>
           <CardContent>
             <Typography variant="h5" component="h2">
               Standard: {std.StandardMap.std}

@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-    Grid,
-    InputAdornment,
-    makeStyles,
-    Toolbar,
-  } from "@material-ui/core";
+  Grid,
+  InputAdornment,
+  makeStyles,
+  Toolbar,
+} from "@material-ui/core";
 import React, { useEffect, useState, useRef } from "react";
 import { Box } from "@mui/material";
 import { useHistory } from "react-router";
@@ -16,148 +16,148 @@ import AddIcon from "@material-ui/icons/Add";
 import StudentForm from "../studentForms/StudentForm";
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux';
-import {studentTableButtons} from "../../../../utils/utilities.js"
-  // import { socket } from "../../../socket";
+import { connect } from 'react-redux';
+import { studentTableButtons } from "../../../../utils/utilities.js"
+// import { socket } from "../../../socket";
 import {
   addStudent,
   getStudents,
-  fetchStudentFormFields, 
-  toggleForm, 
-  editStudentFormFields, 
-  toggleUploadSection, 
-  uploadFile, 
+  fetchStudentFormFields,
+  toggleForm,
+  editStudentFormFields,
+  toggleUploadSection,
+  uploadFile,
   hideNotification,
   fetchStandards,
   assignClass
 } from '../../../../redux/actions/studentAction'
 import StudentFileUpload from "../studentForms/StudentFileUpload";
 import Notification from "../../../common/Alert";
-import {tokens} from '../../../../utils/theme'
+import { tokens } from '../../../../utils/theme'
 import { useTheme } from "@mui/material";
 import Popup from "../../../common/Popup.js";
 import Select from "../../../common/Select.js";
-  
-  // import Loader from '../../common/Loader'
-  
-  
-  const useStyles = makeStyles((theme) => ({
-    paperCotent: {
-      margin: theme.spacing(5),
-      padding: theme.spacing(3),
-    },
-    seacrhInput: {
-      width: "60%",
-    },
-  }));
-  
-  const initialcFormValues = {
-    firstName: "",
-    lastName: "",
-    emailId: "",
-    mobile: "",
-    address: "",
-    aadharNo: "",
-    gender: "Male",
-    dob: moment().format('YYYY-MM-DD'),
-    stream: 'common',
-  };
-  const Students = ({student: {students, loading, showFileImport, formDetails, showForm, 
-    studentFormFields, error, severity, message, standards}, 
-    getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, 
-    addStudent, toggleUploadSection, uploadFile, hideNotification, fetchStandards,
-    assignClass
-  }) => {
-    const history = useHistory();
-    const currentRef = useRef(true)
-    const classes = useStyles();
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    const [selected, setSelected] = React.useState([]);
-    const [std, setStd] = useState("")
-    const [formValues, setFormValues] = useState(initialcFormValues);
-    const [openPopup, setOpenPopup] = useState()
-    // const [filterFunction, setFilterFunction] = useState({
-    //   fn: (item) => {
-    //     return item;
-    //   },
-    // });
-    
-    const loadStudents = () => {
-      getStudents();
+
+// import Loader from '../../common/Loader'
+
+
+const useStyles = makeStyles((theme) => ({
+  paperCotent: {
+    margin: theme.spacing(5),
+    padding: theme.spacing(3),
+  },
+  seacrhInput: {
+    width: "60%",
+  },
+}));
+
+const initialcFormValues = {
+  firstName: "",
+  lastName: "",
+  emailId: "",
+  mobile: "",
+  address: "",
+  aadharNo: "",
+  gender: "Male",
+  dob: moment().format('YYYY-MM-DD'),
+  stream: 'common',
+};
+const Students = ({ student: { students, loading, showFileImport, formDetails, showForm,
+  studentFormFields, error, severity, message, standards },
+  getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields,
+  addStudent, toggleUploadSection, uploadFile, hideNotification, fetchStandards,
+  assignClass
+}) => {
+  const history = useHistory();
+  const currentRef = useRef(true)
+  const classes = useStyles();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [selected, setSelected] = React.useState([]);
+  const [std, setStd] = useState("")
+  const [formValues, setFormValues] = useState(initialcFormValues);
+  const [openPopup, setOpenPopup] = useState()
+  // const [filterFunction, setFilterFunction] = useState({
+  //   fn: (item) => {
+  //     return item;
+  //   },
+  // });
+
+  const loadStudents = () => {
+    getStudents();
+  }
+
+  // socket.on('upload_excel', (data) => {
+  //   console.log('Data =========', data)
+  // })
+  // useEffect(() => {
+  // }, [socket])
+
+  useEffect(() => {
+    if (currentRef.current) {
+      currentRef.current = false
+      getStudents()
     }
-  
-    // socket.on('upload_excel', (data) => {
-    //   console.log('Data =========', data)
-    // })
-    // useEffect(() => {
-    // }, [socket])
-    
-    useEffect(() => {
-      if(currentRef.current) {
-        currentRef.current = false
-        getStudents()
-      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getStudents])
-    // socket.on('upload_excel', (data) => {
-    //   console.log('socket connected', data)
-    // })
+  }, [getStudents])
+  // socket.on('upload_excel', (data) => {
+  //   console.log('socket connected', data)
+  // })
 
-    useEffect(() => {
-      fetchStandards();
-    }, [])
-    const searchUser = (event) => {};
-  
-    const loadForm = () => {
-      fetchStudentFormFields()
-    };
-  
-    const showHideForm = (flag) => {
-      toggleForm(flag)
-      setFormValues(initialcFormValues)
-    }
-  
-    const redirectToStudentDetailsPage = (studentId) => {
-      history.push(`/students/${studentId}`);
-    };
+  useEffect(() => {
+    fetchStandards();
+  }, [])
+  const searchUser = (event) => { };
 
-    const download = () => {
-      // downloadResults(filter)
-    }
+  const loadForm = () => {
+    fetchStudentFormFields()
+  };
 
-    const toggleFilterSection = () => {
-      console.log('toggleFilterSection')
-    }
-  
-    const editStudent= (row) => {
-      editStudentFormFields();
-      setFormValues(row)
-    }
+  const showHideForm = (flag) => {
+    toggleForm(flag)
+    setFormValues(initialcFormValues)
+  }
 
-    const handleToggleUploadSection = () => {
-      toggleUploadSection(true)
-    }
+  const redirectToStudentDetailsPage = (studentId) => {
+    history.push(`/students/${studentId}`);
+  };
 
-    const actionButtonClick = (type) => {
-      setOpenPopup(true)
-    }
-    
-    const handleInputChange = (e) => {
-      setStd(e.target.value)
-    }
+  const download = () => {
+    // downloadResults(filter)
+  }
 
-    const handleSuccess = () => {
-      let postObj = {
-        std: std,
-        students: selected
-      }
-      assignClass(postObj)
+  const toggleFilterSection = () => {
+    console.log('toggleFilterSection')
+  }
+
+  const editStudent = (row) => {
+    editStudentFormFields();
+    setFormValues(row)
+  }
+
+  const handleToggleUploadSection = () => {
+    toggleUploadSection(true)
+  }
+
+  const actionButtonClick = (type) => {
+    setOpenPopup(true)
+  }
+
+  const handleInputChange = (e) => {
+    setStd(e.target.value)
+  }
+
+  const handleSuccess = () => {
+    let postObj = {
+      std: std,
+      students: selected
     }
-  
-    return (
-      <>
-      <Popup 
+    assignClass(postObj)
+  }
+
+  return (
+    <>
+      <Popup
         title="Asign Standard"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
@@ -173,29 +173,29 @@ import Select from "../../../common/Select.js";
           />
         </Grid>
       </Popup>
-        <Box m="20px">
+      <Box m="20px">
         <Notification
-          open={error} 
-          handleClose={hideNotification} 
-          severity={severity} 
-          duration={3000} 
-          message={message} 
+          open={error}
+          handleClose={hideNotification}
+          severity={severity}
+          duration={3000}
+          message={message}
         />
         {/* <Loader /> */}
         {
           showFileImport && <StudentFileUpload toggleUploadSection={toggleUploadSection} uploadFile={uploadFile} />
         }
-         {showForm && (
-            <StudentForm 
-              initialcFormValues={formValues} 
-              formTitle={formDetails}
-              addStudent={addStudent}
-              formFields={studentFormFields}
-              toggleForm={showHideForm}
-              loadStudents={loadStudents}
-            />
+        {showForm && (
+          <StudentForm
+            initialcFormValues={formValues}
+            formTitle={formDetails}
+            addStudent={addStudent}
+            formFields={studentFormFields}
+            toggleForm={showHideForm}
+            loadStudents={loadStudents}
+          />
         )}
-        <Box 
+        <Box
           m="40px 0 0 0"
           height="50vh"
           sx={{
@@ -269,7 +269,7 @@ import Select from "../../../common/Select.js";
             </Grid>
           </Grid>
           {
-            students.studentTableAttributes && students.studentTableAttributes.length > 0 &&  <Table
+            students.studentTableAttributes && students.studentTableAttributes.length > 0 && <Table
               records={students.studentTablerows}
               headCells={students.studentTableAttributes}
               edit={editStudent}
@@ -286,29 +286,29 @@ import Select from "../../../common/Select.js";
           }
         </Box>
       </Box>
-      </>
-    );
-  };
-  
-  Students.propTypes = {
-    getStudents: PropTypes.func.isRequired,
-    student: PropTypes.object.isRequired,
-    fetchStudentFormFields: PropTypes.func.isRequired,
-    toggleForm: PropTypes.func.isRequired,
-    editStudentFormFields: PropTypes.func.isRequired,
-    addStudent: PropTypes.func.isRequired,
-    toggleUploadSection: PropTypes.func.isRequired,
-    uploadFile: PropTypes.func.isRequired,
-    hideNotification: PropTypes.func.isRequired,
-    fetchStandards: PropTypes.func.isRequired,
-    assignClass: PropTypes.func.isRequired
+    </>
+  );
+};
+
+Students.propTypes = {
+  getStudents: PropTypes.func.isRequired,
+  student: PropTypes.object.isRequired,
+  fetchStudentFormFields: PropTypes.func.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+  editStudentFormFields: PropTypes.func.isRequired,
+  addStudent: PropTypes.func.isRequired,
+  toggleUploadSection: PropTypes.func.isRequired,
+  uploadFile: PropTypes.func.isRequired,
+  hideNotification: PropTypes.func.isRequired,
+  fetchStandards: PropTypes.func.isRequired,
+  assignClass: PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => {
+  return {
+    student: state.student
   }
-  
-  const mapStateToProps = state => {
-    return {
-      student: state.student
-    } 
-  }
-  
-  
-  export default connect(mapStateToProps, {toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, hideNotification, fetchStandards, assignClass})(Students);
+}
+
+
+export default connect(mapStateToProps, { toggleUploadSection, uploadFile, getStudents, fetchStudentFormFields, toggleForm, editStudentFormFields, addStudent, hideNotification, fetchStandards, assignClass })(Students);

@@ -1,4 +1,5 @@
 import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
+import RateReviewTwoToneIcon from '@mui/icons-material/RateReviewTwoTone';
 
 export const StudentDetailTabs = [
     {
@@ -27,6 +28,15 @@ export const studentTableButtons = [
     type: "mapStudent",
     name: "Map Standards",
     icon: <PersonAddAltSharpIcon />,
+    id: 1
+  }
+]
+
+export const classStudentsIcons = [
+  {
+    type: "mapStudent",
+    name: "Map Standards",
+    icon: <RateReviewTwoToneIcon />,
     id: 1
   }
 ]

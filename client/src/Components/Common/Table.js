@@ -146,7 +146,7 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected, title, downloadResults, showDownloadButton, showFilterSection, actionButtons, actionButtonClick} = props;
-
+  console.log("num selected", numSelected)
   return (
     <Toolbar
       sx={{
@@ -158,7 +158,7 @@ function EnhancedTableToolbar(props) {
         }),
       }}
     >
-      {numSelected > 0 ? (
+      {numSelected.length > 0 ? (
         <>
           <Typography
             sx={{ flex: '1 1 100%' }}
@@ -169,7 +169,7 @@ function EnhancedTableToolbar(props) {
             {numSelected} selected
           </Typography>
           {
-            actionButtons.map(button => {
+            actionButtons.length && actionButtons.map(button => {
               return (
                 <IconButton 
                   key={button.id}
@@ -204,7 +204,7 @@ function EnhancedTableToolbar(props) {
         </>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected.length > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
@@ -331,7 +331,7 @@ export default function  EnhancedTable(props) {
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar 
           actionButtons={actionButtons}
-          numSelected={selected.length}
+          numSelected={selected}
           title={title}
           showFilterSection={showFilterSection}
           downloadResults={downloadResults}

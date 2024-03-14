@@ -132,6 +132,9 @@ export const USER_LOGOUT = "USER_LOGOUT";
 // Class constant types
 export const FETCH_CLASSES = "FETCH_CLASSES";
 export const FETCH_CLASSES_ERROR = "FETCH_CLASSES_ERROR";
+export const ADD_REMARKS = "ADD_REMARKS"
+export const ADD_REMARKS_ERROR = "ADD_REMARKS_ERROR"
+export const TEACHER_DETAILS = "TEACHER_DETAILS"
 
 
 // APP Constant types;
@@ -197,3 +200,4 @@ export const DELETE_EXAM_URL = "/api/exams/disableExam"
 
 // Class URLs
 export const FETCH_ALL_STANDARDS = '/api/user/fetchAllStandards'
+export const CREATE_STUDENT_REMARKS_URL = "/api/class/createRemarks"

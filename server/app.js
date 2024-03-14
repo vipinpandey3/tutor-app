@@ -13,6 +13,7 @@ const examRoute = require('./routes/exam.route.js');
 const studentRoute = require('./routes/students.route.js')
 const userRoute = require('./routes/user.route.js')
 const genericRoute = require('./routes/generic.route.js');
+const classRoute = require('./routes/class.route.js');
 const models = require("./models");
 var Redis = require('ioredis');
 const {authenticateRequest} = require('./services/Authentication.js')
@@ -49,6 +50,7 @@ app.use('/api/exams', authenticateRequest, examRoute);
 app.use('/api/students', authenticateRequest, studentRoute);
 app.use('/api/user', authenticateRequest, userRoute)
 app.use('/api/generic', authenticateRequest, genericRoute)
+app.use('/api/class', authenticateRequest, classRoute)
 
 models.sequelize
   .sync({ alter: false })

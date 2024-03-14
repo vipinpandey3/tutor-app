@@ -5,19 +5,22 @@ import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DashboardContextProvider } from "./context/dashboard-context";
 import {Provider} from 'react-redux'
-import store from './redux/store'
+import {store, persistor} from './redux/store'
 import { AuthContextProvider } from "./context/auth-context";
+import { PersistGate } from 'redux-persist/integration/react';
 
 
 ReactDOM.render(
   <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
     <AuthContextProvider>
-    <DashboardContextProvider>
-        <Router>
-          <App />
-        </Router>
-    </DashboardContextProvider>
-    </AuthContextProvider>
+      <DashboardContextProvider>
+          <Router>
+            <App />
+          </Router>
+      </DashboardContextProvider>
+      </AuthContextProvider>
+    </PersistGate>
   </Provider>,
   document.getElementById("root")
 );

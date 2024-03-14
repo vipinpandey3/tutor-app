@@ -8,12 +8,15 @@ const initialState = {
         data: [],
         attributes: []
     },
+    teacher_id: null,
+    subject_id: null,
+    is_class_teacher: false,
+    subjetc_name: null
 }
 
 const classReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.FETCH_CLASSES:
-            console.log("action.payload", action.payload);
             return {
                 ...state,
                 loading: action.payload.loading,
@@ -33,7 +36,23 @@ const classReducer = (state = initialState, action) => {
                 error: action.payload.error
             };
 
-        
+        case types.TEACHER_DETAILS:
+            console.log("*******", action.payload.is_class_teacher)
+            return {
+                ...state,
+                teacher_id: action.payload.UserMap.id,
+                subject_id: action.payload.subject_id,
+                is_class_teacher: action.payload.is_class_teacher,
+                subjetc_name: action.payload.subject_name
+            }
+
+        case types.ADD_REMARKS:
+            return {
+                ...state,
+                loading: action.payload.loading,
+                message: action.payload.message,
+                error: action.payload.error
+            };
     
         default:
             return state

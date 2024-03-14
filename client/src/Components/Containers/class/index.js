@@ -6,8 +6,9 @@ import {connect} from 'react-redux';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import {fetchAllStandards} from "../../../redux/actions/classAction";
+import {fetchAllStandards, dispatchTeacherDetails} from "../../../redux/actions/classAction";
 import { useHistory } from "react-router";
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -30,9 +31,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Class = ({class: {message, error, loading, standardsData}, fetchAllStandards}) => {
+const Class = ({class: {message, error, loading, standardsData}, fetchAllStandards, dispatchTeacherDetails}) => {
   let history = useHistory();
   const styles = useStyles();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     let userId = JSON.parse(localStorage.getItem('userId'))
     console.log('userId', userId)
@@ -42,15 +45,17 @@ const Class = ({class: {message, error, loading, standardsData}, fetchAllStandar
     fetchAllStandards(postObj)
   }, [])
 
-  const redirect = (id) => {
-    history.push(`/class/${id}`);
+  const redirect = (std) => {
+    dispatch(dispatchTeacherDetails(std));
+    
+    history.push(`/class/${std.StandardMap.id}`);
   }
 
   return (
     <div className={styles.mainContainer}>
       {
         standardsData.data.map(std => {
-          return <Card className={styles.cardContainer} key={std.id} onClick={() => redirect(std.StandardMap.id)} style={{ marginBottom: '20px' }}>
+          return <Card className={styles.cardContainer} key={std.id} onClick={() => redirect(std)} style={{ marginBottom: '20px' }}>
           <CardContent>
             <Typography variant="h5" component="h2">
               Standard: {std.StandardMap.std}
@@ -78,7 +83,8 @@ const Class = ({class: {message, error, loading, standardsData}, fetchAllStandar
 Class.propTypes = {
   fetchAllStandards: PropTypes.func.isRequired,
   hideNotification: PropTypes.func.isRequired,
-  class: PropTypes.object.isRequired
+  class: PropTypes.object.isRequired,
+  dispatchTeacherDetails: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
@@ -87,4 +93,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {fetchAllStandards})(Class)
+export default connect(mapStateToProps, {fetchAllStandards, dispatchTeacherDetails})(Class)

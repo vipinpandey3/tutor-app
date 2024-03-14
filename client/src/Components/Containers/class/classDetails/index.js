@@ -17,7 +17,11 @@ import Table from "../../../common/Table.js";
 import SearchIcon from "@material-ui/icons/Search";
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import {getStudents} from '../../../../redux/actions/classAction.js'
+import {getStudents, createRemarks} from '../../../../redux/actions/classAction.js';
+import {classStudentsIcons} from '../../../../utils/utilities.js';
+import Popup from "../../../common/Popup.js";
+import TextArea from '../../../common/TextArea.js';
+
 
 const useStyles = makeStyles((theme) => ({
     paperCotent: {
@@ -31,104 +35,137 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ClassDetails = ({student: {students, loading,
-    studentFormFields, error, severity, message}, getStudents}) => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    const params = useParams();
-    const classes = useStyles();
-    const {classId} = params;
-    const [postObj, setPostObj] = useState({
-        limit: 20, 
-        offset: 0,
-        filter: {
-            status: 'current',
-            stdId: classId
-        }
-    });
-    const [selected, setSelected] = React.useState([]);
-    useEffect(() => {
-        getStudents(postObj)
-    }, [postObj])
-
-    const download = () => {
-
+  studentFormFields, error, severity, message, teacher_id, subject_id, is_class_teacher, subjetc_name}, getStudents, createRemarks}) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const params = useParams();
+  const classes = useStyles();
+  const {classId} = params;
+  const [postObj, setPostObj] = useState({
+    limit: 20, 
+    offset: 0,
+    filter: {
+        status: 'current',
+        stdId: classId
     }
+  });
+  const [selected, setSelected] = React.useState([]);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [remarks, setRemarks] = useState("")
+  useEffect(() => {
+    getStudents(postObj)
+  }, [postObj])
+
+  const download = () => {
+
+  }
+
+  const handleSuccess = () => {
+    const postObj = {
+      studentIds: selected,
+      teacherId: teacher_id,
+      subjectId: subject_id,
+      remarkText: remarks
+    }
+    console.log("postObj", postObj, subject_id);
+    createRemarks(postObj)
+  }
+
+  const actionButtonClick = () => {
+    setOpenPopup(true)
+  }
   return (
     <Box m="20px">
-        <Box
-          m="40px 0 0 0"
-          height="50vh"
-          sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .name-column--cell": {
-              color: colors.greenAccent[300],
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: colors.blueAccent[700],
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: colors.primary[400],
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
-            },
-            "& .MuiCheckbox-root": {
-              color: `${colors.greenAccent[200]} !important`,
-            },
-            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-              color: `${colors.grey[100]} !important`,
-            },
-          }}
-        >
-          <Grid container>
-            <Grid item xs={6}>
-              <Toolbar>
-                <Input
-                //   onChange={searchUser}
-                  label="Search Users"
-                  className={classes.seacrhInput}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Toolbar>
-            </Grid>
-            <Grid item sm></Grid>
+      <Popup
+        title="Asign Standard"
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        handleSuccess={handleSuccess}
+      >
+        <Grid item xs={12}>
+          <TextArea
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+            label="Remarks"
+          />
+        </Grid>
+      </Popup>
+      <Box
+        m="40px 0 0 0"
+        height="50vh"
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+          },
+          "& .MuiDataGrid-cell": {
+            borderBottom: "none",
+          },
+          "& .name-column--cell": {
+            color: colors.greenAccent[300],
+          },
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: colors.blueAccent[700],
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            backgroundColor: colors.primary[400],
+          },
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "none",
+            backgroundColor: colors.blueAccent[700],
+          },
+          "& .MuiCheckbox-root": {
+            color: `${colors.greenAccent[200]} !important`,
+          },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${colors.grey[100]} !important`,
+          },
+        }}
+      >
+        <Grid container>
+          <Grid item xs={6}>
+            <Toolbar>
+              <Input
+              //   onChange={searchUser}
+                label="Search Users"
+                className={classes.seacrhInput}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="end">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Toolbar>
           </Grid>
-          {
-            students.studentTableAttributes && students.studentTableAttributes.length > 0 &&  <Table
-              records={students.studentTablerows}
-              headCells={students.studentTableAttributes}
-            //   edit={editStudent}
-              selected={selected}N
-              downloadResults={download}
-              title="Students"
-              showDownloadButton={true}
-            //   redirectToDetailsPage={redirectToStudentDetailsPage}
-            //   showFilterSection={toggleFilterSection}
-            //   actionButtons={studentTableButtons}
-            //   actionButtonClick={actionButtonClick}
-            />
-          }
-        </Box>
+          <Grid item sm></Grid>
+        </Grid>
+        {
+          students.studentTableAttributes && students.studentTableAttributes.length > 0 &&  <Table
+            records={students.studentTablerows}
+            headCells={students.studentTableAttributes}
+          //   edit={editStudent}
+            selected={selected}
+            setSelected={setSelected}
+            downloadResults={download}
+            title="Students"
+            showDownloadButton={true}
+          //   redirectToDetailsPage={redirectToStudentDetailsPage}
+          //   showFilterSection={toggleFilterSection}
+            actionButtons={classStudentsIcons}
+            actionButtonClick={actionButtonClick}
+          />
+        }
+      </Box>
     </Box>
   )
 }
 
 ClassDetails.propTypes = {
-    student: PropTypes.object.isRequired,
-    getStudents: PropTypes.func.isRequired,
+  student: PropTypes.object.isRequired,
+  getStudents: PropTypes.func.isRequired,
+  createRemarks: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -138,4 +175,4 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, {getStudents})(ClassDetails)
+export default connect(mapStateToProps, {getStudents, createRemarks})(ClassDetails)

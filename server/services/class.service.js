@@ -3,10 +3,10 @@ const models = require('./../models/index');
 const classService = {
     createRemarks: async(req) => {
         try {
-            console.log("Inside the classService.getClassDetails method");
             let reqBody = req.body;
             let reqUser = req.user;
-            if(!reqBody.remarks) {
+            console.log("Inside the classService.getClassDetails method", reqBody);
+            if(!reqBody.remarkText) {
                 throw new Error("Error as remarks not found")
             }
             if(!reqBody.studentIds.length) {

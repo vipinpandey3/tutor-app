@@ -60,6 +60,7 @@ export const createRemarks = (remarks) => {
             loading: false,
         }
         const axiosAndPayloadData = await addPayload(axiosData, payload);
-        return await dispatchEngine(axiosAndPayloadData, types.ADD_REMARKS, dispatch, types.ADD_REMARKS_ERROR)
+        return await dispatchEngine(axiosAndPayloadData, types.ADD_REMARKS, dispatch, types.ADD_REMARKS_ERROR);
+        
     }
 }

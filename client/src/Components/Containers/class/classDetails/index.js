@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ClassDetails = ({student: {students, loading,
-  studentFormFields, error, severity, message, teacher_id, subject_id, is_class_teacher, subjetc_name}, getStudents, createRemarks}) => {
+  studentFormFields, error, severity, message},
+  classData: {teacher_id, subject_id, is_class_teacher, subjetc_name}, getStudents, createRemarks}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const params = useParams();
@@ -60,15 +61,15 @@ const ClassDetails = ({student: {students, loading,
 
   }
 
-  const handleSuccess = () => {
+  const handleSuccess = async() => {
     const postObj = {
       studentIds: selected,
       teacherId: teacher_id,
       subjectId: subject_id,
       remarkText: remarks
     }
-    console.log("postObj", postObj, subject_id);
     createRemarks(postObj)
+    setOpenPopup(false)
   }
 
   const actionButtonClick = () => {
